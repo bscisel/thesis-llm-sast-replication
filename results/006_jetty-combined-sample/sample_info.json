@@ -1,0 +1,22 @@
+{
+  "method": "merge",
+  "merged_from": [
+    "003_jetty-stage-1",
+    "005_jetty-stage-2"
+  ],
+  "stages": [
+    {
+      "run": "003_jetty-stage-1",
+      "seed": 20260503,
+      "method": "stratified",
+      "findings": 300
+    },
+    {
+      "run": "005_jetty-stage-2",
+      "seed": 20260810,
+      "method": "rule_extension_one_per_rule",
+      "findings": 60
+    }
+  ],
+  "resampling_note": "Dla error-prone schemat 'stratum' przestaje byc sensowny: w drugim etapie wszystkie findingi wpadaja do warstwy '__remaining__' i zwinelyby sie w jeden klaster. Uzywaj --cluster-by rule. W pierwszym etapie oba podzialy sa identyczne (12 regul, 12 warstw), wiec zmiana nie rusza jego liczb."
+}

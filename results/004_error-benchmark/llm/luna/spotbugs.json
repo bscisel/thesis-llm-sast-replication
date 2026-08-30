@@ -1,0 +1,814 @@
+{
+  "model": "gpt-5.6-luna",
+  "tool": "spotbugs",
+  "num_runs": 3,
+  "runs_per_invocation": 3,
+  "source_root": "java-errors-benchmark",
+  "call_parameters": {
+    "temperature": null,
+    "concurrency": 30,
+    "response_format": "json_schema",
+    "max_completion_tokens": 8192,
+    "max_retries": 6,
+    "reasoning_effort": "default"
+  },
+  "system_prompt_variant": "benchmark",
+  "system_prompt_sha256": "b5b634e0a9109c59",
+  "user_prompt_sha256": "14894866e018872e",
+  "timestamp": "2026-08-09T18:22:27.663541+00:00",
+  "updated_at": "2026-08-09T18:22:27.663541+00:00",
+  "findings": [
+    {
+      "finding_id": 0,
+      "type": "UC_USELESS_CONDITION",
+      "sourcefile": "AgeClassifier.java",
+      "start_line": "13",
+      "message": "Condition has no effect",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.99,
+          "developer_explanation": "After the `age > 10` test fails, `age` is at most 10, so `age >= 18` can never be true and the \"Mature\" branch is unreachable. Reorder or revise the age ranges so the mature classification can be reached if that outcome is intended.",
+          "is_true_positive": true,
+          "issue_signature": "unreachable conditional branch",
+          "reasoning": "The preceding `if (age > 10)` establishes that execution here occurs only when `age <= 10`, making `age >= 18` always false. Therefore the condition has no effect and the \"Mature\" return is unreachable, which is a real correctness issue in the classification logic.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 2257,
+            "output_tokens": 329,
+            "reasoning_tokens": 158,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 5.025
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.99,
+          "developer_explanation": "When the first condition is false, age is known to be 10 or less, so age >= 18 can never be true. The mature classification is therefore unreachable; reorder the checks or change the conditions to express the intended age ranges.",
+          "is_true_positive": true,
+          "issue_signature": "unreachable conditional branch",
+          "reasoning": "The preceding if condition is false on entry to the else-if, which establishes that age <= 10, making age >= 18 impossible. Consequently, the else-if always produces the same false result and the \"Mature\" return is unreachable. This is a real correctness issue because the classification logic cannot classify any age as mature.",
+          "run": 2,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 2257,
+            "output_tokens": 277,
+            "reasoning_tokens": 113,
+            "cached_input_tokens": 2254
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.008
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.99,
+          "developer_explanation": "When execution reaches the second condition, the first test has already established that age is 10 or less, so age >= 18 can never be true. The mature branch is therefore unreachable; reorder or revise the age ranges so the intended categories are tested.",
+          "is_true_positive": true,
+          "issue_signature": "unreachable conditional branch",
+          "reasoning": "The preceding `if (age > 10)` is false when line 13 is reached, which means `age <= 10`, making `age >= 18` always false. This is a real correctness issue because the `",
+          "run": 3,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 2257,
+            "output_tokens": 333,
+            "reasoning_tokens": 186,
+            "cached_input_tokens": 2254
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.617
+        }
+      ]
+    },
+    {
+      "finding_id": 1,
+      "type": "RANGE_ARRAY_INDEX",
+      "sourcefile": "ArrayReader.java",
+      "start_line": "6",
+      "message": "Array index is out of bounds",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 1.0,
+          "developer_explanation": "The array has three elements, so its valid indexes are 0, 1, and 2; accessing index 3 throws an ArrayIndexOutOfBoundsException. Change the access to a valid index or otherwise ensure the index is within the array bounds before reading it.",
+          "is_true_positive": true,
+          "issue_signature": "out-of-bounds array access",
+          "reasoning": "The array is initialized with three elements, making index 3 invalid because the valid indexes are 0 through 2. The read at arr[3] therefore deterministically throws ArrayIndexOutOfBoundsException at runtime, so the warning is a true positive.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 2121,
+            "output_tokens": 204,
+            "reasoning_tokens": 45,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.939
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 1.0,
+          "developer_explanation": "The array contains three elements, whose valid indexes are 0, 1, and 2. Accessing index 3 throws an ArrayIndexOutOfBoundsException; use a valid index or adjust the array contents and intended access.",
+          "is_true_positive": true,
+          "issue_signature": "out-of-bounds array access",
+          "reasoning": "The array is initialized with three elements, so its only valid indexes are 0 through 2. The statement accesses arr[3], which necessarily throws ArrayIndexOutOfBoundsException at runtime. This is a genuine correctness defect.",
+          "run": 2,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 2121,
+            "output_tokens": 187,
+            "reasoning_tokens": 42,
+            "cached_input_tokens": 2118
+          },
+          "stop_reason": "stop",
+          "latency_s": 2.54
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 1.0,
+          "developer_explanation": "The array contains three elements, so its valid indices are 0, 1, and 2. Accessing index 3 throws an ArrayIndexOutOfBoundsException; use a valid index or adjust the array contents and intended access.",
+          "is_true_positive": true,
+          "issue_signature": "array index out of bounds",
+          "reasoning": "The array is initialized with three elements, making indices 0 through 2 valid, while the code accesses index 3. This access necessarily throws ArrayIndexOutOfBoundsException at runtime, so the warning is a true positive.",
+          "run": 3,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 2121,
+            "output_tokens": 173,
+            "reasoning_tokens": 28,
+            "cached_input_tokens": 2118
+          },
+          "stop_reason": "stop",
+          "latency_s": 2.02
+        }
+      ]
+    },
+    {
+      "finding_id": 2,
+      "type": "RC_REF_COMPARISON",
+      "sourcefile": "NumberComparison.java",
+      "start_line": "7",
+      "message": "Suspicious reference comparison",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.99,
+          "developer_explanation": "The code compares two Integer object references with == rather than comparing their numeric values. Because 1024 is outside the guaranteed Integer cache range, the references may be distinct even though the values are equal; use num1.equals(num2) or compare primitive int values instead.",
+          "is_true_positive": true,
+          "issue_signature": "wrapper objects compared by reference",
+          "reasoning": "The shown code uses == on two separately autoboxed Integer values, so it compares object identity rather than integer contents. For 1024, Java does not guarantee that both autoboxing operations reuse the same cached object, meaning equal numeric values can produce false. Therefore, the warning identifies a real correctness issue.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 2238,
+            "output_tokens": 231,
+            "reasoning_tokens": 63,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 4.028
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.99,
+          "developer_explanation": "The two numeric literals are autoboxed to Integer objects, and == compares whether those objects are the same instance rather than whether they hold the same value. Because caching for 1024 is not guaranteed, this can print false even though both values are 1024; compare the integers as primitives or use equals().",
+          "is_true_positive": true,
+          "issue_signature": "reference comparison of boxed integers",
+          "reasoning": "The shown code compares two Integer references containing 1024 with ==, so the result depends on object identity rather than integer value. Integer caching is only guaranteed for a limited range, and distinct objects representing 1024 may therefore compare unequal. This is a real correctness issue if the intended comparison is numeric equality; equals() or primitive comparison should be used.",
+          "run": 2,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 2238,
+            "output_tokens": 342,
+            "reasoning_tokens": 156,
+            "cached_input_tokens": 2235
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.541
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.99,
+          "developer_explanation": "The expression compares the identity of two Integer objects rather than their numeric values. Because values such as 1024 may be represented by distinct objects, the result can depend on boxing and caching behavior; use num1.equals(num2) or compare primitive int values instead.",
+          "is_true_positive": true,
+          "issue_signature": "wrapper objects compared by reference",
+          "reasoning": "Both variables are Integer references, and the flagged expression uses ==, which tests object identity rather than the wrapped numeric value. The two occurrences of 1024 can be distinct boxed objects, so the result is not a reliable value comparison; equals() or unboxing should be used. This is therefore a real correctness issue, assuming the apparent purpose is to compare the numbers.",
+          "run": 3,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 2238,
+            "output_tokens": 418,
+            "reasoning_tokens": 240,
+            "cached_input_tokens": 2235
+          },
+          "stop_reason": "stop",
+          "latency_s": 6.75
+        }
+      ]
+    },
+    {
+      "finding_id": 3,
+      "type": "BC_IMPOSSIBLE_CAST",
+      "sourcefile": "NumberReader.java",
+      "start_line": "6",
+      "message": "Impossible cast",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 1.0,
+          "developer_explanation": "The object is initialized with a String value, so casting it to Integer always throws ClassCastException before the value can be printed. Parse the string as an integer, for example with Integer.valueOf, instead of using a type cast.",
+          "is_true_positive": true,
+          "issue_signature": "impossible object type cast",
+          "reasoning": "The variable is assigned the String value \"10\", and the code then casts that same object to Integer. A Java cast does not convert a String into an Integer, so this statement always throws ClassCastException. The warning therefore identifies a real correctness defect.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 2176,
+            "output_tokens": 201,
+            "reasoning_tokens": 52,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 4.09
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 1.0,
+          "developer_explanation": "The object is initialized with the String value \"10\", so casting it to Integer always throws ClassCastException before the value can be printed. Parse the string with Integer.valueOf(obj.toString()) or store an actual Integer instead.",
+          "is_true_positive": true,
+          "issue_signature": "impossible object type cast",
+          "reasoning": "The variable is assigned the String literal \"10\", so its runtime value cannot be cast to Integer. The cast on line 6 therefore always throws ClassCastException, making this a genuine correctness defect.",
+          "run": 2,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 2176,
+            "output_tokens": 188,
+            "reasoning_tokens": 51,
+            "cached_input_tokens": 2173
+          },
+          "stop_reason": "stop",
+          "latency_s": 2.249
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 1.0,
+          "developer_explanation": "The object is created as a String containing \"10\", so casting it to Integer throws ClassCastException before anything is printed. Convert the text explicitly with Integer.parseInt((String) obj), or store an actual Integer instead.",
+          "is_true_positive": true,
+          "issue_signature": "impossible cast between incompatible types",
+          "reasoning": "The variable is initialized with the String object \"10\", whose runtime type is not Integer. Therefore, the cast to Integer always throws ClassCastException before println can execute, making this a genuine correctness defect.",
+          "run": 3,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 2176,
+            "output_tokens": 234,
+            "reasoning_tokens": 96,
+            "cached_input_tokens": 2173
+          },
+          "stop_reason": "stop",
+          "latency_s": 2.963
+        }
+      ]
+    },
+    {
+      "finding_id": 4,
+      "type": "ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD",
+      "sourcefile": "PersonProfile.java",
+      "start_line": "8",
+      "message": "Write to static field from instance method",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.99,
+          "developer_explanation": "The setter stores each instance's name in one shared static field, so setting one object overwrites the value observed through every other object. Make the field an instance field, such as `private String name`, unless shared global state is explicitly intended and all access is synchronized and designed around that sharing.",
+          "is_true_positive": true,
+          "issue_signature": "instance method writes shared static state",
+          "reasoning": "The `setName` instance method writes to the class-wide static field `name`, so all `PersonProfile` instances share and overwrite the same value. In the shown `main` method, setting `person2` to `Kate` causes both getters to return `Kate`, demonstrating incorrect per-instance behavior. This is therefore a real correctness and design issue rather than merely a stylistic pattern.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 2281,
+            "output_tokens": 259,
+            "reasoning_tokens": 69,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 4.527
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.99,
+          "developer_explanation": "The setter writes to one shared static field, so setting the second profile overwrites the value observed through the first profile; this produces `Kate` for both objects. Make `name` an instance field, or make the entire API explicitly static if a single shared name is actually intended.",
+          "is_true_positive": true,
+          "issue_signature": "instance method writes shared static state",
+          "reasoning": "The code declares `name` as static while `setName` is an instance method, so every `PersonProfile` object writes the same shared value. In the shown `main`, `person2.setName(\"Kate\")` overwrites the value set through `person1`, and both getters therefore return `Kate`. This is a real correctness and design problem for per-person profile state.",
+          "run": 2,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 2281,
+            "output_tokens": 288,
+            "reasoning_tokens": 101,
+            "cached_input_tokens": 2278
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.163
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.99,
+          "developer_explanation": "The name field is static, so every PersonProfile instance shares the same value; setting person2's name overwrites person1's name, and both getters print \"Kate\". Make the field an instance field by removing static, unless a single global name is explicitly intended, in which case the accessor methods should also reflect that design.",
+          "is_true_positive": true,
+          "issue_signature": "instance method writes shared static state",
+          "reasoning": "The shown code declares name as static while setName and getName are instance methods, so all PersonProfile objects share one mutable name. In the demonstrated calls, person2.setName(\"Kate\") overwrites the value previously assigned through person1, causing both getters to return \"Kate\" rather than maintaining separate profiles. This is a real correctness issue for per-instance profile data, in addition to being difficult to reason about with multiple instances.",
+          "run": 3,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 2281,
+            "output_tokens": 292,
+            "reasoning_tokens": 86,
+            "cached_input_tokens": 2278
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.235
+        }
+      ]
+    },
+    {
+      "finding_id": 5,
+      "type": "EQ_COMPARETO_USE_OBJECT_EQUALS",
+      "sourcefile": "PersonRanking.java",
+      "start_line": "19",
+      "message": "Class defines compareTo(...) and uses Object.equals()",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.99,
+          "developer_explanation": "The class inherits identity-based equals while compareTo never returns zero, including when comparing an object with itself; it also returns the same negative result for two different ages in either direction. Implement compareTo using Integer.compare(age, obj.age), and define equals and hashCode if age is the intended identity, or document and deliberately handle a natural ordering inconsistent with equality.",
+          "is_true_positive": true,
+          "issue_signature": "inconsistent Comparable and equals semantics",
+          "reasoning": "Person implements Comparable but inherits Object.equals, and its compareTo method always returns either 1 or -1, never zero, even for the same object. Therefore compareTo(x, x) is nonzero while x.equals(x) is true, violating the Comparable contract, and comparisons of distinct objects with equal ages are also ordered incorrectly. The warning identifies a real correctness issue, although the broken compareTo implementation is an additional defect.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 2402,
+            "output_tokens": 453,
+            "reasoning_tokens": 243,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 6.219
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.99,
+          "developer_explanation": "The comparison method returns -1 whenever the ages are equal, so even an object compared with itself does not return zero. Implement comparison so equal ages return 0, and override equals and hashCode if age-based identity is intended; otherwise explicitly document the inconsistent natural ordering.",
+          "is_true_positive": true,
+          "issue_signature": "inconsistent Comparable and equals contract",
+          "reasoning": "The class inherits identity-based Object.equals(), while compareTo returns -1 whenever the two ages are equal, including when an object is compared with itself. Thus compareTo(x) == 0 does not correspond to equals(x), and the comparison method also violates the basic Comparable reflexivity expectation. The warning therefore identifies a real correctness issue, although the comparison implementation itself is the more immediate defect.",
+          "run": 2,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 2402,
+            "output_tokens": 462,
+            "reasoning_tokens": 278,
+            "cached_input_tokens": 2399
+          },
+          "stop_reason": "stop",
+          "latency_s": 4.863
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.99,
+          "developer_explanation": "The comparison method never returns zero, even when two instances have the same age, and it also returns a negative value when an instance is compared with itself. This violates the Comparable contract and makes ordering-based collections behave incorrectly; return zero for equal ranking values and define equals consistently, or explicitly document and handle an ordering inconsistent with equality.",
+          "is_true_positive": true,
+          "issue_signature": "inconsistent compareTo and equals implementations",
+          "reasoning": "The shown class inherits identity-based Object.equals(), while its compareTo method returns -1 whenever age is not greater, including when the ages are equal or the object is compared with itself. Thus compareTo does not provide the required zero result for equivalent values and is inconsistent with equals, creating a real ordering correctness problem. The warning is therefore a true positive.",
+          "run": 3,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 2402,
+            "output_tokens": 348,
+            "reasoning_tokens": 158,
+            "cached_input_tokens": 2399
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.568
+        }
+      ]
+    },
+    {
+      "finding_id": 6,
+      "type": "HE_EQUALS_USE_HASHCODE",
+      "sourcefile": "PersonRegistry.java",
+      "start_line": "22",
+      "message": "Class defines equals() and uses Object.hashCode()",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.99,
+          "developer_explanation": "The Person class overrides equals but inherits Object.hashCode, so two distinct objects that compare equal can produce different hash codes and behave incorrectly in hash-based collections. Add a hashCode implementation consistent with the equality fields; also review the apparent name.equals(name) typo separately.",
+          "is_true_positive": true,
+          "issue_signature": "equals without corresponding hashCode",
+          "reasoning": "The shown Person class overrides equals but does not override hashCode, so it inherits Object's identity-based implementation. Distinct Person objects that compare equal can therefore have different hash codes, violating the equals/hashCode contract and causing incorrect behavior in hash-based collections. The warning is valid even though this complete snippet does not currently use a hash-based collection.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 2476,
+            "output_tokens": 473,
+            "reasoning_tokens": 300,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 6.456
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.99,
+          "developer_explanation": "The class overrides equals but inherits Object.hashCode, so two distinct objects that compare equal can produce different hash codes and behave incorrectly in hash-based collections. Implement hashCode using the same equality fields, and correct the comparison to compare this.name with the other person's name rather than name with itself.",
+          "is_true_positive": true,
+          "issue_signature": "equals without consistent hashCode",
+          "reasoning": "The shown Person class overrides equals but does not override hashCode, so it inherits identity-based Object.hashCode. Its equals method can report distinct instances as equal, meaning equal objects can have different hash codes and violate the equals/hashCode contract. This is a real correctness issue even though the method also contains a separate name-comparison bug.",
+          "run": 2,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 2476,
+            "output_tokens": 321,
+            "reasoning_tokens": 145,
+            "cached_input_tokens": 2473
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.386
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.99,
+          "developer_explanation": "The class overrides equals but inherits Object.hashCode, so two distinct objects that compare equal may produce different hash codes and behave incorrectly in hash-based collections. Implement hashCode from the same fields used by equals, and also correct the comparison to use the other object's name rather than comparing the field to itself.",
+          "is_true_positive": true,
+          "issue_signature": "equals without compatible hashCode",
+          "reasoning": "The shown Person class overrides equals but does not override hashCode, so it inherits Object's identity-based implementation. Distinct Person instances can compare equal while having different hash codes, violating the equals/hashCode contract even though the current main method does not use a hash-based collection. The equals implementation also contains a separate name comparison defect, but that does not invalidate this warning.",
+          "run": 3,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 2476,
+            "output_tokens": 344,
+            "reasoning_tokens": 159,
+            "cached_input_tokens": 2473
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.935
+        }
+      ]
+    },
+    {
+      "finding_id": 7,
+      "type": "SA_FIELD_SELF_COMPARISON",
+      "sourcefile": "PersonRegistry.java",
+      "start_line": "29",
+      "message": "Self comparison of field with itself",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 1.0,
+          "developer_explanation": "The equality check compares the current object's name to itself, so it is always true for a non-null name and never checks the other person's name. Change it to compare against the other object's field, such as name.equals(person.name), while also handling null names if they are permitted.",
+          "is_true_positive": true,
+          "issue_signature": "self-comparison in equality logic",
+          "reasoning": "The shown code evaluates `name.equals(name)`, comparing the same field to itself rather than comparing it with `person.name`. Consequently, two persons with the same age but different names are considered equal, so the warning identifies a real correctness bug. The category is CORRECTNESS because the equals method can return an incorrect result.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 2359,
+            "output_tokens": 237,
+            "reasoning_tokens": 64,
+            "cached_input_tokens": 0
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.9
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 1.0,
+          "developer_explanation": "The equality check compares the current object's name to itself rather than to the other object's name. Change it to compare against person.name, preferably using a null-safe comparison if names may be null, so persons with different names are not considered equal.",
+          "is_true_positive": true,
+          "issue_signature": "self-comparison in equality implementation",
+          "reasoning": "The return statement evaluates name.equals(name), so the field is compared with itself instead of with person.name. This makes the name condition always true for non-null names and causes equality to depend only on age, which is a real correctness error. The warning is therefore a true positive.",
+          "run": 2,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 2359,
+            "output_tokens": 226,
+            "reasoning_tokens": 70,
+            "cached_input_tokens": 2356
+          },
+          "stop_reason": "stop",
+          "latency_s": 2.841
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 1.0,
+          "developer_explanation": "The equality method compares the current object's name to itself, so any non-null name always matches regardless of the other person's name. Compare against person.name instead, preferably with a null-safe comparison such as Objects.equals(name, person.name).",
+          "is_true_positive": true,
+          "issue_signature": "field compared with itself",
+          "reasoning": "The return expression explicitly evaluates name.equals(name), comparing the field on the current object with itself rather than with person.name. Consequently, differing names are ignored and the equality result depends only on age for non-null names; the self-comparison warning identifies a real correctness bug.",
+          "run": 3,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 2359,
+            "output_tokens": 213,
+            "reasoning_tokens": 62,
+            "cached_input_tokens": 2356
+          },
+          "stop_reason": "stop",
+          "latency_s": 2.728
+        }
+      ]
+    },
+    {
+      "finding_id": 8,
+      "type": "UWF_UNWRITTEN_FIELD",
+      "sourcefile": "ProfileReader.java",
+      "start_line": "12",
+      "message": "Unwritten field",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 1.0,
+          "developer_explanation": "The constructor accepts a name but never assigns it to the name field, so the field remains null. Calling getName().length() therefore throws a NullPointerException; assign the constructor parameter to the field, for example with this.name = name.",
+          "is_true_positive": true,
+          "issue_signature": "field never initialized",
+          "reasoning": "The Person constructor does not write the name parameter into the name field, so every read of that field returns null. The shown main method dereferences that null value with length(), making the reported unwritten-field issue a real correctness bug.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 2225,
+            "output_tokens": 211,
+            "reasoning_tokens": 66,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 4.2
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 1.0,
+          "developer_explanation": "The constructor accepts a name but never assigns it to the field, so the field remains null. Calling getName().length() therefore throws a NullPointerException; assign the constructor parameter to the field, for example with this.name = name.",
+          "is_true_positive": true,
+          "issue_signature": "uninitialized object field",
+          "reasoning": "The Person constructor never writes the name field, so it remains null because Java initializes unwritten reference fields to their default value. The getter returns that null value, and the shown main method then calls length() on it, causing a NullPointerException. This is a real correctness defect, not merely an unused-field concern.",
+          "run": 2,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 2225,
+            "output_tokens": 226,
+            "reasoning_tokens": 64,
+            "cached_input_tokens": 2222
+          },
+          "stop_reason": "stop",
+          "latency_s": 2.584
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 1.0,
+          "developer_explanation": "The constructor accepts a name but never assigns it to the field, so the field remains null. Calling getName().length() therefore throws a NullPointerException; assign the parameter to the field, for example with this.name = name.",
+          "is_true_positive": true,
+          "issue_signature": "uninitialized field read",
+          "reasoning": "The constructor never writes the provided name parameter into the name field, so the field retains its default null value. getName() returns that null value, and the shown main method then dereferences it with length(), causing a NullPointerException. This is a real correctness defect, not merely an unused-field observation.",
+          "run": 3,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 2225,
+            "output_tokens": 223,
+            "reasoning_tokens": 64,
+            "cached_input_tokens": 2222
+          },
+          "stop_reason": "stop",
+          "latency_s": 2.402
+        }
+      ]
+    },
+    {
+      "finding_id": 9,
+      "type": "UC_USELESS_CONDITION",
+      "sourcefile": "RangeValidator.java",
+      "start_line": "11",
+      "message": "Condition has no effect",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.99,
+          "developer_explanation": "The condition requires the same integer to be both less than 0 and greater than 255, which is impossible, so the exception is never thrown. If the intent is to reject values outside the inclusive range 0 through 255, use `value < 0 || value > 255`.",
+          "is_true_positive": true,
+          "issue_signature": "impossible compound condition",
+          "reasoning": "The shown condition requires `value` to be simultaneously less than 0 and greater than 255, so it always evaluates to false for every integer. Consequently, `validate` never rejects out-of-range values such as -1 or 256, making this a real correctness issue rather than merely a stylistic concern.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 2239,
+            "output_tokens": 279,
+            "reasoning_tokens": 106,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 4.429
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 1.0,
+          "developer_explanation": "The two comparisons are joined with &&, so no integer can satisfy both value < 0 and value > 255. As a result, out-of-range values are never rejected; use || if the intent is to reject values below zero or above 255.",
+          "is_true_positive": true,
+          "issue_signature": "impossible conjunction in range check",
+          "reasoning": "The condition requires the same integer to be both less than 0 and greater than 255, which is impossible. Therefore the exception branch is unreachable and the validator accepts every value, making the warning a true positive. The likely corrective condition is value < 0 || value > 255, though the warning itself is valid independently of that proposed rewrite.",
+          "run": 2,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 2239,
+            "output_tokens": 295,
+            "reasoning_tokens": 121,
+            "cached_input_tokens": 2236
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.172
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 1.0,
+          "developer_explanation": "The range check requires the same integer to be both below zero and above 255, which is impossible, so the exception is never thrown. Use `value < 0 || value > 255` to reject values outside the intended inclusive range.",
+          "is_true_positive": true,
+          "issue_signature": "impossible range validation condition",
+          "reasoning": "The shown condition requires `value` to be less than 0 and greater than 255 simultaneously, so it always evaluates to false for every integer. Consequently, `validate` never rejects out-of-range inputs such as -1 or 256, making the warning a real correctness issue rather than merely a stylistic concern.",
+          "run": 3,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 2239,
+            "output_tokens": 234,
+            "reasoning_tokens": 70,
+            "cached_input_tokens": 0
+          },
+          "stop_reason": "stop",
+          "latency_s": 2.847
+        }
+      ]
+    },
+    {
+      "finding_id": 10,
+      "type": "RV_RETURN_VALUE_IGNORED",
+      "sourcefile": "TextTrimmer.java",
+      "start_line": "6",
+      "message": "Method ignores return value",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.99,
+          "developer_explanation": "The call to substring returns a new String, but that result is discarded because Strings are immutable. The subsequent print therefore outputs the original \"abcdef\"; assign the result back to s or otherwise use it if the substring is intended.",
+          "is_true_positive": true,
+          "issue_signature": "ignored String transformation result",
+          "reasoning": "The code calls s.substring(3) and ignores the returned String, then prints the unchanged variable s. Because String is immutable, substring does not modify s, so the likely intended transformation has no effect. This is a genuine unchecked-return-value and resulting correctness issue, although the intended output is inferred from the otherwise unused call.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 2243,
+            "output_tokens": 290,
+            "reasoning_tokens": 129,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 4.902
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.99,
+          "developer_explanation": "The call computes a new substring but discards it because String is immutable, so the subsequent output remains \"abcdef\" rather than the substring starting at index 3. Assign the result back to a variable or use it directly, such as `System.out.println(s.substring(3));`.",
+          "is_true_positive": true,
+          "issue_signature": "ignored immutable-string transformation result",
+          "reasoning": "The code calls `s.substring(3)` and ignores the new String it returns, while `s` remains unchanged and is then printed. Because String is immutable, the call has no effect on the program's observable result, making the unchecked return value a real correctness issue. The returned substring should be assigned or consumed directly.",
+          "run": 2,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 2243,
+            "output_tokens": 399,
+            "reasoning_tokens": 225,
+            "cached_input_tokens": 2240
+          },
+          "stop_reason": "stop",
+          "latency_s": 4.494
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.99,
+          "developer_explanation": "The result of substring is discarded, so the immutable string s remains \"abcdef\" and the following print statement does not print the substring. Assign the result back to s or use it directly, for example, s = s.substring(3).",
+          "is_true_positive": true,
+          "issue_signature": "ignored return value from immutable string operation",
+          "reasoning": "The code calls s.substring(3) and ignores the returned String, while String is immutable and therefore s is unchanged. The subsequent println prints the original \"abcdef\", so the call has no observable effect and likely does not perform the intended trimming or truncation. This is a real correctness issue caused by an unchecked return value.",
+          "run": 3,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 2243,
+            "output_tokens": 264,
+            "reasoning_tokens": 97,
+            "cached_input_tokens": 2240
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.06
+        }
+      ]
+    },
+    {
+      "finding_id": 11,
+      "type": "RV_EXCEPTION_NOT_THROWN",
+      "sourcefile": "ValueProcessor.java",
+      "start_line": "11",
+      "message": "Exception created and dropped rather than thrown",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 1.0,
+          "developer_explanation": "The negative-value branch constructs an IllegalArgumentException but never throws it, so execution continues and prints that the value is positive or zero. Replace the expression with `throw new IllegalArgumentException(\"Value is negative\")` if negative values should be rejected.",
+          "is_true_positive": true,
+          "issue_signature": "exception object created without being thrown",
+          "reasoning": "The negative-value branch creates an IllegalArgumentException and immediately discards it instead of throwing it. Consequently, process continues to print the nonnegative-value message even when called with -1, so the warning identifies a real correctness defect.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 2210,
+            "output_tokens": 194,
+            "reasoning_tokens": 46,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.792
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 1.0,
+          "developer_explanation": "The negative-value branch constructs an IllegalArgumentException but neither throws nor otherwise uses it, so execution continues and prints that the value is valid. Replace the construction with `throw new IllegalArgumentException(\"Value is negative\")` if negative values should be rejected.",
+          "is_true_positive": true,
+          "issue_signature": "exception object created without being thrown",
+          "reasoning": "The negative-value branch creates an IllegalArgumentException and immediately discards it without throwing it or otherwise using it. Because execution then reaches the message claiming the value is positive or zero, the code does not enforce the apparent validation condition. This is a real correctness issue.",
+          "run": 2,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 2210,
+            "output_tokens": 201,
+            "reasoning_tokens": 45,
+            "cached_input_tokens": 2207
+          },
+          "stop_reason": "stop",
+          "latency_s": 2.647
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 1.0,
+          "developer_explanation": "The code constructs an IllegalArgumentException when the value is negative but immediately discards it, so processing continues and prints that the value is valid. Throw the exception, such as with `throw new IllegalArgumentException(\"Value is negative\")`, to enforce the intended validation.",
+          "is_true_positive": true,
+          "issue_signature": "created exception is not thrown",
+          "reasoning": "The negative-value branch creates an IllegalArgumentException but neither throws it nor otherwise uses it. Consequently, `process(-1)` continues to the print statement instead of rejecting the invalid value, so the warning identifies a real correctness issue.",
+          "run": 3,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 2210,
+            "output_tokens": 191,
+            "reasoning_tokens": 40,
+            "cached_input_tokens": 2207
+          },
+          "stop_reason": "stop",
+          "latency_s": 2.358
+        }
+      ]
+    }
+  ]
+}

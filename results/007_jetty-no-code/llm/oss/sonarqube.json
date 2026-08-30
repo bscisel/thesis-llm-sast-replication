@@ -1,0 +1,4106 @@
+{
+  "model": "openai/gpt-oss-120b",
+  "tool": "sonarqube",
+  "num_runs": 1,
+  "runs_per_invocation": 1,
+  "source_root": "jetty.project",
+  "call_parameters": {
+    "temperature": null,
+    "concurrency": 10,
+    "response_format": "json_schema",
+    "max_tokens": 8192,
+    "max_retries": 6,
+    "base_url": "https://openrouter.ai/api/v1",
+    "provider": "deepinfra/bf16",
+    "allow_fallbacks": false,
+    "require_parameters": true,
+    "cache_control": false
+  },
+  "system_prompt_variant": "jetty",
+  "system_prompt_sha256": "382740d7fcf34c9c",
+  "user_prompt_sha256": "71523495aedd174c",
+  "timestamp": "2026-08-16T16:58:53.227889+00:00",
+  "updated_at": "2026-08-16T16:58:53.227889+00:00",
+  "findings": [
+    {
+      "finding_id": 0,
+      "type": "java:S2095",
+      "sourcefile": "HttpProxy.java",
+      "start_line": "270",
+      "message": "Use try-with-resources or close this \"Connection\" in a \"finally\" clause.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly says a Connection is not closed, which indicates a potential resource leak.",
+          "is_true_positive": true,
+          "confidence": 0.7,
+          "category": "CORRECTNESS",
+          "issue_signature": "unclosed connection resource",
+          "developer_explanation": "The code opens a Connection but never closes it, which can exhaust the connection pool and cause failures. Close the Connection in a finally block or use try-with-resources to ensure it is always released.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1946,
+            "output_tokens": 359,
+            "reasoning_tokens": 291,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000133032
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1159,
+          "latency_s": 5.288
+        }
+      ],
+      "original_finding_index": 0
+    },
+    {
+      "finding_id": 1,
+      "type": "java:S2142",
+      "sourcefile": "InputStreamResponseListener.java",
+      "start_line": "354",
+      "message": "Either re-interrupt this method or rethrow the \"InterruptedException\" that can be caught here.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that an InterruptedException is caught but not re‑thrown or re‑interrupted, which is exactly what rule S2142 checks for.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "CONCURRENCY",
+          "issue_signature": "swallowed InterruptedException without re-interrupt",
+          "developer_explanation": "The catch block for InterruptedException discards the interrupt status, which can prevent the thread from being correctly signaled to stop. Restore the interrupt flag with Thread.currentThread().interrupt() or rethrow the exception so callers can handle it. This ensures proper thread‑interruption handling.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1946,
+            "output_tokens": 422,
+            "reasoning_tokens": 349,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000143742
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1386,
+          "latency_s": 6.06
+        }
+      ],
+      "original_finding_index": 1
+    },
+    {
+      "finding_id": 2,
+      "type": "java:S2095",
+      "sourcefile": "ProxyProtocolClientConnectionFactory.java",
+      "start_line": "543",
+      "message": "Use try-with-resources or close this \"Connection\" in a \"finally\" clause.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly states that a Connection is opened without being closed, which SonarQube flags as a potential resource leak. Without evidence that the Connection is managed elsewhere, this likely represents a real leak.",
+          "is_true_positive": true,
+          "confidence": 0.73,
+          "category": "CORRECTNESS",
+          "issue_signature": "unclosed database connection",
+          "developer_explanation": "A Connection object is created but never closed, which can exhaust the connection pool and cause failures at runtime. Ensure the Connection is closed by using a try-with-resources block or by calling close() in a finally clause. This will release the resource promptly and prevent denial‑of‑service issues.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1949,
+            "output_tokens": 526,
+            "reasoning_tokens": 440,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000161533
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1743,
+          "latency_s": 7.376
+        }
+      ],
+      "original_finding_index": 2
+    },
+    {
+      "finding_id": 3,
+      "type": "java:S2095",
+      "sourcefile": "Socks4Proxy.java",
+      "start_line": "232",
+      "message": "Use try-with-resources or close this \"Connection\" in a \"finally\" clause.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly says a Connection is opened without being closed, which indicates a potential resource leak. Since SonarQube's rule S2095 flags such patterns, it is likely a real issue unless the code closes the Connection elsewhere.",
+          "is_true_positive": true,
+          "confidence": 0.7,
+          "category": "CORRECTNESS",
+          "issue_signature": "unclosed database connection",
+          "developer_explanation": "The code creates a Connection but does not ensure it is closed, which can exhaust database resources and cause failures. Close the Connection in a finally block or use try-with-resources to guarantee it is released. This will prevent resource leaks and improve application stability.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1947,
+            "output_tokens": 426,
+            "reasoning_tokens": 319,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000144459
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1274,
+          "latency_s": 5.788
+        }
+      ],
+      "original_finding_index": 3
+    },
+    {
+      "finding_id": 4,
+      "type": "java:S2095",
+      "sourcefile": "Socks5Proxy.java",
+      "start_line": "400",
+      "message": "Use try-with-resources or close this \"Connection\" in a \"finally\" clause.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly states that a Connection is opened without being closed, which SonarQube flags as a potential resource leak. Without evidence that the Connection is managed elsewhere, this likely indicates a real problem.",
+          "is_true_positive": true,
+          "confidence": 0.7,
+          "category": "CORRECTNESS",
+          "issue_signature": "unclosed database connection",
+          "developer_explanation": "The code creates a Connection but does not ensure it is closed, which can exhaust database resources and cause failures. Close the Connection in a finally block or use try-with-resources to guarantee it is released. This will prevent resource leaks and improve reliability.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1947,
+            "output_tokens": 444,
+            "reasoning_tokens": 342,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000147519
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1359,
+          "latency_s": 6.358
+        }
+      ],
+      "original_finding_index": 4
+    },
+    {
+      "finding_id": 5,
+      "type": "java:S2142",
+      "sourcefile": "StandardDeployer.java",
+      "start_line": "153",
+      "message": "Either re-interrupt this method or rethrow the \"InterruptedException\" that can be caught here.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that an InterruptedException is caught but neither re‑interrupts the thread nor rethrows the exception, which is exactly what the rule checks for. This pattern, if present, leads to lost interrupt status and incorrect thread behavior. Therefore the claim is likely correct.",
+          "is_true_positive": true,
+          "confidence": 0.86,
+          "category": "CONCURRENCY",
+          "issue_signature": "caught interrupted exception without rethrow",
+          "developer_explanation": "The code catches InterruptedException and then discards it, which clears the thread's interrupt flag. This can cause the thread to ignore cancellation requests and behave incorrectly. Restore the interrupt status with Thread.currentThread().interrupt() or rethrow the exception to propagate it.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1945,
+            "output_tokens": 468,
+            "reasoning_tokens": 386,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000151525
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1534,
+          "latency_s": 6.696
+        }
+      ],
+      "original_finding_index": 15
+    },
+    {
+      "finding_id": 6,
+      "type": "java:S6218",
+      "sourcefile": "ClientParser.java",
+      "start_line": "52",
+      "message": "Override equals, hashCode and toString to consider array's content in the method",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning claims the class contains an array field but does not override equals, hashCode, and toString to use the array's contents, which Sonar flags as a potential bug. This claim is likely correct because the rule triggers on that pattern, indicating a real correctness issue.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "CORRECTNESS",
+          "issue_signature": "missing equals and hashCode for array field",
+          "developer_explanation": "The class relies on the default implementations of equals, hashCode, and toString, which compare array references rather than their contents. This can lead to incorrect equality checks and wrong behavior in collections. Override these methods to compare the actual array elements.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1933,
+            "output_tokens": 783,
+            "reasoning_tokens": 734,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000204631
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2927,
+          "latency_s": 10.411
+        }
+      ],
+      "original_finding_index": 17
+    },
+    {
+      "finding_id": 7,
+      "type": "java:S1201",
+      "sourcefile": "HttpStatus.java",
+      "start_line": "196",
+      "message": "Either override Object.equals(Object), or rename the method to prevent any confusion.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that a method named equals does not override Object.equals, which indicates a naming/signature mismatch. This is a real problem because such a method will not be used by Java's equality mechanisms and can cause confusion or bugs.",
+          "is_true_positive": true,
+          "confidence": 0.93,
+          "category": "CORRECTNESS",
+          "issue_signature": "method named equals with wrong signature",
+          "developer_explanation": "You have defined a method called equals that does not match the Object.equals(Object) signature, so it does not override the standard equality method. This can lead to unexpected behavior when objects are compared or used in collections. Rename the method or change its signature to correctly override Object.equals.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1930,
+            "output_tokens": 468,
+            "reasoning_tokens": 384,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00015097
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1522,
+          "latency_s": 6.422
+        }
+      ],
+      "original_finding_index": 24
+    },
+    {
+      "finding_id": 8,
+      "type": "java:S2259",
+      "sourcefile": "HttpTester.java",
+      "start_line": "493",
+      "message": "A \"NullPointerException\" could be thrown; \"header\" is nullable here.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly states that a NullPointerException could be thrown because the variable \"header\" is nullable at this point, which is the basis for the decision.",
+          "is_true_positive": true,
+          "confidence": 0.75,
+          "category": "CORRECTNESS",
+          "issue_signature": "possible null pointer dereference",
+          "developer_explanation": "The code may dereference the variable \"header\" without first ensuring it is non‑null, which can cause a NullPointerException at runtime. Add a null check or guarantee that \"header\" is never null before it is used to prevent crashes.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1939,
+            "output_tokens": 439,
+            "reasoning_tokens": 346,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000146373
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1371,
+          "latency_s": 7.133
+        }
+      ],
+      "original_finding_index": 25
+    },
+    {
+      "finding_id": 9,
+      "type": "java:S2259",
+      "sourcefile": "RFC6265CookieParser.java",
+      "start_line": "377",
+      "message": "A \"NullPointerException\" could be thrown; \"attributeName\" is nullable here.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly says that the variable attributeName may be null when it is dereferenced, which indicates a potential NullPointerException. SonarQube's data‑flow analysis usually flags real null‑ability issues, so this is likely a genuine bug.",
+          "is_true_positive": true,
+          "confidence": 0.73,
+          "category": "CORRECTNESS",
+          "issue_signature": "nullable variable dereferenced without null check",
+          "developer_explanation": "The code uses attributeName without verifying that it is non‑null, which can cause a NullPointerException at runtime. Add an explicit null check or ensure attributeName is never null before it is accessed to prevent the crash.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1943,
+            "output_tokens": 482,
+            "reasoning_tokens": 390,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000153831
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1556,
+          "latency_s": 6.972
+        }
+      ],
+      "original_finding_index": 34
+    },
+    {
+      "finding_id": 10,
+      "type": "java:S2259",
+      "sourcefile": "RFC6265SetCookieParser.java",
+      "start_line": "185",
+      "message": "\"NullPointerException\" will be thrown when invoking method \"setAttribute()\".",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly states that invoking setAttribute() may throw a NullPointerException, which is a claim about a possible runtime error. Based on SonarQube's rule S2259, this pattern is usually a real null‑dereference risk unless the code guarantees non‑null, which we cannot see. Therefore the claim is likely correct.",
+          "is_true_positive": true,
+          "confidence": 0.65,
+          "category": "CORRECTNESS",
+          "issue_signature": "possible null dereference on method call",
+          "developer_explanation": "The object on which setAttribute() is called might be null at runtime, which would cause a NullPointerException and crash the program. Add a null check or ensure the object is properly initialized before the call to prevent the exception.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1942,
+            "output_tokens": 481,
+            "reasoning_tokens": 376,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000153624
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1494,
+          "latency_s": 6.654
+        }
+      ],
+      "original_finding_index": 40
+    },
+    {
+      "finding_id": 11,
+      "type": "java:S2095",
+      "sourcefile": "HTTP2Session.java",
+      "start_line": "2564",
+      "message": "Use try-with-resources or close this \"HTTP2Stream\" in a \"finally\" clause.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly states that an HTTP2Stream is opened without being closed, which SonarQube flags as a potential resource leak. Without evidence that the stream is closed elsewhere, the claim is likely correct. Therefore the alarm is probably a true positive.",
+          "is_true_positive": true,
+          "confidence": 0.73,
+          "category": "CORRECTNESS",
+          "issue_signature": "unclosed HTTP2Stream resource",
+          "developer_explanation": "The HTTP2Stream object is created but not closed, which can lead to resource exhaustion and possible denial of service. Ensure the stream is closed by using a try-with-resources block or adding a finally clause that calls its close() method. This will release the underlying resources promptly.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1951,
+            "output_tokens": 481,
+            "reasoning_tokens": 359,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000153957
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1426,
+          "latency_s": 7.05
+        }
+      ],
+      "original_finding_index": 45
+    },
+    {
+      "finding_id": 12,
+      "type": "java:S2095",
+      "sourcefile": "HTTP2CServerConnectionFactory.java",
+      "start_line": "78",
+      "message": "Use try-with-resources or close this \"Connection\" in a \"finally\" clause.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly states that a Connection is not closed and suggests using try-with-resources or a finally block, which indicates a potential resource leak.",
+          "is_true_positive": true,
+          "confidence": 0.7,
+          "category": "CORRECTNESS",
+          "issue_signature": "unclosed database connection",
+          "developer_explanation": "The code creates a Connection object but does not ensure it is closed, which can exhaust the connection pool and cause runtime failures. Wrap the Connection in a try-with-resources statement or close it in a finally block to guarantee proper release of the resource.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1950,
+            "output_tokens": 443,
+            "reasoning_tokens": 361,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00014746
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1435,
+          "latency_s": 5.738
+        }
+      ],
+      "original_finding_index": 49
+    },
+    {
+      "finding_id": 13,
+      "type": "java:S2583",
+      "sourcefile": "EncodableEntry.java",
+      "start_line": "145",
+      "message": "Change this condition so that it does not always evaluate to \"false\"",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly states that a condition in the code always evaluates to false, which indicates dead or unreachable code. Such a condition is typically a bug because the associated branch will never execute.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "CORRECTNESS",
+          "issue_signature": "condition always false",
+          "developer_explanation": "The condition on line 145 is a constant false, so the code inside that branch can never run. This creates dead code and may hide logical errors. Update or remove the condition so that the intended branch can be reached.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1944,
+            "output_tokens": 333,
+            "reasoning_tokens": 240,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000128538
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 955,
+          "latency_s": 5.284
+        }
+      ],
+      "original_finding_index": 51
+    },
+    {
+      "finding_id": 14,
+      "type": "java:S2142",
+      "sourcefile": "ManagedSelector.java",
+      "start_line": "783",
+      "message": "Either re-interrupt this method or rethrow the \"InterruptedException\" that can be caught here.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning indicates that an InterruptedException is caught but neither re‑thrown nor the thread’s interrupt status is restored, which is exactly what the rule flags. This pattern typically leads to lost interrupt signals and incorrect thread behavior, so the alarm is likely valid. Therefore the issue should be addressed.",
+          "is_true_positive": true,
+          "confidence": 0.88,
+          "category": "CONCURRENCY",
+          "issue_signature": "ignored InterruptedException without re-interrupt",
+          "developer_explanation": "The catch block for InterruptedException is swallowing the exception and not restoring the interrupt flag. This can prevent the thread from responding to cancellation requests. Re‑throw the exception or call Thread.currentThread().interrupt() to preserve the interrupt status.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1944,
+            "output_tokens": 581,
+            "reasoning_tokens": 516,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000170698
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2045,
+          "latency_s": 8.85
+        }
+      ],
+      "original_finding_index": 61
+    },
+    {
+      "finding_id": 15,
+      "type": "java:S2095",
+      "sourcefile": "ConnectorServer.java",
+      "start_line": "309",
+      "message": "Use try-with-resources or close this \"ServerSocket\" in a \"finally\" clause.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly states that a ServerSocket is created without being closed in a finally block or try‑with‑resources, which indicates a potential resource leak. Without evidence that the socket is closed elsewhere, this claim is likely correct.",
+          "is_true_positive": true,
+          "confidence": 0.65,
+          "category": "CORRECTNESS",
+          "issue_signature": "unclosed ServerSocket resource",
+          "developer_explanation": "The ServerSocket opened at line 309 is not guaranteed to be closed, which can lead to resource exhaustion and eventual failure of the application. Ensure the socket is closed by using a try‑with‑resources statement or by calling close() in a finally block. This will release the underlying network resources reliably.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1947,
+            "output_tokens": 504,
+            "reasoning_tokens": 399,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000157719
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1592,
+          "latency_s": 7.596
+        }
+      ],
+      "original_finding_index": 69
+    },
+    {
+      "finding_id": 16,
+      "type": "java:S5164",
+      "sourcefile": "ContextFactory.java",
+      "start_line": "67",
+      "message": "Call \"remove()\" on \"__threadClassLoader\".",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly says a call to remove() on '__threadClassLoader' is missing, which indicates a potential class loader leak, so the claim is likely correct.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "CORRECTNESS",
+          "issue_signature": "threadlocal class loader not removed",
+          "developer_explanation": "The ThreadLocal that holds a class loader is never cleared, which can prevent the class loader from being garbage‑collected and cause a memory leak. Add a call to __threadClassLoader.remove() when the class loader is no longer needed to release the reference.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1927,
+            "output_tokens": 699,
+            "reasoning_tokens": 642,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000190129
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2549,
+          "latency_s": 10.291
+        }
+      ],
+      "original_finding_index": 71
+    },
+    {
+      "finding_id": 17,
+      "type": "java:S2119",
+      "sourcefile": "KeystoreGenerator.java",
+      "start_line": "59",
+      "message": "Save and re-use this \"Random\".",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly states that a new Random is created and should be saved and reused, which matches Sonar rule S2119 that flags unnecessary Random instantiation. This indicates a real inefficiency or potential predictability issue.",
+          "is_true_positive": true,
+          "confidence": 0.92,
+          "category": "PERFORMANCE",
+          "issue_signature": "recreating Random instead of reusing it",
+          "developer_explanation": "The code creates a new java.util.Random each time it is needed, which is wasteful and can lead to predictable sequences if created rapidly. Reuse a single Random instance (e.g., store it in a field) instead of instantiating it repeatedly. This improves performance and randomness quality.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1923,
+            "output_tokens": 524,
+            "reasoning_tokens": 441,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000160231
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1758,
+          "latency_s": 8.403
+        }
+      ],
+      "original_finding_index": 75
+    },
+    {
+      "finding_id": 18,
+      "type": "java:S2095",
+      "sourcefile": "AbstractForkedChild.java",
+      "start_line": "177",
+      "message": "Use try-with-resources or close this \"FileInputStream\" in a \"finally\" clause.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly states that a FileInputStream is opened without being closed, which indicates a potential resource leak. Without evidence that the stream is closed elsewhere, this claim is likely correct.",
+          "is_true_positive": true,
+          "confidence": 0.73,
+          "category": "CORRECTNESS",
+          "issue_signature": "unclosed FileInputStream resource",
+          "developer_explanation": "A FileInputStream is created at the indicated line but not closed, which can exhaust file descriptors and cause failures. Ensure the stream is closed by using a try-with-resources block or closing it in a finally clause. This will prevent resource leaks and improve application stability.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1950,
+            "output_tokens": 450,
+            "reasoning_tokens": 344,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00014865
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1369,
+          "latency_s": 5.903
+        }
+      ],
+      "original_finding_index": 76
+    },
+    {
+      "finding_id": 19,
+      "type": "java:S2259",
+      "sourcefile": "NamingEntryUtil.java",
+      "start_line": "98",
+      "message": "A \"NullPointerException\" could be thrown; \"scopeName\" is nullable here.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly states that a NullPointerException could be thrown because scopeName is nullable at this location. This claim points to a potential null dereference, which is a correctness issue, so the warning is likely valid.",
+          "is_true_positive": true,
+          "confidence": 0.7,
+          "category": "CORRECTNESS",
+          "issue_signature": "possible null dereference",
+          "developer_explanation": "The code may use the variable scopeName without checking whether it is null, which can cause a NullPointerException at runtime. Add a null check or ensure scopeName is never null before it is accessed to prevent the crash.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1941,
+            "output_tokens": 518,
+            "reasoning_tokens": 452,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000159877
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1805,
+          "latency_s": 8.469
+        }
+      ],
+      "original_finding_index": 84
+    },
+    {
+      "finding_id": 20,
+      "type": "java:S5164",
+      "sourcefile": "DefaultIdentityService.java",
+      "start_line": "56",
+      "message": "Use \"remove()\" instead of \"set(null)\".",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning claims that the code calls set(null) on a collection where remove() should be used, which SonarQube flags as a potential memory leak and performance issue. This pattern is generally a real problem because set(null) keeps the slot occupied and can waste memory, so the warning is likely correct.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "PERFORMANCE",
+          "issue_signature": "setting collection element to null instead of removing",
+          "developer_explanation": "The code replaces an element in a collection with null instead of actually removing it. This leaves an empty slot that still occupies space and can lead to unnecessary memory usage. Change the call to remove() so the element is properly deleted and the collection can shrink if appropriate.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1929,
+            "output_tokens": 499,
+            "reasoning_tokens": 384,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000156203
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1524,
+          "latency_s": 7.033
+        }
+      ],
+      "original_finding_index": 99
+    },
+    {
+      "finding_id": 21,
+      "type": "java:S2259",
+      "sourcefile": "MultiAuthenticator.java",
+      "start_line": "160",
+      "message": "A \"NullPointerException\" could be thrown; \"authenticator\" is nullable here.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly states that a NullPointerException could be thrown because the variable authenticator may be null at that point. This claim points to a potential null dereference, which is a correctness issue. Without seeing a preceding null‑check, the analysis is likely correct.",
+          "is_true_positive": true,
+          "confidence": 0.7,
+          "category": "CORRECTNESS",
+          "issue_signature": "possible null dereference",
+          "developer_explanation": "The code may dereference authenticator without guaranteeing it is non‑null, which can cause a NullPointerException at runtime. Add an explicit null check or ensure authenticator is always initialized before use to prevent the crash.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1940,
+            "output_tokens": 489,
+            "reasoning_tokens": 387,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00015491
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1542,
+          "latency_s": 6.869
+        }
+      ],
+      "original_finding_index": 100
+    },
+    {
+      "finding_id": 22,
+      "type": "java:S2445",
+      "sourcefile": "MultiAuthenticator.java",
+      "start_line": "372",
+      "message": "\"session\" is a method parameter, and should not be used for synchronization.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that a method parameter named \"session\" is used for synchronization, which SonarQube flags as unsafe because method parameters may be shared and not final. This claim matches the rule's intent that synchronizing on such objects can cause concurrency bugs.",
+          "is_true_positive": true,
+          "confidence": 0.88,
+          "category": "CONCURRENCY",
+          "issue_signature": "synchronization on method parameter",
+          "developer_explanation": "Synchronizing on the \"session\" parameter can lead to unexpected lock contention or deadlocks because the object may be shared with other threads. Use a dedicated private lock object or make the parameter final and ensure it is not exposed elsewhere. Replace the synchronized block with a lock on a private final field.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1938,
+            "output_tokens": 445,
+            "reasoning_tokens": 332,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000147356
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1323,
+          "latency_s": 5.766
+        }
+      ],
+      "original_finding_index": 101
+    },
+    {
+      "finding_id": 23,
+      "type": "java:S2142",
+      "sourcefile": "AbstractConnector.java",
+      "start_line": "706",
+      "message": "Either re-interrupt this method or rethrow the \"InterruptedException\" that can be caught here.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that an InterruptedException is caught without re‑interrupting or rethrowing, which the rule flags as a problem. This pattern typically indicates a real concurrency bug because the thread's interrupt status is lost. Therefore the claim is likely correct.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "CONCURRENCY",
+          "issue_signature": "InterruptedException caught without rethrow or restore",
+          "developer_explanation": "The catch block swallows the InterruptedException, losing the thread's interrupt status. This can prevent other code from correctly detecting that the thread was interrupted, leading to incorrect concurrent behavior. Modify the catch to either rethrow the exception or call Thread.currentThread().interrupt() before returning.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1944,
+            "output_tokens": 481,
+            "reasoning_tokens": 376,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000153698
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1495,
+          "latency_s": 6.742
+        }
+      ],
+      "original_finding_index": 107
+    },
+    {
+      "finding_id": 24,
+      "type": "java:S2142",
+      "sourcefile": "LocalConnector.java",
+      "start_line": "286",
+      "message": "Either re-interrupt this method or rethrow the \"InterruptedException\" that can be caught here.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that an InterruptedException is caught without being re‑interrupted or rethrown, which is exactly what the rule flags as a problem.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "CONCURRENCY",
+          "issue_signature": "swallowed InterruptedException",
+          "developer_explanation": "The method catches InterruptedException but does not restore the thread's interrupt status or propagate the exception, which can cause the thread to ignore cancellation requests. This may lead to incorrect program behavior in a multithreaded environment. Add Thread.currentThread().interrupt() or rethrow the exception to fix the issue.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1944,
+            "output_tokens": 383,
+            "reasoning_tokens": 293,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000137038
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1165,
+          "latency_s": 5.228
+        }
+      ],
+      "original_finding_index": 114
+    },
+    {
+      "finding_id": 25,
+      "type": "java:S2142",
+      "sourcefile": "Server.java",
+      "start_line": "713",
+      "message": "Either re-interrupt this method or rethrow the \"InterruptedException\" that can be caught here.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that an InterruptedException is caught without being re‑interrupted or rethrown, which is exactly what the rule checks for.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "CONCURRENCY",
+          "issue_signature": "swallowed InterruptedException",
+          "developer_explanation": "Your method catches InterruptedException but neither restores the interrupt flag nor propagates the exception. This suppresses the thread's interruption signal, preventing proper cancellation or shutdown. Fix the code by either re‑throwing the exception or calling Thread.currentThread().interrupt() after catching it.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1943,
+            "output_tokens": 440,
+            "reasoning_tokens": 388,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000146691
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1543,
+          "latency_s": 5.599
+        }
+      ],
+      "original_finding_index": 119
+    },
+    {
+      "finding_id": 26,
+      "type": "java:S5164",
+      "sourcefile": "ContextHandler.java",
+      "start_line": "82",
+      "message": "Call \"remove()\" on \"CURRENT_CONTEXT\".",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that the ThreadLocal variable CURRENT_CONTEXT is not having remove() called, which Sonar flags as a potential memory leak. This claim is likely correct because failing to remove a ThreadLocal can retain references and cause leaks, so the issue is probably real.",
+          "is_true_positive": true,
+          "confidence": 0.73,
+          "category": "PERFORMANCE",
+          "issue_signature": "threadlocal not removed",
+          "developer_explanation": "The CURRENT_CONTEXT ThreadLocal is used without calling its remove() method, which can keep references alive and lead to memory leaks. Add a call to CURRENT_CONTEXT.remove() when the context is no longer needed to free resources and avoid performance degradation.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1926,
+            "output_tokens": 790,
+            "reasoning_tokens": 700,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000205562
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2790,
+          "latency_s": 9.882
+        }
+      ],
+      "original_finding_index": 121
+    },
+    {
+      "finding_id": 27,
+      "type": "java:S2095",
+      "sourcefile": "ErrorHandler.java",
+      "start_line": "255",
+      "message": "Use try-with-resources or close this \"ByteBufferOutputStream\" in a \"finally\" clause.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning claims that a ByteBufferOutputStream instance is not closed, which Sonar flags as a potential resource leak. Because ByteBufferOutputStream typically does not hold external resources and its close method is a no-op, this is likely a false positive.",
+          "is_true_positive": false,
+          "confidence": 0.7,
+          "category": "CORRECTNESS",
+          "issue_signature": "unclosed resource stream",
+          "developer_explanation": "The ByteBufferOutputStream you are using does not acquire system resources that need explicit release, so not closing it does not cause a leak. You can safely ignore this warning, or add a no-op close if you want to satisfy the rule.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1949,
+            "output_tokens": 547,
+            "reasoning_tokens": 475,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000165103
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1888,
+          "latency_s": 6.984
+        }
+      ],
+      "original_finding_index": 123
+    },
+    {
+      "finding_id": 28,
+      "type": "java:S2095",
+      "sourcefile": "ErrorHandler.java",
+      "start_line": "256",
+      "message": "Use try-with-resources or close this \"PrintWriter\" in a \"finally\" clause.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly states that a PrintWriter is created without being closed, which indicates a potential resource leak. Since SonarQube flags this pattern when a close is missing, it is likely a real issue.",
+          "is_true_positive": true,
+          "confidence": 0.78,
+          "category": "CORRECTNESS",
+          "issue_signature": "unclosed PrintWriter resource",
+          "developer_explanation": "A PrintWriter opened on line 256 is not closed, which can lead to resource leaks and eventual exhaustion of file handles. Ensure the writer is closed by using a try-with-resources block or by calling close() in a finally clause.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1947,
+            "output_tokens": 499,
+            "reasoning_tokens": 419,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000156869
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1662,
+          "latency_s": 6.237
+        }
+      ],
+      "original_finding_index": 124
+    },
+    {
+      "finding_id": 29,
+      "type": "java:S2177",
+      "sourcefile": "StateTrackingHandler.java",
+      "start_line": "626",
+      "message": "Rename this method; there is a \"private\" method in the parent class with the same name.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that a method in the subclass has the same name as a private method in its parent class, which can be verified by inspecting the class hierarchy. This naming conflict can cause confusion and is considered a maintainability pitfall, so the warning is a valid detection.",
+          "is_true_positive": true,
+          "confidence": 0.73,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "method name collides with private parent method",
+          "developer_explanation": "You have defined a method that shares its name with a private method in the superclass. While this does not cause a runtime error, it can be confusing for readers and may suggest an unintended override. Consider renaming the method to make the code clearer.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1937,
+            "output_tokens": 835,
+            "reasoning_tokens": 789,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000213619
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3149,
+          "latency_s": 10.326
+        }
+      ],
+      "original_finding_index": 128
+    },
+    {
+      "finding_id": 30,
+      "type": "java:S2583",
+      "sourcefile": "HttpChannelState.java",
+      "start_line": "596",
+      "message": "Change this condition so that it does not always evaluate to \"false\"",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly states that a condition in the code always evaluates to false, which SonarQube flags as a dead‑code issue.",
+          "is_true_positive": true,
+          "confidence": 0.73,
+          "category": "CORRECTNESS",
+          "issue_signature": "condition that always evaluates to false",
+          "developer_explanation": "The condition on line 596 can never be true, so the code inside that branch will never execute. This dead code adds unnecessary complexity and may hide bugs. Adjust or remove the condition so that the intended logic can be reached.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1944,
+            "output_tokens": 437,
+            "reasoning_tokens": 370,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000146218
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1476,
+          "latency_s": 6.602
+        }
+      ],
+      "original_finding_index": 133
+    },
+    {
+      "finding_id": 31,
+      "type": "java:S2142",
+      "sourcefile": "HttpConnection.java",
+      "start_line": "1068",
+      "message": "Either re-interrupt this method or rethrow the \"InterruptedException\" that can be caught here.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that an InterruptedException is caught without being re‑thrown or the interrupt status restored, which the rule flags as a problem.",
+          "is_true_positive": true,
+          "confidence": 0.92,
+          "category": "CONCURRENCY",
+          "issue_signature": "ignored interruptedexception",
+          "developer_explanation": "Your code catches InterruptedException but does not re‑throw it or call Thread.currentThread().interrupt(). This discards the interruption signal, preventing proper thread shutdown or coordination. Add a re‑throw or restore the interrupt status to correctly propagate the interruption.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1946,
+            "output_tokens": 455,
+            "reasoning_tokens": 403,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000149352
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1601,
+          "latency_s": 5.809
+        }
+      ],
+      "original_finding_index": 139
+    },
+    {
+      "finding_id": 32,
+      "type": "java:S2095",
+      "sourcefile": "JDBCSessionDataStore.java",
+      "start_line": "328",
+      "message": "Use try-with-resources or close this \"PreparedStatement\" in a \"finally\" clause.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly states that a PreparedStatement is not closed, which SonarQube flags as a potential resource leak.",
+          "is_true_positive": true,
+          "confidence": 0.7,
+          "category": "CORRECTNESS",
+          "issue_signature": "unclosed preparedstatement resource",
+          "developer_explanation": "The code creates a PreparedStatement but does not ensure it is closed, which can exhaust database resources and cause failures. Close the statement using try-with-resources or a finally block to guarantee proper cleanup.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1949,
+            "output_tokens": 385,
+            "reasoning_tokens": 301,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000137563
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1196,
+          "latency_s": 6.017
+        }
+      ],
+      "original_finding_index": 143
+    },
+    {
+      "finding_id": 33,
+      "type": "java:S2095",
+      "sourcefile": "JDBCSessionDataStore.java",
+      "start_line": "347",
+      "message": "Use try-with-resources or close this \"PreparedStatement\" in a \"finally\" clause.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly states that a PreparedStatement is not closed, which SonarQube flags as a resource leak. Without evidence that the statement is closed elsewhere, this is likely a real issue.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "CORRECTNESS",
+          "issue_signature": "unclosed preparedstatement resource",
+          "developer_explanation": "A PreparedStatement is created but never closed, which can exhaust database connections and cause failures. Wrap the statement in a try-with-resources block or close it in a finally clause to ensure the resource is released.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1949,
+            "output_tokens": 573,
+            "reasoning_tokens": 517,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000169523
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2055,
+          "latency_s": 8.117
+        }
+      ],
+      "original_finding_index": 144
+    },
+    {
+      "finding_id": 34,
+      "type": "java:S2095",
+      "sourcefile": "JDBCSessionDataStore.java",
+      "start_line": "370",
+      "message": "Use try-with-resources or close this \"PreparedStatement\" in a \"finally\" clause.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning reports that a PreparedStatement is created without being closed, which would leak a database resource. Since such leaks can cause exhaustion and incorrect behavior, this is likely a real issue.",
+          "is_true_positive": true,
+          "confidence": 0.7,
+          "category": "CORRECTNESS",
+          "issue_signature": "unclosed prepared statement",
+          "developer_explanation": "The code creates a PreparedStatement but never closes it, which can exhaust database connections over time. Ensure the statement is closed, preferably by using try-with-resources or a finally block that calls close(). This will prevent resource leaks and potential denial‑of‑service problems.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1949,
+            "output_tokens": 648,
+            "reasoning_tokens": 588,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000182273
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2337,
+          "latency_s": 8.26
+        }
+      ],
+      "original_finding_index": 145
+    },
+    {
+      "finding_id": 35,
+      "type": "java:S2095",
+      "sourcefile": "JDBCSessionDataStore.java",
+      "start_line": "394",
+      "message": "Use try-with-resources or close this \"PreparedStatement\" in a \"finally\" clause.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly states that a PreparedStatement is not closed, which indicates a potential resource leak.",
+          "is_true_positive": true,
+          "confidence": 0.73,
+          "category": "CORRECTNESS",
+          "issue_signature": "unclosed prepared statement",
+          "developer_explanation": "The PreparedStatement created in the indicated lines is never closed, which can exhaust database connections and cause runtime failures. Ensure the statement is closed by using a try-with-resources block or by calling close() in a finally clause so it is released even if an exception occurs.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1949,
+            "output_tokens": 462,
+            "reasoning_tokens": 390,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000150653
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1542,
+          "latency_s": 5.867
+        }
+      ],
+      "original_finding_index": 146
+    },
+    {
+      "finding_id": 36,
+      "type": "java:S2095",
+      "sourcefile": "JDBCSessionDataStore.java",
+      "start_line": "414",
+      "message": "Use try-with-resources or close this \"PreparedStatement\" in a \"finally\" clause.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that a PreparedStatement is not closed, which SonarQube flags as a potential resource leak, and such leaks are real problems unless the code explicitly closes it elsewhere.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "CORRECTNESS",
+          "issue_signature": "unclosed preparedstatement resource",
+          "developer_explanation": "The PreparedStatement created at the indicated lines is never closed, which can exhaust database connections and cause runtime failures. Ensure the statement is closed by using a try‑with‑resources block or by calling close() in a finally clause.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1949,
+            "output_tokens": 414,
+            "reasoning_tokens": 327,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000142493
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1288,
+          "latency_s": 5.514
+        }
+      ],
+      "original_finding_index": 147
+    },
+    {
+      "finding_id": 37,
+      "type": "java:S2095",
+      "sourcefile": "JDBCSessionDataStore.java",
+      "start_line": "440",
+      "message": "Use try-with-resources or close this \"PreparedStatement\" in a \"finally\" clause.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that a PreparedStatement is not closed, which indicates a possible resource leak. Since no evidence is provided that the statement is closed elsewhere, the claim is likely correct.",
+          "is_true_positive": true,
+          "confidence": 0.78,
+          "category": "CORRECTNESS",
+          "issue_signature": "unclosed preparedstatement resource leak",
+          "developer_explanation": "The PreparedStatement created at the indicated line is not closed, which can exhaust database resources and cause failures. Ensure the statement is closed by using try-with-resources or a finally block that calls close(). This will prevent resource leaks and improve application stability.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1949,
+            "output_tokens": 435,
+            "reasoning_tokens": 354,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000146063
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1407,
+          "latency_s": 6.179
+        }
+      ],
+      "original_finding_index": 148
+    },
+    {
+      "finding_id": 38,
+      "type": "java:S2095",
+      "sourcefile": "JDBCSessionDataStore.java",
+      "start_line": "459",
+      "message": "Use try-with-resources or close this \"PreparedStatement\" in a \"finally\" clause.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly says a PreparedStatement is not closed, which indicates a potential resource leak. Since the tool flagged lines where the statement is created without a try‑with‑resources or finally close, this is likely a real issue.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "CORRECTNESS",
+          "issue_signature": "unclosed preparedstatement",
+          "developer_explanation": "The PreparedStatement created at the indicated lines is never closed, which can exhaust database resources and cause failures. Ensure the statement is closed either by using a try‑with‑resources block or by calling close() in a finally clause.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1949,
+            "output_tokens": 455,
+            "reasoning_tokens": 359,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000149463
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1424,
+          "latency_s": 7.01
+        }
+      ],
+      "original_finding_index": 149
+    },
+    {
+      "finding_id": 39,
+      "type": "java:S2095",
+      "sourcefile": "JDBCSessionDataStore.java",
+      "start_line": "475",
+      "message": "Use try-with-resources or close this \"PreparedStatement\" in a \"finally\" clause.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly states that a PreparedStatement is not closed, which SonarQube flags as a potential resource leak. Without evidence that the statement is closed elsewhere, this is likely a real issue.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "CORRECTNESS",
+          "issue_signature": "unclosed prepared statement",
+          "developer_explanation": "The PreparedStatement created in the indicated lines is never closed, which can exhaust database connections and cause failures. Close it using try-with-resources or a finally block to ensure the resource is released even if an exception occurs.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1949,
+            "output_tokens": 413,
+            "reasoning_tokens": 308,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000142323
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1220,
+          "latency_s": 5.691
+        }
+      ],
+      "original_finding_index": 150
+    },
+    {
+      "finding_id": 40,
+      "type": "java:S2142",
+      "sourcefile": "ManagedSession.java",
+      "start_line": "564",
+      "message": "Either re-interrupt this method or rethrow the \"InterruptedException\" that can be caught here.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that an InterruptedException is caught without re‑interrupting the thread or rethrowing it, which indicates a potential mishandling of thread interruption. This pattern is a known concurrency bug when the interruption status is lost. Therefore the claim is likely correct.",
+          "is_true_positive": true,
+          "confidence": 0.78,
+          "category": "CONCURRENCY",
+          "issue_signature": "ignored InterruptedException",
+          "developer_explanation": "The method catches InterruptedException but does not preserve the interrupt status or propagate the exception, which can cause calling code to miss the cancellation request. Preserve the interruption by either calling Thread.currentThread().interrupt() or rethrowing the exception. This ensures proper thread‑interruption handling.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1944,
+            "output_tokens": 523,
+            "reasoning_tokens": 435,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000160838
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1732,
+          "latency_s": 6.994
+        }
+      ],
+      "original_finding_index": 151
+    },
+    {
+      "finding_id": 41,
+      "type": "java:S2095",
+      "sourcefile": "UnixDomainServerConnector.java",
+      "start_line": "250",
+      "message": "Use try-with-resources or close this \"ServerSocketChannel\" in a \"finally\" clause.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly states that a ServerSocketChannel is opened without being closed, which the rule flags as a resource leak. Without evidence that the channel is closed elsewhere, this is likely a real issue.",
+          "is_true_positive": true,
+          "confidence": 0.7,
+          "category": "CORRECTNESS",
+          "issue_signature": "unclosed ServerSocketChannel resource",
+          "developer_explanation": "The ServerSocketChannel created at the indicated line is not closed, which can lead to resource exhaustion and prevent the application from releasing the underlying socket. Ensure the channel is closed, preferably using try-with-resources or by adding a finally block that calls close() when the server shuts down.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1950,
+            "output_tokens": 508,
+            "reasoning_tokens": 419,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00015851
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1666,
+          "latency_s": 7.145
+        }
+      ],
+      "original_finding_index": 154
+    },
+    {
+      "finding_id": 42,
+      "type": "java:S2142",
+      "sourcefile": "Blocker.java",
+      "start_line": "134",
+      "message": "Either re-interrupt this method or rethrow the \"InterruptedException\" that can be caught here.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that the caught InterruptedException is neither re‑thrown nor re‑interrupted, which is exactly what rule S2142 flags as a problem. This claim is generally correct when an InterruptedException is swallowed, so the alarm is likely valid.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "CONCURRENCY",
+          "issue_signature": "ignored interruptedexception",
+          "developer_explanation": "Your catch block for InterruptedException does not propagate the interruption, which can leave the thread in an inconsistent state and prevent proper shutdown or cancellation. Re‑throw the exception or call Thread.currentThread().interrupt() to preserve the interrupt status.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1944,
+            "output_tokens": 532,
+            "reasoning_tokens": 468,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000162368
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1865,
+          "latency_s": 7.205
+        }
+      ],
+      "original_finding_index": 156
+    },
+    {
+      "finding_id": 43,
+      "type": "java:S2142",
+      "sourcefile": "Blocker.java",
+      "start_line": "216",
+      "message": "Either re-interrupt this method or rethrow the \"InterruptedException\" that can be caught here.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that an InterruptedException is caught without re‑interrupting the thread or rethrowing the exception, which indicates a potential mishandling of thread interruption. This claim matches the rule's intent, so it is likely a real issue. I would need to check the catch block to confirm that it neither calls Thread.currentThread().interrupt() nor rethrows the exception.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "CONCURRENCY",
+          "issue_signature": "caught InterruptedException not rethrown or re-interrupted",
+          "developer_explanation": "The method catches InterruptedException but does not restore the interrupt status or propagate the exception, which can cause calling code to miss the interruption signal. Preserve the interrupt by calling Thread.currentThread().interrupt() or rethrow the exception so that higher‑level logic can handle it correctly.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1944,
+            "output_tokens": 639,
+            "reasoning_tokens": 514,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000180558
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2053,
+          "latency_s": 8.765
+        }
+      ],
+      "original_finding_index": 158
+    },
+    {
+      "finding_id": 44,
+      "type": "java:S2142",
+      "sourcefile": "Blocker.java",
+      "start_line": "289",
+      "message": "Either re-interrupt this method or rethrow the \"InterruptedException\" that can be caught here.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that an InterruptedException is caught without being re‑thrown or the interrupt status restored, which the rule flags as a problem. This pattern is generally a bug because it swallows the interruption signal. Therefore the claim is likely correct.",
+          "is_true_positive": true,
+          "confidence": 0.88,
+          "category": "CONCURRENCY",
+          "issue_signature": "ignored InterruptedException",
+          "developer_explanation": "Your catch block for InterruptedException does not re‑throw the exception nor restore the thread's interrupt flag, which means the interruption is lost and the thread may continue running incorrectly. Preserve the interruption by either re‑throwing the exception or calling Thread.currentThread().interrupt() in the catch block.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1944,
+            "output_tokens": 478,
+            "reasoning_tokens": 403,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000153188
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1602,
+          "latency_s": 6.477
+        }
+      ],
+      "original_finding_index": 160
+    },
+    {
+      "finding_id": 45,
+      "type": "java:S2142",
+      "sourcefile": "Blocker.java",
+      "start_line": "513",
+      "message": "Either re-interrupt this method or rethrow the \"InterruptedException\" that can be caught here.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that an InterruptedException is caught but neither re‑thrown nor the interrupt status is restored, which the rule flags as a problem.",
+          "is_true_positive": true,
+          "confidence": 0.9,
+          "category": "CONCURRENCY",
+          "issue_signature": "ignored InterruptedException without restoring interrupt",
+          "developer_explanation": "Your catch block is swallowing the InterruptedException and does not restore the thread's interrupt flag or propagate the exception. This can prevent the thread from being correctly cancelled and lead to incorrect concurrent behavior. Fix it by re‑throwing the exception or calling Thread.currentThread().interrupt() in the catch block.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1944,
+            "output_tokens": 563,
+            "reasoning_tokens": 522,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000167638
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2075,
+          "latency_s": 7.649
+        }
+      ],
+      "original_finding_index": 163
+    },
+    {
+      "finding_id": 46,
+      "type": "java:S3551",
+      "sourcefile": "ByteArrayOutputStream2.java",
+      "start_line": "63",
+      "message": "Make this method \"synchronized\" to match the parent class implementation.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning says the method overrides a synchronized parent method but is not itself synchronized, which the rule flags as a concurrency problem. This claim is likely correct, making the warning a true positive.",
+          "is_true_positive": true,
+          "confidence": 0.75,
+          "category": "CONCURRENCY",
+          "issue_signature": "overriding synchronized method without synchronization",
+          "developer_explanation": "Your method overrides a synchronized method from the parent class but does not declare synchronized, which can break the thread‑safety guarantees of the original implementation. Add the synchronized modifier or otherwise ensure the method is thread‑safe to avoid potential race conditions.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1936,
+            "output_tokens": 589,
+            "reasoning_tokens": 603,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000171762
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2402,
+          "latency_s": 7.933
+        }
+      ],
+      "original_finding_index": 167
+    },
+    {
+      "finding_id": 47,
+      "type": "java:S2142",
+      "sourcefile": "ExceptionUtil.java",
+      "start_line": "520",
+      "message": "Either re-interrupt this method or rethrow the \"InterruptedException\" that can be caught here.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that an InterruptedException is caught but neither re‑interrupts the thread nor rethrows the exception, which the rule flags as a problem. This pattern typically indicates a concurrency correctness issue because the interruption signal is lost. Therefore the claim is likely correct.",
+          "is_true_positive": true,
+          "confidence": 0.78,
+          "category": "CONCURRENCY",
+          "issue_signature": "ignored InterruptedException without re-interrupt or rethrow",
+          "developer_explanation": "The catch block swallows the InterruptedException, discarding the thread's interrupt status. This can prevent higher‑level code from noticing that the thread was asked to stop, leading to incorrect concurrent behavior. Re‑interrupt the thread (Thread.currentThread().interrupt()) or rethrow the exception to propagate the interruption.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1944,
+            "output_tokens": 444,
+            "reasoning_tokens": 314,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000147408
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1250,
+          "latency_s": 6.349
+        }
+      ],
+      "original_finding_index": 173
+    },
+    {
+      "finding_id": 48,
+      "type": "java:S2142",
+      "sourcefile": "FutureCallback.java",
+      "start_line": "156",
+      "message": "Either re-interrupt this method or rethrow the \"InterruptedException\" that can be caught here.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that an InterruptedException is caught but neither re‑thrown nor the thread's interrupt status is restored, which the rule flags as a problem. This pattern usually indicates a real concurrency bug because the interruption signal is lost. Therefore the claim is likely correct.",
+          "is_true_positive": true,
+          "confidence": 0.86,
+          "category": "CONCURRENCY",
+          "issue_signature": "ignored interruptedexception without restoring interrupt",
+          "developer_explanation": "The catch block for InterruptedException discards the interruption signal, which can prevent higher‑level code from noticing that the thread was asked to stop. Preserve the interrupt by calling Thread.currentThread().interrupt() or rethrow the exception. This ensures proper thread cancellation behavior.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1944,
+            "output_tokens": 511,
+            "reasoning_tokens": 436,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000158798
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1738,
+          "latency_s": 6.785
+        }
+      ],
+      "original_finding_index": 175
+    },
+    {
+      "finding_id": 49,
+      "type": "java:S2142",
+      "sourcefile": "SharedBlockingCallback.java",
+      "start_line": "231",
+      "message": "Either re-interrupt this method or rethrow the \"InterruptedException\" that can be caught here.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that an InterruptedException is caught without re‑interrupting the thread or rethrowing it, which is exactly what the rule S2142 checks for. This indicates a likely mishandling of thread interruption, a concurrency concern. Therefore the claim is likely correct.",
+          "is_true_positive": true,
+          "confidence": 0.86,
+          "category": "CONCURRENCY",
+          "issue_signature": "ignored InterruptedException without re‑interrupt or rethrow",
+          "developer_explanation": "The method catches InterruptedException but neither restores the interrupt status nor propagates the exception. This can prevent the thread from being properly cancelled, leading to unexpected behavior. Modify the catch block to call Thread.currentThread().interrupt() or rethrow the exception.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1945,
+            "output_tokens": 506,
+            "reasoning_tokens": 414,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000157985
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1649,
+          "latency_s": 6.98
+        }
+      ],
+      "original_finding_index": 179
+    },
+    {
+      "finding_id": 50,
+      "type": "java:S2095",
+      "sourcefile": "FileSystemPool.java",
+      "start_line": "118",
+      "message": "Use try-with-resources or close this \"FileSystem\" in a \"finally\" clause.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning claims that a FileSystem object obtained at line 118 is not closed, suggesting a resource leak. Because the class is named FileSystemPool, it is likely that the lifecycle of the FileSystem is managed by the pool and not intended to be closed here, making the alarm a false positive.",
+          "is_true_positive": false,
+          "confidence": 0.6,
+          "category": "CORRECTNESS",
+          "issue_signature": "unclosed FileSystem resource",
+          "developer_explanation": "The analysis flags a possible leak, but in this pool implementation the FileSystem instances are retained for reuse and are closed when the pool is shut down. Therefore, you do not need to close the FileSystem in this method; the warning can be safely ignored.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1948,
+            "output_tokens": 598,
+            "reasoning_tokens": 496,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000173736
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1973,
+          "latency_s": 7.722
+        }
+      ],
+      "original_finding_index": 182
+    },
+    {
+      "finding_id": 51,
+      "type": "java:S4973",
+      "sourcefile": "Credential.java",
+      "start_line": "107",
+      "message": "Strings and Boxed types should be compared using \"equals()\".",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that a string or boxed type is being compared with \"==\" or \"!=\" instead of using equals(), which is a correctness issue when the values are not the same reference. Based on this claim, the code likely contains such a comparison, making the warning a true positive.",
+          "is_true_positive": true,
+          "confidence": 0.73,
+          "category": "CORRECTNESS",
+          "issue_signature": "using == to compare strings or boxed types",
+          "developer_explanation": "The code is comparing a String or a boxed primitive (e.g., Integer) with \"==\" or \"!=\", which checks reference identity rather than the actual value. This can cause logical errors when two distinct objects hold the same value. Replace the comparison with the equals() method to compare the contents correctly.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1930,
+            "output_tokens": 572,
+            "reasoning_tokens": 460,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00016865
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1835,
+          "latency_s": 8.314
+        }
+      ],
+      "original_finding_index": 185
+    },
+    {
+      "finding_id": 52,
+      "type": "java:S4973",
+      "sourcefile": "SniX509ExtendedKeyManager.java",
+      "start_line": "162",
+      "message": "Strings and Boxed types should be compared using \"equals()\".",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly states that a String or boxed type is being compared with ==/!= instead of equals(), which is a correctness problem.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "CORRECTNESS",
+          "issue_signature": "using == to compare strings or boxed types",
+          "developer_explanation": "The code is comparing a String or a boxed primitive with the == operator, which only checks reference identity and can produce wrong results. Use the equals() method to compare the actual values. Changing the comparison will ensure the logic works as intended.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1936,
+            "output_tokens": 365,
+            "reasoning_tokens": 266,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000133682
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1056,
+          "latency_s": 4.706
+        }
+      ],
+      "original_finding_index": 191
+    },
+    {
+      "finding_id": 53,
+      "type": "java:S2142",
+      "sourcefile": "QueuedThreadPool.java",
+      "start_line": "354",
+      "message": "Either re-interrupt this method or rethrow the \"InterruptedException\" that can be caught here.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that an InterruptedException is caught without re‑interrupting or rethrowing, which is exactly what the rule checks for and indicates a problem.",
+          "is_true_positive": true,
+          "confidence": 0.88,
+          "category": "CONCURRENCY",
+          "issue_signature": "swallowed interrupted exception",
+          "developer_explanation": "The code catches InterruptedException but neither restores the thread's interrupt status nor propagates the exception, so the interruption signal is lost. This can prevent proper shutdown or cancellation of tasks in the thread pool. Modify the catch block to call Thread.currentThread().interrupt() or rethrow the exception.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1946,
+            "output_tokens": 405,
+            "reasoning_tokens": 333,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000140852
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1319,
+          "latency_s": 6.691
+        }
+      ],
+      "original_finding_index": 195
+    },
+    {
+      "finding_id": 54,
+      "type": "java:S2095",
+      "sourcefile": "ExtensionStack.java",
+      "start_line": "139",
+      "message": "Use try-with-resources or close this \"Extension\" in a \"finally\" clause.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly says the Extension resource is not closed, indicating a potential resource leak. SonarQube's rule S2095 flags missing close calls for AutoCloseable resources, so the claim is likely correct.",
+          "is_true_positive": true,
+          "confidence": 0.75,
+          "category": "CORRECTNESS",
+          "issue_signature": "resource not closed leading to leak",
+          "developer_explanation": "The Extension instance created at the indicated line is never closed, which can cause resource exhaustion or other incorrect behavior. Ensure the Extension is closed by using try-with-resources or adding a finally block that calls its close method.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1946,
+            "output_tokens": 476,
+            "reasoning_tokens": 385,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000152922
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1534,
+          "latency_s": 6.131
+        }
+      ],
+      "original_finding_index": 206
+    },
+    {
+      "finding_id": 55,
+      "type": "java:S1143",
+      "sourcefile": "WebSocketConnection.java",
+      "start_line": "583",
+      "message": "Remove this throw statement from this finally block.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly says a throw statement is present in a finally block, which SonarQube flags as a bug because it can mask earlier exceptions. This pattern is generally incorrect and can change the program's behavior, so the claim is likely valid.",
+          "is_true_positive": true,
+          "confidence": 0.88,
+          "category": "CORRECTNESS",
+          "issue_signature": "throw statement in finally block",
+          "developer_explanation": "Throwing an exception from a finally block can hide any exception that was already thrown in the try or catch sections, leading to loss of the original error information. Move the throw out of the finally block or handle the error in the catch block instead. This will preserve the original exception and make the error handling clearer.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1932,
+            "output_tokens": 386,
+            "reasoning_tokens": 263,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000137104
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1048,
+          "latency_s": 5.358
+        }
+      ],
+      "original_finding_index": 207
+    },
+    {
+      "finding_id": 56,
+      "type": "java:S2259",
+      "sourcefile": "XmlConfiguration.java",
+      "start_line": "2036",
+      "message": "A \"NullPointerException\" could be thrown; \"envBuilder\" is nullable here.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly states that a NullPointerException could be thrown because envBuilder is nullable at the point of use, which is the claim being evaluated.",
+          "is_true_positive": true,
+          "confidence": 0.78,
+          "category": "CORRECTNESS",
+          "issue_signature": "possible null dereference",
+          "developer_explanation": "The code uses envBuilder without guaranteeing it is non‑null, so a null value could cause a NullPointerException at runtime. Add a null check or ensure envBuilder is always initialized before this point to prevent the exception.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1942,
+            "output_tokens": 358,
+            "reasoning_tokens": 268,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000132714
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1065,
+          "latency_s": 5.154
+        }
+      ],
+      "original_finding_index": 220
+    },
+    {
+      "finding_id": 57,
+      "type": "java:S2583",
+      "sourcefile": "XmlParser.java",
+      "start_line": "165",
+      "message": "Change this condition so that it does not always evaluate to \"true\"",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly states that a condition in the code always evaluates to true, which indicates a potential dead‑code or logic error that SonarQube flags as a bug. Without seeing the code we cannot verify, but such a pattern is usually a real issue, so the claim is likely correct.",
+          "is_true_positive": true,
+          "confidence": 0.78,
+          "category": "CORRECTNESS",
+          "issue_signature": "condition that always evaluates to true",
+          "developer_explanation": "The condition at the indicated line is a constant true expression, meaning the associated branch will never be skipped and any else‑branch is dead code. This can hide bugs and makes the code harder to understand. Replace the constant condition with a proper check or remove the unnecessary branch.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1943,
+            "output_tokens": 426,
+            "reasoning_tokens": 296,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000144311
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1177,
+          "latency_s": 7.897
+        }
+      ],
+      "original_finding_index": 221
+    },
+    {
+      "finding_id": 58,
+      "type": "java:S2068",
+      "sourcefile": "JDBCLoginModule.java",
+      "start_line": "55",
+      "message": "'Password' detected in this expression, review this potentially hard-coded password.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning is triggered because the tool found the literal word 'Password' in an expression, which it assumes may be a hard‑coded password.",
+          "is_true_positive": false,
+          "confidence": 0.6,
+          "category": "SECURITY",
+          "issue_signature": "hard-coded password literal",
+          "developer_explanation": "The rule flagged the occurrence of the word \"Password\" but it may simply be a constant name, column label, or log message rather than an actual password value. If the string is not a secret value, the alert can be ignored. Ensure that no real password is embedded in the code; otherwise replace it with a secure configuration source.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1937,
+            "output_tokens": 537,
+            "reasoning_tokens": 466,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000162959
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1860,
+          "latency_s": 8.571
+        }
+      ],
+      "original_finding_index": 222
+    },
+    {
+      "finding_id": 59,
+      "type": "java:S2755",
+      "sourcefile": "XmlParser.java",
+      "start_line": "113",
+      "message": "Disable access to external entities in XML parsing.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that external entities are not disabled in XML parsing, which indicates a potential XXE security flaw. Since SonarQube's rule S2755 only triggers when a parser is configured insecurely, the claim is likely correct.",
+          "is_true_positive": true,
+          "confidence": 0.73,
+          "category": "SECURITY",
+          "issue_signature": "xml external entity injection vulnerability",
+          "developer_explanation": "Your XML parser is currently allowing external entity resolution, which can be exploited to read arbitrary files or perform denial‑of‑service attacks. Configure the parser to disable external entities (e.g., set FEATURE_SECURE_PROCESSING or disallow DOCTYPE). This will close the XXE vulnerability.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1932,
+            "output_tokens": 519,
+            "reasoning_tokens": 438,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000159714
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1737,
+          "latency_s": 6.736
+        }
+      ],
+      "original_finding_index": 223
+    },
+    {
+      "finding_id": 60,
+      "type": "java:S2178",
+      "sourcefile": "RequestListeners.java",
+      "start_line": "43",
+      "message": "Correct this \"|\" to \"||\" and extract the right operand to a variable if it should always be evaluated.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning flags a bitwise \"|\" used where a logical \"||\" is expected, which the rule treats as a correctness issue.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "CORRECTNESS",
+          "issue_signature": "bitwise OR used in boolean expression",
+          "developer_explanation": "The code is using the bitwise OR operator in a boolean condition, which always evaluates both operands and can produce the wrong logical result. Replace \"|\" with \"||\" to get short‑circuit evaluation, and if the right‑hand expression must always run, compute it separately and store it in a variable before the condition.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1939,
+            "output_tokens": 435,
+            "reasoning_tokens": 329,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000145693
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1309,
+          "latency_s": 5.562
+        }
+      ],
+      "original_finding_index": 224
+    },
+    {
+      "finding_id": 61,
+      "type": "java:S2178",
+      "sourcefile": "RequestListeners.java",
+      "start_line": "45",
+      "message": "Correct this \"|\" to \"||\" and extract the right operand to a variable if it should always be evaluated.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning claims that using the bitwise operator \"|\" in a boolean expression is wrong and should be replaced with \"||\", but without seeing the code we cannot know if the always‑evaluated semantics are intentional. Since the claim is not universally true, the alarm may be a false positive.",
+          "is_true_positive": false,
+          "confidence": 0.6,
+          "category": "CORRECTNESS",
+          "issue_signature": "use of bitwise OR in boolean expression",
+          "developer_explanation": "The tool flagged a \"|\" used where a logical \"||\" is usually expected. If the expression does not rely on side‑effects and both sides should not always be evaluated, replace it with \"||\". If the always‑evaluate behavior is intentional, you can safely ignore this warning.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1939,
+            "output_tokens": 903,
+            "reasoning_tokens": 839,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000225253
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3353,
+          "latency_s": 13.542
+        }
+      ],
+      "original_finding_index": 226
+    },
+    {
+      "finding_id": 62,
+      "type": "java:S2178",
+      "sourcefile": "RequestListeners.java",
+      "start_line": "56",
+      "message": "Correct this \"|\" to \"||\" and extract the right operand to a variable if it should always be evaluated.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning flags a bitwise OR operator \"|\" used where a logical OR \"||\" is likely intended, which can change evaluation semantics, so the claim of a potential bug is material. Without seeing the code we cannot be certain the developer intended both sides to be evaluated, but such usage is usually unintended, making this likely a true positive.",
+          "is_true_positive": true,
+          "confidence": 0.7,
+          "category": "CORRECTNESS",
+          "issue_signature": "use of bitwise OR instead of logical OR",
+          "developer_explanation": "The code uses \"|\" in a boolean expression, which always evaluates both operands. This can cause unexpected side effects or performance issues. Replace \"|\" with \"||\" for short‑circuit logic, and if you need both sides evaluated, compute the right side separately and store it in a variable.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1939,
+            "output_tokens": 547,
+            "reasoning_tokens": 398,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000164733
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1586,
+          "latency_s": 6.915
+        }
+      ],
+      "original_finding_index": 231
+    },
+    {
+      "finding_id": 63,
+      "type": "java:S2178",
+      "sourcefile": "RequestListeners.java",
+      "start_line": "59",
+      "message": "Correct this \"|\" to \"||\" and extract the right operand to a variable if it should always be evaluated.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning flags a bitwise \"|\" used in a boolean expression and suggests it should be \"||\", indicating a likely logic error. This pattern typically leads to unintended evaluation of the right operand, which is a correctness problem.",
+          "is_true_positive": true,
+          "confidence": 0.75,
+          "category": "CORRECTNESS",
+          "issue_signature": "bitwise OR used instead of logical OR",
+          "developer_explanation": "You are using the \"|\" operator in a boolean condition, which always evaluates both sides. This can cause unexpected side effects or performance issues and is usually a mistake; replace it with \"||\" for short‑circuit evaluation, or assign the right‑hand expression to a variable if you really need it evaluated every time.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1939,
+            "output_tokens": 642,
+            "reasoning_tokens": 546,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000180883
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2178,
+          "latency_s": 8.622
+        }
+      ],
+      "original_finding_index": 234
+    },
+    {
+      "finding_id": 64,
+      "type": "java:S3516",
+      "sourcefile": "HttpConnection.java",
+      "start_line": "345",
+      "message": "Refactor this method to not always return the same value.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning claims the method always returns the same value, which is the basis for the decision; SonarQube's symbolic execution reliably detects constant returns, so the claim is likely correct.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "method always returns same constant value",
+          "developer_explanation": "The method returns an identical value on every call, which suggests it does not contribute useful behavior and may be dead code or a placeholder. Consider removing the method, returning a meaningful result, or suppressing the warning if the constant return is intentional.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1931,
+            "output_tokens": 632,
+            "reasoning_tokens": 574,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000178887
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2288,
+          "latency_s": 9.59
+        }
+      ],
+      "original_finding_index": 236
+    },
+    {
+      "finding_id": 65,
+      "type": "java:S2178",
+      "sourcefile": "ResponseListeners.java",
+      "start_line": "367",
+      "message": "Correct this \"|\" to \"||\" and extract the right operand to a variable if it should always be evaluated.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning flags a bitwise \"|\" used where a logical \"||\" is expected, which can change program semantics, so the claim of a potential bug is material. Therefore it is likely a true positive.",
+          "is_true_positive": true,
+          "confidence": 0.78,
+          "category": "CORRECTNESS",
+          "issue_signature": "bitwise OR used instead of logical OR",
+          "developer_explanation": "The code uses the \"|\" operator in a boolean expression, causing both operands to be evaluated and possibly yielding an incorrect result. Replace it with \"||\" to get short‑circuit logical evaluation, or assign the right operand to a variable first if its side effects are required.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1939,
+            "output_tokens": 544,
+            "reasoning_tokens": 456,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000164223
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1817,
+          "latency_s": 8.325
+        }
+      ],
+      "original_finding_index": 239
+    },
+    {
+      "finding_id": 66,
+      "type": "java:S2178",
+      "sourcefile": "ResponseListeners.java",
+      "start_line": "369",
+      "message": "Correct this \"|\" to \"||\" and extract the right operand to a variable if it should always be evaluated.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that a bitwise OR \"|\" is used where a logical OR \"||\" is likely intended, which can change evaluation semantics, so the claim is about a potential correctness issue.",
+          "is_true_positive": true,
+          "confidence": 0.78,
+          "category": "CORRECTNESS",
+          "issue_signature": "use of bitwise OR instead of logical OR",
+          "developer_explanation": "The code currently uses the \"|\" operator in a boolean expression, causing both operands to be evaluated even when the first is true. This can lead to unintended side effects or performance waste. Replace \"|\" with \"||\" for short‑circuit evaluation, and if the right‑hand expression must always run, compute it separately before the logical test.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1939,
+            "output_tokens": 535,
+            "reasoning_tokens": 438,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000162693
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1748,
+          "latency_s": 6.185
+        }
+      ],
+      "original_finding_index": 241
+    },
+    {
+      "finding_id": 67,
+      "type": "java:S2178",
+      "sourcefile": "ResponseListeners.java",
+      "start_line": "377",
+      "message": "Correct this \"|\" to \"||\" and extract the right operand to a variable if it should always be evaluated.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning claims that a bitwise OR operator '|' is used where a logical OR '||' is intended, which changes evaluation semantics, and this is the basis for the verdict.",
+          "is_true_positive": true,
+          "confidence": 0.7,
+          "category": "CORRECTNESS",
+          "issue_signature": "bitwise OR used in boolean expression",
+          "developer_explanation": "The code currently uses the '|' operator in a boolean context, causing both operands to be evaluated even when the left side is true. This can lead to unintended side effects or performance issues. Replace '|' with '||' for short‑circuit evaluation, or evaluate the right operand separately if both sides must always run.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1939,
+            "output_tokens": 582,
+            "reasoning_tokens": 502,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000170683
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2002,
+          "latency_s": 9.32
+        }
+      ],
+      "original_finding_index": 243
+    },
+    {
+      "finding_id": 68,
+      "type": "java:S2178",
+      "sourcefile": "ResponseListeners.java",
+      "start_line": "379",
+      "message": "Correct this \"|\" to \"||\" and extract the right operand to a variable if it should always be evaluated.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning flags a bitwise \"|\" used where a logical \"||\" is expected, which can change program logic and side‑effect evaluation. This pattern is typically a bug unless the developer intentionally wants both operands evaluated, so the claim is likely correct.",
+          "is_true_positive": true,
+          "confidence": 0.73,
+          "category": "CORRECTNESS",
+          "issue_signature": "bitwise OR used instead of logical OR",
+          "developer_explanation": "You are using the \"|\" operator in a boolean expression, which always evaluates both operands and may produce an incorrect result. Replace it with \"||\" for short‑circuit logical OR, and if you need the right side evaluated regardless, compute it separately and store it in a variable before the expression.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1939,
+            "output_tokens": 644,
+            "reasoning_tokens": 560,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000181223
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2233,
+          "latency_s": 8.439
+        }
+      ],
+      "original_finding_index": 245
+    },
+    {
+      "finding_id": 69,
+      "type": "java:S2178",
+      "sourcefile": "ResponseListeners.java",
+      "start_line": "381",
+      "message": "Correct this \"|\" to \"||\" and extract the right operand to a variable if it should always be evaluated.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning claims that a bitwise \"|\" was used in a boolean expression and should be replaced with logical \"||\", which may not be an error if both operands need to be evaluated. Without seeing the code we cannot confirm that the original intent was a logical OR, so the alarm could be a false positive.",
+          "is_true_positive": false,
+          "confidence": 0.6,
+          "category": "CORRECTNESS",
+          "issue_signature": "bitwise OR used in boolean expression",
+          "developer_explanation": "The tool flagged a \"|\" operator in a boolean context, assuming it was a mistake for \"||\". If the code intentionally relies on both sides being evaluated (e.g., for side effects), the warning can be ignored. Otherwise, replace \"|\" with \"||\" to avoid unnecessary evaluation.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1939,
+            "output_tokens": 816,
+            "reasoning_tokens": 743,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000210463
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2964,
+          "latency_s": 11.004
+        }
+      ],
+      "original_finding_index": 247
+    },
+    {
+      "finding_id": 70,
+      "type": "java:S2178",
+      "sourcefile": "ResponseListeners.java",
+      "start_line": "382",
+      "message": "Correct this \"|\" to \"||\" and extract the right operand to a variable if it should always be evaluated.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that a bitwise \"|\" operator is used where a logical \"||\" should be, which can change evaluation semantics, indicating a likely correctness issue.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "CORRECTNESS",
+          "issue_signature": "use of bitwise OR instead of logical OR",
+          "developer_explanation": "The code currently uses the \"|\" operator in a boolean expression, causing both operands to be evaluated even when the left side is true. This can lead to unintended side effects or performance overhead. Replace \"|\" with \"||\" for short‑circuit evaluation, and if both operands must always run, evaluate the right side separately before the logical test.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1939,
+            "output_tokens": 522,
+            "reasoning_tokens": 419,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000160483
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1666,
+          "latency_s": 5.982
+        }
+      ],
+      "original_finding_index": 248
+    },
+    {
+      "finding_id": 71,
+      "type": "java:S3516",
+      "sourcefile": "HTTP2Session.java",
+      "start_line": "2217",
+      "message": "Refactor this method to not always return the same value.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly states that the method always returns the same value, which is the condition SonarQube's S3516 rule checks for. Assuming the analysis correctly identified a constant return, this is a code smell indicating unnecessary logic. Without evidence to the contrary, the claim is likely correct.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "method always returns constant value",
+          "developer_explanation": "The method currently returns the same value for every execution, making it effectively a no‑op. This adds unnecessary code and can confuse readers about its purpose. Refactor the method to either remove it or make it return meaningful results based on its inputs.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1934,
+            "output_tokens": 471,
+            "reasoning_tokens": 380,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000151628
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1511,
+          "latency_s": 5.949
+        }
+      ],
+      "original_finding_index": 252
+    },
+    {
+      "finding_id": 72,
+      "type": "java:S3516",
+      "sourcefile": "HTTP2Stream.java",
+      "start_line": "746",
+      "message": "Refactor this method to not always return the same value.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning asserts that the method always returns the same value, but without seeing the implementation we cannot know whether this is intentional or a bug; many methods legitimately return a constant, so the alarm is likely a false positive. ",
+          "is_true_positive": false,
+          "confidence": 0.6,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "method always returns constant value",
+          "developer_explanation": "If the method is meant to compute different results, refactor it to return appropriate values. However, if the method is intentionally a constant provider (e.g., returning a fixed configuration or version), the warning can be ignored as it does not indicate a real problem.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1932,
+            "output_tokens": 684,
+            "reasoning_tokens": 646,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000187764
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2575,
+          "latency_s": 10.473
+        }
+      ],
+      "original_finding_index": 253
+    },
+    {
+      "finding_id": 73,
+      "type": "java:S3516",
+      "sourcefile": "HTTP3Session.java",
+      "start_line": "516",
+      "message": "Refactor this method to not always return the same value.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly states that the method always returns the same value, which SonarQube flags as a code smell. Without seeing the code we cannot verify intent, but a method that unconditionally returns a constant is usually undesirable, so the claim is likely correct. I therefore consider this a true positive with moderate confidence.",
+          "is_true_positive": true,
+          "confidence": 0.6,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "method always returns constant value",
+          "developer_explanation": "The method currently returns the same result regardless of its inputs or state, which makes it ineffective and hard to understand. This can hide bugs or indicate dead code. Refactor the method so that its return value depends on its parameters or relevant state, or remove it if it is unnecessary.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1932,
+            "output_tokens": 614,
+            "reasoning_tokens": 523,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000175864
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2082,
+          "latency_s": 7.89
+        }
+      ],
+      "original_finding_index": 255
+    },
+    {
+      "finding_id": 74,
+      "type": "java:S1845",
+      "sourcefile": "BundleMetadata.java",
+      "start_line": "32",
+      "message": "Rename field \"bundle\" to prevent any misunderstanding/clash with field \"BUNDLE\".",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning itself reports that there are two fields named \"bundle\" and \"BUNDLE\", which the rule flags as confusing and potentially clashing, indicating a naming issue.",
+          "is_true_positive": true,
+          "confidence": 0.96,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "field name clash differing only by case",
+          "developer_explanation": "Having both a \"bundle\" and a \"BUNDLE\" field in the same class can be confusing and may lead to mistakes when reading or modifying the code. Rename one of the fields to a distinct name to improve clarity and avoid accidental misuse.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1934,
+            "output_tokens": 478,
+            "reasoning_tokens": 386,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000152818
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1531,
+          "latency_s": 8.629
+        }
+      ],
+      "original_finding_index": 257
+    },
+    {
+      "finding_id": 75,
+      "type": "java:S1845",
+      "sourcefile": "FutureCallback.java",
+      "start_line": "29",
+      "message": "Rename field \"SUCCEEDED\" to prevent any misunderstanding/clash with method \"succeeded\".",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning flags a naming conflict between a field named SUCCEEDED and a method named succeeded, which the rule treats as a potential source of confusion. This is a legitimate maintainability concern about ambiguous naming.",
+          "is_true_positive": true,
+          "confidence": 0.7,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "field name clashes with method name",
+          "developer_explanation": "Having a field called SUCCEEDED and a method called succeeded can be confusing for readers and maintainers, as it is easy to mistake one for the other. Consider renaming the field (or the method) to make the purpose clear and avoid misunderstandings.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1935,
+            "output_tokens": 453,
+            "reasoning_tokens": 342,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000148605
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1366,
+          "latency_s": 7.248
+        }
+      ],
+      "original_finding_index": 259
+    },
+    {
+      "finding_id": 76,
+      "type": "java:S1845",
+      "sourcefile": "JavaVersion.java",
+      "start_line": "59",
+      "message": "Rename field \"version\" to prevent any misunderstanding/clash with field \"VERSION\".",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning reports that a field named \"version\" exists alongside another field named \"VERSION\", which the rule flags as a confusing case-sensitive name clash. This naming pattern can indeed cause misunderstanding for developers, so the claim is materially correct.",
+          "is_true_positive": true,
+          "confidence": 0.92,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "field name case clash",
+          "developer_explanation": "You have two fields whose names differ only by case, which can be confusing and lead to mistakes when reading or modifying the code. Rename one of the fields (e.g., change \"version\" to \"apiVersion\" or similar) to make the distinction clear and improve code readability.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1933,
+            "output_tokens": 449,
+            "reasoning_tokens": 334,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000147851
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1331,
+          "latency_s": 7.294
+        }
+      ],
+      "original_finding_index": 260
+    },
+    {
+      "finding_id": 77,
+      "type": "java:S1845",
+      "sourcefile": "Promise.java",
+      "start_line": "233",
+      "message": "Rename method \"noop\" to prevent any misunderstanding/clash with field \"NOOP\" defined in interface \"org.eclipse.jetty.util.thread.Invocable\".",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that a method named \"noop\" collides with a constant field \"NOOP\" in an interface, which the rule flags as confusing naming, so the claim is that the naming is ambiguous. This is a valid code‑smell concern about readability, thus a true positive.",
+          "is_true_positive": true,
+          "confidence": 0.86,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "method name clashes with constant field name",
+          "developer_explanation": "Your class defines a method called \"noop\" while the Jetty interface defines a constant \"NOOP\". The similar names can mislead readers and cause confusion about which identifier is being used. Rename the method to a more distinct name to improve clarity and avoid potential misunderstandings.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1946,
+            "output_tokens": 426,
+            "reasoning_tokens": 291,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000144422
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1154,
+          "latency_s": 6.881
+        }
+      ],
+      "original_finding_index": 261
+    },
+    {
+      "finding_id": 78,
+      "type": "java:S1845",
+      "sourcefile": "RolloverFileOutputStream.java",
+      "start_line": "398",
+      "message": "Rename method \"rollOver\" to prevent any misunderstanding/clash with method \"rollover\".",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning flags that a method named \"rollOver\" is too similar to another method named \"rollover\", which the rule treats as a naming confusion issue.",
+          "is_true_positive": true,
+          "confidence": 0.88,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "method name too similar to another method",
+          "developer_explanation": "Having both \"rollOver\" and \"rollover\" can easily be confused, leading to mistakes when reading or calling the methods. Rename one of the methods to a more distinct name to improve code clarity and avoid accidental misuse.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1939,
+            "output_tokens": 458,
+            "reasoning_tokens": 382,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000149603
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1515,
+          "latency_s": 7.233
+        }
+      ],
+      "original_finding_index": 262
+    },
+    {
+      "finding_id": 79,
+      "type": "java:S3014",
+      "sourcefile": "QueuedThreadPool.java",
+      "start_line": "162",
+      "message": "Remove this use of \"ThreadGroup\". Prefer the use of \"ThreadPoolExecutor\".",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning flags the use of the legacy ThreadGroup API and recommends replacing it with ThreadPoolExecutor, which SonarQube treats as a design/code‑smell issue. This recommendation is generally valid because ThreadGroup is outdated and can lead to harder‑to‑maintain code.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "use of ThreadGroup instead of ThreadPoolExecutor",
+          "developer_explanation": "ThreadGroup is an old API that is discouraged in modern Java; it offers limited functionality and can make thread management error‑prone. Replace the ThreadGroup usage with a ThreadPoolExecutor to get better control, resource management, and clearer code. This will improve maintainability and align the code with current best practices.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1940,
+            "output_tokens": 524,
+            "reasoning_tokens": 396,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00016086
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1578,
+          "latency_s": 7.055
+        }
+      ],
+      "original_finding_index": 268
+    },
+    {
+      "finding_id": 80,
+      "type": "java:S3014",
+      "sourcefile": "ScheduledExecutorScheduler.java",
+      "start_line": "83",
+      "message": "Remove this use of \"ThreadGroup\". Prefer the use of \"ThreadPoolExecutor\".",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning flags the use of the legacy ThreadGroup class and recommends replacing it with ThreadPoolExecutor, which is a design concern the rule consistently treats as a problem.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "use of deprecated ThreadGroup API",
+          "developer_explanation": "ThreadGroup is an outdated API that can lead to confusing thread management and is no longer recommended. Replace it with a ThreadPoolExecutor to get modern, controllable thread pooling and clearer code. This will improve maintainability and align with current best practices.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1939,
+            "output_tokens": 461,
+            "reasoning_tokens": 376,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000150113
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1493,
+          "latency_s": 5.62
+        }
+      ],
+      "original_finding_index": 272
+    },
+    {
+      "finding_id": 81,
+      "type": "java:S1845",
+      "sourcefile": "MessageInputStream.java",
+      "start_line": "51",
+      "message": "Rename field \"closed\" to prevent any misunderstanding/clash with field \"CLOSED\".",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning flags two fields whose names differ only by case, which the rule claims can cause confusion or clashes. This claim is generally valid because such naming can lead to misunderstandings, so the warning is a true positive.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "field name case clash",
+          "developer_explanation": "You have both a field named \"closed\" and another named \"CLOSED\", which differ only by case. This can be confusing for developers and may lead to mistakes when reading or modifying the code. Consider renaming one of them (e.g., rename the constant to IS_CLOSED or the boolean to isClosed) to make the intent clear.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1935,
+            "output_tokens": 704,
+            "reasoning_tokens": 618,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000191275
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2462,
+          "latency_s": 11.241
+        }
+      ],
+      "original_finding_index": 274
+    },
+    {
+      "finding_id": 82,
+      "type": "java:S3776",
+      "sourcefile": "MutableHttpFields.java",
+      "start_line": "431",
+      "message": "Refactor this method to reduce its Cognitive Complexity from 16 to the 15 allowed.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning reports that the method's cognitive complexity exceeds the configured limit, which is a maintainability concern flagged by the rule.",
+          "is_true_positive": true,
+          "confidence": 0.92,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "method exceeds cognitive complexity limit",
+          "developer_explanation": "The method is currently too complex to read and maintain easily. Simplify the logic by extracting smaller helper methods, reducing nesting, or otherwise lowering the cognitive load. This will improve readability and future maintenance.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1938,
+            "output_tokens": 377,
+            "reasoning_tokens": 304,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000135796
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1203,
+          "latency_s": 5.143
+        }
+      ],
+      "original_finding_index": 400
+    },
+    {
+      "finding_id": 83,
+      "type": "java:S3776",
+      "sourcefile": "HttpSenderOverHTTP3.java",
+      "start_line": "57",
+      "message": "Refactor this method to reduce its Cognitive Complexity from 39 to the 15 allowed.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that the method's cognitive complexity is 39, exceeding the allowed limit of 15, which directly indicates a maintainability concern. Since SonarQube computed this metric, the claim is likely correct and the method should be simplified.",
+          "is_true_positive": true,
+          "confidence": 0.88,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "method with excessive cognitive complexity",
+          "developer_explanation": "Your method is currently too complex to read and understand easily, as indicated by its high cognitive complexity score. Simplify the logic by breaking it into smaller helper methods, reducing nesting, and clarifying intent. This will make the code easier to maintain and less error‑prone.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1940,
+            "output_tokens": 460,
+            "reasoning_tokens": 356,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00014998
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1415,
+          "latency_s": 6.92
+        }
+      ],
+      "original_finding_index": 485
+    },
+    {
+      "finding_id": 84,
+      "type": "java:S2696",
+      "sourcefile": "DefaultFileLocatorHelper.java",
+      "start_line": "152",
+      "message": "Make the enclosing method \"static\" or remove this set.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly says to make the enclosing method static or remove this set, which indicates the tool detected a mutable static field being modified, a concurrency concern. This matches rule S2696's focus on thread‑safety of static fields, so the claim is likely correct.",
+          "is_true_positive": true,
+          "confidence": 0.7,
+          "category": "CONCURRENCY",
+          "issue_signature": "mutable static field modification",
+          "developer_explanation": "Your code changes a static field, which can lead to race conditions when accessed by multiple threads. Consider making the field final, using a thread‑safe type, or avoiding the modification altogether. This will eliminate the potential concurrency bug.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1933,
+            "output_tokens": 833,
+            "reasoning_tokens": 808,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000213131
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3216,
+          "latency_s": 10.737
+        }
+      ],
+      "original_finding_index": 616
+    },
+    {
+      "finding_id": 85,
+      "type": "java:S3776",
+      "sourcefile": "HttpChannelState.java",
+      "start_line": "1338",
+      "message": "Refactor this method to reduce its Cognitive Complexity from 37 to the 15 allowed.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that the method's cognitive complexity is 37, exceeding the allowed limit of 15, which is a factual claim about a maintainability metric. This indicates a genuine code smell that should be addressed.",
+          "is_true_positive": true,
+          "confidence": 0.93,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "method with excessive cognitive complexity",
+          "developer_explanation": "The method is currently too complex to read and maintain, as indicated by its high cognitive complexity score. Consider breaking the method into smaller, well‑named helper methods and simplifying nested logic to bring the complexity within acceptable limits.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1940,
+            "output_tokens": 418,
+            "reasoning_tokens": 334,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00014284
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1326,
+          "latency_s": 6.522
+        }
+      ],
+      "original_finding_index": 785
+    },
+    {
+      "finding_id": 86,
+      "type": "java:S1948",
+      "sourcefile": "HttpConnection.java",
+      "start_line": "1049",
+      "message": "Make non-static \"_complete\" transient or serializable.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning assumes the class is serializable and that the instance field _complete is non‑serializable, but HttpConnection is unlikely to implement java.io.Serializable, so the rule does not apply. Therefore the alarm is probably a false positive.",
+          "is_true_positive": false,
+          "confidence": 0.8,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "non-serializable field in serializable class",
+          "developer_explanation": "The tool flags the _complete field as needing to be transient or serializable, but HttpConnection does not implement Serializable, so there is no risk of serialization failure. You can safely ignore this warning unless the class is later made serializable.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1933,
+            "output_tokens": 743,
+            "reasoning_tokens": 720,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000197831
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2860,
+          "latency_s": 12.137
+        }
+      ],
+      "original_finding_index": 791
+    },
+    {
+      "finding_id": 87,
+      "type": "java:S1948",
+      "sourcefile": "UnreadableSessionDataException.java",
+      "start_line": "26",
+      "message": "Make non-static \"_sessionContext\" transient or serializable.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that a non-static field \"_sessionContext\" is neither transient nor serializable, which violates the rule for serializable classes. This indicates a real risk of serialization failure for the exception class.",
+          "is_true_positive": true,
+          "confidence": 0.92,
+          "category": "CORRECTNESS",
+          "issue_signature": "non-serializable field in serializable class",
+          "developer_explanation": "The exception class is serializable, but it contains a field that does not implement Serializable and is not marked transient. When the exception is serialized (e.g., during RMI or HTTP session storage), this will cause a NotSerializableException. Mark the field as transient or make its type implement Serializable to avoid serialization errors.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1936,
+            "output_tokens": 668,
+            "reasoning_tokens": 628,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000185192
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2497,
+          "latency_s": 10.924
+        }
+      ],
+      "original_finding_index": 829
+    },
+    {
+      "finding_id": 88,
+      "type": "java:S1192",
+      "sourcefile": "AsyncJSON.java",
+      "start_line": "673",
+      "message": "Define a constant instead of duplicating this literal \"invalid 'false' literal\" 3 times.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning reports that the same literal \"invalid 'false' literal\" appears three times, which is exactly what the rule S1192 checks for.",
+          "is_true_positive": true,
+          "confidence": 0.97,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "duplicated string literal",
+          "developer_explanation": "The same string is hard‑coded in three places, making future changes error‑prone and harder to read. Extract the literal into a constant (e.g., a static final field) and reference that constant instead. This reduces duplication and improves maintainability.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1937,
+            "output_tokens": 391,
+            "reasoning_tokens": 312,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000138139
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1235,
+          "latency_s": 6.524
+        }
+      ],
+      "original_finding_index": 841
+    },
+    {
+      "finding_id": 89,
+      "type": "java:S3776",
+      "sourcefile": "AsyncJSON.java",
+      "start_line": "1298",
+      "message": "Refactor this method to reduce its Cognitive Complexity from 19 to the 15 allowed.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that the method's cognitive complexity is 19, exceeding the allowed limit of 15, which directly indicates a maintainability concern. Since SonarQube's metric calculation is deterministic, this claim is likely correct.",
+          "is_true_positive": true,
+          "confidence": 0.92,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "method exceeds cognitive complexity threshold",
+          "developer_explanation": "The method is flagged as too complex, making it hard to understand and maintain. Reduce its cognitive complexity by simplifying nested logic, extracting helper methods, or breaking the method into smaller, focused units. This will improve readability and ease future changes.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1939,
+            "output_tokens": 448,
+            "reasoning_tokens": 348,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000147903
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1383,
+          "latency_s": 7.575
+        }
+      ],
+      "original_finding_index": 844
+    },
+    {
+      "finding_id": 90,
+      "type": "java:S3776",
+      "sourcefile": "Utf8StringBuilder.java",
+      "start_line": "351",
+      "message": "Refactor this method to reduce its Cognitive Complexity from 27 to the 15 allowed.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning reports that the method’s cognitive complexity is 27, exceeding the allowed limit of 15, which indicates a maintainability problem. This metric is a concrete measurement and the tool’s recommendation to refactor is appropriate.",
+          "is_true_positive": true,
+          "confidence": 0.9,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "excessive cognitive complexity in method",
+          "developer_explanation": "The method is currently too complex to read and understand easily, making future changes risky. Reduce its cognitive complexity by breaking the method into smaller, simpler pieces or simplifying the logic. This will improve maintainability and reduce the chance of bugs.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1939,
+            "output_tokens": 469,
+            "reasoning_tokens": 371,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000151473
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1467,
+          "latency_s": 7.393
+        }
+      ],
+      "original_finding_index": 934
+    },
+    {
+      "finding_id": 91,
+      "type": "java:S1192",
+      "sourcefile": "AttributeNormalizer.java",
+      "start_line": "328",
+      "message": "Define a constant instead of duplicating this literal \"${%s}\" 3 times.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly states that the literal \"${%s}\" appears three times, indicating literal duplication, which the rule flags as a code smell. This duplication is a maintainability concern and the recommendation to define a constant is appropriate.",
+          "is_true_positive": true,
+          "confidence": 0.96,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "duplicated string literal",
+          "developer_explanation": "The same string \"${%s}\" is used in three places, making future changes error‑prone. Extract this literal into a named constant (e.g., a static final field) and reference the constant instead. This improves readability and ensures any future modification is applied consistently.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1934,
+            "output_tokens": 351,
+            "reasoning_tokens": 235,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000131228
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 937,
+          "latency_s": 6.706
+        }
+      ],
+      "original_finding_index": 946
+    },
+    {
+      "finding_id": 92,
+      "type": "java:S115",
+      "sourcefile": "X509.java",
+      "start_line": "44",
+      "message": "Rename this constant name to match the regular expression '^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$'.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning reports that a constant name does not match the required regular expression, which is a naming‑convention violation. Since the rule is about enforcing a naming standard, the tool correctly identified a code‑style issue.",
+          "is_true_positive": true,
+          "confidence": 0.93,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "constant name not matching naming convention",
+          "developer_explanation": "The constant defined on line 44 uses a name that does not follow the project's uppercase‑with‑underscores style. Rename it so it consists of capital letters, digits, and underscores (e.g., MY_CONSTANT) to satisfy the naming convention and improve readability.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1946,
+            "output_tokens": 440,
+            "reasoning_tokens": 328,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000146802
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1301,
+          "latency_s": 6.753
+        }
+      ],
+      "original_finding_index": 976
+    },
+    {
+      "finding_id": 93,
+      "type": "java:S3776",
+      "sourcefile": "WebSocketCoreSession.java",
+      "start_line": "653",
+      "message": "Refactor this method to reduce its Cognitive Complexity from 20 to the 15 allowed.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that the method's cognitive complexity metric is 20, exceeding the allowed limit of 15, which indicates a maintainability concern. Since SonarQube computes this metric automatically, the claim is likely correct.",
+          "is_true_positive": true,
+          "confidence": 0.9,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "high cognitive complexity",
+          "developer_explanation": "Your method is too complex for readers to easily understand, which can make future changes error‑prone. Reduce nesting, split the method into smaller helpers, or simplify logic to bring the cognitive complexity below the threshold.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1939,
+            "output_tokens": 342,
+            "reasoning_tokens": 233,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000129883
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 930,
+          "latency_s": 5.391
+        }
+      ],
+      "original_finding_index": 1004
+    },
+    {
+      "finding_id": 94,
+      "type": "java:S1186",
+      "sourcefile": "XmlConfiguration.java",
+      "start_line": "425",
+      "message": "Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning indicates that the method at line 425 is empty, which the rule flags as a code smell. Since an empty method without explanation can reduce code readability and maintainability, the claim is valid.",
+          "is_true_positive": true,
+          "confidence": 0.93,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "empty method without comment",
+          "developer_explanation": "The method currently contains no statements, which can be confusing for readers and maintainers. Add a comment explaining why the method is intentionally empty, or throw an UnsupportedOperationException, or provide the intended implementation. This makes the code clearer and prevents future misunderstandings.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1938,
+            "output_tokens": 640,
+            "reasoning_tokens": 584,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000180506
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2323,
+          "latency_s": 8.592
+        }
+      ],
+      "original_finding_index": 1028
+    },
+    {
+      "finding_id": 95,
+      "type": "java:S1181",
+      "sourcefile": "ByteRange.java",
+      "start_line": "155",
+      "message": "Catch Exception instead of Throwable.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that the code catches Throwable rather than Exception, which the rule flags as a bad practice. Catching Throwable can unintentionally swallow Errors and is generally discouraged. Therefore the claim is likely correct.",
+          "is_true_positive": true,
+          "confidence": 0.92,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "catching Throwable instead of Exception",
+          "developer_explanation": "Your code catches Throwable, which also captures serious Errors like OutOfMemoryError that should not be handled. This can hide critical failures and make debugging harder. Change the catch clause to catch Exception or more specific exception types instead.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1934,
+            "output_tokens": 402,
+            "reasoning_tokens": 312,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000139898
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1240,
+          "latency_s": 5.408
+        }
+      ],
+      "original_finding_index": 1299
+    },
+    {
+      "finding_id": 96,
+      "type": "java:S1181",
+      "sourcefile": "SslConnection.java",
+      "start_line": "1523",
+      "message": "Catch Exception instead of Throwable.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly states that a catch clause catches Throwable, which the rule flags as a bad practice. This indicates the tool correctly identified a code smell.",
+          "is_true_positive": true,
+          "confidence": 0.92,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "catching Throwable instead of Exception",
+          "developer_explanation": "Your code catches Throwable, which also captures Errors and other serious problems that should normally propagate. This makes debugging and error handling harder and can hide critical failures. Change the catch clause to catch Exception or more specific exception types instead of Throwable.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1937,
+            "output_tokens": 497,
+            "reasoning_tokens": 459,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000156159
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1826,
+          "latency_s": 7.386
+        }
+      ],
+      "original_finding_index": 1910
+    },
+    {
+      "finding_id": 97,
+      "type": "java:S3358",
+      "sourcefile": "Attributes.java",
+      "start_line": "673",
+      "message": "Extract this nested ternary operation into an independent statement.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning flags a nested ternary expression and advises extracting it, which directly addresses the presence of a confusing construct. Since nested ternaries are indeed hard to read, the recommendation is a valid maintainability concern.",
+          "is_true_positive": true,
+          "confidence": 0.86,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "nested ternary expression",
+          "developer_explanation": "Your code contains a ternary operator inside another ternary, which makes the logic difficult to follow. Refactor the expression by extracting the inner ternary into a separate statement or variable to improve readability and reduce the chance of mistakes.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1927,
+            "output_tokens": 491,
+            "reasoning_tokens": 411,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000154769
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1630,
+          "latency_s": 6.803
+        }
+      ],
+      "original_finding_index": 2631
+    },
+    {
+      "finding_id": 98,
+      "type": "java:S1168",
+      "sourcefile": "StringUtil.java",
+      "start_line": "916",
+      "message": "Return an empty array instead of null.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly states that the method returns null for an array and should return an empty array, which indicates a potential null dereference issue. Since returning null for an array can cause NullPointerExceptions in callers, this is a correctness problem. Therefore the claim is likely valid.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "CORRECTNESS",
+          "issue_signature": "returning null array instead of empty array",
+          "developer_explanation": "The method currently returns null for an array, which can cause callers to throw NullPointerExceptions when they try to iterate or access elements. Replace the null return with an empty array (e.g., new Type[0]) so that callers can safely handle the result without additional null checks.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1925,
+            "output_tokens": 470,
+            "reasoning_tokens": 347,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000151125
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1381,
+          "latency_s": 7.799
+        }
+      ],
+      "original_finding_index": 2766
+    },
+    {
+      "finding_id": 99,
+      "type": "java:S1121",
+      "sourcefile": "MessageInputStream.java",
+      "start_line": "272",
+      "message": "Extract the assignment out of this expression.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly states that an assignment is used inside an expression, which SonarQube flags as a code smell. This pattern is indeed a maintainability concern, so the claim is likely correct.",
+          "is_true_positive": true,
+          "confidence": 0.88,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "assignment inside expression",
+          "developer_explanation": "The code contains an assignment embedded in another expression, which makes the logic harder to read and understand. Extract the assignment into its own statement before the expression to improve clarity and maintainability.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1931,
+            "output_tokens": 504,
+            "reasoning_tokens": 445,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000157127
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1767,
+          "latency_s": 8.129
+        }
+      ],
+      "original_finding_index": 3085
+    },
+    {
+      "finding_id": 100,
+      "type": "java:S131",
+      "sourcefile": "ServletPathSpec.java",
+      "start_line": "440",
+      "message": "Complete cases by adding the missing enum constants or add a default case to this switch.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that the switch statement is missing enum constants or a default case, which indicates a potential logic gap.",
+          "is_true_positive": true,
+          "confidence": 0.8,
+          "category": "CORRECTNESS",
+          "issue_signature": "incomplete switch over enum",
+          "developer_explanation": "Your switch does not cover every value of the enum and lacks a default branch, so if an unhandled enum constant is passed the code will fall through unexpectedly. Add the missing case clauses or a default case to ensure all possible values are handled correctly.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1936,
+            "output_tokens": 547,
+            "reasoning_tokens": 518,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000164622
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2060,
+          "latency_s": 8.729
+        }
+      ],
+      "original_finding_index": 346
+    },
+    {
+      "finding_id": 101,
+      "type": "java:S2447",
+      "sourcefile": "IncludeExcludeSet.java",
+      "start_line": "215",
+      "message": "Null is returned but a \"Boolean\" is expected.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly states that a null literal is returned from a method whose return type is Boolean, which can cause a NullPointerException when the value is used.",
+          "is_true_positive": true,
+          "confidence": 0.88,
+          "category": "CORRECTNESS",
+          "issue_signature": "null return for Boolean type",
+          "developer_explanation": "The method returns null even though it declares a Boolean return type. This can lead to a NullPointerException when the caller dereferences or unboxes the result. Return a non‑null Boolean value (e.g., Boolean.TRUE or Boolean.FALSE) or redesign the method to avoid returning null.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1935,
+            "output_tokens": 435,
+            "reasoning_tokens": 342,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000145545
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1358,
+          "latency_s": 7.153
+        }
+      ],
+      "original_finding_index": 811
+    },
+    {
+      "finding_id": 102,
+      "type": "java:S2157",
+      "sourcefile": "LazyList.java",
+      "start_line": "57",
+      "message": "Add a \"clone()\" method to this class.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly claims that the class should have a clone() method, which SonarQube's S2157 rule flags when a class implements Cloneable without overriding clone. Assuming the class implements Cloneable, this claim is materially correct, making the warning a true positive.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "missing clone method in Cloneable class",
+          "developer_explanation": "Your class implements Cloneable but does not provide its own clone() implementation. This violates the convention that Cloneable classes should override clone, which can lead to unexpected behavior when cloning is attempted. Add a public clone() method that correctly copies the object's state.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1930,
+            "output_tokens": 618,
+            "reasoning_tokens": 550,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00017647
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2188,
+          "latency_s": 8.814
+        }
+      ],
+      "original_finding_index": 817
+    },
+    {
+      "finding_id": 103,
+      "type": "java:S1452",
+      "sourcefile": "PathCollators.java",
+      "start_line": "54",
+      "message": "Remove usage of generic wildcard type.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning only states a generic recommendation to remove any use of a generic wildcard type, but without seeing the code we cannot know if the wildcard is unnecessary or intentional, so the claim is not demonstrably correct.",
+          "is_true_positive": false,
+          "confidence": 0.6,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "use of generic wildcard type",
+          "developer_explanation": "The tool flags any wildcard usage as a code smell, but wildcards are often required for flexibility or to express read‑only contracts. If the wildcard in your code serves a legitimate purpose, you can safely ignore this warning. Only remove it if it truly adds no value or obscures type safety.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1926,
+            "output_tokens": 454,
+            "reasoning_tokens": 348,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000148442
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1384,
+          "latency_s": 6.686
+        }
+      ],
+      "original_finding_index": 875
+    },
+    {
+      "finding_id": 104,
+      "type": "java:S5843",
+      "sourcefile": "AuthenticationProtocolHandler.java",
+      "start_line": "44",
+      "message": "Simplify this regular expression to reduce its complexity from 35 to the 20 allowed.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning claims the regular expression has a complexity score of 35 exceeding the allowed maximum of 20, which is a concrete metric SonarQube computes from the pattern. Assuming the pattern is a literal in the code, this claim is likely correct and indicates a maintainability/performance concern.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "overly complex regular expression",
+          "developer_explanation": "Your regex is flagged as too complex, which can make it hard to understand and may cause performance problems due to excessive backtracking. Simplify the pattern by removing unnecessary groups, quantifiers, or by using clearer constructs. Refactoring the regex to stay within the recommended complexity will improve readability and runtime behavior.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1936,
+            "output_tokens": 451,
+            "reasoning_tokens": 321,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000148302
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1277,
+          "latency_s": 6.788
+        }
+      ],
+      "original_finding_index": 1003
+    },
+    {
+      "finding_id": 105,
+      "type": "java:S1871",
+      "sourcefile": "HttpDateTime.java",
+      "start_line": "178",
+      "message": "This branch's code block is the same as the block for the branch on line 174.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that the code block for this branch is identical to the block for the branch on line 174, which directly indicates duplicated branch logic. Duplicate code in separate branches is a maintainability problem, so the claim is likely correct.",
+          "is_true_positive": true,
+          "confidence": 0.92,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "duplicate branch code block",
+          "developer_explanation": "Two branches of the conditional contain exactly the same statements, which makes the code harder to maintain and increases the risk of future bugs when one copy is changed but the other is not. Consolidate the shared logic into a single block or extract it into a helper method to eliminate the duplication.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1939,
+            "output_tokens": 343,
+            "reasoning_tokens": 205,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000130053
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 815,
+          "latency_s": 5.578
+        }
+      ],
+      "original_finding_index": 1247
+    },
+    {
+      "finding_id": 106,
+      "type": "java:S1700",
+      "sourcefile": "MultiPartByteRanges.java",
+      "start_line": "261",
+      "message": "Rename field \"parser\"",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning claims the field name \"parser\" violates the naming convention, which is a maintainability suggestion. Without seeing the code, the name \"parser\" typically follows standard lowerCamelCase for a non‑static field, so the claim is likely incorrect.",
+          "is_true_positive": false,
+          "confidence": 0.7,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "field naming convention violation",
+          "developer_explanation": "The tool suggests renaming the field \"parser\" because it thinks the name does not match the project's naming rules. In most cases, a non‑static field named \"parser\" already follows standard lowerCamelCase conventions, so this warning can be ignored. No code change is required unless your project has a custom naming policy that requires a different format.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1926,
+            "output_tokens": 741,
+            "reasoning_tokens": 665,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000197232
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2651,
+          "latency_s": 10.752
+        }
+      ],
+      "original_finding_index": 1338
+    },
+    {
+      "finding_id": 107,
+      "type": "java:S5261",
+      "sourcefile": "ServletPathSpec.java",
+      "start_line": "182",
+      "message": "Add explicit curly braces to avoid dangling else.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly states that an if‑else statement lacks explicit curly braces, which SonarQube flags as a potential dangling‑else issue.",
+          "is_true_positive": true,
+          "confidence": 0.92,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "missing curly braces around if-else statement",
+          "developer_explanation": "The if‑else construct on line 182 does not use braces, making it easy to misinterpret which else belongs to which if and increasing the risk of future bugs. Add explicit { } around the affected block to clarify the control flow and improve readability.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1927,
+            "output_tokens": 382,
+            "reasoning_tokens": 283,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000136239
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1124,
+          "latency_s": 5.618
+        }
+      ],
+      "original_finding_index": 1392
+    },
+    {
+      "finding_id": 108,
+      "type": "java:S6126",
+      "sourcefile": "PrefaceFrame.java",
+      "start_line": "33",
+      "message": "Replace this String concatenation with Text block.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning flags a string concatenation that could be expressed as a Java 15 text block, which is a valid maintainability concern. The claim about the presence of concatenation is correct, so the issue is a true positive.",
+          "is_true_positive": true,
+          "confidence": 0.88,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "string concatenation instead of text block",
+          "developer_explanation": "Your code builds a multi‑line string using + concatenation. This makes the source harder to read and maintain. Replace the concatenation with a Java 15 text block to simplify the literal.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1928,
+            "output_tokens": 643,
+            "reasoning_tokens": 596,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000180646
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2369,
+          "latency_s": 10.785
+        }
+      ],
+      "original_finding_index": 1477
+    },
+    {
+      "finding_id": 109,
+      "type": "java:S1172",
+      "sourcefile": "HeaderGenerator.java",
+      "start_line": "48",
+      "message": "Remove this unused method parameter \"capacity\".",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning claims that the method parameter \"capacity\" is never used in the method body, which SonarQube flags as an unused parameter. This is typically a maintainability issue, though it could be a false positive if the method overrides a supertype where the parameter is required. Based on the tool's detection, the claim is likely correct, but without seeing the code we cannot be certain about overriding contexts.",
+          "is_true_positive": true,
+          "confidence": 0.7,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "unused method parameter",
+          "developer_explanation": "The parameter \"capacity\" is not referenced inside the method, so it serves no purpose and makes the code harder to understand. Removing it will simplify the method signature and improve readability. If the method overrides or implements an interface where the parameter is required, you can safely ignore the warning, but otherwise delete the unused parameter.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1927,
+            "output_tokens": 648,
+            "reasoning_tokens": 549,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000181459
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2192,
+          "latency_s": 9.523
+        }
+      ],
+      "original_finding_index": 1479
+    },
+    {
+      "finding_id": 110,
+      "type": "java:S1119",
+      "sourcefile": "WriteFlusher.java",
+      "start_line": "343",
+      "message": "Refactor the code to remove this label and the need for it.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning flags a label in the code and advises its removal, which matches SonarQube rule S1119 that treats labels as confusing code smells. This is a maintainability concern, not a correctness or security issue, so the claim is valid.",
+          "is_true_positive": true,
+          "confidence": 0.92,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "unnecessary label",
+          "developer_explanation": "The method contains a labeled statement that makes the flow harder to read and understand. Labels are rarely needed in Java and can usually be replaced with clearer constructs such as break or continue. Refactor the code to eliminate the label and simplify the control flow.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1932,
+            "output_tokens": 556,
+            "reasoning_tokens": 432,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000166004
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1717,
+          "latency_s": 8.027
+        }
+      ],
+      "original_finding_index": 1738
+    },
+    {
+      "finding_id": 111,
+      "type": "java:S127",
+      "sourcefile": "WriteThroughWriter.java",
+      "start_line": "249",
+      "message": "Refactor the code in order to not assign to this loop counter from within the loop body.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly states that the loop counter is assigned to inside the loop body, which SonarQube flags as a code smell. Modifying a loop counter within the loop can lead to confusing logic and potential bugs, so the claim is materially correct.",
+          "is_true_positive": true,
+          "confidence": 0.92,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "assignment to loop counter inside loop",
+          "developer_explanation": "Your code changes the loop variable from within the loop, which makes the iteration logic hard to follow and can cause off‑by‑one errors or infinite loops. Refactor the loop so that the counter is only updated by the loop construct itself, moving any needed adjustments to the loop condition or using a separate variable.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1936,
+            "output_tokens": 486,
+            "reasoning_tokens": 373,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000154252
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1483,
+          "latency_s": 7.142
+        }
+      ],
+      "original_finding_index": 1743
+    },
+    {
+      "finding_id": 112,
+      "type": "java:S3011",
+      "sourcefile": "DefaultFileLocatorHelper.java",
+      "start_line": "153",
+      "message": "This accessibility update should be removed.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that an accessibility update (e.g., setAccessible) should be removed, which directly matches SonarQube rule S3011 that flags reflection used to change accessibility as a code smell. Based on this claim, the issue is likely a real maintainability/security concern unless the code deliberately requires it.",
+          "is_true_positive": true,
+          "confidence": 0.7,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "reflection used to change accessibility",
+          "developer_explanation": "The code uses reflection to modify the accessibility of a class, method, or field, which breaks encapsulation and can lead to security or maintenance problems. Removing the setAccessible call will keep the code safer and easier to understand. If the access change is truly required, consider alternative designs that avoid reflective access.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1926,
+            "output_tokens": 892,
+            "reasoning_tokens": 876,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000222902
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3487,
+          "latency_s": 12.879
+        }
+      ],
+      "original_finding_index": 1955
+    },
+    {
+      "finding_id": 113,
+      "type": "java:S5738",
+      "sourcefile": "Server.java",
+      "start_line": "904",
+      "message": "Remove this call to a deprecated class, it has been marked for removal.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly states that a call to a deprecated class was found, which is the fact the tool reports. Assuming the class is indeed marked @Deprecated, the claim is correct. Using deprecated APIs is a maintainability concern because they may be removed in future releases.",
+          "is_true_positive": true,
+          "confidence": 0.88,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "use of deprecated class",
+          "developer_explanation": "Your code calls a class that has been marked as deprecated and slated for removal. This can cause compilation or runtime failures when the library updates and the class disappears. Replace the usage with the recommended alternative API to keep the code future‑proof.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1936,
+            "output_tokens": 416,
+            "reasoning_tokens": 304,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000142352
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1204,
+          "latency_s": 7.053
+        }
+      ],
+      "original_finding_index": 2258
+    },
+    {
+      "finding_id": 114,
+      "type": "java:S112",
+      "sourcefile": "SessionDataMap.java",
+      "start_line": "58",
+      "message": "Replace generic exceptions with specific library exceptions or a custom exception.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning is triggered because the rule detected a generic exception being thrown at the indicated line, which the rule flags as a code smell. Since the tool only raises this when such a generic exception is present, the claim is likely correct, making the warning a true positive. This issue relates to code readability and proper exception handling rather than functional correctness.",
+          "is_true_positive": true,
+          "confidence": 0.88,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "throwing generic exception",
+          "developer_explanation": "The code throws a generic Exception, which makes it harder for callers to understand and handle specific error conditions. Replace it with a more specific library exception or define a custom exception that conveys the exact problem. This improves readability and maintainability of the error handling.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1935,
+            "output_tokens": 536,
+            "reasoning_tokens": 443,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000162715
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1765,
+          "latency_s": 9.201
+        }
+      ],
+      "original_finding_index": 2457
+    },
+    {
+      "finding_id": 115,
+      "type": "java:S3824",
+      "sourcefile": "TopologicalSort.java",
+      "start_line": "57",
+      "message": "Replace this \"Map.get()\" and condition with a call to \"Map.computeIfAbsent()\".",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly states that the code uses a Map.get() followed by a condition that can be replaced by Map.computeIfAbsent(), which indicates a pattern the rule detects. This pattern is indeed a code smell that can be simplified, so the claim is likely correct. Therefore the warning is a true positive.",
+          "is_true_positive": true,
+          "confidence": 0.88,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "map get followed by conditional put",
+          "developer_explanation": "Your code retrieves a value from a map and then checks if it is null before inserting a new entry. This can be simplified by using Map.computeIfAbsent(), which reduces boilerplate and avoids a second map lookup. Refactor the code to call computeIfAbsent with a supplier for the value.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1942,
+            "output_tokens": 501,
+            "reasoning_tokens": 346,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000157024
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1367,
+          "latency_s": 7.156
+        }
+      ],
+      "original_finding_index": 2693
+    },
+    {
+      "finding_id": 116,
+      "type": "java:S108",
+      "sourcefile": "TypeUtil.java",
+      "start_line": "622",
+      "message": "Remove this block of code, fill it in, or add a comment explaining why it is empty.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that there is an empty block of code at line 622 that should be removed, filled, or commented, which directly indicates the presence of an empty block. Since an empty block without explanation is a maintainability concern, the claim is likely correct.",
+          "is_true_positive": true,
+          "confidence": 0.88,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "empty code block without comment",
+          "developer_explanation": "The method contains an empty block that does nothing. Empty blocks can be confusing and may hide missing logic, so you should either remove the block, add the intended code, or insert a comment explaining why it is intentionally empty.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1935,
+            "output_tokens": 525,
+            "reasoning_tokens": 418,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000160845
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1664,
+          "latency_s": 7.831
+        }
+      ],
+      "original_finding_index": 2703
+    },
+    {
+      "finding_id": 117,
+      "type": "java:S1144",
+      "sourcefile": "SecurityUtils.java",
+      "start_line": "233",
+      "message": "Remove this unused private \"callableToPrivilegedAction\" method.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that the private method \"callableToPrivilegedAction\" is unused, which SonarQube flags as dead code. Since the tool has determined no references to this method, the claim is likely correct. Therefore the alarm is a true positive.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "unused private method",
+          "developer_explanation": "The method \"callableToPrivilegedAction\" is never invoked anywhere in the codebase, so it serves no purpose. Keeping unused code makes the code harder to read and maintain. Delete the method to clean up the class.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1931,
+            "output_tokens": 365,
+            "reasoning_tokens": 242,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000133497
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 957,
+          "latency_s": 5.478
+        }
+      ],
+      "original_finding_index": 2869
+    },
+    {
+      "finding_id": 118,
+      "type": "java:S6204",
+      "sourcefile": "JettyClientUpgradeRequest.java",
+      "start_line": "52",
+      "message": "Replace this usage of 'Stream.collect(Collectors.toList())' with 'Stream.toList()' and ensure that the list is unmodified.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning claims that using Stream.collect(Collectors.toList()) can be replaced by Stream.toList() and that the resulting list must not be modified, which is a valid suggestion when targeting Java 16+. This claim is generally correct, so the warning is a true positive.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "collect toList collector usage",
+          "developer_explanation": "The code currently builds a list with collect(Collectors.toList()), which creates a mutable list. Since you are on Java 16, you can use the newer Stream.toList() method, which is more concise and returns an unmodifiable list. Make sure the list is not modified after creation before applying the change.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1949,
+            "output_tokens": 982,
+            "reasoning_tokens": 932,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000239053
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3714,
+          "latency_s": 14.082
+        }
+      ],
+      "original_finding_index": 3055
+    },
+    {
+      "finding_id": 119,
+      "type": "xml:S1134",
+      "sourcefile": "pom.xml",
+      "start_line": "54",
+      "message": "Take the required action to fix the issue indicated by this \"FIXME\" comment.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning reports a FIXME comment in pom.xml line 54, which the rule xml:S1134 flags as a code smell. The presence of such a comment indeed indicates unfinished or questionable code, so the tool's claim is correct.",
+          "is_true_positive": true,
+          "confidence": 0.97,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "presence of FIXME comment",
+          "developer_explanation": "Your pom.xml contains a FIXME comment, which signals that some required action has not been completed. This can lead to confusion or missed work, so you should address the underlying issue or remove the comment once the problem is resolved.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1934,
+            "output_tokens": 578,
+            "reasoning_tokens": 496,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000169818
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1969,
+          "latency_s": 8.93
+        }
+      ],
+      "original_finding_index": 3102
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+A static analysis tool reported the following warning. Evaluate whether it is a true positive (real issue) or false positive (incorrect alarm).
+
+Tool: Error Prone
+Rule: {type} ({abbrev})
+Warning: {message}
+Description: {description}
+Suggested fix: {suggestion}
+Documentation: {bugpattern_url}
+File: {sourcefile}, Line: {start_line}, Column: {column}
+
+The snippet below may be an excerpt; code outside it (other methods, callers, other files) is not shown.
+Source code (line numbers shown, flagged lines marked with >>>):
+```java
+{code_context}
+```
+
+Return a JSON object with exactly these fields, in this order:
+{{
+  "reasoning": "<2-4 sentences; the first sentence must state the specific fact in the shown code that decides the verdict>",
+  "is_true_positive": <true or false>,
+  "confidence": <float between 0.0 and 1.0>,
+  "category": "<CORRECTNESS|CONCURRENCY|SECURITY|PERFORMANCE|MAINTAINABILITY|OTHER>",
+  "issue_signature": "<short canonical description of the kind of problem claimed, independent of file, line and class; lower-case noun phrase, max 10 words>",
+  "developer_explanation": "<2-3 sentences for the developer who owns this code. If is_true_positive is true: what is wrong here, why it matters, what to change. If false: why this alarm can be safely dismissed in this context. Plain language, no rule ID, no tool jargon.>"
+}}

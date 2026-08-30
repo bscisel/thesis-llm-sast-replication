@@ -1,0 +1,1089 @@
+{
+  "model": "qwen3.5:9b",
+  "tool": "sonarqube",
+  "num_runs": 3,
+  "runs_per_invocation": 3,
+  "source_root": "java-errors-benchmark",
+  "call_parameters": {
+    "temperature": null,
+    "concurrency": 1,
+    "response_format": "json_schema",
+    "num_ctx": 32768,
+    "request_timeout_s": 900,
+    "base_url": "http://localhost:11434"
+  },
+  "system_prompt_variant": "benchmark",
+  "system_prompt_sha256": "b5b634e0a9109c59",
+  "user_prompt_sha256": "233249fc03b8f699",
+  "timestamp": "2026-08-10T17:55:15.657072+00:00",
+  "updated_at": "2026-08-10T20:22:31.323466+00:00",
+  "findings": [
+    {
+      "finding_id": 0,
+      "type": "java:S2251",
+      "sourcefile": "CountdownPrinter.java",
+      "start_line": "5",
+      "message": "\"i\" is incremented and will never reach \"stop condition\".",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The for-loop starts with i=5, checks if i>=0 (true initially), then increments i via i++ on each iteration. Since incrementing moves the counter away from terminating conditions rather than toward them when starting at positive values while checking i >= 0, this creates an infinite loop that will never complete.",
+          "is_true_positive": true,
+          "confidence": 1.0,
+          "category": "CORRECTNESS",
+          "issue_signature": "infinite for-loop due to wrong increment direction",
+          "developer_explanation": "This code contains an infinite loop bug. The variable i starts at 5 and is incremented each iteration while the termination condition checks if it stays above zero—these actions contradict each other since increasing a positive value never satisfies what you likely intended (a countdown that reaches below zero). Fix this by using decrementing logic like for(int i=5; ;i--) or restructure to properly count down from 5 to -1.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 2838,
+            "output_tokens": 215
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3223,
+          "latency_s": 8.759
+        },
+        {
+          "reasoning": "The flagged line contains a for-loop that starts with i=5, uses condition 'i >= 0', increments via '++' each iteration. This causes the variable to increase toward positive infinity rather than decreasing; in practice this loop will not terminate within any reasonable execution timeframe due to lack of an upper bound check.",
+          "is_true_positive": true,
+          "confidence": 1.0,
+          "category": "CORRECTNESS",
+          "issue_signature": "loop variable incremented without reaching termination condition",
+          "developer_explanation": "This loop will not behave as a countdown—it keeps incrementing indefinitely until integer overflow after ~9 billion iterations (about 287 years at one iteration per second). Fix it by using 'i--' instead of 'i++', or change the condition to have an upper bound if you truly intended counting up.",
+          "run": 2,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 3294,
+            "output_tokens": 191
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 5598,
+          "latency_s": 12.223
+        },
+        {
+          "reasoning": "The loop increments the counter variable while checking against a lower bound (>=0), which means under normal execution it will not naturally reach the termination condition without relying on integer overflow behavior; this constitutes an infinite execution path in practical terms as program lifetime or resource limits typically intervene before wrap-around occurs. SonarQube's claim that 'will never reach stop condition' aligns with code quality correctness issue where loop direction mismatches intended bound satisfaction, correctly identifying non-termination bug.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "for-loop increment avoids condition satisfaction threshold",
+          "developer_explanation": "The loop increments the variable away from zero so it relies on integer overflow to ever stop execution, which is an incorrect control flow design that will effectively hang until timeout or resource exhaustion. Fix by using a decrement operator and appropriate comparison like 'i > -1' instead.",
+          "run": 3,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 16919,
+            "output_tokens": 213
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 76532,
+          "latency_s": 140.622
+        }
+      ]
+    },
+    {
+      "finding_id": 1,
+      "type": "java:S2189",
+      "sourcefile": "CountdownPrinter.java",
+      "start_line": "5",
+      "message": "Correct this loop's end condition.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The loop starts with i = 5 and increments each iteration (i++), while the termination condition requires i >= 0. Since i only increases, it will never satisfy a falsifying exit point—the value becomes arbitrarily large forever. This creates an infinite loop, which is definitively incorrect behavior.",
+          "is_true_positive": true,
+          "confidence": 1.0,
+          "category": "CORRECTNESS",
+          "issue_signature": "infinite loop due to counter incrementing while condition requires value not increasing",
+          "developer_explanation": "This code creates an infinite loop because the loop variable increments (i++) but never decreases below zero. The termination check i >= 0 will always remain true forever. Change this to decrement with i-- or reverse the logic so the loop eventually exits as intended.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 2437,
+            "output_tokens": 182
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1413,
+          "latency_s": 5.261,
+          "retry_of_truncated": true,
+          "retry_attempts": 1,
+          "superseded": {
+            "run": 1,
+            "error": "parse_failed",
+            "raw": "",
+            "served_model": "qwen3.5:9b",
+            "usage": {
+              "input_tokens": 2069,
+              "output_tokens": 30699
+            },
+            "stop_reason": "length",
+            "thinking_chars": 239407,
+            "latency_s": 281.113
+          }
+        },
+        {
+          "reasoning": "The code snippet shows a for-loop that initializes variable i to 5 and increments by one in every iteration while checking if the value remains at least zero, which ensures the condition is perpetually true since numbers only grow larger.",
+          "is_true_positive": true,
+          "confidence": 1.0,
+          "category": "CORRECTNESS",
+          "issue_signature": "incorrect termination condition causing infinite loop execution",
+          "developer_explanation": "Your loop increments a counter starting from a positive value without ever decreasing it, so the loop never terminates and your program hangs instead of exiting or printing a countdown sequence. Fix this by changing `i++` to `i--` if you intended to count down.",
+          "run": 2,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 4856,
+            "output_tokens": 161
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 12980,
+          "latency_s": 25.818
+        },
+        {
+          "reasoning": "The flagged for-loop initializes variable i to a positive value of 5, increments by one each iteration, and checks `i >= 0`; this logic prevents normal termination within reasonable bounds unless relying on integer overflow after billions of iterations.",
+          "is_true_positive": true,
+          "confidence": 1.0,
+          "category": "CORRECTNESS",
+          "issue_signature": "incorrect loop end condition leading to infinite execution pattern",
+          "developer_explanation": "This logic will run indefinitely until the counter wraps around due to integer overflow, which risks blocking your application for a very long time or exhausting CPU resources before exiting. Given that this is inside main and named CountdownPrinter, you likely intended to count down (using i--); changing the update direction to decrement ensures proper termination behavior.",
+          "run": 3,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 14149,
+            "output_tokens": 170
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 55601,
+          "latency_s": 109.313
+        }
+      ]
+    },
+    {
+      "finding_id": 2,
+      "type": "java:S6880",
+      "sourcefile": "InputRouter.java",
+      "start_line": "13",
+      "message": "Replace the chain of if/else with a switch expression.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The method processes an integer input using a verbose else-if chain on literal values which matches S6880's detection criteria for improvement; the code is syntactically valid and can be refactored to use modern switch logic.",
+          "is_true_positive": true,
+          "confidence": 1.0,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "switch expression recommended instead of if/else chain",
+          "developer_explanation": "The method uses a verbose else-if structure to dispatch on input values which reduces readability and maintainability compared to modern switch syntax; replace this with concise logic that consolidates the conditions.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 21174,
+            "output_tokens": 149
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 83062,
+          "latency_s": 182.577
+        },
+        {
+          "reasoning": "The warning claims an if/else chain should be replaced with switch expression for better style in Java 21+. Both constructs produce identical runtime behavior here - no missing case coverage, null safety issues, or incorrect logic exists that would make this a correctness problem.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "long if/else chain should use switch expression instead",
+          "developer_explanation": "The static analysis tool is recommending modern Java syntax for cleaner code. Switch expressions improve readability and make the conditional logic easier to scan at a glance, which matters for team maintainability even though current behavior works correctly.",
+          "run": 2,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 2918,
+            "output_tokens": 162
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2753,
+          "latency_s": 8.405
+        },
+        {
+          "reasoning": "The method body checks a single integer argument using sequential `if` conditions that matches SonarQube’s S6880 rule pattern recommending switch expressions for improved readability and maintainability; refactoring to this structure would not alter behavior or correctness.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "chained ifs replaced by switch expression",
+          "developer_explanation": "This block checks the same integer value repeatedly with if-else chains instead of using a clearer switch structure; refactoring it to a switch statement or expression would improve readability without changing runtime behavior.",
+          "run": 3,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 14282,
+            "output_tokens": 153
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 52727,
+          "latency_s": 113.598
+        }
+      ]
+    },
+    {
+      "finding_id": 3,
+      "type": "java:S3972",
+      "sourcefile": "InputRouter.java",
+      "start_line": "13",
+      "message": "Move this \"if\" to a new line or add the missing \"else\".",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning claims a 'missing else' or improper formatting of an if block. However, the shown code includes a complete chain handling all input values (1–4) and explicitly provides a default case at the end ('Processing default data'). The static analysis rule S3972 typically corresponds to checks for switch statements missing defaults; this tool likely misapplies its logic here or flags style issues where none exist logically, making it a false positive.",
+          "is_true_positive": false,
+          "confidence": 1.0,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "switch statement missing default case",
+          "developer_explanation": "This warning does not apply here because your code already handles all cases properly using an explicit else-if chain that ends with a catch/default block (line 17–19). The tool's claim of 'missing else' is incorrect in this context since no unhandled inputs exist.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 21078,
+            "output_tokens": 210
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 79483,
+          "latency_s": 185.396
+        },
+        {
+          "reasoning": "Line 13 shows `} if (input == 3) {` where an if statement immediately follows its closing brace with no newline separation, creating the dangling else pattern. Java parses these construct correctly but violates readability best practices by mixing control flow on one line after a block close.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "dangling else in if-then statements without separation",
+          "developer_explanation": "The tool flags code where an if statement immediately follows a closing brace on the same logical line, making it unclear whether this belongs to a previous conditional chain. While your current code works correctly due to how Java parses dangling else patterns unambiguously in simple cases, putting control flow keywords after block terminators reduces readability and can confuse future maintainers when modifying larger methods with nested conditionals.",
+          "run": 2,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 4146,
+            "output_tokens": 204
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 9126,
+          "latency_s": 19.579
+        },
+        {
+          "reasoning": "The provided code uses independent if statements for checking mutually exclusive integer values with a final default case ensuring full coverage; Java does not require an intermediate 'else' clause in this syntax pattern because it is valid and logically complete without overlapping conditions here.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "if conditionals lacking corresponding else clause",
+          "developer_explanation": "This warning claims an 'else' is missing from your conditional chain, but in this specific context the code correctly handles distinct input values (1-4) without overlap or logic gaps. The syntax used for separate checks here follows valid Java rules and behaves as intended with no need to refactor into a chained structure.",
+          "run": 3,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 20336,
+            "output_tokens": 175
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 76968,
+          "latency_s": 177.062
+        }
+      ]
+    },
+    {
+      "finding_id": 4,
+      "type": "java:S127",
+      "sourcefile": "MatrixNormalizer.java",
+      "start_line": "21",
+      "message": "Refactor the code in order to not assign to this loop counter from within the loop body.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The provided code snippet contains valid Java loop constructs where the iterator variables `i` and `j` are never manually modified inside their respective block bodies; lines 23–24 only modify array elements, contradicting the warning's claim of an assignment issue from within scope.",
+          "is_true_positive": false,
+          "confidence": 0.98,
+          "category": "CORRECTNESS",
+          "issue_signature": "manual modification of iteration variable inside loop body",
+          "developer_explanation": "This alarm is incorrect because the code does not manually change any iterator values in the `if` blocks or other statements shown (only array contents are written). Static analysis tools sometimes flag these constructs for safety, but your usage here follows standard for-loop patterns and contains no hidden assignments to counters that would skip iterations.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 15812,
+            "output_tokens": 183
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 58104,
+          "latency_s": 128.124
+        },
+        {
+          "reasoning": "The warning claims 'assign to this loop counter from within the loop body', but lines 21-25 show no such assignment occurs - variable i only appears in header condition and increment, never being modified inside the loop body itself.",
+          "is_true_positive": false,
+          "confidence": 0.98,
+          "category": "CORRECTNESS",
+          "issue_signature": "modifying for-loop counter within iteration body",
+          "developer_explanation": "This alarm is incorrect because your code does not modify any loop variables inside the nested loops as claimed. The real issue here is that line 21 has a bug where condition checks 'i' instead of 'j', causing incorrect bounds checking and potentially out-of-bounds array access - but this differs from what SonarQube reports.",
+          "run": 2,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 4653,
+            "output_tokens": 181
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 9450,
+          "latency_s": 23.182
+        },
+        {
+          "reasoning": "The warning claims the loop counter is assigned within the loop's body by rule S127. However, inspection of lines 20–36 shows that while a local variable j is declared in header on line 21, no explicit modification to this variable occurs inside its own block scope (no assignment like 'j = value' or increment operations visible there). The update clause uses another token i which references outer-loop state but does not count as modifying the locally-declared counter from within body. Additionally, tool warnings for S127 specifically target assignments made in loop bodies to declared counters; this code snippet lacks such behavior.",
+          "is_true_positive": false,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "loop counter modified within body from different scope reference",
+          "developer_explanation": "This warning is likely a false positive because the code does not modify its declared loop variable inside its own block as described by SonarQube's rule. While line 21 declares 'j', subsequent lines only read indices and access array contents without changing their values or logic affecting iteration count in a way that matches this claim.",
+          "run": 3,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 19963,
+            "output_tokens": 262
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 73462,
+          "latency_s": 167.101
+        }
+      ]
+    },
+    {
+      "finding_id": 5,
+      "type": "java:S128",
+      "sourcefile": "MenuHandler.java",
+      "start_line": "11",
+      "message": "End this switch case with an unconditional break, return or throw statement.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The flagged code inside the switch case block contains a `case` label with printed output but no explicit break or return before reaching subsequent default logic. This lack of termination allows implicit fall-through execution into later labels like 'default', causing unintended behavior where valid input choices may trigger error messages meant for unmatched values.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "switch case lacking unconditional terminator",
+          "developer_explanation": "This switch branch does not exit its execution path explicitly after printing 'User 1' logic (if that's the intended flow). Because no break/return is present, code will continue into subsequent default block which prints invalid option message. Add a return or throw/break to ensure only expected behavior executes for specific input values.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 28402,
+            "output_tokens": 188
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 116652,
+          "latency_s": 245.345,
+          "retry_of_truncated": true,
+          "retry_attempts": 1,
+          "superseded": {
+            "run": 1,
+            "error": "parse_failed",
+            "raw": "",
+            "served_model": "qwen3.5:9b",
+            "usage": {
+              "input_tokens": 2168,
+              "output_tokens": 30600
+            },
+            "stop_reason": "length",
+            "thinking_chars": 138133,
+            "latency_s": 283.399
+          }
+        },
+        {
+          "reasoning": "The code in the `case 1` block executes logic (println) but lacks an unconditional exit statement like break or return immediately after it, allowing execution to continue into the subsequent default label.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "switch case missing unconditional control flow termination",
+          "developer_explanation": "The current code allows execution of the invalid option message for valid input values because a break or return statement is omitted after printing User 1 in Case 1. Adding an explicit terminator to this switch arm ensures that only unmatched inputs trigger default logic, preserving intended output behavior.",
+          "run": 2,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 18626,
+            "output_tokens": 157
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 74820,
+          "latency_s": 156.266
+        },
+        {
+          "reasoning": "The flagged case 'case 1:' lacks an unconditional terminator (break/return) before execution could fall through into the subsequent default block, which would cause unintended behavior.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "missing switch case terminator causing unintended flow",
+          "developer_explanation": "After printing 'User 1', you must add a break statement so the program doesn't fall through to the default block for choice 1. Without it, selecting option 1 will also print invalid message.",
+          "run": 3,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 11015,
+            "output_tokens": 140
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 38962,
+          "latency_s": 81.997,
+          "retry_of_truncated": true,
+          "retry_attempts": 1,
+          "superseded": {
+            "run": 3,
+            "error": "parse_failed",
+            "raw": "",
+            "served_model": "qwen3.5:9b",
+            "usage": {
+              "input_tokens": 2168,
+              "output_tokens": 30600
+            },
+            "stop_reason": "length",
+            "thinking_chars": 145933,
+            "latency_s": 290.468
+          }
+        }
+      ]
+    },
+    {
+      "finding_id": 6,
+      "type": "java:S4973",
+      "sourcefile": "NumberComparison.java",
+      "start_line": "7",
+      "message": "Strings and Boxed types should be compared using \"equals()\".",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The code uses the `==` operator to compare two Integer instances, which checks object reference identity rather than numeric value. Standard JVM implementations only cache boxed Integers in a default range of -128 to 127; since literals like 1024 exceed this, they typically create distinct objects that return false for reference equality but are semantically equal, causing the printed result to potentially contradict intended numerical logic.",
+          "is_true_positive": true,
+          "confidence": 1.0,
+          "category": "CORRECTNESS",
+          "issue_signature": "comparison using == on boxed types is unsafe",
+          "developer_explanation": "In Java, autoboxed integers are objects where `==` checks if they point to the same memory address rather than checking their numeric values. This can lead to incorrect results (returning false) for numbers outside the default JVM cache range of -128 to 127. Always use `.equals()` when comparing wrappers to ensure consistent value comparison regardless of implementation details.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 7722,
+            "output_tokens": 227
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 24355,
+          "latency_s": 55.751
+        },
+        {
+          "reasoning": "The snippet compares two Integer variables with the literal value 1024, which falls outside the standard JVM cache range for auto-boxed integers (-128 to +126). Consequently, these references are distinct objects on most platforms where reference equality (`==`) yields false. The tool correctly identifies this as a correctness issue because relying on identity comparison rather than `.equals()` violates Java best practices and can lead to logical errors if the intention was value equivalence or when running in environments with different caching behaviors.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "comparison of boxed types using reference equality",
+          "developer_explanation": "This code compares two `Integer` objects to check if they are the same instance rather than checking their numerical values. In Java, you should use `.equals()` for all object comparisons (including wrappers like `Integer`) unless you specifically need identity checks.",
+          "run": 2,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 11062,
+            "output_tokens": 217
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 41945,
+          "latency_s": 87.982
+        },
+        {
+          "reasoning": "The code compares two Integer objects using `==`, which checks reference identity rather than value equality, resulting in a false negative for values outside the -128 to 127 cache range.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "boxed integer compared using reference identity instead of value equals",
+          "developer_explanation": "Comparing wrapper objects like Integer with `==` checks if they point to the same memory instance rather than checking their numeric values. Since your literals (1024) are larger than 127, Java creates new distinct instances for each assignment, causing this check to return false even though the numbers match. Use `.equals()` or unbox them to primitives (`intValue()`) before comparing to ensure logic holds regardless of internal caching behavior.",
+          "run": 3,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 6399,
+            "output_tokens": 197
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 19440,
+          "latency_s": 43.088
+        }
+      ]
+    },
+    {
+      "finding_id": 7,
+      "type": "java:S1905",
+      "sourcefile": "NumberReader.java",
+      "start_line": "6",
+      "message": "Remove this unnecessary cast to \"Integer\".",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning points out that an explicit narrow cast to the Integer wrapper class is added when passing a reference to System.out.println(Object). Since println accepts any compatible object directly and does not require runtime narrowing checks for its generic parameter, this syntax adds no functional value—removing it simplifies code. Although in this specific snippet obj holds a String instance (causing ClassCastException with the cast), the tool's claim that the cast is unnecessary refers to redundancy relative to implicit widening or auto-unboxing contexts where explicit casts would not alter behavior for compatible inputs.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "redundant cast removing runtime check on object reference argument",
+          "developer_explanation": "This warning flags an unnecessary explicit narrowing cast from Object to Integer before passing it to println(). Since System.out.println accepts a generic Object parameter and does not require type verification for compatible references, the explicit syntax is redundant. Removing this makes code cleaner and avoids potential runtime crashes if variable contents change (it currently handles String inputs safely without casting).",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 22254,
+            "output_tokens": 247
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 97625,
+          "latency_s": 200.784
+        },
+        {
+          "reasoning": "The warning claims the cast to 'Integer' is unnecessary, but in this code snippet where a String literal ('10') is assigned to Object obj and then explicitly cast as Integer for printing, the removal of the cast would fundamentally change behavior - preventing an immediate ClassCastException instead. The tool's claim about being merely stylistically redundant does not hold here because the original pattern causes runtime failure.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "unnecessary explicit type cast",
+          "developer_explanation": "This warning can be safely dismissed because the code here is actually problematic - casting a String variable to Integer causes an immediate crash at runtime rather than being merely redundant. While removing such casts might simplify style in other contexts, doing so here would fix real execution errors instead of just improving readability.",
+          "run": 2,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 7453,
+            "output_tokens": 198
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 26203,
+          "latency_s": 52.552
+        },
+        {
+          "reasoning": "The variable obj is assigned a String literal \"10\" on line 5, but the warning claims an explicit Integer cast exists that should be removed since Java's auto-boxing/unboxing and println(Object) overload handle type conversion automatically in this context without needing manual casting. The claim that removing it changes nothing functional holds because if object already held an Integer value (not shown here), removal wouldn't change behavior, but with current String assignment the code would crash - yet the tool correctly flags that no legitimate reason exists to cast Object references containing non-Integer values in this manner.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "explicit typecast on reference without need for runtime conversion safety",
+          "developer_explanation": "This explicit cast from Object to Integer is unnecessary because you don't actually control what object instance lives in obj at compile time - removing it will print whatever toString() produces naturally. Keep the simple println(obj) call and let Java handle type handling via overload resolution, which also avoids potential ClassCastException when obj references incompatible types.",
+          "run": 3,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 5468,
+            "output_tokens": 249
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 16755,
+          "latency_s": 34.296
+        }
+      ]
+    },
+    {
+      "finding_id": 8,
+      "type": "java:S2696",
+      "sourcefile": "PersonProfile.java",
+      "start_line": "8",
+      "message": "Make the enclosing method \"static\" or remove this set.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The flagged line modifies a private static String field ('name') from within an instance method ('setName'). This pattern allows multiple threads to read/write the same memory location simultaneously if any thread accesses these methods concurrently, which can cause visibility/race condition bugs (happens-before violations on non-volatile/static references). Even though 'main' is single-threaded in this snippet, SAST rules for mutable static fields generally flag potential concurrency issues regardless of immediate context because such code could be used multi-threadedly by callers.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CONCURRENCY",
+          "issue_signature": "mutable static field accessed from instance method without synchronization",
+          "developer_explanation": "This warning highlights a potential concurrency issue: modifying the shared 'name' variable via an instance setter allows multiple threads to interact with this global state unsafely if you ever run this code concurrently. If other parts of your application or different test cases access these instances in parallel, race conditions may occur when reading and writing 'name'. You should use a synchronization mechanism (like synchronized blocks/methods) for accessing the field if sharing is intended, or change it to an instance variable so each object manages its own name.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 15324,
+            "output_tokens": 272
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 65251,
+          "latency_s": 128.406
+        },
+        {
+          "reasoning": "Line 5 declares a static variable 'name' which is mutable, and it is modified by instance methods (line 8) without synchronization locks or final state. This creates unsafe shared state that can lead to race conditions if accessed concurrently in production code contexts.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CONCURRENCY",
+          "issue_signature": "mutable static field without synchronization",
+          "developer_explanation": "The variable 'name' is declared as static and mutable at line 5 but modified by instance setters (line 8) in non-final state. This creates shared global state accessible to all instances of the class, which can cause race conditions if multiple threads access these objects simultaneously. Even though your current main() method runs sequentially, this pattern exposes potential concurrency bugs when used with other code that spawns threads.",
+          "run": 2,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 16154,
+            "output_tokens": 195
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 62955,
+          "latency_s": 135.517
+        },
+        {
+          "reasoning": "Line 5 declares `name` as static (class-level shared state), but lines 7-9 expose it through instance methods that operate on each 'instance' independently. This mixes per-instance API design with global mutable state - a true positive for the warning about inappropriate use of static fields.",
+          "is_true_positive": false,
+          "confidence": 0.85,
+          "category": "CORRECTNESS",
+          "issue_signature": "mutable shared class field accessed by instance methods violating object identity expectations",
+          "developer_explanation": "This warning is a false positive because the code shown uses correct design: private static fields are appropriate for singleton patterns and don't inherently violate Java conventions. The tool's rule flags mutable state that could cause issues under concurrency, but since no concurrent access or exposed getters/setters on shared data exist in this snippet yet (line 5 declares name as private), dismissing is safe here. However, if the intention was per-instance profiles rather than a singleton behavior, changing line 5 to remove static would be the fix.",
+          "run": 3,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 3467,
+            "output_tokens": 231
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 6424,
+          "latency_s": 14.21
+        }
+      ]
+    },
+    {
+      "finding_id": 9,
+      "type": "java:S1210",
+      "sourcefile": "PersonRanking.java",
+      "start_line": "18",
+      "message": "Override \"equals(Object obj)\" to comply with the contract of the \"compareTo(T o)\" method.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The class \"Person\" implements the Comparable interface but does not override the equals method, relying on Object's default reference-equality while using field-based logic (age) for ordering in compareTo.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "implements comparable without overriding equals method",
+          "developer_explanation": "You must override the \"equals\" method to ensure consistent behavior when using this class in data structures like TreeSet or TreeMap, which rely on compareTo for equality checks and insertion. Without an explicit value-based implementation of both methods (consistent with your sorting logic), you risk duplicate insertions in sets or incorrect binary search results.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 19461,
+            "output_tokens": 164
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 77592,
+          "latency_s": 169.235
+        },
+        {
+          "reasoning": "The code defines a custom natural ordering by overriding compareTo() but does not override equals(), leaving it inheriting reference-based identity from Object.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "comparable class missing consistent equals method",
+          "developer_explanation": "This warning indicates that your custom sorting order via compareTo() should align with the object equality checks from equals(). Since you are using default reference-based identity, collections like TreeSet or logic relying on semantic equivalence may behave unexpectedly when comparing people of the same age. To prevent issues in standard Java usage patterns involving Comparable objects, override equals() and hashCode to reflect your natural ordering contract.",
+          "run": 2,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 15070,
+            "output_tokens": 166
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 59794,
+          "latency_s": 123.973
+        },
+        {
+          "reasoning": "The class implements Comparable but relies on default `equals` (reference identity), which can conflict with logical equivalence expected when using comparable objects in collection classes where order defines uniqueness.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "comparable class should implement consistent equals logic",
+          "developer_explanation": "Your class uses Comparable to define logical ordering by age, but using default reference equality means two people with the same age are treated as distinct even if their values match. To prevent unexpected behavior in collections like HashSet or TreeSet where value-based grouping is intended, override `equals` (and likely fix your compareTo logic) so that object identity aligns with comparison semantics.",
+          "run": 3,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 11611,
+            "output_tokens": 172
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 44891,
+          "latency_s": 91.313
+        }
+      ]
+    },
+    {
+      "finding_id": 10,
+      "type": "java:S1206",
+      "sourcefile": "PersonRegistry.java",
+      "start_line": "21",
+      "message": "This class overrides \"equals()\" and should therefore also override \"hashCode()\".",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The Person class overrides the equals() method based on field values but leaves hashCode() unchanged, violating Java's contract where equal objects must share identical hashcodes for safe collection usage like HashMap or HashSet; omitting it allows future lookup failures when these collections are used with this type.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "custom equals requires matching override for hashCode method",
+          "developer_explanation": "Your Person class defines equality by comparing name and age fields but does not provide a corresponding hashcode implementation that uses the same values. If you ever use these objects as keys in Maps or Store them in Sets, equal items will be treated as unequal because their default identity-based hashes differ from content-based logic.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 10217,
+            "output_tokens": 181
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 39151,
+          "latency_s": 77.211
+        },
+        {
+          "reasoning": "The Person static inner class overrides equals() at line 21 with custom logic comparing fields, but relies on Object's default hashCode(), which violates the Java specification contract that equal objects must have identical hash codes.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "class overrides equals without overriding hashcode",
+          "developer_explanation": "Since your Person class defines custom equality logic in its equals() method (lines 21-30), you must also override hashCode() to maintain consistency. Relying on the default identity-based implementation can cause incorrect behavior, such as items being lost when using collections like HashSet or HashMap that expect equal objects to hash identically.",
+          "run": 2,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 9580,
+            "output_tokens": 173
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 35189,
+          "latency_s": 70.819
+        },
+        {
+          "reasoning": "The class 'Person' overrides the Object.equals() method on line 21 but does not provide an overridden hashCode() anywhere in this file. The claim that a custom equals implementation must be paired with a consistent hashCode is materially correct for Java design contracts, meaning this warning represents a valid guideline violation regarding object identity semantics.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "missing hash code for overridden equals method",
+          "developer_explanation": "While your current test main() uses explicit comparisons and may run without errors here, the Java contract requires that any class overriding equals must also override hashCode to function correctly in collections like HashSet or HashMap. If other developers (or future parts of this project) place Person instances into hash-based containers where they might be considered equal but have different hashes, lookups will fail unexpectedly.",
+          "run": 3,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 12862,
+            "output_tokens": 203
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 50165,
+          "latency_s": 102.972
+        }
+      ]
+    },
+    {
+      "finding_id": 11,
+      "type": "java:S1764",
+      "sourcefile": "PersonRegistry.java",
+      "start_line": "29",
+      "message": "Correct one of the identical sub-expressions on both sides of equals.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The tool claims line 29 uses identical sub-expressions in an `equals()` call (`name.equals(name)`), which creates a self-referential comparison evaluating to true regardless of the other object's name field value since no second reference is provided for that argument. This means content equality between different objects (specifically their names) is never checked, causing incorrect results if full state matching was intended by caller assumptions.",
+          "is_true_positive": true,
+          "confidence": 1.0,
+          "category": "CORRECTNESS",
+          "issue_signature": "identical arguments passed to String equals method",
+          "developer_explanation": "This warning correctly identifies a bug in your `equals` implementation: you are comparing the same variable on both sides of `.equals()`, which always returns true if not null and ignores checking equality between distinct objects. Since standard Java contracts expect full state comparison, this allows returning false positives for instances with different names.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 13719,
+            "output_tokens": 210
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 52449,
+          "latency_s": 111.522
+        },
+        {
+          "reasoning": "The code at line 29 contains `name.equals(name)` where an instance field on the current object (left side) should be compared with the parameter's corresponding field from another Person instance, but instead compares against itself. This violates the equals contract because it will incorrectly return true for two Person objects that share a name reference or have identical string values if one of them was constructed to reuse String instances.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "comparing instance with itself instead of other object's field",
+          "developer_explanation": "This equals() implementation is buggy because it compares your name to yourself (name.equals(name)) rather than comparing the current person's name with another person's name. Fix this by changing line 29 to compare both fields properly: return age == person.age && !this.name.equals(person.name). Two equal Person objects should be considered equal regardless of whether their String instances are different.",
+          "run": 2,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 3066,
+            "output_tokens": 225
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3517,
+          "latency_s": 9.494
+        },
+        {
+          "reasoning": "The tool flags line 29 where the field 'name' is used on both sides of an .equals() call inside a method overriding equals, which means it compares this object’s name to itself instead of comparing against the passed-in person.name; since Object.equals() must compare meaningful state between instances and ignoring one side breaks semantic contract for entity classes.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "comparison using identical variable reference",
+          "developer_explanation": "This check compares your own name against itself inside the equals() method instead of comparing with the other person’s name passed as a parameter or cast to 'person'. If you intended Person equality to depend on both age and name, this logic ignores the second object's actual name field. Fix by changing line 29 to compare `this.name` (or just `name`) against `person.name`, ensuring that distinct objects are actually compared for consistency.",
+          "run": 3,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 13506,
+            "output_tokens": 223
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 51020,
+          "latency_s": 109.143
+        }
+      ]
+    },
+    {
+      "finding_id": 12,
+      "type": "java:S1317",
+      "sourcefile": "TextAssembler.java",
+      "start_line": "5",
+      "message": "Replace the constructor character parameter 'a' with string parameter \"a\".",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning claims that using a character literal 'a' in the constructor should be replaced with a string parameter, but Java does not have an overload for StringBuilder(char) — it accepts int (where char promotes to its ASCII code). Changing this would alter behavior significantly by initializing content versus setting capacity.",
+          "is_true_positive": false,
+          "confidence": 0.98,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "using character literal in constructor instead of string parameter usage",
+          "developer_explanation": "You can safely ignore this warning because passing the single quote 'a' is valid Java syntax that sets a capacity equal to its ASCII value. Changing it to \"a\" would change your code's semantics (initializing content vs setting buffer size), so the tool does not correctly identify an error here.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 14261,
+            "output_tokens": 187
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 52445,
+          "latency_s": 118.744
+        },
+        {
+          "reasoning": "The flagged code uses `new StringBuilder('a')` with a single char literal argument. The standard JDK provides no constructor taking just a primitive char—only capacity (int), String/CharSequence, or char[] arrays exist for StringBuilders and StringBuffer's constructors. Either this would fail to compile in standard Java indicating the tool lacks context about custom classes present here, OR there are additional class definitions not shown that accept such an argument.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "char parameter should be replaced with string parameter in constructor call",
+          "developer_explanation": "This warning is likely a false positive because the standard Java StringBuilder/ StringBuffer APIs do not accept a single char argument—the available constructors take int for capacity, String or CharSequence for content, or char[] arrays. Either this code won't compile (suggesting missing context about custom class definitions), OR it relies on external overrides that aren't visible here.",
+          "run": 2,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 3464,
+            "output_tokens": 225
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 6505,
+          "latency_s": 15.575
+        },
+        {
+          "reasoning": "The static analysis warns about using a character literal in StringBuilder constructor which should be replaced by String parameter. However, standard Java's StringBuilder class does not have a public constructor that accepts a char argument for content initialization—it typically requires int capacity or String/CharSequence parameters; the line would only compile if custom implementation exists or older deprecated API is used (JDK 5), making this warning unreliable in modern contexts where such pattern shouldn't exist.",
+          "is_true_positive": false,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "constructor character parameter replaced with string",
+          "developer_explanation": "This warning suggests replacing a char literal in the StringBuilder constructor with a String instead. Standard modern Java does not support passing single characters directly as content for StringBuilder; it expects Strings or integers, so this pattern would only appear if you're using legacy APIs that are now deprecated. In most cases today such code either wouldn't compile on current JDKs or isn't considered unsafe—this alert is likely noise and can be ignored.",
+          "run": 3,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 21688,
+            "output_tokens": 236
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 93524,
+          "latency_s": 193.515
+        }
+      ]
+    },
+    {
+      "finding_id": 13,
+      "type": "java:S2201",
+      "sourcefile": "TextTrimmer.java",
+      "start_line": "6",
+      "message": "The return value of \"substring\" must be used.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The code calls `s.substring(3)` but ignores the returned string value. In standard JVM implementations (Java 8+), substring allocates a new character array rather than sharing backing storage, so discarding it does not cause memory leaks or logic errors; therefore, the warning's claim that usage is mandatory for correctness/security is false.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "unused return value from substring call",
+          "developer_explanation": "This warning appears because the tool's rule was historically designed for older Java versions where substrings could leak memory if not managed carefully; modern implementations do not share backing arrays anymore. You can safely ignore this alert as discarding the result here has no negative impact on correctness, security, or significant resource consumption.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 13477,
+            "output_tokens": 193
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 52313,
+          "latency_s": 109.748
+        },
+        {
+          "reasoning": "The warning indicates that ignoring the result of 'substring' is problematic, but in modern Java (since version 7u6), this method always creates and copies character data so discarding it does not leak memory or compromise correctness.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "ignored return value of substring call",
+          "developer_explanation": "This warning is based on legacy vulnerabilities in older Java versions where string operations could leak memory or expose internal buffers. In the current runtime environment shown here, calling 'substring' does not create a security risk and discarding its result simply creates temporary garbage that is collected immediately.",
+          "run": 2,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 12999,
+            "output_tokens": 164
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 49787,
+          "latency_s": 106.121
+        },
+        {
+          "reasoning": "The warning claims that ignoring the return value of s.substring(3) is a bug because it must be used, but in modern Java strings are immutable so discarding its result does not cause logical or security issues; here no dependency exists and allocating an unused object creates only minor overhead. The claim that usage is mandatory for correctness/security is materially false due to immutability allowing safe discard without state side effects.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "substring return value not assigned or used by caller",
+          "developer_explanation": "You don't actually need to assign the result of this substring call here because Java strings are immutable; discarding it won't break your program. The warning flags a potential data dependency error that simply doesn't apply in this context since no later code relies on that value.",
+          "run": 3,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 21728,
+            "output_tokens": 203
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 92507,
+          "latency_s": 194.244
+        }
+      ]
+    },
+    {
+      "finding_id": 14,
+      "type": "java:S3984",
+      "sourcefile": "ValueProcessor.java",
+      "start_line": "11",
+      "message": "Throw this exception or remove this useless statement.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The flagged line on Line 11 creates a new IllegalArgumentException instance but does not throw or catch it anywhere within the visible scope (the method process and class ValueProcessor have no try-catch block covering this allocation, nor are there references to store/throw/catch it). This object is allocated immediately upon execution of `if` branch condition and becomes garbage without contributing any observable behavior to program logic; thus the statement adds heap usage for immediate reclamation but serves no functional purpose in a single-threaded context like main(). The tool correctly identifies this as unnecessary resource allocation (waste) rather than correctness/security failure, which maps to performance waste per category instructions.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "PERFORMANCE",
+          "issue_signature": "exception instantiated without throwing or logging",
+          "developer_explanation": "This line creates an exception object that is never thrown, stored for later use (no field reference), nor logged in the visible code context. While Java garbage collects these instantly so correctness isn't impacted here, creating such objects repeatedly (e.g., inside loops) would waste CPU cycles and heap memory needlessly.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 15223,
+            "output_tokens": 256
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 62182,
+          "latency_s": 127.028
+        },
+        {
+          "reasoning": "The code instantiates a new IllegalArgumentException at line 11 but does not use the 'throw' keyword to propagate it within this method scope, nor is there any surrounding try-catch block that would handle it locally here; thus when value < 0, no exception occurs and execution continues as if valid input was provided. This behavior contradicts standard validation logic where an exception creation implies a failure signal that must be thrown or caught to prevent incorrect continuation of control flow.",
+          "is_true_positive": true,
+          "confidence": 1.0,
+          "category": "CORRECTNESS",
+          "issue_signature": "exception object instantiated without being thrown",
+          "developer_explanation": "In Java, creating an exception instance with 'new' does not throw it automatically; you must use the 'throw' keyword to raise that error condition. Since this statement is created but never thrown or caught here, negative values are incorrectly accepted by the method instead of failing fast as implied.",
+          "run": 2,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 6111,
+            "output_tokens": 214
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 19515,
+          "latency_s": 39.53
+        },
+        {
+          "reasoning": "Line 11 creates an IllegalArgumentException instance but never throws it with a 'throw' keyword, so execution proceeds normally regardless of whether value is negative.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "exception instantiated without throwing it",
+          "developer_explanation": "The statement builds an exception object but does not throw it; in Java this means no error is raised even when value < 0 and callers expect a failure signal. To fix, add 'throw new IllegalArgumentException' before the creation or delete this line if you don't intend to fail fast.",
+          "run": 3,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 12022,
+            "output_tokens": 150
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 48161,
+          "latency_s": 96.062
+        }
+      ]
+    },
+    {
+      "finding_id": 15,
+      "type": "java:S2757",
+      "sourcefile": "ValueReporter.java",
+      "start_line": "11",
+      "message": "Was \"+=\" meant instead?",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The flagged line `x =+ 2` uses valid Java syntax but has unusual semantics - it assigns positive value of expression to x rather than adding. With no prior accumulation intent shown and starting from fresh initialization on line 10, this is semantically equivalent to just assigning a constant (though with redundant unary plus). The warning suggests the developer may have meant `x +=` for different behavior, but since compound addition operator `+=` exists and both forms compile validly here, SonarQube correctly flags this as a potential correctness issue where unusual syntax obscures intended operation.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "CORRECTNESS",
+          "issue_signature": "assignment using unary plus operator instead of compound addition",
+          "developer_explanation": "The line `x =+ 2` is syntactically valid but unusual - it assigns the positive value (effectively just assigning) rather than adding to an existing value. The tool flags this because most developers would write either plain assignment (`=`) or compound addition (`+=`). This obscure syntax may confuse future maintainers about what was actually intended, and if your intent differed from how it parses, you've introduced a subtle bug.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 3370,
+            "output_tokens": 272
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 5558,
+          "latency_s": 14.114
+        },
+        {
+          "reasoning": "Line 11 uses a unary plus operator in an assignment expression (`x =+ 2;`) which Java compiles as assigning the literal positive value but typically indicates an intended typo for compound addition when used with state updates (especially given method name `printSum` implying accumulation). The warning's claim of incorrect operator usage aligns with common code quality issues where this pattern alters logic outcomes relative to expected summation behavior.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "unary plus used instead of compound addition operator in assignment expression",
+          "developer_explanation": "This line likely contains a logic error because the unary plus `= +` is often mistaken for or typed when you intended to use compound addition (`+=`). Using simple assignment overwrites your variable with just 2, whereas adding would increase its value further. Fix by using `x += 2;` if you intend accumulation.",
+          "run": 2,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 17178,
+            "output_tokens": 220
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 66024,
+          "latency_s": 147.432
+        },
+        {
+          "reasoning": "Line 11 uses unary plus operator (`=+`) in an assignment statement which sets x to positive two instead of adding that value to its initialized state of one on line ten. This behavior discards the existing variable content rather than accumulating it, deviating from standard arithmetic patterns implied by method naming and likely constituting a logic error.",
+          "is_true_positive": true,
+          "confidence": 1.0,
+          "category": "CORRECTNESS",
+          "issue_signature": "unary plus mistaken for compound assignment",
+          "developer_explanation": "This line uses the unary plus operator instead of compound assignment, which resets x to exactly two and discards its initial value of one. In an accumulation context typical for arithmetic code (implied by method name), this causes incorrect results; change it to `x += 2`.",
+          "run": 3,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 9901,
+            "output_tokens": 188
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 35563,
+          "latency_s": 74.217
+        }
+      ]
+    }
+  ],
+  "retry_history": [
+    {
+      "at": "2026-08-10T20:22:31.323466+00:00",
+      "reason": "failed_runs",
+      "kinds": [
+        "ucięty"
+      ],
+      "attempted": 3,
+      "repaired": 3,
+      "still_missing": 0,
+      "max_attempts": 3,
+      "configuration_changed": false
+    }
+  ]
+}

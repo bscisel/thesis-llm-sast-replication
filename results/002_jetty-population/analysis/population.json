@@ -1,0 +1,24 @@
+{
+  "run": "002_jetty-population",
+  "narzedzia": {
+    "error_prone": {
+      "surowe": 1023,
+      "wykluczone_kod_testowy": 0,
+      "wykluczone_moduly": 0,
+      "pula_do_probkowania": 1023
+    },
+    "sonarqube": {
+      "surowe": 16366,
+      "wykluczone_kod_testowy": 8626,
+      "wykluczone_moduly": 6,
+      "pula_do_probkowania": 7734
+    },
+    "spotbugs": {
+      "surowe": 1823,
+      "wykluczone_kod_testowy": 0,
+      "wykluczone_moduly": 2,
+      "pula_do_probkowania": 1821
+    }
+  },
+  "surowe_razem": 19212
+}

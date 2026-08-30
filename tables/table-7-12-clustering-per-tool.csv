@@ -1,0 +1,4 @@
+tool;rules;intraclass_correlation;design_effect;effective_sample_size
+SonarQube;49;0,227;1,302;92
+SpotBugs;42;0,631;2,028;59
+Error Prone;32;0,857;3,209;37

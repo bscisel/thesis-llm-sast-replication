@@ -1,0 +1,3630 @@
+{
+  "dataset": "jetty-core-minus-coreapp-start",
+  "schema_version": "1+column-key",
+  "created_at": "2026-07-28",
+  "run": "007_jetty-no-code",
+  "ground_truth_scope": "warning_level_report_snapshot",
+  "labeling_method": "manual_author_review",
+  "key_fields": [
+    "tool",
+    "sourcefile",
+    "start_line",
+    "type",
+    "column"
+  ],
+  "reports": {
+    "spotbugs": 120,
+    "error-prone": 120,
+    "sonarqube": 120
+  },
+  "total_findings": 360,
+  "labeled_findings": 360,
+  "findings": [
+    {
+      "finding_id": "spotbugs:BouncyCastleClientALPNProcessor.java:66:SIC_INNER_SHOULD_BE_STATIC:",
+      "tool": "spotbugs",
+      "sourcefile": "BouncyCastleClientALPNProcessor.java",
+      "start_line": "66",
+      "type": "SIC_INNER_SHOULD_BE_STATIC",
+      "message": "Should be a static inner class",
+      "is_true_positive": true,
+      "column": ""
+    },
+    {
+      "finding_id": "spotbugs:BouncyCastleServerALPNProcessor.java:44:SIC_INNER_SHOULD_BE_STATIC:",
+      "tool": "spotbugs",
+      "sourcefile": "BouncyCastleServerALPNProcessor.java",
+      "start_line": "44",
+      "type": "SIC_INNER_SHOULD_BE_STATIC",
+      "message": "Should be a static inner class",
+      "is_true_positive": true,
+      "column": ""
+    },
+    {
+      "finding_id": "spotbugs:ConscryptClientALPNProcessor.java:76:SIC_INNER_SHOULD_BE_STATIC:",
+      "tool": "spotbugs",
+      "sourcefile": "ConscryptClientALPNProcessor.java",
+      "start_line": "76",
+      "type": "SIC_INNER_SHOULD_BE_STATIC",
+      "message": "Should be a static inner class",
+      "is_true_positive": true,
+      "column": ""
+    },
+    {
+      "finding_id": "spotbugs:ConscryptServerALPNProcessor.java:75:SIC_INNER_SHOULD_BE_STATIC:",
+      "tool": "spotbugs",
+      "sourcefile": "ConscryptServerALPNProcessor.java",
+      "start_line": "75",
+      "type": "SIC_INNER_SHOULD_BE_STATIC",
+      "message": "Should be a static inner class",
+      "is_true_positive": true,
+      "column": ""
+    },
+    {
+      "finding_id": "spotbugs:AbstractHttpClientTransport.java:42:EI_EXPOSE_REP2:",
+      "tool": "spotbugs",
+      "sourcefile": "AbstractHttpClientTransport.java",
+      "start_line": "42",
+      "type": "EI_EXPOSE_REP2",
+      "message": "May expose internal representation by incorporating reference to mutable object",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "spotbugs:ProxyProtocolClientConnectionFactory.java:461:CT_CONSTRUCTOR_THROW:",
+      "tool": "spotbugs",
+      "sourcefile": "ProxyProtocolClientConnectionFactory.java",
+      "start_line": "461",
+      "type": "CT_CONSTRUCTOR_THROW",
+      "message": "Be wary of letting constructors throw exceptions.",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "spotbugs:RedirectCache.java:89:CT_CONSTRUCTOR_THROW:",
+      "tool": "spotbugs",
+      "sourcefile": "RedirectCache.java",
+      "start_line": "89",
+      "type": "CT_CONSTRUCTOR_THROW",
+      "message": "Be wary of letting constructors throw exceptions.",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "spotbugs:Result.java:45:EI_EXPOSE_REP2:",
+      "tool": "spotbugs",
+      "sourcefile": "Result.java",
+      "start_line": "45",
+      "type": "EI_EXPOSE_REP2",
+      "message": "May expose internal representation by incorporating reference to mutable object",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "spotbugs:GzipCompression.java:119:EI_EXPOSE_REP2:",
+      "tool": "spotbugs",
+      "sourcefile": "GzipCompression.java",
+      "start_line": "119",
+      "type": "EI_EXPOSE_REP2",
+      "message": "May expose internal representation by incorporating reference to mutable object",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "spotbugs:GzipEncoderSink.java:99:CT_CONSTRUCTOR_THROW:",
+      "tool": "spotbugs",
+      "sourcefile": "GzipEncoderSink.java",
+      "start_line": "99",
+      "type": "CT_CONSTRUCTOR_THROW",
+      "message": "Be wary of letting constructors throw exceptions.",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "spotbugs:WebAppClassLoader.java:310:UPM_UNCALLED_PRIVATE_METHOD:",
+      "tool": "spotbugs",
+      "sourcefile": "WebAppClassLoader.java",
+      "start_line": "310",
+      "type": "UPM_UNCALLED_PRIVATE_METHOD",
+      "message": "Private method is never called",
+      "is_true_positive": true,
+      "column": ""
+    },
+    {
+      "finding_id": "spotbugs:HttpConnectionOverFCGI.java:298:AT_STALE_THREAD_WRITE_OF_PRIMITIVE:",
+      "tool": "spotbugs",
+      "sourcefile": "HttpConnectionOverFCGI.java",
+      "start_line": "298",
+      "type": "AT_STALE_THREAD_WRITE_OF_PRIMITIVE",
+      "message": "This write of this shared primitive variable may not be visible to other threads",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "spotbugs:HeaderParser.java:63:URF_UNREAD_FIELD:",
+      "tool": "spotbugs",
+      "sourcefile": "HeaderParser.java",
+      "start_line": "63",
+      "type": "URF_UNREAD_FIELD",
+      "message": "Unread field",
+      "is_true_positive": true,
+      "column": ""
+    },
+    {
+      "finding_id": "spotbugs:JettyHttpsParameters.java:54:URF_UNREAD_FIELD:",
+      "tool": "spotbugs",
+      "sourcefile": "JettyHttpsParameters.java",
+      "start_line": "54",
+      "type": "URF_UNREAD_FIELD",
+      "message": "Unread field",
+      "is_true_positive": true,
+      "column": ""
+    },
+    {
+      "finding_id": "spotbugs:HttpException.java:178:CT_CONSTRUCTOR_THROW:",
+      "tool": "spotbugs",
+      "sourcefile": "HttpException.java",
+      "start_line": "178",
+      "type": "CT_CONSTRUCTOR_THROW",
+      "message": "Be wary of letting constructors throw exceptions.",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "spotbugs:HttpException.java:183:CT_CONSTRUCTOR_THROW:",
+      "tool": "spotbugs",
+      "sourcefile": "HttpException.java",
+      "start_line": "183",
+      "type": "CT_CONSTRUCTOR_THROW",
+      "message": "Be wary of letting constructors throw exceptions.",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "spotbugs:HttpException.java:95:CT_CONSTRUCTOR_THROW:",
+      "tool": "spotbugs",
+      "sourcefile": "HttpException.java",
+      "start_line": "95",
+      "type": "CT_CONSTRUCTOR_THROW",
+      "message": "Be wary of letting constructors throw exceptions.",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "spotbugs:HttpParser.java:1948:AT_NONATOMIC_64BIT_PRIMITIVE:",
+      "tool": "spotbugs",
+      "sourcefile": "HttpParser.java",
+      "start_line": "1948",
+      "type": "AT_NONATOMIC_64BIT_PRIMITIVE",
+      "message": "This write of this 64-bit primitive variable may not be atomic",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "spotbugs:HttpParser.java:1898:AT_NONATOMIC_64BIT_PRIMITIVE:",
+      "tool": "spotbugs",
+      "sourcefile": "HttpParser.java",
+      "start_line": "1898",
+      "type": "AT_NONATOMIC_64BIT_PRIMITIVE",
+      "message": "This write of this 64-bit primitive variable may not be atomic",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "spotbugs:HttpParser.java:2289:AT_NONATOMIC_64BIT_PRIMITIVE:",
+      "tool": "spotbugs",
+      "sourcefile": "HttpParser.java",
+      "start_line": "2289",
+      "type": "AT_NONATOMIC_64BIT_PRIMITIVE",
+      "message": "This write of this 64-bit primitive variable may not be atomic",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "spotbugs:HttpParser.java:2288:AT_NONATOMIC_64BIT_PRIMITIVE:",
+      "tool": "spotbugs",
+      "sourcefile": "HttpParser.java",
+      "start_line": "2288",
+      "type": "AT_NONATOMIC_64BIT_PRIMITIVE",
+      "message": "This write of this 64-bit primitive variable may not be atomic",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "spotbugs:HttpParser.java:2303:AT_NONATOMIC_64BIT_PRIMITIVE:",
+      "tool": "spotbugs",
+      "sourcefile": "HttpParser.java",
+      "start_line": "2303",
+      "type": "AT_NONATOMIC_64BIT_PRIMITIVE",
+      "message": "This write of this 64-bit primitive variable may not be atomic",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "spotbugs:HttpParser.java:750:AT_STALE_THREAD_WRITE_OF_PRIMITIVE:",
+      "tool": "spotbugs",
+      "sourcefile": "HttpParser.java",
+      "start_line": "750",
+      "type": "AT_STALE_THREAD_WRITE_OF_PRIMITIVE",
+      "message": "This write of this shared primitive variable may not be visible to other threads",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "spotbugs:HttpParser.java:1360:AT_STALE_THREAD_WRITE_OF_PRIMITIVE:",
+      "tool": "spotbugs",
+      "sourcefile": "HttpParser.java",
+      "start_line": "1360",
+      "type": "AT_STALE_THREAD_WRITE_OF_PRIMITIVE",
+      "message": "This write of this shared primitive variable may not be visible to other threads",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "spotbugs:HttpParser.java:2286:AT_STALE_THREAD_WRITE_OF_PRIMITIVE:",
+      "tool": "spotbugs",
+      "sourcefile": "HttpParser.java",
+      "start_line": "2286",
+      "type": "AT_STALE_THREAD_WRITE_OF_PRIMITIVE",
+      "message": "This write of this shared primitive variable may not be visible to other threads",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "spotbugs:HttpParser.java:2291:AT_STALE_THREAD_WRITE_OF_PRIMITIVE:",
+      "tool": "spotbugs",
+      "sourcefile": "HttpParser.java",
+      "start_line": "2291",
+      "type": "AT_STALE_THREAD_WRITE_OF_PRIMITIVE",
+      "message": "This write of this shared primitive variable may not be visible to other threads",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "spotbugs:HttpParser.java:2275:AT_STALE_THREAD_WRITE_OF_PRIMITIVE:",
+      "tool": "spotbugs",
+      "sourcefile": "HttpParser.java",
+      "start_line": "2275",
+      "type": "AT_STALE_THREAD_WRITE_OF_PRIMITIVE",
+      "message": "This write of this shared primitive variable may not be visible to other threads",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "spotbugs:HttpParser.java:325:CT_CONSTRUCTOR_THROW:",
+      "tool": "spotbugs",
+      "sourcefile": "HttpParser.java",
+      "start_line": "325",
+      "type": "CT_CONSTRUCTOR_THROW",
+      "message": "Be wary of letting constructors throw exceptions.",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "spotbugs:HttpParser.java:344:CT_CONSTRUCTOR_THROW:",
+      "tool": "spotbugs",
+      "sourcefile": "HttpParser.java",
+      "start_line": "344",
+      "type": "CT_CONSTRUCTOR_THROW",
+      "message": "Be wary of letting constructors throw exceptions.",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "spotbugs:MultiPart.java:760:CT_CONSTRUCTOR_THROW:",
+      "tool": "spotbugs",
+      "sourcefile": "MultiPart.java",
+      "start_line": "760",
+      "type": "CT_CONSTRUCTOR_THROW",
+      "message": "Be wary of letting constructors throw exceptions.",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "spotbugs:HttpConnectionOverHTTP2.java:322:AT_STALE_THREAD_WRITE_OF_PRIMITIVE:",
+      "tool": "spotbugs",
+      "sourcefile": "HttpConnectionOverHTTP2.java",
+      "start_line": "322",
+      "type": "AT_STALE_THREAD_WRITE_OF_PRIMITIVE",
+      "message": "This write of this shared primitive variable may not be visible to other threads",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "spotbugs:AbstractFlowControlStrategy.java:85:AT_STALE_THREAD_WRITE_OF_PRIMITIVE:",
+      "tool": "spotbugs",
+      "sourcefile": "AbstractFlowControlStrategy.java",
+      "start_line": "85",
+      "type": "AT_STALE_THREAD_WRITE_OF_PRIMITIVE",
+      "message": "This write of this shared primitive variable may not be visible to other threads",
+      "is_true_positive": true,
+      "column": ""
+    },
+    {
+      "finding_id": "spotbugs:BufferingFlowControlStrategy.java:93:AT_STALE_THREAD_WRITE_OF_PRIMITIVE:",
+      "tool": "spotbugs",
+      "sourcefile": "BufferingFlowControlStrategy.java",
+      "start_line": "93",
+      "type": "AT_STALE_THREAD_WRITE_OF_PRIMITIVE",
+      "message": "This write of this shared primitive variable may not be visible to other threads",
+      "is_true_positive": true,
+      "column": ""
+    },
+    {
+      "finding_id": "spotbugs:HTTP2Connection.java:129:AT_STALE_THREAD_WRITE_OF_PRIMITIVE:",
+      "tool": "spotbugs",
+      "sourcefile": "HTTP2Connection.java",
+      "start_line": "129",
+      "type": "AT_STALE_THREAD_WRITE_OF_PRIMITIVE",
+      "message": "This write of this shared primitive variable may not be visible to other threads",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "spotbugs:HTTP2Session.java:544:AT_STALE_THREAD_WRITE_OF_PRIMITIVE:",
+      "tool": "spotbugs",
+      "sourcefile": "HTTP2Session.java",
+      "start_line": "544",
+      "type": "AT_STALE_THREAD_WRITE_OF_PRIMITIVE",
+      "message": "This write of this shared primitive variable may not be visible to other threads",
+      "is_true_positive": true,
+      "column": ""
+    },
+    {
+      "finding_id": "spotbugs:HTTP2Session.java:499:AT_STALE_THREAD_WRITE_OF_PRIMITIVE:",
+      "tool": "spotbugs",
+      "sourcefile": "HTTP2Session.java",
+      "start_line": "499",
+      "type": "AT_STALE_THREAD_WRITE_OF_PRIMITIVE",
+      "message": "This write of this shared primitive variable may not be visible to other threads",
+      "is_true_positive": true,
+      "column": ""
+    },
+    {
+      "finding_id": "spotbugs:HTTP2Session.java:213:AT_STALE_THREAD_WRITE_OF_PRIMITIVE:",
+      "tool": "spotbugs",
+      "sourcefile": "HTTP2Session.java",
+      "start_line": "213",
+      "type": "AT_STALE_THREAD_WRITE_OF_PRIMITIVE",
+      "message": "This write of this shared primitive variable may not be visible to other threads",
+      "is_true_positive": true,
+      "column": ""
+    },
+    {
+      "finding_id": "spotbugs:HTTP2Session.java:238:AT_STALE_THREAD_WRITE_OF_PRIMITIVE:",
+      "tool": "spotbugs",
+      "sourcefile": "HTTP2Session.java",
+      "start_line": "238",
+      "type": "AT_STALE_THREAD_WRITE_OF_PRIMITIVE",
+      "message": "This write of this shared primitive variable may not be visible to other threads",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "spotbugs:HTTP2Session.java:271:AT_STALE_THREAD_WRITE_OF_PRIMITIVE:",
+      "tool": "spotbugs",
+      "sourcefile": "HTTP2Session.java",
+      "start_line": "271",
+      "type": "AT_STALE_THREAD_WRITE_OF_PRIMITIVE",
+      "message": "This write of this shared primitive variable may not be visible to other threads",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "spotbugs:HTTP2Stream.java:586:AT_STALE_THREAD_WRITE_OF_PRIMITIVE:",
+      "tool": "spotbugs",
+      "sourcefile": "HTTP2Stream.java",
+      "start_line": "586",
+      "type": "AT_STALE_THREAD_WRITE_OF_PRIMITIVE",
+      "message": "This write of this shared primitive variable may not be visible to other threads",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "spotbugs:Generator.java:66:EI_EXPOSE_REP:",
+      "tool": "spotbugs",
+      "sourcefile": "Generator.java",
+      "start_line": "66",
+      "type": "EI_EXPOSE_REP",
+      "message": "May expose internal representation by returning reference to mutable object",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "spotbugs:AuthorityHttpField.java:22:MS_MUTABLE_ARRAY:",
+      "tool": "spotbugs",
+      "sourcefile": "AuthorityHttpField.java",
+      "start_line": "22",
+      "type": "MS_MUTABLE_ARRAY",
+      "message": "Field is a mutable array",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "spotbugs:HpackEncoder.java:110:CT_CONSTRUCTOR_THROW:",
+      "tool": "spotbugs",
+      "sourcefile": "HpackEncoder.java",
+      "start_line": "110",
+      "type": "CT_CONSTRUCTOR_THROW",
+      "message": "Be wary of letting constructors throw exceptions.",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "spotbugs:HpackEncoder.java:219:NP_NULL_PARAM_DEREF:",
+      "tool": "spotbugs",
+      "sourcefile": "HpackEncoder.java",
+      "start_line": "219",
+      "type": "NP_NULL_PARAM_DEREF",
+      "message": "Method call passes null for non-null parameter",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "spotbugs:StaticTableHttpField.java:33:CT_CONSTRUCTOR_THROW:",
+      "tool": "spotbugs",
+      "sourcefile": "StaticTableHttpField.java",
+      "start_line": "33",
+      "type": "CT_CONSTRUCTOR_THROW",
+      "message": "Be wary of letting constructors throw exceptions.",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "spotbugs:AbstractHTTP2ServerConnectionFactory.java:84:CT_CONSTRUCTOR_THROW:",
+      "tool": "spotbugs",
+      "sourcefile": "AbstractHTTP2ServerConnectionFactory.java",
+      "start_line": "84",
+      "type": "CT_CONSTRUCTOR_THROW",
+      "message": "Be wary of letting constructors throw exceptions.",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "spotbugs:ControlStreamConnection.java:122:NP_NULL_ON_SOME_PATH_EXCEPTION:",
+      "tool": "spotbugs",
+      "sourcefile": "ControlStreamConnection.java",
+      "start_line": "122",
+      "type": "NP_NULL_ON_SOME_PATH_EXCEPTION",
+      "message": "Possible null pointer dereference in method on exception path",
+      "is_true_positive": true,
+      "column": ""
+    },
+    {
+      "finding_id": "spotbugs:QpackDecoder.java:122:AT_STALE_THREAD_WRITE_OF_PRIMITIVE:",
+      "tool": "spotbugs",
+      "sourcefile": "QpackDecoder.java",
+      "start_line": "122",
+      "type": "AT_STALE_THREAD_WRITE_OF_PRIMITIVE",
+      "message": "This write of this shared primitive variable may not be visible to other threads",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "spotbugs:Http3Fields.java:70:NP_NULL_PARAM_DEREF:",
+      "tool": "spotbugs",
+      "sourcefile": "Http3Fields.java",
+      "start_line": "70",
+      "type": "NP_NULL_PARAM_DEREF",
+      "message": "Method call passes null for non-null parameter",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "spotbugs:StaticTableHttpField.java:40:CT_CONSTRUCTOR_THROW:",
+      "tool": "spotbugs",
+      "sourcefile": "StaticTableHttpField.java",
+      "start_line": "40",
+      "type": "CT_CONSTRUCTOR_THROW",
+      "message": "Be wary of letting constructors throw exceptions.",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "spotbugs:Entry.java:54:AT_STALE_THREAD_WRITE_OF_PRIMITIVE:",
+      "tool": "spotbugs",
+      "sourcefile": "Entry.java",
+      "start_line": "54",
+      "type": "AT_STALE_THREAD_WRITE_OF_PRIMITIVE",
+      "message": "This write of this shared primitive variable may not be visible to other threads",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "spotbugs:ByteBufferAggregator.java:54:CT_CONSTRUCTOR_THROW:",
+      "tool": "spotbugs",
+      "sourcefile": "ByteBufferAggregator.java",
+      "start_line": "54",
+      "type": "CT_CONSTRUCTOR_THROW",
+      "message": "Be wary of letting constructors throw exceptions.",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "spotbugs:BundleIndex.java:50:RV_RETURN_VALUE_OF_PUTIFABSENT_IGNORED:",
+      "tool": "spotbugs",
+      "sourcefile": "BundleIndex.java",
+      "start_line": "50",
+      "type": "RV_RETURN_VALUE_OF_PUTIFABSENT_IGNORED",
+      "message": "Return value of putIfAbsent ignored, value passed to putIfAbsent reused",
+      "is_true_positive": true,
+      "column": ""
+    },
+    {
+      "finding_id": "spotbugs:BundleIndex.java:48:RV_RETURN_VALUE_OF_PUTIFABSENT_IGNORED:",
+      "tool": "spotbugs",
+      "sourcefile": "BundleIndex.java",
+      "start_line": "48",
+      "type": "RV_RETURN_VALUE_OF_PUTIFABSENT_IGNORED",
+      "message": "Return value of putIfAbsent ignored, value passed to putIfAbsent reused",
+      "is_true_positive": true,
+      "column": ""
+    },
+    {
+      "finding_id": "spotbugs:JettyServerFactory.java:86:RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE:",
+      "tool": "spotbugs",
+      "sourcefile": "JettyServerFactory.java",
+      "start_line": "86",
+      "type": "RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE",
+      "message": "Nullcheck of value previously dereferenced",
+      "is_true_positive": true,
+      "column": ""
+    },
+    {
+      "finding_id": "spotbugs:PackageAdminServiceListener.java:57:CT_CONSTRUCTOR_THROW:",
+      "tool": "spotbugs",
+      "sourcefile": "PackageAdminServiceListener.java",
+      "start_line": "57",
+      "type": "CT_CONSTRUCTOR_THROW",
+      "message": "Be wary of letting constructors throw exceptions.",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "spotbugs:PackageAdminServiceListener.java:52:EI_EXPOSE_REP2:",
+      "tool": "spotbugs",
+      "sourcefile": "PackageAdminServiceListener.java",
+      "start_line": "52",
+      "type": "EI_EXPOSE_REP2",
+      "message": "May expose internal representation by incorporating reference to mutable object",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "spotbugs:AckFrame.java:43:CT_CONSTRUCTOR_THROW:",
+      "tool": "spotbugs",
+      "sourcefile": "AckFrame.java",
+      "start_line": "43",
+      "type": "CT_CONSTRUCTOR_THROW",
+      "message": "Be wary of letting constructors throw exceptions.",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "spotbugs:JnaQuicheConnection.java:257:HSM_HIDING_METHOD:",
+      "tool": "spotbugs",
+      "sourcefile": "JnaQuicheConnection.java",
+      "start_line": "257",
+      "type": "HSM_HIDING_METHOD",
+      "message": "Method hiding should be avoided.",
+      "is_true_positive": true,
+      "column": ""
+    },
+    {
+      "finding_id": "spotbugs:timespec.java:19:NM_CLASS_NAMING_CONVENTION:",
+      "tool": "spotbugs",
+      "sourcefile": "timespec.java",
+      "start_line": "19",
+      "type": "NM_CLASS_NAMING_CONVENTION",
+      "message": "Class names should start with an upper case letter",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "spotbugs:AbstractQuicheServerConnectionFactory.java:48:EI_EXPOSE_REP:",
+      "tool": "spotbugs",
+      "sourcefile": "AbstractQuicheServerConnectionFactory.java",
+      "start_line": "48",
+      "type": "EI_EXPOSE_REP",
+      "message": "May expose internal representation by returning reference to mutable object",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "spotbugs:ServerQuicheSession.java:172:AT_NONATOMIC_64BIT_PRIMITIVE:",
+      "tool": "spotbugs",
+      "sourcefile": "ServerQuicheSession.java",
+      "start_line": "172",
+      "type": "AT_NONATOMIC_64BIT_PRIMITIVE",
+      "message": "This write of this 64-bit primitive variable may not be atomic",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "spotbugs:SecurityHandler.java:157:EI_EXPOSE_REP:",
+      "tool": "spotbugs",
+      "sourcefile": "SecurityHandler.java",
+      "start_line": "157",
+      "type": "EI_EXPOSE_REP",
+      "message": "May expose internal representation by returning reference to mutable object",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "spotbugs:UserStore.java:41:SIC_INNER_SHOULD_BE_STATIC:",
+      "tool": "spotbugs",
+      "sourcefile": "UserStore.java",
+      "start_line": "41",
+      "type": "SIC_INNER_SHOULD_BE_STATIC",
+      "message": "Should be a static inner class",
+      "is_true_positive": true,
+      "column": ""
+    },
+    {
+      "finding_id": "spotbugs:AcceptRateLimit.java:212:AT_STALE_THREAD_WRITE_OF_PRIMITIVE:",
+      "tool": "spotbugs",
+      "sourcefile": "AcceptRateLimit.java",
+      "start_line": "212",
+      "type": "AT_STALE_THREAD_WRITE_OF_PRIMITIVE",
+      "message": "This write of this shared primitive variable may not be visible to other threads",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "spotbugs:LowResourceMonitor.java:203:AT_STALE_THREAD_WRITE_OF_PRIMITIVE:",
+      "tool": "spotbugs",
+      "sourcefile": "LowResourceMonitor.java",
+      "start_line": "203",
+      "type": "AT_STALE_THREAD_WRITE_OF_PRIMITIVE",
+      "message": "This write of this shared primitive variable may not be visible to other threads",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "spotbugs:LowResourceMonitor.java:537:SIC_INNER_SHOULD_BE_STATIC:",
+      "tool": "spotbugs",
+      "sourcefile": "LowResourceMonitor.java",
+      "start_line": "537",
+      "type": "SIC_INNER_SHOULD_BE_STATIC",
+      "message": "Should be a static inner class",
+      "is_true_positive": true,
+      "column": ""
+    },
+    {
+      "finding_id": "spotbugs:Server.java:485:EI_EXPOSE_REP:",
+      "tool": "spotbugs",
+      "sourcefile": "Server.java",
+      "start_line": "485",
+      "type": "EI_EXPOSE_REP",
+      "message": "May expose internal representation by returning reference to mutable object",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "spotbugs:Server.java:188:EI_EXPOSE_REP2:",
+      "tool": "spotbugs",
+      "sourcefile": "Server.java",
+      "start_line": "188",
+      "type": "EI_EXPOSE_REP2",
+      "message": "May expose internal representation by incorporating reference to mutable object",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "spotbugs:AbstractSessionManager.java:856:AT_STALE_THREAD_WRITE_OF_PRIMITIVE:",
+      "tool": "spotbugs",
+      "sourcefile": "AbstractSessionManager.java",
+      "start_line": "856",
+      "type": "AT_STALE_THREAD_WRITE_OF_PRIMITIVE",
+      "message": "This write of this shared primitive variable may not be visible to other threads",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "spotbugs:AbstractSessionManager.java:371:AT_STALE_THREAD_WRITE_OF_PRIMITIVE:",
+      "tool": "spotbugs",
+      "sourcefile": "AbstractSessionManager.java",
+      "start_line": "371",
+      "type": "AT_STALE_THREAD_WRITE_OF_PRIMITIVE",
+      "message": "This write of this shared primitive variable may not be visible to other threads",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "spotbugs:AbstractSessionManager.java:390:AT_STALE_THREAD_WRITE_OF_PRIMITIVE:",
+      "tool": "spotbugs",
+      "sourcefile": "AbstractSessionManager.java",
+      "start_line": "390",
+      "type": "AT_STALE_THREAD_WRITE_OF_PRIMITIVE",
+      "message": "This write of this shared primitive variable may not be visible to other threads",
+      "is_true_positive": true,
+      "column": ""
+    },
+    {
+      "finding_id": "spotbugs:DefaultSessionIdManager.java:185:AT_NONATOMIC_64BIT_PRIMITIVE:",
+      "tool": "spotbugs",
+      "sourcefile": "DefaultSessionIdManager.java",
+      "start_line": "185",
+      "type": "AT_NONATOMIC_64BIT_PRIMITIVE",
+      "message": "This write of this 64-bit primitive variable may not be atomic",
+      "is_true_positive": true,
+      "column": ""
+    },
+    {
+      "finding_id": "spotbugs:DefaultSessionIdManager.java:260:SBSC_USE_STRINGBUFFER_CONCATENATION:",
+      "tool": "spotbugs",
+      "sourcefile": "DefaultSessionIdManager.java",
+      "start_line": "260",
+      "type": "SBSC_USE_STRINGBUFFER_CONCATENATION",
+      "message": "Method concatenates strings using + in a loop",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "spotbugs:JDBCSessionDataStore.java:394:SQL_PREPARED_STATEMENT_GENERATED_FROM_NONCONSTANT_STRING:",
+      "tool": "spotbugs",
+      "sourcefile": "JDBCSessionDataStore.java",
+      "start_line": "394",
+      "type": "SQL_PREPARED_STATEMENT_GENERATED_FROM_NONCONSTANT_STRING",
+      "message": "A prepared statement is generated from a nonconstant String",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "spotbugs:JDBCSessionDataStore.java:347:SQL_PREPARED_STATEMENT_GENERATED_FROM_NONCONSTANT_STRING:",
+      "tool": "spotbugs",
+      "sourcefile": "JDBCSessionDataStore.java",
+      "start_line": "347",
+      "type": "SQL_PREPARED_STATEMENT_GENERATED_FROM_NONCONSTANT_STRING",
+      "message": "A prepared statement is generated from a nonconstant String",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "spotbugs:JDBCSessionDataStore.java:370:SQL_PREPARED_STATEMENT_GENERATED_FROM_NONCONSTANT_STRING:",
+      "tool": "spotbugs",
+      "sourcefile": "JDBCSessionDataStore.java",
+      "start_line": "370",
+      "type": "SQL_PREPARED_STATEMENT_GENERATED_FROM_NONCONSTANT_STRING",
+      "message": "A prepared statement is generated from a nonconstant String",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "spotbugs:JSONPojoConvertorFactory.java:32:CT_CONSTRUCTOR_THROW:",
+      "tool": "spotbugs",
+      "sourcefile": "JSONPojoConvertorFactory.java",
+      "start_line": "32",
+      "type": "CT_CONSTRUCTOR_THROW",
+      "message": "Be wary of letting constructors throw exceptions.",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "spotbugs:ArrayTernaryTrie.java:112:CT_CONSTRUCTOR_THROW:",
+      "tool": "spotbugs",
+      "sourcefile": "ArrayTernaryTrie.java",
+      "start_line": "112",
+      "type": "CT_CONSTRUCTOR_THROW",
+      "message": "Be wary of letting constructors throw exceptions.",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "spotbugs:ArrayTrie.java:177:CT_CONSTRUCTOR_THROW:",
+      "tool": "spotbugs",
+      "sourcefile": "ArrayTrie.java",
+      "start_line": "177",
+      "type": "CT_CONSTRUCTOR_THROW",
+      "message": "Be wary of letting constructors throw exceptions.",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "spotbugs:Attributes.java:274:EI_EXPOSE_REP2:",
+      "tool": "spotbugs",
+      "sourcefile": "Attributes.java",
+      "start_line": "274",
+      "type": "EI_EXPOSE_REP2",
+      "message": "May expose internal representation by incorporating reference to mutable object",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "spotbugs:BufferUtil.java:1454:INT_BAD_COMPARISON_WITH_NONNEGATIVE_VALUE:",
+      "tool": "spotbugs",
+      "sourcefile": "BufferUtil.java",
+      "start_line": "1454",
+      "type": "INT_BAD_COMPARISON_WITH_NONNEGATIVE_VALUE",
+      "message": "Bad comparison of nonnegative value with negative constant or zero",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "spotbugs:Callback.java:855:UPM_UNCALLED_PRIVATE_METHOD:",
+      "tool": "spotbugs",
+      "sourcefile": "Callback.java",
+      "start_line": "855",
+      "type": "UPM_UNCALLED_PRIVATE_METHOD",
+      "message": "Private method is never called",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "spotbugs:Callback.java:824:UPM_UNCALLED_PRIVATE_METHOD:",
+      "tool": "spotbugs",
+      "sourcefile": "Callback.java",
+      "start_line": "824",
+      "type": "UPM_UNCALLED_PRIVATE_METHOD",
+      "message": "Private method is never called",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "spotbugs:ClassMatcher.java:837:RC_REF_COMPARISON_BAD_PRACTICE_BOOLEAN:",
+      "tool": "spotbugs",
+      "sourcefile": "ClassMatcher.java",
+      "start_line": "837",
+      "type": "RC_REF_COMPARISON_BAD_PRACTICE_BOOLEAN",
+      "message": "Suspicious reference comparison of Boolean values",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "spotbugs:ClassMatcher.java:None:SE_BAD_FIELD:",
+      "tool": "spotbugs",
+      "sourcefile": "ClassMatcher.java",
+      "start_line": "None",
+      "type": "SE_BAD_FIELD",
+      "message": "Non-transient non-serializable instance field in serializable class",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "spotbugs:ClassMatcher.java:130:CT_CONSTRUCTOR_THROW:",
+      "tool": "spotbugs",
+      "sourcefile": "ClassMatcher.java",
+      "start_line": "130",
+      "type": "CT_CONSTRUCTOR_THROW",
+      "message": "Be wary of letting constructors throw exceptions.",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "spotbugs:HostPort.java:75:CT_CONSTRUCTOR_THROW:",
+      "tool": "spotbugs",
+      "sourcefile": "HostPort.java",
+      "start_line": "75",
+      "type": "CT_CONSTRUCTOR_THROW",
+      "message": "Be wary of letting constructors throw exceptions.",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "spotbugs:LegacyQuotedStringTokenizer.java:104:CT_CONSTRUCTOR_THROW:",
+      "tool": "spotbugs",
+      "sourcefile": "LegacyQuotedStringTokenizer.java",
+      "start_line": "104",
+      "type": "CT_CONSTRUCTOR_THROW",
+      "message": "Be wary of letting constructors throw exceptions.",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "spotbugs:RolloverFileOutputStream.java:138:CT_CONSTRUCTOR_THROW:",
+      "tool": "spotbugs",
+      "sourcefile": "RolloverFileOutputStream.java",
+      "start_line": "138",
+      "type": "CT_CONSTRUCTOR_THROW",
+      "message": "Be wary of letting constructors throw exceptions.",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "spotbugs:Scanner.java:159:URF_UNREAD_FIELD:",
+      "tool": "spotbugs",
+      "sourcefile": "Scanner.java",
+      "start_line": "159",
+      "type": "URF_UNREAD_FIELD",
+      "message": "Unread field",
+      "is_true_positive": true,
+      "column": ""
+    },
+    {
+      "finding_id": "spotbugs:ExtensionConfig.java:211:WMI_WRONG_MAP_ITERATOR:",
+      "tool": "spotbugs",
+      "sourcefile": "ExtensionConfig.java",
+      "start_line": "211",
+      "type": "WMI_WRONG_MAP_ITERATOR",
+      "message": "Inefficient use of keySet iterator instead of entrySet iterator",
+      "is_true_positive": true,
+      "column": ""
+    },
+    {
+      "finding_id": "spotbugs:ExtensionConfig.java:232:WMI_WRONG_MAP_ITERATOR:",
+      "tool": "spotbugs",
+      "sourcefile": "ExtensionConfig.java",
+      "start_line": "232",
+      "type": "WMI_WRONG_MAP_ITERATOR",
+      "message": "Inefficient use of keySet iterator instead of entrySet iterator",
+      "is_true_positive": true,
+      "column": ""
+    },
+    {
+      "finding_id": "spotbugs:WebSocketCoreSession.java:573:AT_STALE_THREAD_WRITE_OF_PRIMITIVE:",
+      "tool": "spotbugs",
+      "sourcefile": "WebSocketCoreSession.java",
+      "start_line": "573",
+      "type": "AT_STALE_THREAD_WRITE_OF_PRIMITIVE",
+      "message": "This write of this shared primitive variable may not be visible to other threads",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "spotbugs:WebSocketCoreSession.java:609:AT_STALE_THREAD_WRITE_OF_PRIMITIVE:",
+      "tool": "spotbugs",
+      "sourcefile": "WebSocketCoreSession.java",
+      "start_line": "609",
+      "type": "AT_STALE_THREAD_WRITE_OF_PRIMITIVE",
+      "message": "This write of this shared primitive variable may not be visible to other threads",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "spotbugs:MessageOutputStream.java:55:CT_CONSTRUCTOR_THROW:",
+      "tool": "spotbugs",
+      "sourcefile": "MessageOutputStream.java",
+      "start_line": "55",
+      "type": "CT_CONSTRUCTOR_THROW",
+      "message": "Be wary of letting constructors throw exceptions.",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "spotbugs:PartialByteBufferMessageSink.java:26:NM_SAME_SIMPLE_NAME_AS_SUPERCLASS:",
+      "tool": "spotbugs",
+      "sourcefile": "PartialByteBufferMessageSink.java",
+      "start_line": "26",
+      "type": "NM_SAME_SIMPLE_NAME_AS_SUPERCLASS",
+      "message": "Class names shouldn't shadow simple name of superclass",
+      "is_true_positive": true,
+      "column": ""
+    },
+    {
+      "finding_id": "spotbugs:XmlConfiguration.java:292:CT_CONSTRUCTOR_THROW:",
+      "tool": "spotbugs",
+      "sourcefile": "XmlConfiguration.java",
+      "start_line": "292",
+      "type": "CT_CONSTRUCTOR_THROW",
+      "message": "Be wary of letting constructors throw exceptions.",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "spotbugs:XmlConfiguration.java:2082:WMI_WRONG_MAP_ITERATOR:",
+      "tool": "spotbugs",
+      "sourcefile": "XmlConfiguration.java",
+      "start_line": "2082",
+      "type": "WMI_WRONG_MAP_ITERATOR",
+      "message": "Inefficient use of keySet iterator instead of entrySet iterator",
+      "is_true_positive": true,
+      "column": ""
+    },
+    {
+      "finding_id": "spotbugs:XmlConfiguration.java:811:SBSC_USE_STRINGBUFFER_CONCATENATION:",
+      "tool": "spotbugs",
+      "sourcefile": "XmlConfiguration.java",
+      "start_line": "811",
+      "type": "SBSC_USE_STRINGBUFFER_CONCATENATION",
+      "message": "Method concatenates strings using + in a loop",
+      "is_true_positive": true,
+      "column": ""
+    },
+    {
+      "finding_id": "error-prone:ArrayTernaryTrie.java:448:MissingOverride:16",
+      "tool": "error-prone",
+      "sourcefile": "ArrayTernaryTrie.java",
+      "start_line": "448",
+      "type": "MissingOverride",
+      "message": "size implements method in Index; expected @Override",
+      "is_true_positive": true,
+      "column": "16"
+    },
+    {
+      "finding_id": "error-prone:Callback.java:90:FutureReturnValueIgnored:33",
+      "tool": "error-prone",
+      "sourcefile": "Callback.java",
+      "start_line": "90",
+      "type": "FutureReturnValueIgnored",
+      "message": "Return value of methods returning Future must be checked. Ignoring returned Futures suppresses exceptions thrown from the code that completes the Future.",
+      "is_true_positive": false,
+      "column": "33"
+    },
+    {
+      "finding_id": "error-prone:BufferUtil.java:941:UnnecessaryParentheses:28",
+      "tool": "error-prone",
+      "sourcefile": "BufferUtil.java",
+      "start_line": "941",
+      "type": "UnnecessaryParentheses",
+      "message": "These grouping parentheses are unnecessary; it is unlikely the code will be misinterpreted without them",
+      "is_true_positive": true,
+      "column": "28"
+    },
+    {
+      "finding_id": "error-prone:CharsetStringBuilder.java:160:ReferenceEquality:21",
+      "tool": "error-prone",
+      "sourcefile": "CharsetStringBuilder.java",
+      "start_line": "160",
+      "type": "ReferenceEquality",
+      "message": "Comparison using reference equality instead of value equality",
+      "is_true_positive": false,
+      "column": "21"
+    },
+    {
+      "finding_id": "error-prone:ClassMatcher.java:845:ReferenceEquality:27",
+      "tool": "error-prone",
+      "sourcefile": "ClassMatcher.java",
+      "start_line": "845",
+      "type": "ReferenceEquality",
+      "message": "Comparison using reference equality instead of value equality",
+      "is_true_positive": false,
+      "column": "27"
+    },
+    {
+      "finding_id": "error-prone:Content.java:598:MissingSummary:12",
+      "tool": "error-prone",
+      "sourcefile": "Content.java",
+      "start_line": "598",
+      "type": "MissingSummary",
+      "message": "A summary fragment is required; consider using the value of the @return block as a summary fragment instead.",
+      "is_true_positive": true,
+      "column": "12"
+    },
+    {
+      "finding_id": "error-prone:RetainableByteBuffer.java:257:MissingSummary:8",
+      "tool": "error-prone",
+      "sourcefile": "RetainableByteBuffer.java",
+      "start_line": "257",
+      "type": "MissingSummary",
+      "message": "A summary fragment is required; consider using the value of the @return block as a summary fragment instead.",
+      "is_true_positive": true,
+      "column": "8"
+    },
+    {
+      "finding_id": "error-prone:RetainableByteBuffer.java:330:IntLongMath:27",
+      "tool": "error-prone",
+      "sourcefile": "RetainableByteBuffer.java",
+      "start_line": "330",
+      "type": "IntLongMath",
+      "message": "Expression of type int may overflow before being assigned to a long",
+      "is_true_positive": false,
+      "column": "27"
+    },
+    {
+      "finding_id": "error-prone:RetainableByteBuffer.java:633:InvalidParam:18",
+      "tool": "error-prone",
+      "sourcefile": "RetainableByteBuffer.java",
+      "start_line": "633",
+      "type": "InvalidParam",
+      "message": "`byte` is very close to the parameter `bytes`. Did you mean to reference the parameter?",
+      "is_true_positive": false,
+      "column": "18"
+    },
+    {
+      "finding_id": "error-prone:RetainableByteBuffer.java:1011:IntLongMath:47",
+      "tool": "error-prone",
+      "sourcefile": "RetainableByteBuffer.java",
+      "start_line": "1011",
+      "type": "IntLongMath",
+      "message": "Expression of type int may overflow before being assigned to a long",
+      "is_true_positive": false,
+      "column": "47"
+    },
+    {
+      "finding_id": "error-prone:ByteBufferOutputStream.java:48:MissingOverride:17",
+      "tool": "error-prone",
+      "sourcefile": "ByteBufferOutputStream.java",
+      "start_line": "48",
+      "type": "MissingOverride",
+      "message": "write overrides method in OutputStream; expected @Override",
+      "is_true_positive": true,
+      "column": "17"
+    },
+    {
+      "finding_id": "error-prone:ComplianceUtils.java:173:MissingCasesInEnumSwitch:13",
+      "tool": "error-prone",
+      "sourcefile": "ComplianceUtils.java",
+      "start_line": "173",
+      "type": "MissingCasesInEnumSwitch",
+      "message": "Non-exhaustive switch; either add a default or handle the remaining cases: CONNECTION, CACHE_CONTROL, DATE, and 85 others",
+      "is_true_positive": false,
+      "column": "13"
+    },
+    {
+      "finding_id": "error-prone:HttpURI.java:301:MissingSummary:8",
+      "tool": "error-prone",
+      "sourcefile": "HttpURI.java",
+      "start_line": "301",
+      "type": "MissingSummary",
+      "message": "A summary fragment is required; consider using the value of the @return block as a summary fragment instead.",
+      "is_true_positive": true,
+      "column": "8"
+    },
+    {
+      "finding_id": "error-prone:MetaData.java:197:MissingSummary:12",
+      "tool": "error-prone",
+      "sourcefile": "MetaData.java",
+      "start_line": "197",
+      "type": "MissingSummary",
+      "message": "A summary fragment is required; consider using the value of the @return block as a summary fragment instead.",
+      "is_true_positive": true,
+      "column": "12"
+    },
+    {
+      "finding_id": "error-prone:HttpField.java:595:ReferenceEquality:19",
+      "tool": "error-prone",
+      "sourcefile": "HttpField.java",
+      "start_line": "595",
+      "type": "ReferenceEquality",
+      "message": "Comparison using reference equality instead of value equality",
+      "is_true_positive": false,
+      "column": "19"
+    },
+    {
+      "finding_id": "error-prone:HttpFields.java:681:OperatorPrecedence:47",
+      "tool": "error-prone",
+      "sourcefile": "HttpFields.java",
+      "start_line": "681",
+      "type": "OperatorPrecedence",
+      "message": "Use grouping parenthesis to make the operator precedence explicit",
+      "is_true_positive": true,
+      "column": "47"
+    },
+    {
+      "finding_id": "error-prone:HttpFields.java:1841:ReferenceEquality:36",
+      "tool": "error-prone",
+      "sourcefile": "HttpFields.java",
+      "start_line": "1841",
+      "type": "ReferenceEquality",
+      "message": "Comparison using reference equality instead of value equality",
+      "is_true_positive": false,
+      "column": "36"
+    },
+    {
+      "finding_id": "error-prone:HttpFields.java:1930:ReferenceEquality:48",
+      "tool": "error-prone",
+      "sourcefile": "HttpFields.java",
+      "start_line": "1930",
+      "type": "ReferenceEquality",
+      "message": "Comparison using reference equality instead of value equality",
+      "is_true_positive": false,
+      "column": "48"
+    },
+    {
+      "finding_id": "error-prone:QuotedCSVParser.java:246:OperatorPrecedence:101",
+      "tool": "error-prone",
+      "sourcefile": "QuotedCSVParser.java",
+      "start_line": "246",
+      "type": "OperatorPrecedence",
+      "message": "Use grouping parenthesis to make the operator precedence explicit",
+      "is_true_positive": true,
+      "column": "101"
+    },
+    {
+      "finding_id": "error-prone:HttpFieldsContainsHeaderValue.java:58:ReferenceEquality:24",
+      "tool": "error-prone",
+      "sourcefile": "HttpFieldsContainsHeaderValue.java",
+      "start_line": "58",
+      "type": "ReferenceEquality",
+      "message": "Comparison using reference equality instead of value equality",
+      "is_true_positive": true,
+      "column": "24"
+    },
+    {
+      "finding_id": "error-prone:AsyncJSON.java:117:MissingSummary:12",
+      "tool": "error-prone",
+      "sourcefile": "AsyncJSON.java",
+      "start_line": "117",
+      "type": "MissingSummary",
+      "message": "A summary line is required on public/protected Javadocs.",
+      "is_true_positive": true,
+      "column": "12"
+    },
+    {
+      "finding_id": "error-prone:HTTP2Session.java:1696:MissingCasesInEnumSwitch:13",
+      "tool": "error-prone",
+      "sourcefile": "HTTP2Session.java",
+      "start_line": "1696",
+      "type": "MissingCasesInEnumSwitch",
+      "message": "Non-exhaustive switch; either add a default or handle the remaining cases: DATA, PRIORITY, RST_STREAM, and 9 others",
+      "is_true_positive": false,
+      "column": "13"
+    },
+    {
+      "finding_id": "error-prone:HTTP2Session.java:1726:MissingCasesInEnumSwitch:13",
+      "tool": "error-prone",
+      "sourcefile": "HTTP2Session.java",
+      "start_line": "1726",
+      "type": "MissingCasesInEnumSwitch",
+      "message": "Non-exhaustive switch; either add a default or handle the remaining cases: DATA, PRIORITY, RST_STREAM, and 9 others",
+      "is_true_positive": false,
+      "column": "13"
+    },
+    {
+      "finding_id": "error-prone:HTTP2Session.java:2407:MissingCasesInEnumSwitch:17",
+      "tool": "error-prone",
+      "sourcefile": "HTTP2Session.java",
+      "start_line": "2407",
+      "type": "MissingCasesInEnumSwitch",
+      "message": "Non-exhaustive switch; either add a default or handle the remaining cases: NOT_CLOSED, LOCALLY_CLOSING, CLOSED",
+      "is_true_positive": false,
+      "column": "17"
+    },
+    {
+      "finding_id": "error-prone:HTTP2StreamEndPoint.java:353:FutureReturnValueIgnored:37",
+      "tool": "error-prone",
+      "sourcefile": "HTTP2StreamEndPoint.java",
+      "start_line": "353",
+      "type": "FutureReturnValueIgnored",
+      "message": "Return value of methods returning Future must be checked. Ignoring returned Futures suppresses exceptions thrown from the code that completes the Future.",
+      "is_true_positive": false,
+      "column": "37"
+    },
+    {
+      "finding_id": "error-prone:HTTP2StreamEndPoint.java:381:MissingCasesInEnumSwitch:13",
+      "tool": "error-prone",
+      "sourcefile": "HTTP2StreamEndPoint.java",
+      "start_line": "381",
+      "type": "MissingCasesInEnumSwitch",
+      "message": "Non-exhaustive switch; either add a default or handle the remaining cases: IDLE, OSHUT, FAILED",
+      "is_true_positive": false,
+      "column": "13"
+    },
+    {
+      "finding_id": "error-prone:HTTP2StreamEndPoint.java:407:MissingCasesInEnumSwitch:13",
+      "tool": "error-prone",
+      "sourcefile": "HTTP2StreamEndPoint.java",
+      "start_line": "407",
+      "type": "MissingCasesInEnumSwitch",
+      "message": "Non-exhaustive switch; either add a default or handle the remaining cases: IDLE, OSHUT, FAILED",
+      "is_true_positive": false,
+      "column": "13"
+    },
+    {
+      "finding_id": "error-prone:SessionContainer.java:70:FutureReturnValueIgnored:29",
+      "tool": "error-prone",
+      "sourcefile": "SessionContainer.java",
+      "start_line": "70",
+      "type": "FutureReturnValueIgnored",
+      "message": "Return value of methods returning Future must be checked. Ignoring returned Futures suppresses exceptions thrown from the code that completes the Future.",
+      "is_true_positive": false,
+      "column": "29"
+    },
+    {
+      "finding_id": "error-prone:XmlParser.java:440:OperatorPrecedence:108",
+      "tool": "error-prone",
+      "sourcefile": "XmlParser.java",
+      "start_line": "440",
+      "type": "OperatorPrecedence",
+      "message": "Use grouping parenthesis to make the operator precedence explicit",
+      "is_true_positive": true,
+      "column": "108"
+    },
+    {
+      "finding_id": "error-prone:Server.java:197:OperatorPrecedence:29",
+      "tool": "error-prone",
+      "sourcefile": "Server.java",
+      "start_line": "197",
+      "type": "OperatorPrecedence",
+      "message": "Use grouping parenthesis to make the operator precedence explicit",
+      "is_true_positive": true,
+      "column": "29"
+    },
+    {
+      "finding_id": "error-prone:Server.java:197:OperatorPrecedence:100",
+      "tool": "error-prone",
+      "sourcefile": "Server.java",
+      "start_line": "197",
+      "type": "OperatorPrecedence",
+      "message": "Use grouping parenthesis to make the operator precedence explicit",
+      "is_true_positive": true,
+      "column": "100"
+    },
+    {
+      "finding_id": "error-prone:Handler.java:178:MissingSummary:12",
+      "tool": "error-prone",
+      "sourcefile": "Handler.java",
+      "start_line": "178",
+      "type": "MissingSummary",
+      "message": "A summary fragment is required; consider using the value of the @return block as a summary fragment instead.",
+      "is_true_positive": true,
+      "column": "12"
+    },
+    {
+      "finding_id": "error-prone:Response.java:521:MissingCasesInEnumSwitch:13",
+      "tool": "error-prone",
+      "sourcefile": "Response.java",
+      "start_line": "521",
+      "type": "MissingCasesInEnumSwitch",
+      "message": "Non-exhaustive switch; either add a default or handle the remaining cases: CONNECTION, CACHE_CONTROL, DATE, and 86 others",
+      "is_true_positive": false,
+      "column": "13"
+    },
+    {
+      "finding_id": "error-prone:GzipDecoderSource.java:66:MissingCasesInEnumSwitch:17",
+      "tool": "error-prone",
+      "sourcefile": "GzipDecoderSource.java",
+      "start_line": "66",
+      "type": "MissingCasesInEnumSwitch",
+      "message": "Non-exhaustive switch; either add a default or handle the remaining cases: ID, CM, FLG, and 12 others",
+      "is_true_positive": false,
+      "column": "17"
+    },
+    {
+      "finding_id": "error-prone:GzipDecoderSource.java:156:OperatorPrecedence:63",
+      "tool": "error-prone",
+      "sourcefile": "GzipDecoderSource.java",
+      "start_line": "156",
+      "type": "OperatorPrecedence",
+      "message": "Use grouping parenthesis to make the operator precedence explicit",
+      "is_true_positive": true,
+      "column": "63"
+    },
+    {
+      "finding_id": "error-prone:GzipDecoderSource.java:189:OperatorPrecedence:63",
+      "tool": "error-prone",
+      "sourcefile": "GzipDecoderSource.java",
+      "start_line": "189",
+      "type": "OperatorPrecedence",
+      "message": "Use grouping parenthesis to make the operator precedence explicit",
+      "is_true_positive": true,
+      "column": "63"
+    },
+    {
+      "finding_id": "error-prone:GzipDecoderSource.java:238:OperatorPrecedence:63",
+      "tool": "error-prone",
+      "sourcefile": "GzipDecoderSource.java",
+      "start_line": "238",
+      "type": "OperatorPrecedence",
+      "message": "Use grouping parenthesis to make the operator precedence explicit",
+      "is_true_positive": true,
+      "column": "63"
+    },
+    {
+      "finding_id": "error-prone:SessionInactivityTimer.java:88:MissingSummary:8",
+      "tool": "error-prone",
+      "sourcefile": "SessionInactivityTimer.java",
+      "start_line": "88",
+      "type": "MissingSummary",
+      "message": "A summary line is required on public/protected Javadocs.",
+      "is_true_positive": true,
+      "column": "8"
+    },
+    {
+      "finding_id": "error-prone:DatabaseAdaptor.java:178:UnnecessaryParentheses:16",
+      "tool": "error-prone",
+      "sourcefile": "DatabaseAdaptor.java",
+      "start_line": "178",
+      "type": "UnnecessaryParentheses",
+      "message": "These grouping parentheses are unnecessary; it is unlikely the code will be misinterpreted without them",
+      "is_true_positive": true,
+      "column": "16"
+    },
+    {
+      "finding_id": "error-prone:DatabaseAdaptor.java:277:BanJNDI:52",
+      "tool": "error-prone",
+      "sourcefile": "DatabaseAdaptor.java",
+      "start_line": "277",
+      "type": "BanJNDI",
+      "message": "Using JNDI may deserialize user input via the `Serializable` API which is extremely dangerous",
+      "is_true_positive": false,
+      "column": "52"
+    },
+    {
+      "finding_id": "error-prone:DefaultSessionIdManager.java:248:UnnecessaryParentheses:94",
+      "tool": "error-prone",
+      "sourcefile": "DefaultSessionIdManager.java",
+      "start_line": "248",
+      "type": "UnnecessaryParentheses",
+      "message": "These grouping parentheses are unnecessary; it is unlikely the code will be misinterpreted without them",
+      "is_true_positive": true,
+      "column": "94"
+    },
+    {
+      "finding_id": "error-prone:DefaultSessionIdManager.java:430:MissingOverride:17",
+      "tool": "error-prone",
+      "sourcefile": "DefaultSessionIdManager.java",
+      "start_line": "430",
+      "type": "MissingOverride",
+      "message": "scavenge implements method in SessionIdManager; expected @Override",
+      "is_true_positive": true,
+      "column": "17"
+    },
+    {
+      "finding_id": "error-prone:SessionHandler.java:32:SameNameButDifferent:13",
+      "tool": "error-prone",
+      "sourcefile": "SessionHandler.java",
+      "start_line": "32",
+      "type": "SameNameButDifferent",
+      "message": "The name `Handler` refers to [org.eclipse.jetty.server.Handler, org.eclipse.jetty.server.Request.Handler] within this file. It may be confusing to have the same name refer to multiple types. Consider qualifying them for clarity.",
+      "is_true_positive": true,
+      "column": "13"
+    },
+    {
+      "finding_id": "error-prone:SessionHandler.java:50:SameNameButDifferent:28",
+      "tool": "error-prone",
+      "sourcefile": "SessionHandler.java",
+      "start_line": "50",
+      "type": "SameNameButDifferent",
+      "message": "The name `Handler` refers to [org.eclipse.jetty.server.Handler, org.eclipse.jetty.server.Request.Handler] within this file. It may be confusing to have the same name refer to multiple types. Consider qualifying them for clarity.",
+      "is_true_positive": true,
+      "column": "28"
+    },
+    {
+      "finding_id": "error-prone:SessionHandler.java:64:SameNameButDifferent:9",
+      "tool": "error-prone",
+      "sourcefile": "SessionHandler.java",
+      "start_line": "64",
+      "type": "SameNameButDifferent",
+      "message": "The name `Handler` refers to [org.eclipse.jetty.server.Handler, org.eclipse.jetty.server.Request.Handler] within this file. It may be confusing to have the same name refer to multiple types. Consider qualifying them for clarity.",
+      "is_true_positive": true,
+      "column": "9"
+    },
+    {
+      "finding_id": "error-prone:SessionHandler.java:134:SameNameButDifferent:32",
+      "tool": "error-prone",
+      "sourcefile": "SessionHandler.java",
+      "start_line": "134",
+      "type": "SameNameButDifferent",
+      "message": "The name `Handler` refers to [org.eclipse.jetty.server.Handler, org.eclipse.jetty.server.Request.Handler] within this file. It may be confusing to have the same name refer to multiple types. Consider qualifying them for clarity.",
+      "is_true_positive": true,
+      "column": "32"
+    },
+    {
+      "finding_id": "error-prone:AbstractLoginModule.java:216:UnusedVariable:20",
+      "tool": "error-prone",
+      "sourcefile": "AbstractLoginModule.java",
+      "start_line": "216",
+      "type": "UnusedVariable",
+      "message": "This assignment to the local variable 'webCredential' is never read.",
+      "is_true_positive": true,
+      "column": "20"
+    },
+    {
+      "finding_id": "error-prone:Response.java:222:FutureReturnValueIgnored:31",
+      "tool": "error-prone",
+      "sourcefile": "Response.java",
+      "start_line": "222",
+      "type": "FutureReturnValueIgnored",
+      "message": "Return value of methods returning Future must be checked. Ignoring returned Futures suppresses exceptions thrown from the code that completes the Future.",
+      "is_true_positive": false,
+      "column": "31"
+    },
+    {
+      "finding_id": "error-prone:HttpDestination.java:330:FutureReturnValueIgnored:30",
+      "tool": "error-prone",
+      "sourcefile": "HttpDestination.java",
+      "start_line": "330",
+      "type": "FutureReturnValueIgnored",
+      "message": "Return value of methods returning Future must be checked. Ignoring returned Futures suppresses exceptions thrown from the code that completes the Future.",
+      "is_true_positive": false,
+      "column": "30"
+    },
+    {
+      "finding_id": "error-prone:HttpDestination.java:335:FutureReturnValueIgnored:26",
+      "tool": "error-prone",
+      "sourcefile": "HttpDestination.java",
+      "start_line": "335",
+      "type": "FutureReturnValueIgnored",
+      "message": "Return value of methods returning Future must be checked. Ignoring returned Futures suppresses exceptions thrown from the code that completes the Future.",
+      "is_true_positive": false,
+      "column": "26"
+    },
+    {
+      "finding_id": "error-prone:HttpDestination.java:445:FutureReturnValueIgnored:22",
+      "tool": "error-prone",
+      "sourcefile": "HttpDestination.java",
+      "start_line": "445",
+      "type": "FutureReturnValueIgnored",
+      "message": "Return value of methods returning Future must be checked. Ignoring returned Futures suppresses exceptions thrown from the code that completes the Future.",
+      "is_true_positive": false,
+      "column": "22"
+    },
+    {
+      "finding_id": "error-prone:CompressionHandler.java:258:MissingCasesInEnumSwitch:13",
+      "tool": "error-prone",
+      "sourcefile": "CompressionHandler.java",
+      "start_line": "258",
+      "type": "MissingCasesInEnumSwitch",
+      "message": "Non-exhaustive switch; either add a default or handle the remaining cases: CONNECTION, CACHE_CONTROL, DATE, and 84 others",
+      "is_true_positive": false,
+      "column": "13"
+    },
+    {
+      "finding_id": "error-prone:DecompressionRequest.java:82:MissingCasesInEnumSwitch:13",
+      "tool": "error-prone",
+      "sourcefile": "DecompressionRequest.java",
+      "start_line": "82",
+      "type": "MissingCasesInEnumSwitch",
+      "message": "Non-exhaustive switch; either add a default or handle the remaining cases: CONNECTION, CACHE_CONTROL, DATE, and 86 others",
+      "is_true_positive": false,
+      "column": "13"
+    },
+    {
+      "finding_id": "error-prone:DeploymentScanner.java:646:MissingCasesInEnumSwitch:13",
+      "tool": "error-prone",
+      "sourcefile": "DeploymentScanner.java",
+      "start_line": "646",
+      "type": "MissingCasesInEnumSwitch",
+      "message": "Non-exhaustive switch; either add a default or handle the remaining cases: UNCHANGED",
+      "is_true_positive": false,
+      "column": "13"
+    },
+    {
+      "finding_id": "error-prone:WebAppClassLoader.java:132:MissingOverride:25",
+      "tool": "error-prone",
+      "sourcefile": "WebAppClassLoader.java",
+      "start_line": "132",
+      "type": "MissingOverride",
+      "message": "isProtectedClass implements method in ClassVisibilityChecker; expected @Override",
+      "is_true_positive": true,
+      "column": "25"
+    },
+    {
+      "finding_id": "error-prone:HttpConnectionOverFCGI.java:376:FutureReturnValueIgnored:40",
+      "tool": "error-prone",
+      "sourcefile": "HttpConnectionOverFCGI.java",
+      "start_line": "376",
+      "type": "FutureReturnValueIgnored",
+      "message": "Return value of methods returning Future must be checked. Ignoring returned Futures suppresses exceptions thrown from the code that completes the Future.",
+      "is_true_positive": false,
+      "column": "40"
+    },
+    {
+      "finding_id": "error-prone:ResponseContentParser.java:78:SameNameButDifferent:17",
+      "tool": "error-prone",
+      "sourcefile": "ResponseContentParser.java",
+      "start_line": "78",
+      "type": "SameNameButDifferent",
+      "message": "The name `State` refers to [org.eclipse.jetty.fcgi.parser.ResponseContentParser.State, org.eclipse.jetty.http.HttpParser.State] within this file. It may be confusing to have the same name refer to multiple types. Consider qualifying them for clarity.",
+      "is_true_positive": true,
+      "column": "17"
+    },
+    {
+      "finding_id": "error-prone:ResponseContentParser.java:92:SameNameButDifferent:21",
+      "tool": "error-prone",
+      "sourcefile": "ResponseContentParser.java",
+      "start_line": "92",
+      "type": "SameNameButDifferent",
+      "message": "The name `State` refers to [org.eclipse.jetty.fcgi.parser.ResponseContentParser.State, org.eclipse.jetty.http.HttpParser.State] within this file. It may be confusing to have the same name refer to multiple types. Consider qualifying them for clarity.",
+      "is_true_positive": true,
+      "column": "21"
+    },
+    {
+      "finding_id": "error-prone:ResponseContentParser.java:126:SameNameButDifferent:46",
+      "tool": "error-prone",
+      "sourcefile": "ResponseContentParser.java",
+      "start_line": "126",
+      "type": "SameNameButDifferent",
+      "message": "The name `State` refers to [org.eclipse.jetty.fcgi.parser.ResponseContentParser.State, org.eclipse.jetty.http.HttpParser.State] within this file. It may be confusing to have the same name refer to multiple types. Consider qualifying them for clarity.",
+      "is_true_positive": true,
+      "column": "46"
+    },
+    {
+      "finding_id": "error-prone:ResponseContentParser.java:126:SameNameButDifferent:66",
+      "tool": "error-prone",
+      "sourcefile": "ResponseContentParser.java",
+      "start_line": "126",
+      "type": "SameNameButDifferent",
+      "message": "The name `State` refers to [org.eclipse.jetty.fcgi.parser.ResponseContentParser.State, org.eclipse.jetty.http.HttpParser.State] within this file. It may be confusing to have the same name refer to multiple types. Consider qualifying them for clarity.",
+      "is_true_positive": true,
+      "column": "66"
+    },
+    {
+      "finding_id": "error-prone:ProxyHandler.java:511:FutureReturnValueIgnored:43",
+      "tool": "error-prone",
+      "sourcefile": "ProxyHandler.java",
+      "start_line": "511",
+      "type": "FutureReturnValueIgnored",
+      "message": "Return value of methods returning Future must be checked. Ignoring returned Futures suppresses exceptions thrown from the code that completes the Future.",
+      "is_true_positive": false,
+      "column": "43"
+    },
+    {
+      "finding_id": "error-prone:AbstractStream.java:69:MissingOverride:17",
+      "tool": "error-prone",
+      "sourcefile": "AbstractStream.java",
+      "start_line": "69",
+      "type": "MissingOverride",
+      "message": "getIdleTimeout implements method in Stream; expected @Override",
+      "is_true_positive": true,
+      "column": "17"
+    },
+    {
+      "finding_id": "error-prone:FrameGenerator.java:236:IntLongMath:25",
+      "tool": "error-prone",
+      "sourcefile": "FrameGenerator.java",
+      "start_line": "236",
+      "type": "IntLongMath",
+      "message": "Expression of type int may overflow before being assigned to a long",
+      "is_true_positive": true,
+      "column": "25"
+    },
+    {
+      "finding_id": "error-prone:FrameGenerator.java:258:IntLongMath:25",
+      "tool": "error-prone",
+      "sourcefile": "FrameGenerator.java",
+      "start_line": "258",
+      "type": "IntLongMath",
+      "message": "Expression of type int may overflow before being assigned to a long",
+      "is_true_positive": true,
+      "column": "25",
+      "notes_source": "reconstructed_2026-07-31_from_code_and_rubric"
+    },
+    {
+      "finding_id": "error-prone:FrameGenerator.java:463:IntLongMath:47",
+      "tool": "error-prone",
+      "sourcefile": "FrameGenerator.java",
+      "start_line": "463",
+      "type": "IntLongMath",
+      "message": "Expression of type int may overflow before being assigned to a long",
+      "is_true_positive": false,
+      "column": "47"
+    },
+    {
+      "finding_id": "error-prone:FrameGenerator.java:551:IntLongMath:25",
+      "tool": "error-prone",
+      "sourcefile": "FrameGenerator.java",
+      "start_line": "551",
+      "type": "IntLongMath",
+      "message": "Expression of type int may overflow before being assigned to a long",
+      "is_true_positive": true,
+      "column": "25"
+    },
+    {
+      "finding_id": "error-prone:StreamParser.java:117:IntLongMath:56",
+      "tool": "error-prone",
+      "sourcefile": "StreamParser.java",
+      "start_line": "117",
+      "type": "IntLongMath",
+      "message": "Expression of type int may overflow before being assigned to a long",
+      "is_true_positive": false,
+      "column": "56"
+    },
+    {
+      "finding_id": "error-prone:Frame.java:23:OperatorPrecedence:40",
+      "tool": "error-prone",
+      "sourcefile": "Frame.java",
+      "start_line": "23",
+      "type": "OperatorPrecedence",
+      "message": "Use grouping parenthesis to make the operator precedence explicit",
+      "is_true_positive": true,
+      "column": "40"
+    },
+    {
+      "finding_id": "error-prone:HTTP3Session.java:522:MissingCasesInEnumSwitch:13",
+      "tool": "error-prone",
+      "sourcefile": "HTTP3Session.java",
+      "start_line": "522",
+      "type": "MissingCasesInEnumSwitch",
+      "message": "Non-exhaustive switch; either add a default or handle the remaining cases: LOCALLY_CLOSED, REMOTELY_CLOSED",
+      "is_true_positive": false,
+      "column": "13"
+    },
+    {
+      "finding_id": "error-prone:HTTP3Stream.java:190:OperatorPrecedence:29",
+      "tool": "error-prone",
+      "sourcefile": "HTTP3Stream.java",
+      "start_line": "190",
+      "type": "OperatorPrecedence",
+      "message": "Use grouping parenthesis to make the operator precedence explicit",
+      "is_true_positive": true,
+      "column": "29"
+    },
+    {
+      "finding_id": "error-prone:HttpConnectionOverHTTP3.java:79:UnusedVariable:27",
+      "tool": "error-prone",
+      "sourcefile": "HttpConnectionOverHTTP3.java",
+      "start_line": "79",
+      "type": "UnusedVariable",
+      "message": "The local variable 'peerCertificates' is never read.",
+      "is_true_positive": true,
+      "column": "27"
+    },
+    {
+      "finding_id": "error-prone:HttpConnectionOverHTTP3.java:186:FutureReturnValueIgnored:44",
+      "tool": "error-prone",
+      "sourcefile": "HttpConnectionOverHTTP3.java",
+      "start_line": "186",
+      "type": "FutureReturnValueIgnored",
+      "message": "Return value of methods returning Future must be checked. Ignoring returned Futures suppresses exceptions thrown from the code that completes the Future.",
+      "is_true_positive": false,
+      "column": "44"
+    },
+    {
+      "finding_id": "error-prone:ServerQuicheConnection.java:356:FutureReturnValueIgnored:26",
+      "tool": "error-prone",
+      "sourcefile": "ServerQuicheConnection.java",
+      "start_line": "356",
+      "type": "FutureReturnValueIgnored",
+      "message": "Return value of methods returning Future must be checked. Ignoring returned Futures suppresses exceptions thrown from the code that completes the Future.",
+      "is_true_positive": false,
+      "column": "26"
+    },
+    {
+      "finding_id": "error-prone:QuicheServerConnector.java:119:FutureReturnValueIgnored:25",
+      "tool": "error-prone",
+      "sourcefile": "QuicheServerConnector.java",
+      "start_line": "119",
+      "type": "FutureReturnValueIgnored",
+      "message": "Method returns a nested type, java.util.concurrent.CompletableFuture<java.util.concurrent.CompletableFuture<java.lang.Void>>",
+      "is_true_positive": false,
+      "column": "25"
+    },
+    {
+      "finding_id": "error-prone:localContextRoot.java:448:BanJNDI:32",
+      "tool": "error-prone",
+      "sourcefile": "localContextRoot.java",
+      "start_line": "448",
+      "type": "BanJNDI",
+      "message": "Using JNDI may deserialize user input via the `Serializable` API which is extremely dangerous",
+      "is_true_positive": false,
+      "column": "32"
+    },
+    {
+      "finding_id": "error-prone:AbstractForkedChild.java:185:MissingOverride:17",
+      "tool": "error-prone",
+      "sourcefile": "AbstractForkedChild.java",
+      "start_line": "185",
+      "type": "MissingOverride",
+      "message": "doStart overrides method in ContainerLifeCycle; expected @Override",
+      "is_true_positive": true,
+      "column": "17"
+    },
+    {
+      "finding_id": "error-prone:AbstractServerForker.java:128:MissingOverride:29",
+      "tool": "error-prone",
+      "sourcefile": "AbstractServerForker.java",
+      "start_line": "128",
+      "type": "MissingOverride",
+      "message": "redeployWebApp implements method in AbstractForker; expected @Override",
+      "is_true_positive": true,
+      "column": "29"
+    },
+    {
+      "finding_id": "error-prone:Transaction.java:125:BanJNDI:45",
+      "tool": "error-prone",
+      "sourcefile": "Transaction.java",
+      "start_line": "125",
+      "type": "BanJNDI",
+      "message": "Using JNDI may deserialize user input via the `Serializable` API which is extremely dangerous",
+      "is_true_positive": false,
+      "column": "45"
+    },
+    {
+      "finding_id": "error-prone:Rule.java:46:MissingSummary:8",
+      "tool": "error-prone",
+      "sourcefile": "Rule.java",
+      "start_line": "46",
+      "type": "MissingSummary",
+      "message": "A summary fragment is required; consider using the value of the @return block as a summary fragment instead.",
+      "is_true_positive": true,
+      "column": "8"
+    },
+    {
+      "finding_id": "error-prone:RewriteHandler.java:54:SameNameButDifferent:27",
+      "tool": "error-prone",
+      "sourcefile": "RewriteHandler.java",
+      "start_line": "54",
+      "type": "SameNameButDifferent",
+      "message": "The name `Handler` refers to [org.eclipse.jetty.server.Handler, org.eclipse.jetty.server.Request.Handler] within this file. It may be confusing to have the same name refer to multiple types. Consider qualifying them for clarity.",
+      "is_true_positive": true,
+      "column": "27"
+    },
+    {
+      "finding_id": "error-prone:RewriteHandler.java:148:SameNameButDifferent:23",
+      "tool": "error-prone",
+      "sourcefile": "RewriteHandler.java",
+      "start_line": "148",
+      "type": "SameNameButDifferent",
+      "message": "The name `Handler` refers to [org.eclipse.jetty.server.Handler, org.eclipse.jetty.server.Request.Handler] within this file. It may be confusing to have the same name refer to multiple types. Consider qualifying them for clarity.",
+      "is_true_positive": true,
+      "column": "23"
+    },
+    {
+      "finding_id": "error-prone:RewriteHandler.java:112:MissingSummary:8",
+      "tool": "error-prone",
+      "sourcefile": "RewriteHandler.java",
+      "start_line": "112",
+      "type": "MissingSummary",
+      "message": "A summary fragment is required; consider using the value of the @see block as a summary fragment instead.",
+      "is_true_positive": true,
+      "column": "8"
+    },
+    {
+      "finding_id": "error-prone:RewriteHandler.java:120:MissingSummary:8",
+      "tool": "error-prone",
+      "sourcefile": "RewriteHandler.java",
+      "start_line": "120",
+      "type": "MissingSummary",
+      "message": "A summary fragment is required; consider using the value of the @see block as a summary fragment instead.",
+      "is_true_positive": true,
+      "column": "8"
+    },
+    {
+      "finding_id": "error-prone:CoreSession.java:112:MissingSummary:8",
+      "tool": "error-prone",
+      "sourcefile": "CoreSession.java",
+      "start_line": "112",
+      "type": "MissingSummary",
+      "message": "A summary fragment is required; consider using the value of the @return block as a summary fragment instead.",
+      "is_true_positive": true,
+      "column": "8"
+    },
+    {
+      "finding_id": "error-prone:FrameFlusher.java:250:ReferenceEquality:38",
+      "tool": "error-prone",
+      "sourcefile": "FrameFlusher.java",
+      "start_line": "250",
+      "type": "ReferenceEquality",
+      "message": "Comparison using reference equality instead of value equality",
+      "is_true_positive": false,
+      "column": "38"
+    },
+    {
+      "finding_id": "error-prone:FrameFlusher.java:265:ReferenceEquality:34",
+      "tool": "error-prone",
+      "sourcefile": "FrameFlusher.java",
+      "start_line": "265",
+      "type": "ReferenceEquality",
+      "message": "Comparison using reference equality instead of value equality",
+      "is_true_positive": false,
+      "column": "34"
+    },
+    {
+      "finding_id": "error-prone:FrameCaptureExtension.java:103:UnnecessaryParentheses:39",
+      "tool": "error-prone",
+      "sourcefile": "FrameCaptureExtension.java",
+      "start_line": "103",
+      "type": "UnnecessaryParentheses",
+      "message": "These grouping parentheses are unnecessary; it is unlikely the code will be misinterpreted without them",
+      "is_true_positive": true,
+      "column": "39"
+    },
+    {
+      "finding_id": "error-prone:MessageHandler.java:205:IntLongMath:67",
+      "tool": "error-prone",
+      "sourcefile": "MessageHandler.java",
+      "start_line": "205",
+      "type": "IntLongMath",
+      "message": "Expression of type int may overflow before being assigned to a long",
+      "is_true_positive": true,
+      "column": "67"
+    },
+    {
+      "finding_id": "error-prone:MessageHandler.java:243:IntLongMath:67",
+      "tool": "error-prone",
+      "sourcefile": "MessageHandler.java",
+      "start_line": "243",
+      "type": "IntLongMath",
+      "message": "Expression of type int may overflow before being assigned to a long",
+      "is_true_positive": true,
+      "column": "67"
+    },
+    {
+      "finding_id": "error-prone:ValidationExtension.java:37:UnusedVariable:33",
+      "tool": "error-prone",
+      "sourcefile": "ValidationExtension.java",
+      "start_line": "37",
+      "type": "UnusedVariable",
+      "message": "The field 'LOG' is never read.",
+      "is_true_positive": true,
+      "column": "33"
+    },
+    {
+      "finding_id": "error-prone:ByteBufferMessageSink.java:53:IntLongMath:77",
+      "tool": "error-prone",
+      "sourcefile": "ByteBufferMessageSink.java",
+      "start_line": "53",
+      "type": "IntLongMath",
+      "message": "Expression of type int may overflow before being assigned to a long",
+      "is_true_positive": true,
+      "column": "77"
+    },
+    {
+      "finding_id": "error-prone:DispatchedMessageSink.java:77:MissingOverride:17",
+      "tool": "error-prone",
+      "sourcefile": "DispatchedMessageSink.java",
+      "start_line": "77",
+      "type": "MissingOverride",
+      "message": "accept implements method in MessageSink; expected @Override",
+      "is_true_positive": true,
+      "column": "17"
+    },
+    {
+      "finding_id": "error-prone:DispatchedMessageSink.java:109:FutureReturnValueIgnored:82",
+      "tool": "error-prone",
+      "sourcefile": "DispatchedMessageSink.java",
+      "start_line": "109",
+      "type": "FutureReturnValueIgnored",
+      "message": "Return value of methods returning Future must be checked. Ignoring returned Futures suppresses exceptions thrown from the code that completes the Future.",
+      "is_true_positive": false,
+      "column": "82"
+    },
+    {
+      "finding_id": "error-prone:MessageInputStream.java:134:ReferenceEquality:26",
+      "tool": "error-prone",
+      "sourcefile": "MessageInputStream.java",
+      "start_line": "134",
+      "type": "ReferenceEquality",
+      "message": "Comparison using reference equality instead of value equality",
+      "is_true_positive": false,
+      "column": "26"
+    },
+    {
+      "finding_id": "error-prone:MessageInputStream.java:137:ReferenceEquality:26",
+      "tool": "error-prone",
+      "sourcefile": "MessageInputStream.java",
+      "start_line": "137",
+      "type": "ReferenceEquality",
+      "message": "Comparison using reference equality instead of value equality",
+      "is_true_positive": false,
+      "column": "26"
+    },
+    {
+      "finding_id": "error-prone:CoreClientUpgradeRequest.java:110:FutureReturnValueIgnored:39",
+      "tool": "error-prone",
+      "sourcefile": "CoreClientUpgradeRequest.java",
+      "start_line": "110",
+      "type": "FutureReturnValueIgnored",
+      "message": "Return value of methods returning Future must be checked. Ignoring returned Futures suppresses exceptions thrown from the code that completes the Future.",
+      "is_true_positive": false,
+      "column": "39"
+    },
+    {
+      "finding_id": "error-prone:CoreClientUpgradeRequest.java:113:FutureReturnValueIgnored:30",
+      "tool": "error-prone",
+      "sourcefile": "CoreClientUpgradeRequest.java",
+      "start_line": "113",
+      "type": "FutureReturnValueIgnored",
+      "message": "Return value of methods returning Future must be checked. Ignoring returned Futures suppresses exceptions thrown from the code that completes the Future.",
+      "is_true_positive": false,
+      "column": "30"
+    },
+    {
+      "finding_id": "error-prone:WebSocketClient.java:201:FutureReturnValueIgnored:33",
+      "tool": "error-prone",
+      "sourcefile": "WebSocketClient.java",
+      "start_line": "201",
+      "type": "FutureReturnValueIgnored",
+      "message": "Return value of methods returning Future must be checked. Ignoring returned Futures suppresses exceptions thrown from the code that completes the Future.",
+      "is_true_positive": false,
+      "column": "33"
+    },
+    {
+      "finding_id": "error-prone:WebSocketClient.java:214:FutureReturnValueIgnored:35",
+      "tool": "error-prone",
+      "sourcefile": "WebSocketClient.java",
+      "start_line": "214",
+      "type": "FutureReturnValueIgnored",
+      "message": "Return value of methods returning Future must be checked. Ignoring returned Futures suppresses exceptions thrown from the code that completes the Future.",
+      "is_true_positive": false,
+      "column": "35"
+    },
+    {
+      "finding_id": "error-prone:ServerUpgradeResponse.java:30:MissingSummary:8",
+      "tool": "error-prone",
+      "sourcefile": "ServerUpgradeResponse.java",
+      "start_line": "30",
+      "type": "MissingSummary",
+      "message": "A summary fragment is required; consider using the value of the @return block as a summary fragment instead.",
+      "is_true_positive": true,
+      "column": "8"
+    },
+    {
+      "finding_id": "sonarqube:HttpProxy.java:270:java:S2095:",
+      "tool": "sonarqube",
+      "sourcefile": "HttpProxy.java",
+      "start_line": "270",
+      "type": "java:S2095",
+      "message": "Use try-with-resources or close this \"Connection\" in a \"finally\" clause.",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "sonarqube:InputStreamResponseListener.java:354:java:S2142:",
+      "tool": "sonarqube",
+      "sourcefile": "InputStreamResponseListener.java",
+      "start_line": "354",
+      "type": "java:S2142",
+      "message": "Either re-interrupt this method or rethrow the \"InterruptedException\" that can be caught here.",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "sonarqube:ProxyProtocolClientConnectionFactory.java:543:java:S2095:",
+      "tool": "sonarqube",
+      "sourcefile": "ProxyProtocolClientConnectionFactory.java",
+      "start_line": "543",
+      "type": "java:S2095",
+      "message": "Use try-with-resources or close this \"Connection\" in a \"finally\" clause.",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "sonarqube:Socks4Proxy.java:232:java:S2095:",
+      "tool": "sonarqube",
+      "sourcefile": "Socks4Proxy.java",
+      "start_line": "232",
+      "type": "java:S2095",
+      "message": "Use try-with-resources or close this \"Connection\" in a \"finally\" clause.",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "sonarqube:Socks5Proxy.java:400:java:S2095:",
+      "tool": "sonarqube",
+      "sourcefile": "Socks5Proxy.java",
+      "start_line": "400",
+      "type": "java:S2095",
+      "message": "Use try-with-resources or close this \"Connection\" in a \"finally\" clause.",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "sonarqube:StandardDeployer.java:153:java:S2142:",
+      "tool": "sonarqube",
+      "sourcefile": "StandardDeployer.java",
+      "start_line": "153",
+      "type": "java:S2142",
+      "message": "Either re-interrupt this method or rethrow the \"InterruptedException\" that can be caught here.",
+      "is_true_positive": true,
+      "column": ""
+    },
+    {
+      "finding_id": "sonarqube:ClientParser.java:52:java:S6218:",
+      "tool": "sonarqube",
+      "sourcefile": "ClientParser.java",
+      "start_line": "52",
+      "type": "java:S6218",
+      "message": "Override equals, hashCode and toString to consider array's content in the method",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "sonarqube:HttpStatus.java:196:java:S1201:",
+      "tool": "sonarqube",
+      "sourcefile": "HttpStatus.java",
+      "start_line": "196",
+      "type": "java:S1201",
+      "message": "Either override Object.equals(Object), or rename the method to prevent any confusion.",
+      "is_true_positive": true,
+      "column": ""
+    },
+    {
+      "finding_id": "sonarqube:HttpTester.java:493:java:S2259:",
+      "tool": "sonarqube",
+      "sourcefile": "HttpTester.java",
+      "start_line": "493",
+      "type": "java:S2259",
+      "message": "A \"NullPointerException\" could be thrown; \"header\" is nullable here.",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "sonarqube:RFC6265CookieParser.java:377:java:S2259:",
+      "tool": "sonarqube",
+      "sourcefile": "RFC6265CookieParser.java",
+      "start_line": "377",
+      "type": "java:S2259",
+      "message": "A \"NullPointerException\" could be thrown; \"attributeName\" is nullable here.",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "sonarqube:RFC6265SetCookieParser.java:185:java:S2259:",
+      "tool": "sonarqube",
+      "sourcefile": "RFC6265SetCookieParser.java",
+      "start_line": "185",
+      "type": "java:S2259",
+      "message": "\"NullPointerException\" will be thrown when invoking method \"setAttribute()\".",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "sonarqube:HTTP2Session.java:2564:java:S2095:",
+      "tool": "sonarqube",
+      "sourcefile": "HTTP2Session.java",
+      "start_line": "2564",
+      "type": "java:S2095",
+      "message": "Use try-with-resources or close this \"HTTP2Stream\" in a \"finally\" clause.",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "sonarqube:HTTP2CServerConnectionFactory.java:78:java:S2095:",
+      "tool": "sonarqube",
+      "sourcefile": "HTTP2CServerConnectionFactory.java",
+      "start_line": "78",
+      "type": "java:S2095",
+      "message": "Use try-with-resources or close this \"Connection\" in a \"finally\" clause.",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "sonarqube:EncodableEntry.java:145:java:S2583:",
+      "tool": "sonarqube",
+      "sourcefile": "EncodableEntry.java",
+      "start_line": "145",
+      "type": "java:S2583",
+      "message": "Change this condition so that it does not always evaluate to \"false\"",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "sonarqube:ManagedSelector.java:783:java:S2142:",
+      "tool": "sonarqube",
+      "sourcefile": "ManagedSelector.java",
+      "start_line": "783",
+      "type": "java:S2142",
+      "message": "Either re-interrupt this method or rethrow the \"InterruptedException\" that can be caught here.",
+      "is_true_positive": true,
+      "column": ""
+    },
+    {
+      "finding_id": "sonarqube:ConnectorServer.java:309:java:S2095:",
+      "tool": "sonarqube",
+      "sourcefile": "ConnectorServer.java",
+      "start_line": "309",
+      "type": "java:S2095",
+      "message": "Use try-with-resources or close this \"ServerSocket\" in a \"finally\" clause.",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "sonarqube:ContextFactory.java:67:java:S5164:",
+      "tool": "sonarqube",
+      "sourcefile": "ContextFactory.java",
+      "start_line": "67",
+      "type": "java:S5164",
+      "message": "Call \"remove()\" on \"__threadClassLoader\".",
+      "is_true_positive": true,
+      "column": ""
+    },
+    {
+      "finding_id": "sonarqube:KeystoreGenerator.java:59:java:S2119:",
+      "tool": "sonarqube",
+      "sourcefile": "KeystoreGenerator.java",
+      "start_line": "59",
+      "type": "java:S2119",
+      "message": "Save and re-use this \"Random\".",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "sonarqube:AbstractForkedChild.java:177:java:S2095:",
+      "tool": "sonarqube",
+      "sourcefile": "AbstractForkedChild.java",
+      "start_line": "177",
+      "type": "java:S2095",
+      "message": "Use try-with-resources or close this \"FileInputStream\" in a \"finally\" clause.",
+      "is_true_positive": true,
+      "column": ""
+    },
+    {
+      "finding_id": "sonarqube:NamingEntryUtil.java:98:java:S2259:",
+      "tool": "sonarqube",
+      "sourcefile": "NamingEntryUtil.java",
+      "start_line": "98",
+      "type": "java:S2259",
+      "message": "A \"NullPointerException\" could be thrown; \"scopeName\" is nullable here.",
+      "is_true_positive": true,
+      "column": ""
+    },
+    {
+      "finding_id": "sonarqube:DefaultIdentityService.java:56:java:S5164:",
+      "tool": "sonarqube",
+      "sourcefile": "DefaultIdentityService.java",
+      "start_line": "56",
+      "type": "java:S5164",
+      "message": "Use \"remove()\" instead of \"set(null)\".",
+      "is_true_positive": true,
+      "column": ""
+    },
+    {
+      "finding_id": "sonarqube:MultiAuthenticator.java:160:java:S2259:",
+      "tool": "sonarqube",
+      "sourcefile": "MultiAuthenticator.java",
+      "start_line": "160",
+      "type": "java:S2259",
+      "message": "A \"NullPointerException\" could be thrown; \"authenticator\" is nullable here.",
+      "is_true_positive": true,
+      "column": ""
+    },
+    {
+      "finding_id": "sonarqube:MultiAuthenticator.java:372:java:S2445:",
+      "tool": "sonarqube",
+      "sourcefile": "MultiAuthenticator.java",
+      "start_line": "372",
+      "type": "java:S2445",
+      "message": "\"session\" is a method parameter, and should not be used for synchronization.",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "sonarqube:AbstractConnector.java:706:java:S2142:",
+      "tool": "sonarqube",
+      "sourcefile": "AbstractConnector.java",
+      "start_line": "706",
+      "type": "java:S2142",
+      "message": "Either re-interrupt this method or rethrow the \"InterruptedException\" that can be caught here.",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "sonarqube:LocalConnector.java:286:java:S2142:",
+      "tool": "sonarqube",
+      "sourcefile": "LocalConnector.java",
+      "start_line": "286",
+      "type": "java:S2142",
+      "message": "Either re-interrupt this method or rethrow the \"InterruptedException\" that can be caught here.",
+      "is_true_positive": true,
+      "column": ""
+    },
+    {
+      "finding_id": "sonarqube:Server.java:713:java:S2142:",
+      "tool": "sonarqube",
+      "sourcefile": "Server.java",
+      "start_line": "713",
+      "type": "java:S2142",
+      "message": "Either re-interrupt this method or rethrow the \"InterruptedException\" that can be caught here.",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "sonarqube:ContextHandler.java:82:java:S5164:",
+      "tool": "sonarqube",
+      "sourcefile": "ContextHandler.java",
+      "start_line": "82",
+      "type": "java:S5164",
+      "message": "Call \"remove()\" on \"CURRENT_CONTEXT\".",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "sonarqube:ErrorHandler.java:255:java:S2095:",
+      "tool": "sonarqube",
+      "sourcefile": "ErrorHandler.java",
+      "start_line": "255",
+      "type": "java:S2095",
+      "message": "Use try-with-resources or close this \"ByteBufferOutputStream\" in a \"finally\" clause.",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "sonarqube:ErrorHandler.java:256:java:S2095:",
+      "tool": "sonarqube",
+      "sourcefile": "ErrorHandler.java",
+      "start_line": "256",
+      "type": "java:S2095",
+      "message": "Use try-with-resources or close this \"PrintWriter\" in a \"finally\" clause.",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "sonarqube:StateTrackingHandler.java:626:java:S2177:",
+      "tool": "sonarqube",
+      "sourcefile": "StateTrackingHandler.java",
+      "start_line": "626",
+      "type": "java:S2177",
+      "message": "Rename this method; there is a \"private\" method in the parent class with the same name.",
+      "is_true_positive": true,
+      "column": ""
+    },
+    {
+      "finding_id": "sonarqube:HttpChannelState.java:596:java:S2583:",
+      "tool": "sonarqube",
+      "sourcefile": "HttpChannelState.java",
+      "start_line": "596",
+      "type": "java:S2583",
+      "message": "Change this condition so that it does not always evaluate to \"false\"",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "sonarqube:HttpConnection.java:1068:java:S2142:",
+      "tool": "sonarqube",
+      "sourcefile": "HttpConnection.java",
+      "start_line": "1068",
+      "type": "java:S2142",
+      "message": "Either re-interrupt this method or rethrow the \"InterruptedException\" that can be caught here.",
+      "is_true_positive": true,
+      "column": ""
+    },
+    {
+      "finding_id": "sonarqube:JDBCSessionDataStore.java:328:java:S2095:",
+      "tool": "sonarqube",
+      "sourcefile": "JDBCSessionDataStore.java",
+      "start_line": "328",
+      "type": "java:S2095",
+      "message": "Use try-with-resources or close this \"PreparedStatement\" in a \"finally\" clause.",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "sonarqube:JDBCSessionDataStore.java:347:java:S2095:",
+      "tool": "sonarqube",
+      "sourcefile": "JDBCSessionDataStore.java",
+      "start_line": "347",
+      "type": "java:S2095",
+      "message": "Use try-with-resources or close this \"PreparedStatement\" in a \"finally\" clause.",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "sonarqube:JDBCSessionDataStore.java:370:java:S2095:",
+      "tool": "sonarqube",
+      "sourcefile": "JDBCSessionDataStore.java",
+      "start_line": "370",
+      "type": "java:S2095",
+      "message": "Use try-with-resources or close this \"PreparedStatement\" in a \"finally\" clause.",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "sonarqube:JDBCSessionDataStore.java:394:java:S2095:",
+      "tool": "sonarqube",
+      "sourcefile": "JDBCSessionDataStore.java",
+      "start_line": "394",
+      "type": "java:S2095",
+      "message": "Use try-with-resources or close this \"PreparedStatement\" in a \"finally\" clause.",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "sonarqube:JDBCSessionDataStore.java:414:java:S2095:",
+      "tool": "sonarqube",
+      "sourcefile": "JDBCSessionDataStore.java",
+      "start_line": "414",
+      "type": "java:S2095",
+      "message": "Use try-with-resources or close this \"PreparedStatement\" in a \"finally\" clause.",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "sonarqube:JDBCSessionDataStore.java:440:java:S2095:",
+      "tool": "sonarqube",
+      "sourcefile": "JDBCSessionDataStore.java",
+      "start_line": "440",
+      "type": "java:S2095",
+      "message": "Use try-with-resources or close this \"PreparedStatement\" in a \"finally\" clause.",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "sonarqube:JDBCSessionDataStore.java:459:java:S2095:",
+      "tool": "sonarqube",
+      "sourcefile": "JDBCSessionDataStore.java",
+      "start_line": "459",
+      "type": "java:S2095",
+      "message": "Use try-with-resources or close this \"PreparedStatement\" in a \"finally\" clause.",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "sonarqube:JDBCSessionDataStore.java:475:java:S2095:",
+      "tool": "sonarqube",
+      "sourcefile": "JDBCSessionDataStore.java",
+      "start_line": "475",
+      "type": "java:S2095",
+      "message": "Use try-with-resources or close this \"PreparedStatement\" in a \"finally\" clause.",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "sonarqube:ManagedSession.java:564:java:S2142:",
+      "tool": "sonarqube",
+      "sourcefile": "ManagedSession.java",
+      "start_line": "564",
+      "type": "java:S2142",
+      "message": "Either re-interrupt this method or rethrow the \"InterruptedException\" that can be caught here.",
+      "is_true_positive": true,
+      "column": ""
+    },
+    {
+      "finding_id": "sonarqube:UnixDomainServerConnector.java:250:java:S2095:",
+      "tool": "sonarqube",
+      "sourcefile": "UnixDomainServerConnector.java",
+      "start_line": "250",
+      "type": "java:S2095",
+      "message": "Use try-with-resources or close this \"ServerSocketChannel\" in a \"finally\" clause.",
+      "is_true_positive": true,
+      "column": ""
+    },
+    {
+      "finding_id": "sonarqube:Blocker.java:134:java:S2142:",
+      "tool": "sonarqube",
+      "sourcefile": "Blocker.java",
+      "start_line": "134",
+      "type": "java:S2142",
+      "message": "Either re-interrupt this method or rethrow the \"InterruptedException\" that can be caught here.",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "sonarqube:Blocker.java:216:java:S2142:",
+      "tool": "sonarqube",
+      "sourcefile": "Blocker.java",
+      "start_line": "216",
+      "type": "java:S2142",
+      "message": "Either re-interrupt this method or rethrow the \"InterruptedException\" that can be caught here.",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "sonarqube:Blocker.java:289:java:S2142:",
+      "tool": "sonarqube",
+      "sourcefile": "Blocker.java",
+      "start_line": "289",
+      "type": "java:S2142",
+      "message": "Either re-interrupt this method or rethrow the \"InterruptedException\" that can be caught here.",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "sonarqube:Blocker.java:513:java:S2142:",
+      "tool": "sonarqube",
+      "sourcefile": "Blocker.java",
+      "start_line": "513",
+      "type": "java:S2142",
+      "message": "Either re-interrupt this method or rethrow the \"InterruptedException\" that can be caught here.",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "sonarqube:ByteArrayOutputStream2.java:63:java:S3551:",
+      "tool": "sonarqube",
+      "sourcefile": "ByteArrayOutputStream2.java",
+      "start_line": "63",
+      "type": "java:S3551",
+      "message": "Make this method \"synchronized\" to match the parent class implementation.",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "sonarqube:ExceptionUtil.java:520:java:S2142:",
+      "tool": "sonarqube",
+      "sourcefile": "ExceptionUtil.java",
+      "start_line": "520",
+      "type": "java:S2142",
+      "message": "Either re-interrupt this method or rethrow the \"InterruptedException\" that can be caught here.",
+      "is_true_positive": true,
+      "column": ""
+    },
+    {
+      "finding_id": "sonarqube:FutureCallback.java:156:java:S2142:",
+      "tool": "sonarqube",
+      "sourcefile": "FutureCallback.java",
+      "start_line": "156",
+      "type": "java:S2142",
+      "message": "Either re-interrupt this method or rethrow the \"InterruptedException\" that can be caught here.",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "sonarqube:SharedBlockingCallback.java:231:java:S2142:",
+      "tool": "sonarqube",
+      "sourcefile": "SharedBlockingCallback.java",
+      "start_line": "231",
+      "type": "java:S2142",
+      "message": "Either re-interrupt this method or rethrow the \"InterruptedException\" that can be caught here.",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "sonarqube:FileSystemPool.java:118:java:S2095:",
+      "tool": "sonarqube",
+      "sourcefile": "FileSystemPool.java",
+      "start_line": "118",
+      "type": "java:S2095",
+      "message": "Use try-with-resources or close this \"FileSystem\" in a \"finally\" clause.",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "sonarqube:Credential.java:107:java:S4973:",
+      "tool": "sonarqube",
+      "sourcefile": "Credential.java",
+      "start_line": "107",
+      "type": "java:S4973",
+      "message": "Strings and Boxed types should be compared using \"equals()\".",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "sonarqube:SniX509ExtendedKeyManager.java:162:java:S4973:",
+      "tool": "sonarqube",
+      "sourcefile": "SniX509ExtendedKeyManager.java",
+      "start_line": "162",
+      "type": "java:S4973",
+      "message": "Strings and Boxed types should be compared using \"equals()\".",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "sonarqube:QueuedThreadPool.java:354:java:S2142:",
+      "tool": "sonarqube",
+      "sourcefile": "QueuedThreadPool.java",
+      "start_line": "354",
+      "type": "java:S2142",
+      "message": "Either re-interrupt this method or rethrow the \"InterruptedException\" that can be caught here.",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "sonarqube:ExtensionStack.java:139:java:S2095:",
+      "tool": "sonarqube",
+      "sourcefile": "ExtensionStack.java",
+      "start_line": "139",
+      "type": "java:S2095",
+      "message": "Use try-with-resources or close this \"Extension\" in a \"finally\" clause.",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "sonarqube:WebSocketConnection.java:583:java:S1143:",
+      "tool": "sonarqube",
+      "sourcefile": "WebSocketConnection.java",
+      "start_line": "583",
+      "type": "java:S1143",
+      "message": "Remove this throw statement from this finally block.",
+      "is_true_positive": true,
+      "column": ""
+    },
+    {
+      "finding_id": "sonarqube:XmlConfiguration.java:2036:java:S2259:",
+      "tool": "sonarqube",
+      "sourcefile": "XmlConfiguration.java",
+      "start_line": "2036",
+      "type": "java:S2259",
+      "message": "A \"NullPointerException\" could be thrown; \"envBuilder\" is nullable here.",
+      "is_true_positive": true,
+      "column": ""
+    },
+    {
+      "finding_id": "sonarqube:XmlParser.java:165:java:S2583:",
+      "tool": "sonarqube",
+      "sourcefile": "XmlParser.java",
+      "start_line": "165",
+      "type": "java:S2583",
+      "message": "Change this condition so that it does not always evaluate to \"true\"",
+      "is_true_positive": true,
+      "column": ""
+    },
+    {
+      "finding_id": "sonarqube:JDBCLoginModule.java:55:java:S2068:",
+      "tool": "sonarqube",
+      "sourcefile": "JDBCLoginModule.java",
+      "start_line": "55",
+      "type": "java:S2068",
+      "message": "'Password' detected in this expression, review this potentially hard-coded password.",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "sonarqube:XmlParser.java:113:java:S2755:",
+      "tool": "sonarqube",
+      "sourcefile": "XmlParser.java",
+      "start_line": "113",
+      "type": "java:S2755",
+      "message": "Disable access to external entities in XML parsing.",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "sonarqube:RequestListeners.java:43:java:S2178:",
+      "tool": "sonarqube",
+      "sourcefile": "RequestListeners.java",
+      "start_line": "43",
+      "type": "java:S2178",
+      "message": "Correct this \"|\" to \"||\" and extract the right operand to a variable if it should always be evaluated.",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "sonarqube:RequestListeners.java:45:java:S2178:",
+      "tool": "sonarqube",
+      "sourcefile": "RequestListeners.java",
+      "start_line": "45",
+      "type": "java:S2178",
+      "message": "Correct this \"|\" to \"||\" and extract the right operand to a variable if it should always be evaluated.",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "sonarqube:RequestListeners.java:56:java:S2178:",
+      "tool": "sonarqube",
+      "sourcefile": "RequestListeners.java",
+      "start_line": "56",
+      "type": "java:S2178",
+      "message": "Correct this \"|\" to \"||\" and extract the right operand to a variable if it should always be evaluated.",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "sonarqube:RequestListeners.java:59:java:S2178:",
+      "tool": "sonarqube",
+      "sourcefile": "RequestListeners.java",
+      "start_line": "59",
+      "type": "java:S2178",
+      "message": "Correct this \"|\" to \"||\" and extract the right operand to a variable if it should always be evaluated.",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "sonarqube:HttpConnection.java:345:java:S3516:",
+      "tool": "sonarqube",
+      "sourcefile": "HttpConnection.java",
+      "start_line": "345",
+      "type": "java:S3516",
+      "message": "Refactor this method to not always return the same value.",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "sonarqube:ResponseListeners.java:367:java:S2178:",
+      "tool": "sonarqube",
+      "sourcefile": "ResponseListeners.java",
+      "start_line": "367",
+      "type": "java:S2178",
+      "message": "Correct this \"|\" to \"||\" and extract the right operand to a variable if it should always be evaluated.",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "sonarqube:ResponseListeners.java:369:java:S2178:",
+      "tool": "sonarqube",
+      "sourcefile": "ResponseListeners.java",
+      "start_line": "369",
+      "type": "java:S2178",
+      "message": "Correct this \"|\" to \"||\" and extract the right operand to a variable if it should always be evaluated.",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "sonarqube:ResponseListeners.java:377:java:S2178:",
+      "tool": "sonarqube",
+      "sourcefile": "ResponseListeners.java",
+      "start_line": "377",
+      "type": "java:S2178",
+      "message": "Correct this \"|\" to \"||\" and extract the right operand to a variable if it should always be evaluated.",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "sonarqube:ResponseListeners.java:379:java:S2178:",
+      "tool": "sonarqube",
+      "sourcefile": "ResponseListeners.java",
+      "start_line": "379",
+      "type": "java:S2178",
+      "message": "Correct this \"|\" to \"||\" and extract the right operand to a variable if it should always be evaluated.",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "sonarqube:ResponseListeners.java:381:java:S2178:",
+      "tool": "sonarqube",
+      "sourcefile": "ResponseListeners.java",
+      "start_line": "381",
+      "type": "java:S2178",
+      "message": "Correct this \"|\" to \"||\" and extract the right operand to a variable if it should always be evaluated.",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "sonarqube:ResponseListeners.java:382:java:S2178:",
+      "tool": "sonarqube",
+      "sourcefile": "ResponseListeners.java",
+      "start_line": "382",
+      "type": "java:S2178",
+      "message": "Correct this \"|\" to \"||\" and extract the right operand to a variable if it should always be evaluated.",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "sonarqube:HTTP2Session.java:2217:java:S3516:",
+      "tool": "sonarqube",
+      "sourcefile": "HTTP2Session.java",
+      "start_line": "2217",
+      "type": "java:S3516",
+      "message": "Refactor this method to not always return the same value.",
+      "is_true_positive": true,
+      "column": ""
+    },
+    {
+      "finding_id": "sonarqube:HTTP2Stream.java:746:java:S3516:",
+      "tool": "sonarqube",
+      "sourcefile": "HTTP2Stream.java",
+      "start_line": "746",
+      "type": "java:S3516",
+      "message": "Refactor this method to not always return the same value.",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "sonarqube:HTTP3Session.java:516:java:S3516:",
+      "tool": "sonarqube",
+      "sourcefile": "HTTP3Session.java",
+      "start_line": "516",
+      "type": "java:S3516",
+      "message": "Refactor this method to not always return the same value.",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "sonarqube:BundleMetadata.java:32:java:S1845:",
+      "tool": "sonarqube",
+      "sourcefile": "BundleMetadata.java",
+      "start_line": "32",
+      "type": "java:S1845",
+      "message": "Rename field \"bundle\" to prevent any misunderstanding/clash with field \"BUNDLE\".",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "sonarqube:FutureCallback.java:29:java:S1845:",
+      "tool": "sonarqube",
+      "sourcefile": "FutureCallback.java",
+      "start_line": "29",
+      "type": "java:S1845",
+      "message": "Rename field \"SUCCEEDED\" to prevent any misunderstanding/clash with method \"succeeded\".",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "sonarqube:JavaVersion.java:59:java:S1845:",
+      "tool": "sonarqube",
+      "sourcefile": "JavaVersion.java",
+      "start_line": "59",
+      "type": "java:S1845",
+      "message": "Rename field \"version\" to prevent any misunderstanding/clash with field \"VERSION\".",
+      "is_true_positive": true,
+      "column": ""
+    },
+    {
+      "finding_id": "sonarqube:Promise.java:233:java:S1845:",
+      "tool": "sonarqube",
+      "sourcefile": "Promise.java",
+      "start_line": "233",
+      "type": "java:S1845",
+      "message": "Rename method \"noop\" to prevent any misunderstanding/clash with field \"NOOP\" defined in interface \"org.eclipse.jetty.util.thread.Invocable\".",
+      "is_true_positive": true,
+      "column": ""
+    },
+    {
+      "finding_id": "sonarqube:RolloverFileOutputStream.java:398:java:S1845:",
+      "tool": "sonarqube",
+      "sourcefile": "RolloverFileOutputStream.java",
+      "start_line": "398",
+      "type": "java:S1845",
+      "message": "Rename method \"rollOver\" to prevent any misunderstanding/clash with method \"rollover\".",
+      "is_true_positive": true,
+      "column": ""
+    },
+    {
+      "finding_id": "sonarqube:QueuedThreadPool.java:162:java:S3014:",
+      "tool": "sonarqube",
+      "sourcefile": "QueuedThreadPool.java",
+      "start_line": "162",
+      "type": "java:S3014",
+      "message": "Remove this use of \"ThreadGroup\". Prefer the use of \"ThreadPoolExecutor\".",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "sonarqube:ScheduledExecutorScheduler.java:83:java:S3014:",
+      "tool": "sonarqube",
+      "sourcefile": "ScheduledExecutorScheduler.java",
+      "start_line": "83",
+      "type": "java:S3014",
+      "message": "Remove this use of \"ThreadGroup\". Prefer the use of \"ThreadPoolExecutor\".",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "sonarqube:MessageInputStream.java:51:java:S1845:",
+      "tool": "sonarqube",
+      "sourcefile": "MessageInputStream.java",
+      "start_line": "51",
+      "type": "java:S1845",
+      "message": "Rename field \"closed\" to prevent any misunderstanding/clash with field \"CLOSED\".",
+      "is_true_positive": true,
+      "column": ""
+    },
+    {
+      "finding_id": "sonarqube:MutableHttpFields.java:431:java:S3776:",
+      "tool": "sonarqube",
+      "sourcefile": "MutableHttpFields.java",
+      "start_line": "431",
+      "type": "java:S3776",
+      "message": "Refactor this method to reduce its Cognitive Complexity from 16 to the 15 allowed.",
+      "is_true_positive": false,
+      "column": "",
+      "notes_source": "reconstructed_2026-07-31_from_code_and_rubric"
+    },
+    {
+      "finding_id": "sonarqube:HttpSenderOverHTTP3.java:57:java:S3776:",
+      "tool": "sonarqube",
+      "sourcefile": "HttpSenderOverHTTP3.java",
+      "start_line": "57",
+      "type": "java:S3776",
+      "message": "Refactor this method to reduce its Cognitive Complexity from 39 to the 15 allowed.",
+      "is_true_positive": true,
+      "column": ""
+    },
+    {
+      "finding_id": "sonarqube:DefaultFileLocatorHelper.java:152:java:S2696:",
+      "tool": "sonarqube",
+      "sourcefile": "DefaultFileLocatorHelper.java",
+      "start_line": "152",
+      "type": "java:S2696",
+      "message": "Make the enclosing method \"static\" or remove this set.",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "sonarqube:HttpChannelState.java:1338:java:S3776:",
+      "tool": "sonarqube",
+      "sourcefile": "HttpChannelState.java",
+      "start_line": "1338",
+      "type": "java:S3776",
+      "message": "Refactor this method to reduce its Cognitive Complexity from 37 to the 15 allowed.",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "sonarqube:HttpConnection.java:1049:java:S1948:",
+      "tool": "sonarqube",
+      "sourcefile": "HttpConnection.java",
+      "start_line": "1049",
+      "type": "java:S1948",
+      "message": "Make non-static \"_complete\" transient or serializable.",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "sonarqube:UnreadableSessionDataException.java:26:java:S1948:",
+      "tool": "sonarqube",
+      "sourcefile": "UnreadableSessionDataException.java",
+      "start_line": "26",
+      "type": "java:S1948",
+      "message": "Make non-static \"_sessionContext\" transient or serializable.",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "sonarqube:AsyncJSON.java:673:java:S1192:",
+      "tool": "sonarqube",
+      "sourcefile": "AsyncJSON.java",
+      "start_line": "673",
+      "type": "java:S1192",
+      "message": "Define a constant instead of duplicating this literal \"invalid 'false' literal\" 3 times.",
+      "is_true_positive": true,
+      "column": ""
+    },
+    {
+      "finding_id": "sonarqube:AsyncJSON.java:1298:java:S3776:",
+      "tool": "sonarqube",
+      "sourcefile": "AsyncJSON.java",
+      "start_line": "1298",
+      "type": "java:S3776",
+      "message": "Refactor this method to reduce its Cognitive Complexity from 19 to the 15 allowed.",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "sonarqube:Utf8StringBuilder.java:351:java:S3776:",
+      "tool": "sonarqube",
+      "sourcefile": "Utf8StringBuilder.java",
+      "start_line": "351",
+      "type": "java:S3776",
+      "message": "Refactor this method to reduce its Cognitive Complexity from 27 to the 15 allowed.",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "sonarqube:AttributeNormalizer.java:328:java:S1192:",
+      "tool": "sonarqube",
+      "sourcefile": "AttributeNormalizer.java",
+      "start_line": "328",
+      "type": "java:S1192",
+      "message": "Define a constant instead of duplicating this literal \"${%s}\" 3 times.",
+      "is_true_positive": true,
+      "column": ""
+    },
+    {
+      "finding_id": "sonarqube:X509.java:44:java:S115:",
+      "tool": "sonarqube",
+      "sourcefile": "X509.java",
+      "start_line": "44",
+      "type": "java:S115",
+      "message": "Rename this constant name to match the regular expression '^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$'.",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "sonarqube:WebSocketCoreSession.java:653:java:S3776:",
+      "tool": "sonarqube",
+      "sourcefile": "WebSocketCoreSession.java",
+      "start_line": "653",
+      "type": "java:S3776",
+      "message": "Refactor this method to reduce its Cognitive Complexity from 20 to the 15 allowed.",
+      "is_true_positive": true,
+      "column": ""
+    },
+    {
+      "finding_id": "sonarqube:XmlConfiguration.java:425:java:S1186:",
+      "tool": "sonarqube",
+      "sourcefile": "XmlConfiguration.java",
+      "start_line": "425",
+      "type": "java:S1186",
+      "message": "Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "sonarqube:ByteRange.java:155:java:S1181:",
+      "tool": "sonarqube",
+      "sourcefile": "ByteRange.java",
+      "start_line": "155",
+      "type": "java:S1181",
+      "message": "Catch Exception instead of Throwable.",
+      "is_true_positive": true,
+      "column": ""
+    },
+    {
+      "finding_id": "sonarqube:SslConnection.java:1523:java:S1181:",
+      "tool": "sonarqube",
+      "sourcefile": "SslConnection.java",
+      "start_line": "1523",
+      "type": "java:S1181",
+      "message": "Catch Exception instead of Throwable.",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "sonarqube:Attributes.java:673:java:S3358:",
+      "tool": "sonarqube",
+      "sourcefile": "Attributes.java",
+      "start_line": "673",
+      "type": "java:S3358",
+      "message": "Extract this nested ternary operation into an independent statement.",
+      "is_true_positive": true,
+      "column": ""
+    },
+    {
+      "finding_id": "sonarqube:StringUtil.java:916:java:S1168:",
+      "tool": "sonarqube",
+      "sourcefile": "StringUtil.java",
+      "start_line": "916",
+      "type": "java:S1168",
+      "message": "Return an empty array instead of null.",
+      "is_true_positive": true,
+      "column": ""
+    },
+    {
+      "finding_id": "sonarqube:MessageInputStream.java:272:java:S1121:",
+      "tool": "sonarqube",
+      "sourcefile": "MessageInputStream.java",
+      "start_line": "272",
+      "type": "java:S1121",
+      "message": "Extract the assignment out of this expression.",
+      "is_true_positive": false,
+      "column": ""
+    },
+    {
+      "finding_id": "error-prone:AbstractForkedChild.java:154:StringSplitter:48",
+      "tool": "error-prone",
+      "sourcefile": "AbstractForkedChild.java",
+      "start_line": "154",
+      "type": "StringSplitter",
+      "column": "48",
+      "message": "String.split(String) has surprising behavior",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "error-prone:AbstractSessionDataStore.java:298:NarrowCalculation:65",
+      "tool": "error-prone",
+      "sourcefile": "AbstractSessionDataStore.java",
+      "start_line": "298",
+      "type": "NarrowCalculation",
+      "column": "65",
+      "message": "This product of integers could overflow before being implicitly cast to a long.",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "error-prone:ArrayByteBufferPool.java:811:UnusedMethod:14",
+      "tool": "error-prone",
+      "sourcefile": "ArrayByteBufferPool.java",
+      "start_line": "811",
+      "type": "UnusedMethod",
+      "column": "14",
+      "message": "Method 'remove' is never used.",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "error-prone:Blocker.java:422:LockNotBeforeTry:27",
+      "tool": "error-prone",
+      "sourcefile": "Blocker.java",
+      "start_line": "422",
+      "type": "LockNotBeforeTry",
+      "column": "27",
+      "message": "Prefer locking *immediately* before the try block which releases the lock to avoid the possibility of any intermediate statements throwing.",
+      "is_true_positive": false
+    },
+    {
+      "finding_id": "error-prone:ByteArrayEndPoint.java:59:UnnecessaryLambda:28",
+      "tool": "error-prone",
+      "sourcefile": "ByteArrayEndPoint.java",
+      "start_line": "59",
+      "type": "UnnecessaryLambda",
+      "column": "28",
+      "message": "Returning a lambda from a helper method or saving it in a constant is unnecessary; prefer to implement the functional interface method directly and use a method reference instead.",
+      "is_true_positive": false
+    },
+    {
+      "finding_id": "error-prone:ByteArrayEndPoint.java:475:BadInstanceof:24",
+      "tool": "error-prone",
+      "sourcefile": "ByteArrayEndPoint.java",
+      "start_line": "475",
+      "type": "BadInstanceof",
+      "column": "24",
+      "message": "`_buffer` is an instance of RetainableByteBuffer.DynamicCapacity which is a subtype of RetainableByteBuffer.DynamicCapacity, so this is equivalent to a null check.",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "error-prone:DeploymentScanner.java:1389:EqualsGetClass:24",
+      "tool": "error-prone",
+      "sourcefile": "DeploymentScanner.java",
+      "start_line": "1389",
+      "type": "EqualsGetClass",
+      "column": "24",
+      "message": "Prefer instanceof to getClass when implementing Object#equals.",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "error-prone:Frame.java:407:SuperCallToObjectMethod:52",
+      "tool": "error-prone",
+      "sourcefile": "Frame.java",
+      "start_line": "407",
+      "type": "SuperCallToObjectMethod",
+      "column": "52",
+      "message": "`super.hashCode()` is equivalent to `System.identityHashCode(this)` here",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "error-prone:Generator.java:50:EnumOrdinal:76",
+      "tool": "error-prone",
+      "sourcefile": "Generator.java",
+      "start_line": "50",
+      "type": "EnumOrdinal",
+      "column": "76",
+      "message": "You should almost never invoke the Enum.ordinal() method.",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "error-prone:HTTP2StreamEndPoint.java:558:InconsistentCapitalization:62",
+      "tool": "error-prone",
+      "sourcefile": "HTTP2StreamEndPoint.java",
+      "start_line": "558",
+      "type": "InconsistentCapitalization",
+      "column": "62",
+      "message": "Found the field 'endpoint' with the same name as the parameter 'endPoint' but with different capitalization.",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "error-prone:HeaderBlockParser.java:53:MalformedInlineTag:15",
+      "tool": "error-prone",
+      "sourcefile": "HeaderBlockParser.java",
+      "start_line": "53",
+      "type": "MalformedInlineTag",
+      "column": "15",
+      "message": "The correct syntax to open this inline tag is {@code.",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "error-prone:HttpException.java:83:JavaLangClash:5",
+      "tool": "error-prone",
+      "sourcefile": "HttpException.java",
+      "start_line": "83",
+      "type": "JavaLangClash",
+      "column": "5",
+      "message": "org.eclipse.jetty.http.HttpException.RuntimeException clashes with java.lang.RuntimeException",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "error-prone:JettyLoggerFactory.java:235:CatchAndPrintStackTrace:17",
+      "tool": "error-prone",
+      "sourcefile": "JettyLoggerFactory.java",
+      "start_line": "235",
+      "type": "CatchAndPrintStackTrace",
+      "column": "17",
+      "message": "Logging or rethrowing exceptions should usually be preferred to catching and calling printStackTrace",
+      "is_true_positive": false
+    },
+    {
+      "finding_id": "error-prone:ManagedSelector.java:474:JavaTimeDefaultTimeZone:92",
+      "tool": "error-prone",
+      "sourcefile": "ManagedSelector.java",
+      "start_line": "474",
+      "type": "JavaTimeDefaultTimeZone",
+      "column": "92",
+      "message": "ZonedDateTime.now() is not allowed because it silently uses the system default time-zone. You must pass an explicit time-zone (e.g., ZoneId.of(\"America/Los_Angeles\")) to this method.",
+      "is_true_positive": false
+    },
+    {
+      "finding_id": "error-prone:MetaDataBuilder.java:238:AnnotateFormatMethod:20",
+      "tool": "error-prone",
+      "sourcefile": "MetaDataBuilder.java",
+      "start_line": "238",
+      "type": "AnnotateFormatMethod",
+      "column": "20",
+      "message": "This method uses a pair of parameters as a format string and its arguments, but the enclosing method wasn't annotated @FormatMethod. Doing so gives compile-time rather than run-time protection against malformed format strings.",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "error-prone:NamingEntryUtil.java:86:EmptyCatch:9",
+      "tool": "error-prone",
+      "sourcefile": "NamingEntryUtil.java",
+      "start_line": "86",
+      "type": "EmptyCatch",
+      "column": "9",
+      "message": "Caught exceptions should not be ignored",
+      "is_true_positive": false
+    },
+    {
+      "finding_id": "error-prone:PerMessageDeflateExtension.java:60:NonCanonicalType:25",
+      "tool": "error-prone",
+      "sourcefile": "PerMessageDeflateExtension.java",
+      "start_line": "60",
+      "type": "NonCanonicalType",
+      "column": "25",
+      "message": "The type `CompressionPool.Entry` was referred to by the non-canonical name `InflaterPool.Entry`. This may be misleading.",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "error-prone:QuicException.java:81:OverrideThrowableToString:19",
+      "tool": "error-prone",
+      "sourcefile": "QuicException.java",
+      "start_line": "81",
+      "type": "OverrideThrowableToString",
+      "column": "19",
+      "message": "To return a custom message with a Throwable class, one should override getMessage() instead of toString().",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "error-prone:Response.java:566:InlineMeSuggester:17",
+      "tool": "error-prone",
+      "sourcefile": "Response.java",
+      "start_line": "566",
+      "type": "InlineMeSuggester",
+      "column": "17",
+      "message": "This deprecated API looks inlineable. If you'd like the body of the API to be automatically inlined to its callers, please annotate it with @InlineMe. NOTE: the suggested fix makes the method final if it was not already.",
+      "is_true_positive": false
+    },
+    {
+      "finding_id": "error-prone:WriteFlusher.java:250:ClassCanBeStatic:13",
+      "tool": "error-prone",
+      "sourcefile": "WriteFlusher.java",
+      "start_line": "250",
+      "type": "ClassCanBeStatic",
+      "column": "13",
+      "message": "Inner class is non-static but does not reference enclosing class",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "sonarqube:AuthenticationProtocolHandler.java:44:java:S5843:",
+      "tool": "sonarqube",
+      "sourcefile": "AuthenticationProtocolHandler.java",
+      "start_line": "44",
+      "type": "java:S5843",
+      "column": "",
+      "message": "Simplify this regular expression to reduce its complexity from 35 to the 20 allowed.",
+      "is_true_positive": false
+    },
+    {
+      "finding_id": "sonarqube:DefaultFileLocatorHelper.java:153:java:S3011:",
+      "tool": "sonarqube",
+      "sourcefile": "DefaultFileLocatorHelper.java",
+      "start_line": "153",
+      "type": "java:S3011",
+      "column": "",
+      "message": "This accessibility update should be removed.",
+      "is_true_positive": false
+    },
+    {
+      "finding_id": "sonarqube:HeaderGenerator.java:48:java:S1172:",
+      "tool": "sonarqube",
+      "sourcefile": "HeaderGenerator.java",
+      "start_line": "48",
+      "type": "java:S1172",
+      "column": "",
+      "message": "Remove this unused method parameter \"capacity\".",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "sonarqube:HttpDateTime.java:178:java:S1871:",
+      "tool": "sonarqube",
+      "sourcefile": "HttpDateTime.java",
+      "start_line": "178",
+      "type": "java:S1871",
+      "column": "",
+      "message": "This branch's code block is the same as the block for the branch on line 174.",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "sonarqube:IncludeExcludeSet.java:215:java:S2447:",
+      "tool": "sonarqube",
+      "sourcefile": "IncludeExcludeSet.java",
+      "start_line": "215",
+      "type": "java:S2447",
+      "column": "",
+      "message": "Null is returned but a \"Boolean\" is expected.",
+      "is_true_positive": false
+    },
+    {
+      "finding_id": "sonarqube:JettyClientUpgradeRequest.java:52:java:S6204:",
+      "tool": "sonarqube",
+      "sourcefile": "JettyClientUpgradeRequest.java",
+      "start_line": "52",
+      "type": "java:S6204",
+      "column": "",
+      "message": "Replace this usage of 'Stream.collect(Collectors.toList())' with 'Stream.toList()' and ensure that the list is unmodified.",
+      "is_true_positive": false
+    },
+    {
+      "finding_id": "sonarqube:LazyList.java:57:java:S2157:",
+      "tool": "sonarqube",
+      "sourcefile": "LazyList.java",
+      "start_line": "57",
+      "type": "java:S2157",
+      "column": "",
+      "message": "Add a \"clone()\" method to this class.",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "sonarqube:MultiPartByteRanges.java:261:java:S1700:",
+      "tool": "sonarqube",
+      "sourcefile": "MultiPartByteRanges.java",
+      "start_line": "261",
+      "type": "java:S1700",
+      "column": "",
+      "message": "Rename field \"parser\"",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "sonarqube:PathCollators.java:54:java:S1452:",
+      "tool": "sonarqube",
+      "sourcefile": "PathCollators.java",
+      "start_line": "54",
+      "type": "java:S1452",
+      "column": "",
+      "message": "Remove usage of generic wildcard type.",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "sonarqube:PrefaceFrame.java:33:java:S6126:",
+      "tool": "sonarqube",
+      "sourcefile": "PrefaceFrame.java",
+      "start_line": "33",
+      "type": "java:S6126",
+      "column": "",
+      "message": "Replace this String concatenation with Text block.",
+      "is_true_positive": false
+    },
+    {
+      "finding_id": "sonarqube:SecurityUtils.java:233:java:S1144:",
+      "tool": "sonarqube",
+      "sourcefile": "SecurityUtils.java",
+      "start_line": "233",
+      "type": "java:S1144",
+      "column": "",
+      "message": "Remove this unused private \"callableToPrivilegedAction\" method.",
+      "is_true_positive": false
+    },
+    {
+      "finding_id": "sonarqube:Server.java:904:java:S5738:",
+      "tool": "sonarqube",
+      "sourcefile": "Server.java",
+      "start_line": "904",
+      "type": "java:S5738",
+      "column": "",
+      "message": "Remove this call to a deprecated class, it has been marked for removal.",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "sonarqube:ServletPathSpec.java:182:java:S5261:",
+      "tool": "sonarqube",
+      "sourcefile": "ServletPathSpec.java",
+      "start_line": "182",
+      "type": "java:S5261",
+      "column": "",
+      "message": "Add explicit curly braces to avoid dangling else.",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "sonarqube:ServletPathSpec.java:440:java:S131:",
+      "tool": "sonarqube",
+      "sourcefile": "ServletPathSpec.java",
+      "start_line": "440",
+      "type": "java:S131",
+      "column": "",
+      "message": "Complete cases by adding the missing enum constants or add a default case to this switch.",
+      "is_true_positive": false
+    },
+    {
+      "finding_id": "sonarqube:SessionDataMap.java:58:java:S112:",
+      "tool": "sonarqube",
+      "sourcefile": "SessionDataMap.java",
+      "start_line": "58",
+      "type": "java:S112",
+      "column": "",
+      "message": "Replace generic exceptions with specific library exceptions or a custom exception.",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "sonarqube:TopologicalSort.java:57:java:S3824:",
+      "tool": "sonarqube",
+      "sourcefile": "TopologicalSort.java",
+      "start_line": "57",
+      "type": "java:S3824",
+      "column": "",
+      "message": "Replace this \"Map.get()\" and condition with a call to \"Map.computeIfAbsent()\".",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "sonarqube:TypeUtil.java:622:java:S108:",
+      "tool": "sonarqube",
+      "sourcefile": "TypeUtil.java",
+      "start_line": "622",
+      "type": "java:S108",
+      "column": "",
+      "message": "Remove this block of code, fill it in, or add a comment explaining why it is empty.",
+      "is_true_positive": false
+    },
+    {
+      "finding_id": "sonarqube:WriteFlusher.java:343:java:S1119:",
+      "tool": "sonarqube",
+      "sourcefile": "WriteFlusher.java",
+      "start_line": "343",
+      "type": "java:S1119",
+      "column": "",
+      "message": "Refactor the code to remove this label and the need for it.",
+      "is_true_positive": false
+    },
+    {
+      "finding_id": "sonarqube:WriteThroughWriter.java:249:java:S127:",
+      "tool": "sonarqube",
+      "sourcefile": "WriteThroughWriter.java",
+      "start_line": "249",
+      "type": "java:S127",
+      "column": "",
+      "message": "Refactor the code in order to not assign to this loop counter from within the loop body.",
+      "is_true_positive": false
+    },
+    {
+      "finding_id": "sonarqube:pom.xml:54:xml:S1134:",
+      "tool": "sonarqube",
+      "sourcefile": "pom.xml",
+      "start_line": "54",
+      "type": "xml:S1134",
+      "column": "",
+      "message": "Take the required action to fix the issue indicated by this \"FIXME\" comment.",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "spotbugs:AbstractForkedChild.java:177:OS_OPEN_STREAM:",
+      "tool": "spotbugs",
+      "sourcefile": "AbstractForkedChild.java",
+      "start_line": "177",
+      "type": "OS_OPEN_STREAM",
+      "column": "",
+      "message": "Method may fail to close stream",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "spotbugs:Blocker.java:449:UL_UNRELEASED_LOCK_EXCEPTION_PATH:",
+      "tool": "spotbugs",
+      "sourcefile": "Blocker.java",
+      "start_line": "449",
+      "type": "UL_UNRELEASED_LOCK_EXCEPTION_PATH",
+      "column": "",
+      "message": "Method does not release lock on all exception paths",
+      "is_true_positive": false
+    },
+    {
+      "finding_id": "spotbugs:BlockingArrayQueue.java:919:IT_NO_SUCH_ELEMENT:",
+      "tool": "spotbugs",
+      "sourcefile": "BlockingArrayQueue.java",
+      "start_line": "919",
+      "type": "IT_NO_SUCH_ELEMENT",
+      "column": "",
+      "message": "Iterator next() method cannot throw NoSuchElementException",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "spotbugs:DefaultSessionIdManager.java:356:DMI_RANDOM_USED_ONLY_ONCE:",
+      "tool": "spotbugs",
+      "sourcefile": "DefaultSessionIdManager.java",
+      "start_line": "356",
+      "type": "DMI_RANDOM_USED_ONLY_ONCE",
+      "column": "",
+      "message": "Random object created and used only once",
+      "is_true_positive": false
+    },
+    {
+      "finding_id": "spotbugs:ExceptionUtil.java:304:NM_CLASS_NOT_EXCEPTION:",
+      "tool": "spotbugs",
+      "sourcefile": "ExceptionUtil.java",
+      "start_line": "304",
+      "type": "NM_CLASS_NOT_EXCEPTION",
+      "column": "",
+      "message": "Class is not derived from an Exception, even though it is named as such",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "spotbugs:Http3Fields.java:37:MS_PKGPROTECT:",
+      "tool": "spotbugs",
+      "sourcefile": "Http3Fields.java",
+      "start_line": "37",
+      "type": "MS_PKGPROTECT",
+      "column": "",
+      "message": "Field should be package protected",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "spotbugs:HttpCookie.java:869:ES_COMPARING_PARAMETER_STRING_WITH_EQ:",
+      "tool": "spotbugs",
+      "sourcefile": "HttpCookie.java",
+      "start_line": "869",
+      "type": "ES_COMPARING_PARAMETER_STRING_WITH_EQ",
+      "column": "",
+      "message": "Comparison of String parameter using == or !=",
+      "is_true_positive": false
+    },
+    {
+      "finding_id": "spotbugs:HttpParser.java:1366:AT_NONATOMIC_OPERATIONS_ON_SHARED_VARIABLE:",
+      "tool": "spotbugs",
+      "sourcefile": "HttpParser.java",
+      "start_line": "1366",
+      "type": "AT_NONATOMIC_OPERATIONS_ON_SHARED_VARIABLE",
+      "column": "",
+      "message": "Operation on shared variable is not atomic",
+      "is_true_positive": false
+    },
+    {
+      "finding_id": "spotbugs:HttpTester.java:636:VA_FORMAT_STRING_USES_NEWLINE:",
+      "tool": "spotbugs",
+      "sourcefile": "HttpTester.java",
+      "start_line": "636",
+      "type": "VA_FORMAT_STRING_USES_NEWLINE",
+      "column": "",
+      "message": "Format string should use %n rather than \\n",
+      "is_true_positive": false
+    },
+    {
+      "finding_id": "spotbugs:InitialContextFactory.java:34:NM_SAME_SIMPLE_NAME_AS_INTERFACE:",
+      "tool": "spotbugs",
+      "sourcefile": "InitialContextFactory.java",
+      "start_line": "34",
+      "type": "NM_SAME_SIMPLE_NAME_AS_INTERFACE",
+      "column": "",
+      "message": "Class names shouldn't shadow simple name of implemented interface",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "spotbugs:JettyHttpExchange.java:96:EQ_CHECK_FOR_OPERAND_NOT_COMPATIBLE_WITH_THIS:",
+      "tool": "spotbugs",
+      "sourcefile": "JettyHttpExchange.java",
+      "start_line": "96",
+      "type": "EQ_CHECK_FOR_OPERAND_NOT_COMPATIBLE_WITH_THIS",
+      "column": "",
+      "message": "Equals checks for incompatible operand",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "spotbugs:JettyHttpServerProvider.java:36:EI_EXPOSE_STATIC_REP2:",
+      "tool": "spotbugs",
+      "sourcefile": "JettyHttpServerProvider.java",
+      "start_line": "36",
+      "type": "EI_EXPOSE_STATIC_REP2",
+      "column": "",
+      "message": "May expose internal static state by storing a mutable object into a static field",
+      "is_true_positive": false
+    },
+    {
+      "finding_id": "spotbugs:JettyLoggerConfiguration.java:79:NP_BOOLEAN_RETURN_NULL:",
+      "tool": "spotbugs",
+      "sourcefile": "JettyLoggerConfiguration.java",
+      "start_line": "79",
+      "type": "NP_BOOLEAN_RETURN_NULL",
+      "column": "",
+      "message": "Method with Boolean return type returns explicit null",
+      "is_true_positive": false
+    },
+    {
+      "finding_id": "spotbugs:LazyList.java:60:CN_IDIOM:",
+      "tool": "spotbugs",
+      "sourcefile": "LazyList.java",
+      "start_line": "60",
+      "type": "CN_IDIOM",
+      "column": "",
+      "message": "Class implements Cloneable but does not define or use clone method",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "spotbugs:MavenServerConnector.java:39:MS_SHOULD_BE_FINAL:",
+      "tool": "spotbugs",
+      "sourcefile": "MavenServerConnector.java",
+      "start_line": "39",
+      "type": "MS_SHOULD_BE_FINAL",
+      "column": "",
+      "message": "Field isn't final but should be",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "spotbugs:QuotedQualityCSV.java:335:RV_NEGATING_RESULT_OF_COMPARETO:",
+      "tool": "spotbugs",
+      "sourcefile": "QuotedQualityCSV.java",
+      "start_line": "335",
+      "type": "RV_NEGATING_RESULT_OF_COMPARETO",
+      "column": "",
+      "message": "Negating the result of compareTo()/compare()",
+      "is_true_positive": false
+    },
+    {
+      "finding_id": "spotbugs:SelectiveJarResource.java:52:MS_MUTABLE_COLLECTION_PKGPROTECT:",
+      "tool": "spotbugs",
+      "sourcefile": "SelectiveJarResource.java",
+      "start_line": "52",
+      "type": "MS_MUTABLE_COLLECTION_PKGPROTECT",
+      "column": "",
+      "message": "Field is a mutable collection which should be package protected",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "spotbugs:ShutdownService.java:348:DM_EXIT:",
+      "tool": "spotbugs",
+      "sourcefile": "ShutdownService.java",
+      "start_line": "348",
+      "type": "DM_EXIT",
+      "column": "",
+      "message": "Method invokes System.exit(...)",
+      "is_true_positive": false
+    },
+    {
+      "finding_id": "spotbugs:TopologicalSort.java:183:SE_COMPARATOR_SHOULD_BE_SERIALIZABLE:",
+      "tool": "spotbugs",
+      "sourcefile": "TopologicalSort.java",
+      "start_line": "183",
+      "type": "SE_COMPARATOR_SHOULD_BE_SERIALIZABLE",
+      "column": "",
+      "message": "Comparator doesn't implement Serializable",
+      "is_true_positive": false
+    },
+    {
+      "finding_id": "spotbugs:WebAppClassLoader.java:333:PERM_SUPER_NOT_CALLED_IN_GETPERMISSIONS:",
+      "tool": "spotbugs",
+      "sourcefile": "WebAppClassLoader.java",
+      "start_line": "333",
+      "type": "PERM_SUPER_NOT_CALLED_IN_GETPERMISSIONS",
+      "column": "",
+      "message": "Custom class loader does not call its superclass's getPermissions()",
+      "is_true_positive": true
+    }
+  ],
+  "merged_from": [
+    "003_jetty-stage-1",
+    "005_jetty-stage-2"
+  ]
+}

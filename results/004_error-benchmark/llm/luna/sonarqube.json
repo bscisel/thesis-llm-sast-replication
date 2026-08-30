@@ -1,0 +1,1078 @@
+{
+  "model": "gpt-5.6-luna",
+  "tool": "sonarqube",
+  "num_runs": 3,
+  "runs_per_invocation": 3,
+  "source_root": "java-errors-benchmark",
+  "call_parameters": {
+    "temperature": null,
+    "concurrency": 30,
+    "response_format": "json_schema",
+    "max_completion_tokens": 8192,
+    "max_retries": 6,
+    "reasoning_effort": "default"
+  },
+  "system_prompt_variant": "benchmark",
+  "system_prompt_sha256": "b5b634e0a9109c59",
+  "user_prompt_sha256": "233249fc03b8f699",
+  "timestamp": "2026-08-09T18:23:25.174398+00:00",
+  "updated_at": "2026-08-09T18:23:25.174398+00:00",
+  "findings": [
+    {
+      "finding_id": 0,
+      "type": "java:S2251",
+      "sourcefile": "CountdownPrinter.java",
+      "start_line": "5",
+      "message": "\"i\" is incremented and will never reach \"stop condition\".",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.99,
+          "developer_explanation": "The loop starts at 5, requires `i` to remain nonnegative, and increments `i`, so it moves away from the intended termination condition and runs until integer overflow. Decrement `i` (`i--`) to implement the apparent countdown and terminate after printing 0.",
+          "is_true_positive": true,
+          "issue_signature": "loop counter moves away from termination condition",
+          "reasoning": "The loop initializes `i` to 5, continues while `i >= 0`, and increments `i` on every iteration, so its counter moves away from the stopping condition. It will effectively run indefinitely (apart from eventual integer overflow) instead of performing a countdown, making this a real correctness issue.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 2096,
+            "output_tokens": 546,
+            "reasoning_tokens": 374,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 5.269
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.99,
+          "developer_explanation": "The loop starts at 5, requires the counter to remain nonnegative, and increments it, so it moves away from the intended termination condition instead of counting down. Change `i++` to `i--` so the loop terminates after printing 5 through 0.",
+          "is_true_positive": true,
+          "issue_signature": "loop counter moves away from termination condition",
+          "reasoning": "The loop initializes `i` to 5, tests `i >= 0`, and then increments `i`, so each normal iteration moves farther from the stopping condition. Although integer overflow could eventually wrap the value, the loop is effectively non-terminating for its intended behavior and will produce an enormous amount of output before that occurs.",
+          "run": 2,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 2096,
+            "output_tokens": 470,
+            "reasoning_tokens": 294,
+            "cached_input_tokens": 2093
+          },
+          "stop_reason": "stop",
+          "latency_s": 4.642
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 1.0,
+          "developer_explanation": "The loop starts at 5, continues while i is nonnegative, and increments i, so its condition never becomes false; after integer overflow it continues indefinitely. Decrement i instead, or change the condition and update expression to match the intended traversal.",
+          "is_true_positive": true,
+          "issue_signature": "loop counter moves away from termination condition",
+          "reasoning": "The loop increments i while requiring i >= 0, so i moves away from the stopping condition rather than toward it. It therefore does not terminate normally and eventually wraps around on integer overflow, making this a real correctness issue.",
+          "run": 3,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 2096,
+            "output_tokens": 213,
+            "reasoning_tokens": 65,
+            "cached_input_tokens": 2093
+          },
+          "stop_reason": "stop",
+          "latency_s": 2.565
+        }
+      ]
+    },
+    {
+      "finding_id": 1,
+      "type": "java:S2189",
+      "sourcefile": "CountdownPrinter.java",
+      "start_line": "5",
+      "message": "Correct this loop's end condition.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.99,
+          "developer_explanation": "The loop increments `i` while requiring it to remain nonnegative, so it prints values upward instead of counting down from 5. Change the update expression to `i--` so the loop reaches its intended end condition promptly.",
+          "is_true_positive": true,
+          "issue_signature": "loop condition incompatible with update",
+          "reasoning": "The loop starts at 5, tests `i >= 0`, and increments `i` with `i++`, so its end condition is not reached during the intended countdown. It will print a very large sequence of values and only become negative after integer overflow, making this a real correctness defect.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 2095,
+            "output_tokens": 364,
+            "reasoning_tokens": 207,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.976
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.99,
+          "developer_explanation": "The loop increments `i` while continuing as long as `i` is nonnegative, so it does not count down toward its stopping condition. Change the update to `i--` (or otherwise adjust the condition and update consistently) so the loop terminates after printing the intended countdown.",
+          "is_true_positive": true,
+          "issue_signature": "loop condition inconsistent with update direction",
+          "reasoning": "The loop starts at 5, tests `i >= 0`, and increments `i`, moving away from the terminating boundary instead of toward it. It will run for an effectively unbounded number of iterations, only eventually stopping after integer overflow, so the end condition is materially incorrect for this countdown. The update should decrement `i` or the condition should be revised to match the intended iteration direction.",
+          "run": 2,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 2095,
+            "output_tokens": 483,
+            "reasoning_tokens": 293,
+            "cached_input_tokens": 2092
+          },
+          "stop_reason": "stop",
+          "latency_s": 5.105
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.99,
+          "developer_explanation": "The loop starts at 5, increments `i`, and continues while `i >= 0`, so it does not count down toward termination. It will print an enormous number of values before integer overflow makes the condition false; change the update to `i--` for a countdown.",
+          "is_true_positive": true,
+          "issue_signature": "loop condition incompatible with update direction",
+          "reasoning": "The loop increments `i` with `i++` while its condition requires `i` to remain nonnegative, so it moves away from the intended countdown termination condition. It will run through nearly the entire positive integer range before overflow makes `i` negative, causing excessive output and execution time rather than promptly terminating.",
+          "run": 3,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 2095,
+            "output_tokens": 338,
+            "reasoning_tokens": 166,
+            "cached_input_tokens": 2092
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.58
+        }
+      ]
+    },
+    {
+      "finding_id": 2,
+      "type": "java:S6880",
+      "sourcefile": "InputRouter.java",
+      "start_line": "13",
+      "message": "Replace the chain of if/else with a switch expression.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.98,
+          "developer_explanation": "The conditional beginning at line 13 is an if/else-if/else chain that selects behavior based on the same integer value. Rewriting that chain as a switch expression or switch statement would make the alternatives clearer and more idiomatic for the stated Java version; the earlier independent conditional chain should remain separate unless its behavior is intentionally being changed.",
+          "is_true_positive": true,
+          "issue_signature": "if/else chain replaceable with switch expression",
+          "reasoning": "The code contains a genuine if/else-if/else chain on the same integer selector at lines 13–19, so the reported structural condition is present. That chain can be expressed as a switch without requiring a behavioral change, improving readability and maintainability. The separate if at line 13 also means the two existing chains should not be merged automatically, because doing so could change the output for inputs 1 and 2.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 2243,
+            "output_tokens": 899,
+            "reasoning_tokens": 683,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 8.344
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.91,
+          "developer_explanation": "The second conditional chain tests the same input value for cases 3 and 4 and a default case, so it can be expressed more clearly with a switch. Also review the missing `else` before the condition for input 3, because inputs 1 and 2 currently produce their specific message and then the default message.",
+          "is_true_positive": true,
+          "issue_signature": "conditional chain replaceable with switch",
+          "reasoning": "The code contains a separate if/else chain beginning at line 13 that compares the same integer against 3 and 4 before handling the default case. A switch can represent those alternatives more clearly, so the maintainability claim is materially correct even though the earlier chain is accidentally disconnected and causes an additional correctness issue. The disconnected chains do not invalidate the reported claim about the chain beginning on the flagged line.",
+          "run": 2,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 2243,
+            "output_tokens": 1229,
+            "reasoning_tokens": 1024,
+            "cached_input_tokens": 0
+          },
+          "stop_reason": "stop",
+          "latency_s": 10.686
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.97,
+          "developer_explanation": "The conditional beginning at line 13 is an if/else-if chain that compares the same input value and can be expressed more clearly with a switch expression. Replacing that chain with a switch-based value selection preserves its cases and default behavior while making the routing logic easier to extend.",
+          "is_true_positive": true,
+          "issue_signature": "if/else chain replaceable with switch expression",
+          "reasoning": "The code contains a distinct if/else-if chain at lines 13–18 for input values 3 and 4, with a default branch. A switch expression can represent these mutually exclusive value comparisons more directly, so the warning identifies a real maintainability issue even though the preceding chain is separated by another independent if.",
+          "run": 3,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 2243,
+            "output_tokens": 1899,
+            "reasoning_tokens": 1705,
+            "cached_input_tokens": 2240
+          },
+          "stop_reason": "stop",
+          "latency_s": 15.952
+        }
+      ]
+    },
+    {
+      "finding_id": 3,
+      "type": "java:S3972",
+      "sourcefile": "InputRouter.java",
+      "start_line": "13",
+      "message": "Move this \"if\" to a new line or add the missing \"else\".",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.99,
+          "developer_explanation": "The second conditional chain starts on the same physical line as the closing brace of the first chain, which makes the control flow harder to read and can suggest that an else branch was accidentally omitted. Put the second `if` on its own line; do not add an `else` unless the two condition groups are intended to be mutually exclusive.",
+          "is_true_positive": true,
+          "issue_signature": "adjacent if statements on one line",
+          "reasoning": "The shown code places `} if (input == 3)` on a single line, immediately after an `else if` chain has ended. This is a real readability and maintainability issue because the adjacent conditional chains can be mistaken for one continuous chain, so the warning is a true positive. Moving the second `if` to a new line clarifies the intended independent control flow, while adding an `else` would change behavior and is not required.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 2246,
+            "output_tokens": 549,
+            "reasoning_tokens": 336,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 5.394
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.99,
+          "developer_explanation": "The second conditional starts a separate chain, so inputs 1 and 2 print their specific message and then also print the default message. Change the second `if` to `else if` if these cases are intended to be mutually exclusive; otherwise place it on a separate line only if the independent behavior is deliberate.",
+          "is_true_positive": true,
+          "issue_signature": "independent conditional chain causes unintended fall-through",
+          "reasoning": "The shown code has `} if (input == 3)` instead of `} else if (input == 3)`, creating two independent conditional chains. For inputs 1 or 2, the first chain matches and the second chain reaches its `else`, producing both a specific message and the default message. This is a real correctness issue if the routing cases are intended to be exclusive, as the structure and messages strongly indicate.",
+          "run": 2,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 2246,
+            "output_tokens": 716,
+            "reasoning_tokens": 512,
+            "cached_input_tokens": 2243
+          },
+          "stop_reason": "stop",
+          "latency_s": 6.301
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.99,
+          "developer_explanation": "The first conditional chain handles inputs 1 and 2, then the separate `if` for input 3 runs afterward. Consequently, inputs 1 and 2 also print the default message because the second chain's `else` is reached; connect the second condition with `else if` (or otherwise provide the intended mutually exclusive structure).",
+          "is_true_positive": true,
+          "issue_signature": "conditional chain missing an else branch",
+          "reasoning": "The conditional chain for inputs 1 and 2 ends at line 12, while a separate `if` for input 3 starts on line 13. For inputs 1 and 2, the first branch prints its message but the second chain still executes and prints the default message, so the conditions are not mutually exclusive as the routing structure evidently suggests. This is a real correctness issue, not merely a formatting concern.",
+          "run": 3,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 2246,
+            "output_tokens": 971,
+            "reasoning_tokens": 759,
+            "cached_input_tokens": 2243
+          },
+          "stop_reason": "stop",
+          "latency_s": 8.712
+        }
+      ]
+    },
+    {
+      "finding_id": 4,
+      "type": "java:S127",
+      "sourcefile": "MatrixNormalizer.java",
+      "start_line": "21",
+      "message": "Refactor the code in order to not assign to this loop counter from within the loop body.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 1.0,
+          "developer_explanation": "The inner loop tests and increments the outer row counter `i` instead of testing and incrementing its own column counter `j`. This skips rows, processes incorrect elements, and can cause an out-of-bounds access; use `j < columns` and `j++` in the inner loop.",
+          "is_true_positive": true,
+          "issue_signature": "outer loop counter modified by inner loop",
+          "reasoning": "The inner loop at line 21 uses `i < columns` and `i++`, so it modifies the outer loop's counter while never advancing `j`. Consequently, the traversal is incorrect and may access an invalid row or terminate before processing the matrix correctly. The warning therefore identifies a real correctness problem, even though the assignment occurs in the loop update expression rather than the body statement.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 2375,
+            "output_tokens": 531,
+            "reasoning_tokens": 341,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 4.973
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 1.0,
+          "developer_explanation": "The inner loop increments the outer row index `i` instead of its own column index `j`, so it does not traverse columns correctly and can access a row outside the array. Change the inner loop to use `j < columns` as its condition and `j++` as its update.",
+          "is_true_positive": true,
+          "issue_signature": "loop counter modified by nested loop",
+          "reasoning": "The inner `for` loop tests and increments the outer loop counter `i` while leaving its own counter `j` unchanged. This causes the row index to change during column traversal, potentially producing an out-of-bounds access and incorrect normalization. The warning identifies a real correctness issue, even though the problematic assignment appears in the loop update clause rather than a statement in the body.",
+          "run": 2,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 2375,
+            "output_tokens": 436,
+            "reasoning_tokens": 249,
+            "cached_input_tokens": 2372
+          },
+          "stop_reason": "stop",
+          "latency_s": 4.317
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.99,
+          "developer_explanation": "The inner loop declares j but uses i in its condition and increment, so it changes the outer loop counter instead of advancing across columns. This skips elements and can terminate the outer loop early or access an invalid row; use `j < columns` and `j++` in the inner loop.",
+          "is_true_positive": true,
+          "issue_signature": "loop counter modified during iteration",
+          "reasoning": "The inner loop declares `j` but tests and increments `i`, thereby modifying the outer loop counter rather than advancing the inner loop. As a result, normalization skips matrix elements and can produce an out-of-bounds access for some dimensions, so the warning identifies a real correctness issue despite the assignment occurring in the loop update expression rather than the body.",
+          "run": 3,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 2375,
+            "output_tokens": 692,
+            "reasoning_tokens": 512,
+            "cached_input_tokens": 2372
+          },
+          "stop_reason": "stop",
+          "latency_s": 7.428
+        }
+      ]
+    },
+    {
+      "finding_id": 5,
+      "type": "java:S128",
+      "sourcefile": "MenuHandler.java",
+      "start_line": "11",
+      "message": "End this switch case with an unconditional break, return or throw statement.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.99,
+          "developer_explanation": "The case for choice 1 has no terminating statement, so execution falls through into the default branch. With the shown value of 1, the program prints both the valid-user message and the invalid-option message; add a break after the case 1 statement unless this fall-through is intentional.",
+          "is_true_positive": true,
+          "issue_signature": "switch case fall-through",
+          "reasoning": "Case 1 is immediately followed by the default label without an unconditional break, return, or throw. Because userChoice is 1 in the shown code, the default branch also executes and prints \"Invalid option\" after the valid choice message, making the warning a real correctness issue.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 2174,
+            "output_tokens": 302,
+            "reasoning_tokens": 138,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.376
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.99,
+          "developer_explanation": "The `case 1` branch has no terminating statement, so execution falls through into `default` and prints both the valid-user message and the invalid-option message. Add a `break` after the `case 1` output unless this fall-through is explicitly intended.",
+          "is_true_positive": true,
+          "issue_signature": "switch case falls through without termination",
+          "reasoning": "The shown `case 1` has no `break`, `return`, or `throw`, so execution necessarily falls through to the `default` label. Because `userChoice` is 1, the program prints both `User 1` and `Invalid option`, making the warning a real correctness issue rather than merely a stylistic concern.",
+          "run": 2,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 2174,
+            "output_tokens": 281,
+            "reasoning_tokens": 106,
+            "cached_input_tokens": 2171
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.061
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.99,
+          "developer_explanation": "The `case 1` branch prints the valid selection message but then falls through to `default`, so it also prints the invalid-option message. Add an unconditional `break` after the `case 1` statements unless this fall-through is explicitly intended.",
+          "is_true_positive": true,
+          "issue_signature": "switch case falls through to default",
+          "reasoning": "The shown `case 1` has no terminating `break`, `return`, or `throw`, so execution falls through into the `default` branch. Because `default` prints \"Invalid option\" and `userChoice` is 1, a valid choice produces an invalid-option message as well, making the warning a real correctness issue.",
+          "run": 3,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 2174,
+            "output_tokens": 287,
+            "reasoning_tokens": 116,
+            "cached_input_tokens": 2171
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.256
+        }
+      ]
+    },
+    {
+      "finding_id": 6,
+      "type": "java:S4973",
+      "sourcefile": "NumberComparison.java",
+      "start_line": "7",
+      "message": "Strings and Boxed types should be compared using \"equals()\".",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.99,
+          "developer_explanation": "The `==` operator compares the two `Integer` objects by reference identity rather than comparing their numeric values. Use `num1.equals(num2)` (or safely unbox and compare primitives) to make the value comparison explicit and reliable.",
+          "is_true_positive": true,
+          "issue_signature": "boxed values compared by reference identity",
+          "reasoning": "The shown code compares two `Integer` objects with `==`, which tests whether they are the same object rather than whether their values are equal. Since 1024 is outside the guaranteed Integer cache range, the result is not reliably determined by numeric equality and should be compared with `equals()` or primitive values.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 2101,
+            "output_tokens": 338,
+            "reasoning_tokens": 176,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.887
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.99,
+          "developer_explanation": "The `==` operator compares the two `Integer` object references, not their numeric values. Since 1024 is outside Java’s guaranteed integer cache range, the references are not guaranteed to be identical; use `num1.equals(num2)` or compare primitive values instead.",
+          "is_true_positive": true,
+          "issue_signature": "boxed values compared by reference",
+          "reasoning": "Both variables are boxed `Integer` objects, and the flagged `==` expression compares their references rather than their numeric contents. Because 1024 is outside the guaranteed `Integer` cache range, the expression is not reliably true for equal numeric values and can produce an unintended result. The warning therefore identifies a real correctness issue.",
+          "run": 2,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 2101,
+            "output_tokens": 297,
+            "reasoning_tokens": 126,
+            "cached_input_tokens": 2098
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.47
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.99,
+          "developer_explanation": "The == operator compares the two Integer object references, not their numeric values. Since both objects represent 1024 but Integer identity outside the guaranteed cache range is not reliable, use num1.equals(num2) or compare primitive values instead.",
+          "is_true_positive": true,
+          "issue_signature": "boxed values compared by reference",
+          "reasoning": "The shown code compares two Integer references with ==, which tests object identity rather than whether their numeric values are equal. For the value 1024, Integer object reuse is not guaranteed, so this expression can produce false even when both values are numerically equal; equals() or primitive comparison is appropriate.",
+          "run": 3,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 2101,
+            "output_tokens": 318,
+            "reasoning_tokens": 160,
+            "cached_input_tokens": 2098
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.501
+        }
+      ]
+    },
+    {
+      "finding_id": 7,
+      "type": "java:S1905",
+      "sourcefile": "NumberReader.java",
+      "start_line": "6",
+      "message": "Remove this unnecessary cast to \"Integer\".",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.99,
+          "developer_explanation": "The cast is not behaviorally redundant here: the object actually contains a String, so the cast throws ClassCastException, while removing it would print the String instead. The warning can therefore be dismissed as an incorrect redundant-cast finding, although the code may need an explicit numeric conversion if printing an integer was intended.",
+          "is_true_positive": false,
+          "issue_signature": "redundant type cast",
+          "reasoning": "The variable is initialized with the String value \"10\", so casting it to Integer causes a ClassCastException at runtime. Removing the cast changes the behavior to printing the String through println(Object), meaning the cast is not redundant in this code context.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 2082,
+            "output_tokens": 645,
+            "reasoning_tokens": 481,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 6.392
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.99,
+          "developer_explanation": "The value assigned to obj is a String, so casting it to Integer causes a ClassCastException before println can execute. The cast is unnecessary for println(Object); remove it to print the value, or explicitly parse the string if an Integer is required.",
+          "is_true_positive": true,
+          "issue_signature": "unnecessary type cast",
+          "reasoning": "obj is initialized with the String value \"10\", but the flagged expression casts that object to Integer, which causes a ClassCastException at runtime. println accepts Object directly, so the cast is unnecessary and also prevents the program from producing its apparent output.",
+          "run": 2,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 2082,
+            "output_tokens": 374,
+            "reasoning_tokens": 224,
+            "cached_input_tokens": 2079
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.768
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.99,
+          "developer_explanation": "The cast is not safely redundant here: the object actually contains a String, so casting it to Integer throws ClassCastException before anything is printed. Removing the cast would change the behavior to printing the string, so this alarm can be dismissed as an incorrect redundancy finding; the underlying code may instead need parsing if an integer is intended.",
+          "is_true_positive": false,
+          "issue_signature": "unnecessary type cast",
+          "reasoning": "The variable is initialized with the String value \"10\", so `(Integer) obj` performs a runtime-incompatible cast and throws ClassCastException. Removing the cast is not behavior-preserving: it would invoke println with the Object and print the string instead. Therefore, although the cast is not needed for compilation, it is not an unnecessary cast in the materially relevant sense reported here, making this a false positive; the warning concerns correctness because its proposed change alters runtime behavior.",
+          "run": 3,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 2082,
+            "output_tokens": 722,
+            "reasoning_tokens": 512,
+            "cached_input_tokens": 2079
+          },
+          "stop_reason": "stop",
+          "latency_s": 6.734
+        }
+      ]
+    },
+    {
+      "finding_id": 8,
+      "type": "java:S2696",
+      "sourcefile": "PersonProfile.java",
+      "start_line": "8",
+      "message": "Make the enclosing method \"static\" or remove this set.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.99,
+          "developer_explanation": "The setter changes one class-wide value, so setting the name on the second profile overwrites the name observed through the first profile; both calls in the example ultimately return \"Kate\". Make the field an instance field if each profile should have its own name, or make the setter explicitly static if a single shared name is intentional.",
+          "is_true_positive": true,
+          "issue_signature": "instance method mutates static field",
+          "reasoning": "The shown code assigns to the static field `name` from a non-static instance method, so all `PersonProfile` objects share and overwrite the same value. This produces incorrect per-object behavior in the example: after `person2.setName(\"Kate\")`, both getters return \"Kate\". The warning therefore identifies a real correctness and design issue, even though making the method static is only one possible fix.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 2239,
+            "output_tokens": 505,
+            "reasoning_tokens": 305,
+            "cached_input_tokens": 0
+          },
+          "stop_reason": "stop",
+          "latency_s": 5.314
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.99,
+          "developer_explanation": "The setter writes to one class-wide field, so setting the name on one profile overwrites the name observed through every profile; in the shown example, both objects report \"Kate\". Make the field an instance field if each profile should have its own name, or make the setter static if a single shared name is truly intended.",
+          "is_true_positive": true,
+          "issue_signature": "instance method modifies shared static state",
+          "reasoning": "The setter assigns to the static field `name`, so all `PersonProfile` instances share and overwrite the same value. The shown `main` method demonstrates the resulting correctness problem: after `person2.setName(\"Kate\")`, `person1.getName()` also returns `\"Kate\"`. This is a true positive unless a single class-wide name is explicitly intended, which the per-instance API and example contradict.",
+          "run": 2,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 2239,
+            "output_tokens": 382,
+            "reasoning_tokens": 181,
+            "cached_input_tokens": 2236
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.968
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.98,
+          "developer_explanation": "The name is declared static, so all PersonProfile instances share one value; assigning \"Kate\" through the second instance overwrites \"John\", causing both objects to return the same name. Make the field non-static for per-profile state, or make the entire API explicitly static if one process-wide name is actually intended.",
+          "is_true_positive": true,
+          "issue_signature": "instance method updates shared static state",
+          "reasoning": "The shown code declares name as static but updates it through an instance method, and the two instances in main therefore overwrite the same shared value. This is a real correctness issue for profile-specific names: after person2.setName(\"Kate\"), person1.getName() also returns \"Kate\". The field should be instance state, unless a single global name is explicitly intended.",
+          "run": 3,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 2239,
+            "output_tokens": 631,
+            "reasoning_tokens": 441,
+            "cached_input_tokens": 2236
+          },
+          "stop_reason": "stop",
+          "latency_s": 6.104
+        }
+      ]
+    },
+    {
+      "finding_id": 9,
+      "type": "java:S1210",
+      "sourcefile": "PersonRanking.java",
+      "start_line": "18",
+      "message": "Override \"equals(Object obj)\" to comply with the contract of the \"compareTo(T o)\" method.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.88,
+          "developer_explanation": "The alert can be dismissed as stated because adding equals would not make this compareTo implementation conform: it returns -1 even when both ages are equal. The actual defect is that compareTo should return 0 for equal comparison values; consistency between equals and compareTo can then be addressed if that value-based equality is intended.",
+          "is_true_positive": false,
+          "issue_signature": "missing equals in comparable type",
+          "reasoning": "The shown compareTo method returns -1 whenever age is not greater than the other age, including when the two ages are equal. Consequently, overriding equals would not make the current comparison implementation comply with its contract, and Comparable does not strictly require an equals override merely because the interface is implemented. The warning identifies a separate possible design concern, but the stated remedy does not describe the decisive defect in this code.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 2230,
+            "output_tokens": 1106,
+            "reasoning_tokens": 904,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 10.206
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.9,
+          "developer_explanation": "The comparison implementation is invalid for equal ages: it returns -1 in both directions instead of returning 0, violating the Comparable contract. Define the comparison so equal ages return 0 and implement equals consistently with the comparison semantics, typically by comparing the age field.",
+          "is_true_positive": true,
+          "issue_signature": "inconsistent Comparable and equals semantics",
+          "reasoning": "The shown compareTo method returns -1 whenever ages are equal, so two Person instances with the same age are not treated as equal by comparison and the comparison is not antisymmetric. Although adding equals alone would not repair this implementation, the warning identifies a real consistency problem in this Comparable class; compareTo should return 0 for equal ranking values and equals should use matching semantics. The issue is therefore a correctness problem rather than merely a stylistic omission.",
+          "run": 2,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 2230,
+            "output_tokens": 1224,
+            "reasoning_tokens": 1024,
+            "cached_input_tokens": 2227
+          },
+          "stop_reason": "stop",
+          "latency_s": 10.629
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.93,
+          "developer_explanation": "The type orders people by age but does not define equality and hashing using that same criterion. Implement equals(Object) and hashCode based on age, and also make compareTo return 0 when ages are equal, for example with Integer.compare(age, obj.age).",
+          "is_true_positive": true,
+          "issue_signature": "comparable type lacks consistent equality",
+          "reasoning": "The nested Person implements Comparable<Person> with an age-based comparison but declares no equals(Object) or hashCode, which can make ordering and equality inconsistent. In addition, the current compareTo returns -1 for equal ages, violating the basic Comparable requirement that comparing an object with itself returns zero; correcting that comparison exposes the missing consistent equality. Therefore the warning identifies a real contract-related correctness issue, although fixing compareTo is also necessary.",
+          "run": 3,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 2230,
+            "output_tokens": 1188,
+            "reasoning_tokens": 991,
+            "cached_input_tokens": 2227
+          },
+          "stop_reason": "stop",
+          "latency_s": 10.505
+        }
+      ]
+    },
+    {
+      "finding_id": 10,
+      "type": "java:S1206",
+      "sourcefile": "PersonRegistry.java",
+      "start_line": "21",
+      "message": "This class overrides \"equals()\" and should therefore also override \"hashCode()\".",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.99,
+          "developer_explanation": "Person overrides equals but does not override hashCode, violating the equals/hashCode contract. Add a hashCode implementation based on the same equality fields so instances behave correctly in hash-based collections.",
+          "is_true_positive": true,
+          "issue_signature": "equals override without hashCode override",
+          "reasoning": "The shown Person class overrides equals but declares no hashCode method. This violates Java's equals/hashCode contract and can cause equal objects to be treated as different keys in hash-based collections. The warning is therefore a true positive, independently of the separate defect in the name comparison expression.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 2319,
+            "output_tokens": 263,
+            "reasoning_tokens": 118,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 4.53
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.99,
+          "developer_explanation": "The Person class overrides equals(Object) but does not override hashCode(), so equal Person instances would not necessarily have the same hash code. Implement hashCode() using the same fields as equals(), such as name and age; separately, the current comparison name.equals(name) appears to be a typo and should likely compare against the other object's name.",
+          "is_true_positive": true,
+          "issue_signature": "equals override missing hashCode implementation",
+          "reasoning": "The shown Person class defines equals(Object) at line 21 but contains no hashCode() override. This violates the equals/hashCode contract and can cause incorrect behavior when Person instances are used in hash-based collections, so the warning is a true positive. The separate name.equals(name) defect does not change the validity of this warning.",
+          "run": 2,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 2319,
+            "output_tokens": 292,
+            "reasoning_tokens": 106,
+            "cached_input_tokens": 2316
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.394
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.99,
+          "developer_explanation": "The nested class defines equals(Object) but inherits Object.hashCode(), so two objects considered equal can have different hash codes and behave incorrectly in hash-based collections. Add a hashCode() implementation using the same fields as equals; also note that the current comparison name.equals(name) appears to be a separate typo that should likely compare against the other person's name.",
+          "is_true_positive": true,
+          "issue_signature": "equals without matching hashCode",
+          "reasoning": "The shown Person class overrides equals(Object) but declares no hashCode() override. This violates the equals/hashCode contract and can produce incorrect behavior when instances are used in hash-based collections, so the warning is a true positive. The equals implementation also contains a separate likely correctness defect, but that does not invalidate this warning.",
+          "run": 3,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 2319,
+            "output_tokens": 366,
+            "reasoning_tokens": 181,
+            "cached_input_tokens": 2316
+          },
+          "stop_reason": "stop",
+          "latency_s": 4.053
+        }
+      ]
+    },
+    {
+      "finding_id": 11,
+      "type": "java:S1764",
+      "sourcefile": "PersonRegistry.java",
+      "start_line": "29",
+      "message": "Correct one of the identical sub-expressions on both sides of equals.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.99,
+          "developer_explanation": "The equality check compares this object's name to itself, so two different people with the same age will be considered equal regardless of the other person's name. Change it to compare against the other object's name, such as name.equals(person.name), while also considering a null-safe comparison if names may be null.",
+          "is_true_positive": true,
+          "issue_signature": "equality compares a value with itself",
+          "reasoning": "The shown code evaluates name.equals(name), comparing the same object's field to itself rather than comparing name with person.name. This makes the name portion of equals always true for non-null names and can also throw a null pointer exception when this object's name is null. The warning therefore identifies a real correctness defect in the equality implementation.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 2314,
+            "output_tokens": 301,
+            "reasoning_tokens": 125,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.422
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 1.0,
+          "developer_explanation": "The equality check compares this object's name to itself, so it never compares the other Person's name and effectively ignores that field. Change it to compare name with person.name, using a null-safe comparison if names may be null.",
+          "is_true_positive": true,
+          "issue_signature": "self-comparison in equality check",
+          "reasoning": "The code uses `name.equals(name)`, so both sides of the name comparison are the same expression rather than comparing against `person.name`. Consequently, two Person objects with the same age are considered equal regardless of their names, which is a real correctness defect in this equals implementation.",
+          "run": 2,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 2314,
+            "output_tokens": 247,
+            "reasoning_tokens": 94,
+            "cached_input_tokens": 2311
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.009
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 1.0,
+          "developer_explanation": "The comparison uses the current object's name on both sides, so it never compares the other person's name and can report equality for objects with different names. Compare `name` with `person.name`, preferably with a null-safe comparison such as `Objects.equals(name, person.name)`.",
+          "is_true_positive": true,
+          "issue_signature": "incorrect equality field comparison",
+          "reasoning": "The flagged expression is `name.equals(name)`, which compares the same field to itself instead of comparing `name` with `person.name`. Consequently, the name check is always true when reached and objects with different names can be considered equal; it can also throw if this object's name is null. This is a real correctness defect in the equals implementation.",
+          "run": 3,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 2314,
+            "output_tokens": 262,
+            "reasoning_tokens": 86,
+            "cached_input_tokens": 2311
+          },
+          "stop_reason": "stop",
+          "latency_s": 2.698
+        }
+      ]
+    },
+    {
+      "finding_id": 12,
+      "type": "java:S1317",
+      "sourcefile": "TextAssembler.java",
+      "start_line": "5",
+      "message": "Replace the constructor character parameter 'a' with string parameter \"a\".",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.99,
+          "developer_explanation": "The character literal 'a' is implicitly converted to its numeric value and selects the StringBuilder(int capacity) constructor, so the builder starts empty with capacity 97. As a result, appending \"bc\" prints \"bc\" rather than \"abc\"; use new StringBuilder(\"a\") if the initial content should be a.",
+          "is_true_positive": true,
+          "issue_signature": "incorrect StringBuilder constructor overload",
+          "reasoning": "The expression new StringBuilder('a') selects the int-capacity constructor because a char widens to int, so it does not initialize the builder with the character 'a'. The subsequent append therefore produces \"bc\", not \"abc\", making the warning a real correctness issue.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 2095,
+            "output_tokens": 272,
+            "reasoning_tokens": 99,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.135
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.99,
+          "developer_explanation": "The character literal 'a' selects the StringBuilder(int capacity) constructor through numeric promotion, so it sets an initial capacity of 97 rather than adding \"a\" to the builder. Use new StringBuilder(\"a\") if the builder should start with that character; the current code prints \"bc\" instead of \"abc\".",
+          "is_true_positive": true,
+          "issue_signature": "character interpreted as builder capacity",
+          "reasoning": "The shown code passes the char literal 'a' to StringBuilder, which resolves to the int-capacity constructor rather than a constructor that initializes content. Consequently, the builder starts empty and the program prints \"bc\", so replacing it with the string parameter \"a\" addresses a real correctness issue.",
+          "run": 2,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 2095,
+            "output_tokens": 400,
+            "reasoning_tokens": 224,
+            "cached_input_tokens": 2092
+          },
+          "stop_reason": "stop",
+          "latency_s": 4.692
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.99,
+          "developer_explanation": "The character literal selects the constructor that takes an integer capacity, so it does not initialize the builder with the character. Use a string argument such as \"a\" if the intended output is \"abc\"; the current code prints \"bc\".",
+          "is_true_positive": true,
+          "issue_signature": "character selects unintended constructor overload",
+          "reasoning": "The character literal 'a' is implicitly converted to its integer code point, so this call selects StringBuilder(int) and creates an empty builder with capacity 97 rather than one containing 'a'. Consequently, appending \"bc\" produces \"bc\" instead of the evidently intended \"abc\", making the warning a true correctness issue.",
+          "run": 3,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 2095,
+            "output_tokens": 323,
+            "reasoning_tokens": 157,
+            "cached_input_tokens": 2092
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.421
+        }
+      ]
+    },
+    {
+      "finding_id": 13,
+      "type": "java:S2201",
+      "sourcefile": "TextTrimmer.java",
+      "start_line": "6",
+      "message": "The return value of \"substring\" must be used.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 1.0,
+          "developer_explanation": "The call computes a substring but discards the returned String; Java String is immutable, so s remains \"abcdef\" and the output is not trimmed. Assign the result back to s or otherwise use it, for example, `s = s.substring(3);`.",
+          "is_true_positive": true,
+          "issue_signature": "ignored substring return value",
+          "reasoning": "The shown code calls `s.substring(3)` and discards the returned String, while `String` is immutable and `s` is subsequently printed unchanged. Therefore the substring operation has no effect on the program's result, so the warning correctly identifies a correctness issue.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 2095,
+            "output_tokens": 227,
+            "reasoning_tokens": 69,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 2.808
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 1.0,
+          "developer_explanation": "The call to substring does not modify the original string, and its returned substring is discarded, so s remains \"abcdef\". Store the result, for example by assigning s = s.substring(3), if the intent is to trim the first three characters.",
+          "is_true_positive": true,
+          "issue_signature": "ignored substring return value",
+          "reasoning": "The shown code calls substring(3) and discards its return value, while Java strings are immutable, so s remains unchanged before it is printed. This is a real correctness issue if the evident intent is to use the substring result, as the current output is \"abcdef\" rather than the resulting substring.",
+          "run": 2,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 2095,
+            "output_tokens": 214,
+            "reasoning_tokens": 52,
+            "cached_input_tokens": 2092
+          },
+          "stop_reason": "stop",
+          "latency_s": 2.44
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 1.0,
+          "developer_explanation": "The call to substring does not modify the original string because String is immutable, and its returned substring is discarded. Assign the result back to a variable, such as s = s.substring(3), or use it directly where the shortened value is needed.",
+          "is_true_positive": true,
+          "issue_signature": "ignored substring result",
+          "reasoning": "The code calls substring on s but discards the returned String, while String is immutable and therefore s remains \"abcdef\". Consequently, the subsequent print does not use the requested substring, so the warning identifies a real correctness issue.",
+          "run": 3,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 2095,
+            "output_tokens": 211,
+            "reasoning_tokens": 66,
+            "cached_input_tokens": 2092
+          },
+          "stop_reason": "stop",
+          "latency_s": 2.552
+        }
+      ]
+    },
+    {
+      "finding_id": 14,
+      "type": "java:S3984",
+      "sourcefile": "ValueProcessor.java",
+      "start_line": "11",
+      "message": "Throw this exception or remove this useless statement.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 1.0,
+          "developer_explanation": "The code creates an IllegalArgumentException but never throws it, so negative values continue to the success message. Add the throw keyword before the exception construction, or remove the statement if negative values are meant to be accepted.",
+          "is_true_positive": true,
+          "issue_signature": "constructed exception not thrown",
+          "reasoning": "The negative-value branch constructs an IllegalArgumentException without throwing it, and execution therefore continues to print that the value is non-negative. This is a real correctness issue because the invalid input is neither rejected nor reported as intended. The statement should throw the exception or be removed if no validation is required.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 2148,
+            "output_tokens": 202,
+            "reasoning_tokens": 50,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 2.578
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 1.0,
+          "developer_explanation": "The code creates an IllegalArgumentException but never throws it, so negative values continue to the output statement as if they were valid. Add the `throw` keyword before the exception construction, or remove the check if negative values are intended to be accepted.",
+          "is_true_positive": true,
+          "issue_signature": "constructed exception is not thrown",
+          "reasoning": "The negative-value branch constructs an IllegalArgumentException without throwing it, so execution continues and prints that the value is nonnegative. This makes the validation ineffective and is a real correctness issue, matching the warning.",
+          "run": 2,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 2148,
+            "output_tokens": 205,
+            "reasoning_tokens": 63,
+            "cached_input_tokens": 2145
+          },
+          "stop_reason": "stop",
+          "latency_s": 2.614
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 1.0,
+          "developer_explanation": "The code only constructs an IllegalArgumentException when the value is negative; it never throws or otherwise uses that exception. Throw the exception, such as with `throw new IllegalArgumentException(...)`, or remove the statement and implement the intended handling.",
+          "is_true_positive": true,
+          "issue_signature": "constructed exception is neither thrown nor used",
+          "reasoning": "The negative-value branch constructs an IllegalArgumentException without throwing it, so execution continues to print that the value is valid. This is a real correctness issue because the invalid input is not rejected and the output is misleading. The statement should throw the exception or be removed if no rejection is intended.",
+          "run": 3,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 2148,
+            "output_tokens": 214,
+            "reasoning_tokens": 55,
+            "cached_input_tokens": 2145
+          },
+          "stop_reason": "stop",
+          "latency_s": 2.675
+        }
+      ]
+    },
+    {
+      "finding_id": 15,
+      "type": "java:S2757",
+      "sourcefile": "ValueReporter.java",
+      "start_line": "11",
+      "message": "Was \"+=\" meant instead?",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.99,
+          "developer_explanation": "The statement `x =+ 2` assigns positive 2 to `x`; it does not add 2 to the existing value. Change it to `x += 2` if the intended result is the sum, which would print 3 instead of 2.",
+          "is_true_positive": true,
+          "issue_signature": "assignment used instead of compound addition",
+          "reasoning": "The shown code initializes `x` to 1 and then uses `x =+ 2`, which assigns the unary-positive value 2 rather than adding 2 to the existing value. Consequently, the method prints 2 instead of 3, so the warning identifies a real correctness issue. The appropriate change is `x += 2` if summation is intended.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 2183,
+            "output_tokens": 274,
+            "reasoning_tokens": 92,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.005
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.99,
+          "developer_explanation": "The statement `x =+ 2` assigns positive 2 to `x`; it does not add 2 to the existing value. Change it to `x += 2` if the method is intended to print the sum, which would produce 3 instead of 2.",
+          "is_true_positive": true,
+          "issue_signature": "unary-plus assignment instead of addition",
+          "reasoning": "The shown statement `x =+ 2` is parsed as `x = (+2)`, so it overwrites the initial value 1 rather than incrementing it. This makes the method print 2 instead of the evident sum 3, so the warning identifies a real correctness issue.",
+          "run": 2,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 2183,
+            "output_tokens": 322,
+            "reasoning_tokens": 153,
+            "cached_input_tokens": 2180
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.594
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.99,
+          "developer_explanation": "The statement `x =+ 2` assigns positive 2 to `x`; it does not add 2 to the existing value, so the method prints 2 instead of the likely intended sum 3. Change it to `x += 2` if the intent is to increment the current value.",
+          "is_true_positive": true,
+          "issue_signature": "assignment uses unary plus instead of addition",
+          "reasoning": "The shown code initializes `x` to 1 and then uses `x =+ 2`, which assigns positive 2 rather than adding 2 to the existing value. Consequently, the method prints 2 instead of 3, so the warning identifies a real correctness issue. The appropriate correction is `x += 2` if the intended operation is summation.",
+          "run": 3,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 2183,
+            "output_tokens": 288,
+            "reasoning_tokens": 99,
+            "cached_input_tokens": 2180
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.099
+        }
+      ]
+    }
+  ]
+}

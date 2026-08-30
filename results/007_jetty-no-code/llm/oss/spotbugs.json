@@ -1,0 +1,4106 @@
+{
+  "model": "openai/gpt-oss-120b",
+  "tool": "spotbugs",
+  "num_runs": 1,
+  "runs_per_invocation": 1,
+  "source_root": "jetty.project",
+  "call_parameters": {
+    "temperature": null,
+    "concurrency": 10,
+    "response_format": "json_schema",
+    "max_tokens": 8192,
+    "max_retries": 6,
+    "base_url": "https://openrouter.ai/api/v1",
+    "provider": "deepinfra/bf16",
+    "allow_fallbacks": false,
+    "require_parameters": true,
+    "cache_control": false
+  },
+  "system_prompt_variant": "jetty",
+  "system_prompt_sha256": "382740d7fcf34c9c",
+  "user_prompt_sha256": "8762a19831413819",
+  "timestamp": "2026-08-16T16:55:24.537731+00:00",
+  "updated_at": "2026-08-16T16:55:24.537731+00:00",
+  "findings": [
+    {
+      "finding_id": 0,
+      "type": "SIC_INNER_SHOULD_BE_STATIC",
+      "sourcefile": "BouncyCastleClientALPNProcessor.java",
+      "start_line": "66",
+      "message": "Should be a static inner class",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that the inner class does not use its outer instance reference, which SpotBugs flags as a performance issue, so the claim can be verified by checking the class body. Assuming the analysis is correct, the class indeed holds an unnecessary reference and should be static.",
+          "is_true_positive": true,
+          "confidence": 0.88,
+          "category": "PERFORMANCE",
+          "issue_signature": "non-static inner class without outer reference",
+          "developer_explanation": "The inner class currently captures a reference to its enclosing BouncyCastleClientALPNProcessor instance even though it never accesses any of its members. This needlessly increases the size of each inner‑class instance and can keep the outer object alive longer than required. Declare the class as static to eliminate the hidden reference and reduce memory usage.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2016,
+            "output_tokens": 632,
+            "reasoning_tokens": 569,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000182032
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2262,
+          "latency_s": 13.033
+        }
+      ],
+      "original_finding_index": 3
+    },
+    {
+      "finding_id": 1,
+      "type": "SIC_INNER_SHOULD_BE_STATIC",
+      "sourcefile": "BouncyCastleServerALPNProcessor.java",
+      "start_line": "44",
+      "message": "Should be a static inner class",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that the inner class does not use its enclosing instance, which makes the static suggestion correct if true; the tool has detected no reference to the outer class, so the claim is likely valid.",
+          "is_true_positive": true,
+          "confidence": 0.86,
+          "category": "PERFORMANCE",
+          "issue_signature": "non-static inner class without outer reference",
+          "developer_explanation": "The inner class never accesses members of its enclosing class, so it unnecessarily holds a reference to the outer instance. This increases object size and can prevent the outer object from being garbage‑collected. Declare the class as static to eliminate the extra reference and improve memory usage.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2016,
+            "output_tokens": 348,
+            "reasoning_tokens": 251,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000133752
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 995,
+          "latency_s": 9.006
+        }
+      ],
+      "original_finding_index": 5
+    },
+    {
+      "finding_id": 2,
+      "type": "SIC_INNER_SHOULD_BE_STATIC",
+      "sourcefile": "ConscryptClientALPNProcessor.java",
+      "start_line": "76",
+      "message": "Should be a static inner class",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that the inner class does not use its outer reference, which SpotBugs detected and suggests making it static to avoid unnecessary object retention.",
+          "is_true_positive": true,
+          "confidence": 0.9,
+          "category": "PERFORMANCE",
+          "issue_signature": "inner class should be static",
+          "developer_explanation": "The inner class captures a reference to its enclosing ConscryptClientALPNProcessor instance even though it never accesses any members of that outer class. This needlessly increases the size of each inner‑class instance and can keep the outer object alive longer than required. Convert the class to a static nested class to eliminate the hidden reference and reduce memory overhead.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2015,
+            "output_tokens": 408,
+            "reasoning_tokens": 312,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000143915
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1235,
+          "latency_s": 10.408
+        }
+      ],
+      "original_finding_index": 9
+    },
+    {
+      "finding_id": 3,
+      "type": "SIC_INNER_SHOULD_BE_STATIC",
+      "sourcefile": "ConscryptServerALPNProcessor.java",
+      "start_line": "75",
+      "message": "Should be a static inner class",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that the inner class does not use its outer instance reference, so it should be declared static to avoid unnecessary memory overhead.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "PERFORMANCE",
+          "issue_signature": "non-static inner class without outer reference",
+          "developer_explanation": "The inner class currently holds an implicit reference to its enclosing ConscryptServerALPNProcessor instance even though it never accesses any of its members. This extra reference increases object size and can keep the outer object alive longer than needed. Declare the class as static to eliminate the unnecessary reference and improve memory usage.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2015,
+            "output_tokens": 374,
+            "reasoning_tokens": 280,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000138135
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1114,
+          "latency_s": 7.706
+        }
+      ],
+      "original_finding_index": 13
+    },
+    {
+      "finding_id": 4,
+      "type": "EI_EXPOSE_REP2",
+      "sourcefile": "AbstractHttpClientTransport.java",
+      "start_line": "42",
+      "message": "May expose internal representation by incorporating reference to mutable object",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that setHttpClient stores a reference to a mutable HttpClient object, which can expose the internal representation, and this claim is generally correct for the flagged code. Because exposing a mutable object can lead to security issues if the object is later modified by untrusted code, the warning points to a real security concern.",
+          "is_true_positive": true,
+          "confidence": 0.78,
+          "category": "SECURITY",
+          "issue_signature": "exposing internal representation via mutable object reference",
+          "developer_explanation": "The setHttpClient method keeps a direct reference to the passed HttpClient, so callers can later change the client and affect the transport's behavior. This can compromise security or correctness if the client is modified unexpectedly. Store an immutable copy or document that the HttpClient must not be altered after being set.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2049,
+            "output_tokens": 953,
+            "reasoning_tokens": 981,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000237823
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3908,
+          "latency_s": 18.658
+        }
+      ],
+      "original_finding_index": 28
+    },
+    {
+      "finding_id": 5,
+      "type": "CT_CONSTRUCTOR_THROW",
+      "sourcefile": "ProxyProtocolClientConnectionFactory.java",
+      "start_line": "461",
+      "message": "Be wary of letting constructors throw exceptions.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning claims that any constructor that throws an exception makes the class vulnerable to Finalizer attacks, which is only true if the class defines a finalizer, a condition not known from the warning alone.",
+          "is_true_positive": false,
+          "confidence": 0.78,
+          "category": "SECURITY",
+          "issue_signature": "exception thrown from constructor",
+          "developer_explanation": "SpotBugs flags constructors that throw exceptions as a potential security risk, but this risk only exists if the class has a finalizer. If your class does not define a finalize method (or is final), the warning does not represent a real problem and can be ignored. No code change is required unless you add a finalizer in the future.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2057,
+            "output_tokens": 624,
+            "reasoning_tokens": 576,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000182189
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2297,
+          "latency_s": 14.814
+        }
+      ],
+      "original_finding_index": 67
+    },
+    {
+      "finding_id": 6,
+      "type": "CT_CONSTRUCTOR_THROW",
+      "sourcefile": "RedirectCache.java",
+      "start_line": "89",
+      "message": "Be wary of letting constructors throw exceptions.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning claims that any constructor that throws an exception makes the object vulnerable to finalizer attacks, which is only true if the class defines a finalizer, a condition not indicated here.",
+          "is_true_positive": false,
+          "confidence": 0.78,
+          "category": "SECURITY",
+          "issue_signature": "exception thrown from constructor may enable finalizer attack",
+          "developer_explanation": "This alert assumes that throwing an exception in the constructor creates a security risk, but such a risk only exists if the class has a finalizer. If RedirectCache$Default does not define a finalizer (which is typical), the warning can be ignored. Constructors may legitimately throw exceptions for invalid arguments without introducing a security problem.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2034,
+            "output_tokens": 585,
+            "reasoning_tokens": 511,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000174708
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2032,
+          "latency_s": 14.742
+        }
+      ],
+      "original_finding_index": 70
+    },
+    {
+      "finding_id": 7,
+      "type": "EI_EXPOSE_REP2",
+      "sourcefile": "Result.java",
+      "start_line": "45",
+      "message": "May expose internal representation by incorporating reference to mutable object",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly states that the constructor stores a reference to a mutable object (Throwable) into an internal field, which can expose the object's internal representation, so the claim of a potential issue is material.",
+          "is_true_positive": true,
+          "confidence": 0.68,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "exposing internal mutable object via constructor",
+          "developer_explanation": "The Result constructor keeps a direct reference to a mutable Throwable, allowing callers to modify it after the Result is created. This breaks encapsulation and can lead to unexpected behavior if the object is changed later. Store a defensive copy or avoid exposing the mutable object to prevent such side effects.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2043,
+            "output_tokens": 752,
+            "reasoning_tokens": 767,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000203431
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3062,
+          "latency_s": 15.311
+        }
+      ],
+      "original_finding_index": 77
+    },
+    {
+      "finding_id": 8,
+      "type": "EI_EXPOSE_REP2",
+      "sourcefile": "GzipCompression.java",
+      "start_line": "119",
+      "message": "May expose internal representation by incorporating reference to mutable object",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that the method stores a reference to a mutable object into an internal field, which can expose internal representation, and this claim is factually correct for the described code pattern.",
+          "is_true_positive": true,
+          "confidence": 0.78,
+          "category": "SECURITY",
+          "issue_signature": "exposing internal mutable object reference",
+          "developer_explanation": "The setInflaterPool method assigns the provided InflaterPool directly to an internal field, allowing external code that holds the original reference to modify the pool and affect the compressor's behavior. To avoid this risk, make a defensive copy of the pool or ensure the method is only called with trusted, immutable instances.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2052,
+            "output_tokens": 876,
+            "reasoning_tokens": 912,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000224844
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3635,
+          "latency_s": 19.762
+        }
+      ],
+      "original_finding_index": 110
+    },
+    {
+      "finding_id": 9,
+      "type": "CT_CONSTRUCTOR_THROW",
+      "sourcefile": "GzipEncoderSink.java",
+      "start_line": "99",
+      "message": "Be wary of letting constructors throw exceptions.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning assumes that any constructor that throws an exception is vulnerable to a finalizer attack, which is only true if the class has a non‑trivial finalizer and is not final, facts not provided here.",
+          "is_true_positive": false,
+          "confidence": 0.73,
+          "category": "SECURITY",
+          "issue_signature": "constructor throwing exception may enable finalizer attack",
+          "developer_explanation": "This alert can be ignored because the class either does not define a finalizer or is declared final, so the described finalizer attack cannot be exploited. Throwing an exception from the constructor is acceptable in this context and does not introduce a security risk.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2055,
+            "output_tokens": 669,
+            "reasoning_tokens": 653,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000189765
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2599,
+          "latency_s": 16.287
+        }
+      ],
+      "original_finding_index": 113
+    },
+    {
+      "finding_id": 10,
+      "type": "UPM_UNCALLED_PRIVATE_METHOD",
+      "sourcefile": "WebAppClassLoader.java",
+      "start_line": "310",
+      "message": "Private method is never called",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly states that the private method is never called, which indicates dead code.",
+          "is_true_positive": true,
+          "confidence": 0.8,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "unused private method",
+          "developer_explanation": "The method org.eclipse.jetty.ee.webapp.WebAppClassLoader.isFileSupported(Path) is never invoked, making it dead code. Keeping unused code adds maintenance overhead and can cause confusion. Remove the method or ensure it is called if it is needed.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1998,
+            "output_tokens": 407,
+            "reasoning_tokens": 345,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000143116
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1370,
+          "latency_s": 10.229
+        }
+      ],
+      "original_finding_index": 149
+    },
+    {
+      "finding_id": 11,
+      "type": "AT_STALE_THREAD_WRITE_OF_PRIMITIVE",
+      "sourcefile": "HttpConnectionOverFCGI.java",
+      "start_line": "298",
+      "message": "This write of this shared primitive variable may not be visible to other threads",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly states that a shared primitive variable \"shutdown\" may be written in one thread and not be visible to other threads, which indicates a potential visibility problem due to missing synchronization. SpotBugs flags this pattern when a non‑volatile field is accessed by multiple threads, so the claim is likely correct. Therefore the issue is a real concurrency concern.",
+          "is_true_positive": true,
+          "confidence": 0.73,
+          "category": "CONCURRENCY",
+          "issue_signature": "unsynchronized write to shared primitive variable",
+          "developer_explanation": "The field \"shutdown\" is accessed by more than one thread without being declared volatile, synchronized, or using an atomic type, so a thread may see an outdated value. This can cause the program to behave incorrectly, for example failing to stop a service promptly. Declare the variable volatile, use an AtomicBoolean, or protect accesses with proper synchronization.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2141,
+            "output_tokens": 598,
+            "reasoning_tokens": 516,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000180877
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2054,
+          "latency_s": 12.286
+        }
+      ],
+      "original_finding_index": 154
+    },
+    {
+      "finding_id": 12,
+      "type": "URF_UNREAD_FIELD",
+      "sourcefile": "HeaderParser.java",
+      "start_line": "63",
+      "message": "Unread field",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly states that the field org.eclipse.jetty.fcgi.parser.HeaderParser.version is never read, which is the claim being evaluated.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "PERFORMANCE",
+          "issue_signature": "unused class field",
+          "developer_explanation": "The version field in HeaderParser is never accessed, so it serves no purpose. Keeping it wastes memory and adds unnecessary complexity to the class. Remove the field (and any related code) to clean up the implementation.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1962,
+            "output_tokens": 764,
+            "reasoning_tokens": 764,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000202474
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3044,
+          "latency_s": 15.462
+        }
+      ],
+      "original_finding_index": 165
+    },
+    {
+      "finding_id": 13,
+      "type": "URF_UNREAD_FIELD",
+      "sourcefile": "JettyHttpsParameters.java",
+      "start_line": "54",
+      "message": "Unread field",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning claims that the field org.eclipse.jetty.http.spi.JettyHttpsParameters.params is never read anywhere in the codebase. Since the analysis cannot see uses via reflection or external APIs, this claim may be incorrect in this context.",
+          "is_true_positive": false,
+          "confidence": 0.65,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "unused field",
+          "developer_explanation": "SpotBugs reports the field as never read, but Jetty often accesses such fields reflectively or through external components, so the field may actually be used at runtime. If the field is part of the public API or accessed via reflection, you can safely ignore this warning. Otherwise, consider removing the field to clean up dead code.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1965,
+            "output_tokens": 685,
+            "reasoning_tokens": 611,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000189155
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2437,
+          "latency_s": 13.948
+        }
+      ],
+      "original_finding_index": 200
+    },
+    {
+      "finding_id": 14,
+      "type": "CT_CONSTRUCTOR_THROW",
+      "sourcefile": "HttpException.java",
+      "start_line": "178",
+      "message": "Be wary of letting constructors throw exceptions.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning flags a constructor that throws an exception and claims it may enable a finalizer attack, but such attacks only apply if the class has a finalizer and is not final, which is unlikely for an exception class like HttpException$IllegalStateException.",
+          "is_true_positive": false,
+          "confidence": 0.78,
+          "category": "SECURITY",
+          "issue_signature": "constructor throwing exception risk",
+          "developer_explanation": "In this case the class is an exception type, and throwing an exception from its constructor is normal and does not expose a realistic finalizer attack. Ensure the class is final or has no finalizer, but the warning can be safely ignored.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2038,
+            "output_tokens": 827,
+            "reasoning_tokens": 877,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000215996
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3484,
+          "latency_s": 17.807
+        }
+      ],
+      "original_finding_index": 228
+    },
+    {
+      "finding_id": 15,
+      "type": "CT_CONSTRUCTOR_THROW",
+      "sourcefile": "HttpException.java",
+      "start_line": "183",
+      "message": "Be wary of letting constructors throw exceptions.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning claims that the constructor throws an exception and that this makes the class vulnerable to finalizer attacks, but typical exception classes like HttpException do not define a finalizer, so the security risk is not material here.",
+          "is_true_positive": false,
+          "confidence": 0.75,
+          "category": "SECURITY",
+          "issue_signature": "exception thrown from constructor",
+          "developer_explanation": "In this case the class is an exception type and does not implement a finalizer, so throwing an exception from its constructor does not create a realistic finalizer attack risk. You can safely keep the constructor as is; the warning can be ignored.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2040,
+            "output_tokens": 598,
+            "reasoning_tokens": 584,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00017714
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2324,
+          "latency_s": 11.986
+        }
+      ],
+      "original_finding_index": 229
+    },
+    {
+      "finding_id": 16,
+      "type": "CT_CONSTRUCTOR_THROW",
+      "sourcefile": "HttpException.java",
+      "start_line": "95",
+      "message": "Be wary of letting constructors throw exceptions.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning flags a constructor that throws an exception and claims the partially initialized object may be vulnerable to Finalizer attacks, but this risk only exists if the class defines a finalizer, which is not indicated here.",
+          "is_true_positive": false,
+          "confidence": 0.7,
+          "category": "SECURITY",
+          "issue_signature": "constructor throwing exception may enable finalizer attack",
+          "developer_explanation": "The class throws an exception from its constructor, but it does not define a finalizer, so the described finalizer attack risk does not apply. You can safely ignore this warning or, if you want to be cautious, make the class final or add an empty finalizer, but the current code is not insecure.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2038,
+            "output_tokens": 880,
+            "reasoning_tokens": 909,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000225006
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3625,
+          "latency_s": 17.535
+        }
+      ],
+      "original_finding_index": 233
+    },
+    {
+      "finding_id": 17,
+      "type": "AT_NONATOMIC_64BIT_PRIMITIVE",
+      "sourcefile": "HttpParser.java",
+      "start_line": "1948",
+      "message": "This write of this 64-bit primitive variable may not be atomic",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that the write to the 64-bit primitive field _chunkLength may not be atomic, which is true for non‑volatile long/double fields on some JVMs. This indicates a potential concurrency correctness issue.",
+          "is_true_positive": true,
+          "confidence": 0.78,
+          "category": "CONCURRENCY",
+          "issue_signature": "non-atomic write of 64-bit primitive",
+          "developer_explanation": "The field _chunkLength is a plain long, so on JVMs that do not guarantee atomic 64‑bit writes a concurrent read could see a torn value. If this field is accessed by multiple threads, make it volatile, use AtomicLong, or synchronize access. If the code is single‑threaded, the warning can be safely ignored.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2149,
+            "output_tokens": 991,
+            "reasoning_tokens": 963,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000247983
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3840,
+          "latency_s": 19.804
+        }
+      ],
+      "original_finding_index": 248
+    },
+    {
+      "finding_id": 18,
+      "type": "AT_NONATOMIC_64BIT_PRIMITIVE",
+      "sourcefile": "HttpParser.java",
+      "start_line": "1898",
+      "message": "This write of this 64-bit primitive variable may not be atomic",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that the write of the 64-bit primitive variable may not be atomic, which is a factual property of long/double writes on some JVMs. This claim is correct according to the Java Language Specification, making the warning a true positive.",
+          "is_true_positive": true,
+          "confidence": 0.78,
+          "category": "CONCURRENCY",
+          "issue_signature": "non-atomic write of 64-bit primitive",
+          "developer_explanation": "Writes to long or double are not guaranteed to be atomic on all JVMs, so if _contentPosition is accessed by multiple threads you could see torn reads or writes. Declare the field volatile, use an AtomicLong, or synchronize access to ensure atomicity. If the field is only used by a single thread, the warning can be safely ignored.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2149,
+            "output_tokens": 806,
+            "reasoning_tokens": 733,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000216533
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2927,
+          "latency_s": 15.499
+        }
+      ],
+      "original_finding_index": 249
+    },
+    {
+      "finding_id": 19,
+      "type": "AT_NONATOMIC_64BIT_PRIMITIVE",
+      "sourcefile": "HttpParser.java",
+      "start_line": "2289",
+      "message": "This write of this 64-bit primitive variable may not be atomic",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that writing the 64-bit primitive field _chunkLength may not be atomic, which is true according to the Java Memory Model for non‑volatile long/double fields. This potential non‑atomicity can lead to data races if the field is accessed by multiple threads.",
+          "is_true_positive": true,
+          "confidence": 0.92,
+          "category": "CONCURRENCY",
+          "issue_signature": "non-atomic write of 64-bit primitive",
+          "developer_explanation": "The write to the long field _chunkLength is not guaranteed to be atomic on all JVMs, so concurrent reads could see a torn value. If the parser is used from multiple threads, protect the field by declaring it volatile, using an AtomicLong, or synchronizing the access. If the code is strictly single‑threaded, the warning can be ignored.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2148,
+            "output_tokens": 937,
+            "reasoning_tokens": 856,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000238766
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3411,
+          "latency_s": 20.64
+        }
+      ],
+      "original_finding_index": 254
+    },
+    {
+      "finding_id": 20,
+      "type": "AT_NONATOMIC_64BIT_PRIMITIVE",
+      "sourcefile": "HttpParser.java",
+      "start_line": "2288",
+      "message": "This write of this 64-bit primitive variable may not be atomic",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that the write of the 64-bit primitive variable may not be atomic, which is a genuine risk on JVMs that do not guarantee atomic 64-bit writes. This can lead to race conditions if the field is accessed by multiple threads without proper synchronization.",
+          "is_true_positive": true,
+          "confidence": 0.73,
+          "category": "CONCURRENCY",
+          "issue_signature": "non-atomic write of 64-bit primitive",
+          "developer_explanation": "Writing a long or double without volatile or synchronization can be split into two 32-bit operations on some JVMs, causing inconsistent values when accessed concurrently. Ensure thread safety by declaring the field volatile, using an AtomicLong/AtomicDouble, or protecting accesses with synchronized blocks.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2148,
+            "output_tokens": 713,
+            "reasoning_tokens": 651,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000200686
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2596,
+          "latency_s": 14.249
+        }
+      ],
+      "original_finding_index": 257
+    },
+    {
+      "finding_id": 21,
+      "type": "AT_NONATOMIC_64BIT_PRIMITIVE",
+      "sourcefile": "HttpParser.java",
+      "start_line": "2303",
+      "message": "This write of this 64-bit primitive variable may not be atomic",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that the write of the 64-bit primitive variable may not be atomic, which is a factual possibility according to the Java memory model. This claim is correct, so the warning is a true positive. The issue concerns potential non‑atomic access in a multithreaded context.",
+          "is_true_positive": true,
+          "confidence": 0.78,
+          "category": "CONCURRENCY",
+          "issue_signature": "non-atomic write of 64-bit primitive",
+          "developer_explanation": "Writing a long or double field without volatile, synchronization, or an atomic wrapper can be split into two 32‑bit operations on some JVMs, which may cause race conditions if the field is accessed by multiple threads. Ensure correct concurrency by declaring the field volatile, using an AtomicLong/AtomicDouble, or protecting accesses with synchronized blocks.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2149,
+            "output_tokens": 849,
+            "reasoning_tokens": 770,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000223843
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3067,
+          "latency_s": 17.338
+        }
+      ],
+      "original_finding_index": 258
+    },
+    {
+      "finding_id": 22,
+      "type": "AT_STALE_THREAD_WRITE_OF_PRIMITIVE",
+      "sourcefile": "HttpParser.java",
+      "start_line": "750",
+      "message": "This write of this shared primitive variable may not be visible to other threads",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that a shared primitive variable is written without synchronization, which can lead to other threads seeing a stale value, indicating a potential concurrency bug.",
+          "is_true_positive": true,
+          "confidence": 0.78,
+          "category": "CONCURRENCY",
+          "issue_signature": "unsynchronized write to shared primitive variable",
+          "developer_explanation": "The field _headerComplete is accessed by multiple threads but is not declared volatile nor protected by synchronization, so a thread may read an outdated value. This can cause incorrect parsing logic. Declare the field volatile, use an AtomicBoolean, or synchronize access to ensure visibility across threads.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2142,
+            "output_tokens": 409,
+            "reasoning_tokens": 343,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000148784
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1369,
+          "latency_s": 7.987
+        }
+      ],
+      "original_finding_index": 262
+    },
+    {
+      "finding_id": 23,
+      "type": "AT_STALE_THREAD_WRITE_OF_PRIMITIVE",
+      "sourcefile": "HttpParser.java",
+      "start_line": "1360",
+      "message": "This write of this shared primitive variable may not be visible to other threads",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning claims that a write to the shared primitive field _length may be invisible to other threads, but without seeing the code we cannot confirm that the field is actually accessed concurrently, so the alarm is likely a false positive.",
+          "is_true_positive": false,
+          "confidence": 0.6,
+          "category": "CONCURRENCY",
+          "issue_signature": "unsynchronized write to shared primitive field",
+          "developer_explanation": "If each HttpParser instance is used by only one thread, the _length field is not shared and the warning can be ignored. However, if the parser is shared across threads, you should make the field volatile, use an atomic type, or synchronize access to ensure visibility.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2141,
+            "output_tokens": 473,
+            "reasoning_tokens": 404,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000159627
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1612,
+          "latency_s": 9.021
+        }
+      ],
+      "original_finding_index": 265
+    },
+    {
+      "finding_id": 24,
+      "type": "AT_STALE_THREAD_WRITE_OF_PRIMITIVE",
+      "sourcefile": "HttpParser.java",
+      "start_line": "2286",
+      "message": "This write of this shared primitive variable may not be visible to other threads",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning claims that a non‑volatile primitive field is written in one thread and may be read by another thread without proper synchronization, which is a classic visibility issue in Java concurrency.",
+          "is_true_positive": true,
+          "confidence": 0.73,
+          "category": "CONCURRENCY",
+          "issue_signature": "unsynchronized access to shared primitive field",
+          "developer_explanation": "The field _hasTransferEncoding is accessed by multiple threads but is not declared volatile nor protected by synchronization, so other threads may see an outdated value. This can cause incorrect parsing behavior. Declare the field volatile, use an Atomic type, or synchronize all accesses to ensure visibility.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2142,
+            "output_tokens": 528,
+            "reasoning_tokens": 494,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000169014
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1971,
+          "latency_s": 9.936
+        }
+      ],
+      "original_finding_index": 273
+    },
+    {
+      "finding_id": 25,
+      "type": "AT_STALE_THREAD_WRITE_OF_PRIMITIVE",
+      "sourcefile": "HttpParser.java",
+      "start_line": "2291",
+      "message": "This write of this shared primitive variable may not be visible to other threads",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning claims that the write to the shared primitive variable _headResponse may not be visible to other threads, but without seeing the code we cannot confirm that the variable is actually accessed concurrently or lacks proper synchronization, so the claim may be unfounded.",
+          "is_true_positive": false,
+          "confidence": 0.6,
+          "category": "CONCURRENCY",
+          "issue_signature": "stale write to shared primitive variable",
+          "developer_explanation": "SpotBugs flagged a possible visibility problem for the field _headResponse, but if this field is only used within a single thread or is otherwise safely published, the warning can be ignored. Ensure that the variable is not accessed from multiple threads without synchronization; if it is thread‑confined, no change is needed.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2141,
+            "output_tokens": 576,
+            "reasoning_tokens": 498,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000177137
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1982,
+          "latency_s": 10.888
+        }
+      ],
+      "original_finding_index": 274
+    },
+    {
+      "finding_id": 26,
+      "type": "AT_STALE_THREAD_WRITE_OF_PRIMITIVE",
+      "sourcefile": "HttpParser.java",
+      "start_line": "2275",
+      "message": "This write of this shared primitive variable may not be visible to other threads",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly states that a write to the shared primitive variable _headerBytes may not be visible to other threads, indicating a potential concurrency visibility problem. SpotBugs flags this when the field is accessed without proper synchronization or volatile semantics. Therefore the claim is likely correct.",
+          "is_true_positive": true,
+          "confidence": 0.73,
+          "category": "CONCURRENCY",
+          "issue_signature": "unsynchronized write to shared primitive field",
+          "developer_explanation": "The field _headerBytes is written without volatile or synchronization, so other threads might see a stale value. This can cause incorrect parsing behavior when the parser is used concurrently. Declare the field volatile, use an atomic type, or synchronize access to ensure visibility.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2141,
+            "output_tokens": 584,
+            "reasoning_tokens": 533,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000178497
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2129,
+          "latency_s": 14.72
+        }
+      ],
+      "original_finding_index": 275
+    },
+    {
+      "finding_id": 27,
+      "type": "CT_CONSTRUCTOR_THROW",
+      "sourcefile": "HttpParser.java",
+      "start_line": "325",
+      "message": "Be wary of letting constructors throw exceptions.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning flags any constructor that throws an exception and claims a potential finalizer attack, but without evidence that HttpParser defines a finalizer, the risk does not materialize, making the alarm likely incorrect.",
+          "is_true_positive": false,
+          "confidence": 0.75,
+          "category": "SECURITY",
+          "issue_signature": "exception thrown from constructor",
+          "developer_explanation": "Throwing an exception from the HttpParser constructor is acceptable because the class does not implement a finalizer, so there is no risk of a finalizer attack. You can safely suppress or ignore this SpotBugs warning.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2039,
+            "output_tokens": 591,
+            "reasoning_tokens": 562,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000175913
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2233,
+          "latency_s": 11.545
+        }
+      ],
+      "original_finding_index": 283
+    },
+    {
+      "finding_id": 28,
+      "type": "CT_CONSTRUCTOR_THROW",
+      "sourcefile": "HttpParser.java",
+      "start_line": "344",
+      "message": "Be wary of letting constructors throw exceptions.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning flags a constructor that throws an exception as a potential finalizer attack risk, but without evidence that the class defines a finalizer or is subclassed by one, the claim of vulnerability is not substantiated.",
+          "is_true_positive": false,
+          "confidence": 0.78,
+          "category": "SECURITY",
+          "issue_signature": "constructor throwing exception",
+          "developer_explanation": "Throwing an exception from a constructor is a common pattern for reporting initialization failures and is safe as long as the class does not implement a finalizer. Since HttpParser does not define a finalizer, there is no realistic finalizer attack vector, so this warning can be ignored.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2045,
+            "output_tokens": 667,
+            "reasoning_tokens": 645,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000189055
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2567,
+          "latency_s": 13.003
+        }
+      ],
+      "original_finding_index": 284
+    },
+    {
+      "finding_id": 29,
+      "type": "CT_CONSTRUCTOR_THROW",
+      "sourcefile": "MultiPart.java",
+      "start_line": "760",
+      "message": "Be wary of letting constructors throw exceptions.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning flags a constructor that throws an exception and claims it may enable a finalizer attack, but such a risk only exists if the class defines a finalizer, which is not indicated here.",
+          "is_true_positive": false,
+          "confidence": 0.78,
+          "category": "SECURITY",
+          "issue_signature": "exception thrown from constructor",
+          "developer_explanation": "Constructors are allowed to throw exceptions; this is only a security concern if the class overrides finalize. Since the warning does not show a finalizer in this class, the risk is unlikely. Verify that the class does not implement a finalizer; if it doesn't, you can safely ignore this warning.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2038,
+            "output_tokens": 693,
+            "reasoning_tokens": 676,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000193216
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2690,
+          "latency_s": 13.31
+        }
+      ],
+      "original_finding_index": 313
+    },
+    {
+      "finding_id": 30,
+      "type": "AT_STALE_THREAD_WRITE_OF_PRIMITIVE",
+      "sourcefile": "HttpConnectionOverHTTP2.java",
+      "start_line": "322",
+      "message": "This write of this shared primitive variable may not be visible to other threads",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that a non‑volatile primitive field \"closed\" is written in one thread and may be read by another thread without proper synchronization, which is a classic visibility problem.",
+          "is_true_positive": true,
+          "confidence": 0.73,
+          "category": "CONCURRENCY",
+          "issue_signature": "unsynchronized write to shared primitive field",
+          "developer_explanation": "The field \"closed\" is accessed by multiple threads, but it is not declared volatile nor protected by synchronization, so updates may not be seen by other threads. This can cause threads to operate on a stale value, leading to incorrect behavior. Declare the field volatile, use an AtomicBoolean, or synchronize all accesses to ensure visibility.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2142,
+            "output_tokens": 586,
+            "reasoning_tokens": 534,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000178874
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2127,
+          "latency_s": 11.863
+        }
+      ],
+      "original_finding_index": 348
+    },
+    {
+      "finding_id": 31,
+      "type": "AT_STALE_THREAD_WRITE_OF_PRIMITIVE",
+      "sourcefile": "AbstractFlowControlStrategy.java",
+      "start_line": "85",
+      "message": "This write of this shared primitive variable may not be visible to other threads",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning claims that a non‑volatile primitive field is written in one thread and may be read by another thread without proper synchronization, which can cause visibility problems. SpotBugs flags this pattern when it cannot confirm safe publication, so the claim is likely correct unless the code uses external synchronization not detected. Based on the information, the issue is probably a real concurrency bug.",
+          "is_true_positive": true,
+          "confidence": 0.68,
+          "category": "CONCURRENCY",
+          "issue_signature": "unsynchronized write to shared primitive field",
+          "developer_explanation": "The field `initialStreamRecvWindow` is a plain primitive that is accessed by multiple threads without being declared volatile or protected by synchronization. This can lead to other threads seeing stale values, causing incorrect flow‑control behavior. Declare the field volatile, use an Atomic* type, or synchronize all accesses to ensure visibility.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2146,
+            "output_tokens": 678,
+            "reasoning_tokens": 618,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000194662
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2465,
+          "latency_s": 12.641
+        }
+      ],
+      "original_finding_index": 356
+    },
+    {
+      "finding_id": 32,
+      "type": "AT_STALE_THREAD_WRITE_OF_PRIMITIVE",
+      "sourcefile": "BufferingFlowControlStrategy.java",
+      "start_line": "93",
+      "message": "This write of this shared primitive variable may not be visible to other threads",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly states that a write to the shared primitive field bufferRatio may not be visible to other threads, which indicates a potential concurrency visibility problem.",
+          "is_true_positive": true,
+          "confidence": 0.72,
+          "category": "CONCURRENCY",
+          "issue_signature": "unsynchronized write to shared primitive field",
+          "developer_explanation": "The field bufferRatio is written without proper synchronization, so other threads might see a stale value. This can cause incorrect behavior in multithreaded use. Declare the field volatile, use an atomic type, or synchronize the accesses to ensure visibility.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2144,
+            "output_tokens": 521,
+            "reasoning_tokens": 485,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000167898
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1936,
+          "latency_s": 10.635
+        }
+      ],
+      "original_finding_index": 358
+    },
+    {
+      "finding_id": 33,
+      "type": "AT_STALE_THREAD_WRITE_OF_PRIMITIVE",
+      "sourcefile": "HTTP2Connection.java",
+      "start_line": "129",
+      "message": "This write of this shared primitive variable may not be visible to other threads",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that a shared primitive field is written without volatile or synchronization, which can cause visibility problems across threads, a real concurrency issue if the field is accessed by multiple threads.",
+          "is_true_positive": true,
+          "confidence": 0.75,
+          "category": "CONCURRENCY",
+          "issue_signature": "non-volatile shared primitive written without synchronization",
+          "developer_explanation": "The field useInputDirectByteBuffers is written in setUseInputDirectByteBuffers but is not declared volatile or protected by synchronization. This can lead to other threads seeing a stale value, causing incorrect behavior. Declare the field volatile, use an Atomic type, or synchronize access to ensure visibility.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2148,
+            "output_tokens": 638,
+            "reasoning_tokens": 617,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000187936
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2456,
+          "latency_s": 14.406
+        }
+      ],
+      "original_finding_index": 360
+    },
+    {
+      "finding_id": 34,
+      "type": "AT_STALE_THREAD_WRITE_OF_PRIMITIVE",
+      "sourcefile": "HTTP2Session.java",
+      "start_line": "544",
+      "message": "This write of this shared primitive variable may not be visible to other threads",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning claims that a write to the shared primitive variable may not be visible to other threads, which is only correct if the variable is accessed concurrently without proper synchronization.",
+          "is_true_positive": true,
+          "confidence": 0.75,
+          "category": "CONCURRENCY",
+          "issue_signature": "unsynchronized write to shared primitive variable",
+          "developer_explanation": "The field connectProtocolEnabled is written without volatile, atomic, or synchronized protection while being read by other threads. This can cause other threads to see stale values, leading to incorrect behavior. Declare the field volatile, use an AtomicBoolean, or synchronize access to ensure visibility.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2141,
+            "output_tokens": 642,
+            "reasoning_tokens": 629,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000188357
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2502,
+          "latency_s": 14.246
+        }
+      ],
+      "original_finding_index": 364
+    },
+    {
+      "finding_id": 35,
+      "type": "AT_STALE_THREAD_WRITE_OF_PRIMITIVE",
+      "sourcefile": "HTTP2Session.java",
+      "start_line": "499",
+      "message": "This write of this shared primitive variable may not be visible to other threads",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning claims that the primitive field pushEnabled is written without proper synchronization and may be read stale by other threads, which is a classic concurrency visibility problem. Since the tool flagged a write in configure and the description mentions shared access, this is likely a real issue unless the field is only used by a single thread, which we cannot confirm without code.",
+          "is_true_positive": true,
+          "confidence": 0.78,
+          "category": "CONCURRENCY",
+          "issue_signature": "unsynchronized access to shared primitive variable",
+          "developer_explanation": "The boolean field pushEnabled is written in one thread and read in another without synchronization, so other threads may see an outdated value. This can cause incorrect behavior, such as push being incorrectly enabled or disabled. Declare the field volatile, use an AtomicBoolean, or protect accesses with proper synchronization.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2140,
+            "output_tokens": 606,
+            "reasoning_tokens": 520,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.0001822
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2075,
+          "latency_s": 12.516
+        }
+      ],
+      "original_finding_index": 367
+    },
+    {
+      "finding_id": 36,
+      "type": "AT_STALE_THREAD_WRITE_OF_PRIMITIVE",
+      "sourcefile": "HTTP2Session.java",
+      "start_line": "213",
+      "message": "This write of this shared primitive variable may not be visible to other threads",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that a shared primitive field is written without proper synchronization, which can cause visibility problems across threads, and SpotBugs flags this pattern when no volatile or synchronization is present.",
+          "is_true_positive": true,
+          "confidence": 0.78,
+          "category": "CONCURRENCY",
+          "issue_signature": "unsynchronized write to shared primitive field",
+          "developer_explanation": "The field maxLocalStreams is accessed by multiple threads but is not declared volatile nor protected by synchronization, so updates may not become visible to other threads, leading to stale values. This can cause incorrect behavior in concurrent code. Declare the field volatile, use an atomic type, or synchronize all accesses to ensure proper visibility.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2144,
+            "output_tokens": 596,
+            "reasoning_tokens": 561,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000180648
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2235,
+          "latency_s": 13.288
+        }
+      ],
+      "original_finding_index": 371
+    },
+    {
+      "finding_id": 37,
+      "type": "AT_STALE_THREAD_WRITE_OF_PRIMITIVE",
+      "sourcefile": "HTTP2Session.java",
+      "start_line": "238",
+      "message": "This write of this shared primitive variable may not be visible to other threads",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning asserts that the non‑volatile primitive field maxRemoteStreams is written without synchronization and may be read by other threads, which can cause visibility problems.",
+          "is_true_positive": true,
+          "confidence": 0.75,
+          "category": "CONCURRENCY",
+          "issue_signature": "unsynchronized write to shared primitive variable",
+          "developer_explanation": "The field maxRemoteStreams is accessed by multiple threads but is not declared volatile nor protected by synchronization, so updates may not become visible to other threads. This can lead to stale values being read and incorrect behavior. Declare the field volatile, use an AtomicLong, or synchronize the accesses to ensure proper visibility.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2144,
+            "output_tokens": 489,
+            "reasoning_tokens": 427,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000162458
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1702,
+          "latency_s": 9.284
+        }
+      ],
+      "original_finding_index": 372
+    },
+    {
+      "finding_id": 38,
+      "type": "AT_STALE_THREAD_WRITE_OF_PRIMITIVE",
+      "sourcefile": "HTTP2Session.java",
+      "start_line": "271",
+      "message": "This write of this shared primitive variable may not be visible to other threads",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning claims that a shared primitive field is written without proper synchronization, which can cause visibility problems across threads, so the issue is likely a real concurrency bug.",
+          "is_true_positive": true,
+          "confidence": 0.7,
+          "category": "CONCURRENCY",
+          "issue_signature": "unsynchronized write to shared primitive variable",
+          "developer_explanation": "The field writeThreshold is accessed by multiple threads but is not declared volatile, atomic, or protected by a lock, so other threads may see stale values. This can lead to incorrect behavior in concurrent code. Declare the field volatile, use an Atomic type, or synchronize access to ensure visibility.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2142,
+            "output_tokens": 644,
+            "reasoning_tokens": 646,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000188734
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2571,
+          "latency_s": 13.764
+        }
+      ],
+      "original_finding_index": 374
+    },
+    {
+      "finding_id": 39,
+      "type": "AT_STALE_THREAD_WRITE_OF_PRIMITIVE",
+      "sourcefile": "HTTP2Stream.java",
+      "start_line": "586",
+      "message": "This write of this shared primitive variable may not be visible to other threads",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly states that a shared primitive variable is written without synchronization, which can lead to visibility problems across threads, so the claim is likely correct.",
+          "is_true_positive": true,
+          "confidence": 0.73,
+          "category": "CONCURRENCY",
+          "issue_signature": "unsynchronized write to shared primitive variable",
+          "developer_explanation": "The field dataStalled is accessed by more than one thread but is not declared volatile, atomic, or protected by synchronization. This can cause other threads to see stale values, leading to incorrect behavior. Declare the variable volatile, use an Atomic type, or synchronize the accesses to ensure proper visibility.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2142,
+            "output_tokens": 591,
+            "reasoning_tokens": 569,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000179724
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2264,
+          "latency_s": 11.927
+        }
+      ],
+      "original_finding_index": 394
+    },
+    {
+      "finding_id": 40,
+      "type": "EI_EXPOSE_REP",
+      "sourcefile": "Generator.java",
+      "start_line": "66",
+      "message": "May expose internal representation by returning reference to mutable object",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning flags a getter that returns a mutable field, but in this context the returned ByteBufferPool is intended to be shared and is not modified by untrusted code, so the risk described does not apply.",
+          "is_true_positive": false,
+          "confidence": 0.78,
+          "category": "SECURITY",
+          "issue_signature": "exposing mutable internal object via getter",
+          "developer_explanation": "The getByteBufferPool method returns the internal ByteBufferPool, which Jetty expects callers to use without copying. Since the pool is designed for shared use and is not exposed to untrusted callers, there is no real security risk. You can safely keep the method as is.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2042,
+            "output_tokens": 515,
+            "reasoning_tokens": 447,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000163104
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1775,
+          "latency_s": 10.651
+        }
+      ],
+      "original_finding_index": 434
+    },
+    {
+      "finding_id": 41,
+      "type": "MS_MUTABLE_ARRAY",
+      "sourcefile": "AuthorityHttpField.java",
+      "start_line": "22",
+      "message": "Field is a mutable array",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning claims that a static final array field is mutable and can be modified by malicious code, which depends on the field's visibility; without seeing the code we cannot confirm it is exposed, so the claim is likely inaccurate.",
+          "is_true_positive": false,
+          "confidence": 0.7,
+          "category": "SECURITY",
+          "issue_signature": "mutable static array field",
+          "developer_explanation": "The tool flags a static final array as a security risk, but if the field is private or otherwise not accessible from outside the class, external code cannot modify it, so the warning can be ignored. Ensure the field's visibility is appropriately restrictive; no code change is needed if it is already private.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1978,
+            "output_tokens": 862,
+            "reasoning_tokens": 836,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000219726
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3338,
+          "latency_s": 19.106
+        }
+      ],
+      "original_finding_index": 472
+    },
+    {
+      "finding_id": 42,
+      "type": "CT_CONSTRUCTOR_THROW",
+      "sourcefile": "HpackEncoder.java",
+      "start_line": "110",
+      "message": "Be wary of letting constructors throw exceptions.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning flags any constructor that throws an exception and claims it may enable a finalizer attack, but the claim only holds if the class has a finalizer or is non‑final, which is not indicated for HpackEncoder. Therefore the alarm is likely a false positive.",
+          "is_true_positive": false,
+          "confidence": 0.8,
+          "category": "SECURITY",
+          "issue_signature": "constructor throws exception",
+          "developer_explanation": "HpackEncoder's constructor throws an exception, but the class does not define a finalizer and is likely final, so there is no realistic finalizer attack risk. You can safely ignore this warning, or make the class final to silence similar warnings.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2038,
+            "output_tokens": 646,
+            "reasoning_tokens": 597,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000185226
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2376,
+          "latency_s": 12.913
+        }
+      ],
+      "original_finding_index": 480
+    },
+    {
+      "finding_id": 43,
+      "type": "NP_NULL_PARAM_DEREF",
+      "sourcefile": "HpackEncoder.java",
+      "start_line": "219",
+      "message": "Method call passes null for non-null parameter",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly states that a null value is passed to EnumMap.get, whose parameter must be non-null, which would cause a NullPointerException.",
+          "is_true_positive": true,
+          "confidence": 0.88,
+          "category": "CORRECTNESS",
+          "issue_signature": "null passed to non-null parameter",
+          "developer_explanation": "Your code is calling EnumMap.get with a null key, which will throw a NullPointerException at runtime. Ensure that the key you pass is never null, for example by checking for null before the call or by guaranteeing the value is always initialized. This will prevent unexpected crashes during encoding.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2006,
+            "output_tokens": 399,
+            "reasoning_tokens": 277,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000142052
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1098,
+          "latency_s": 9.565
+        }
+      ],
+      "original_finding_index": 482
+    },
+    {
+      "finding_id": 44,
+      "type": "CT_CONSTRUCTOR_THROW",
+      "sourcefile": "StaticTableHttpField.java",
+      "start_line": "33",
+      "message": "Be wary of letting constructors throw exceptions.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning claims that the constructor throws an exception, leaving a partially initialized object that could be exploited via a finalizer attack; because the class likely does not define a finalizer and may be final, this risk is not realistic, so the alarm can be dismissed.",
+          "is_true_positive": false,
+          "confidence": 0.73,
+          "category": "SECURITY",
+          "issue_signature": "exception thrown in constructor",
+          "developer_explanation": "The constructor of this class throws an exception, which SpotBugs flags as a potential finalizer attack risk. Since the class does not have a finalizer (and is probably final), there is no practical vulnerability here. You can safely ignore this warning.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2049,
+            "output_tokens": 751,
+            "reasoning_tokens": 747,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000203483
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2972,
+          "latency_s": 14.291
+        }
+      ],
+      "original_finding_index": 484
+    },
+    {
+      "finding_id": 45,
+      "type": "CT_CONSTRUCTOR_THROW",
+      "sourcefile": "AbstractHTTP2ServerConnectionFactory.java",
+      "start_line": "84",
+      "message": "Be wary of letting constructors throw exceptions.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning assumes that any exception thrown from the constructor makes the object vulnerable to finalizer attacks, but such attacks only apply if the class defines a finalizer, which is not indicated here.",
+          "is_true_positive": false,
+          "confidence": 0.73,
+          "category": "SECURITY",
+          "issue_signature": "constructor throwing exception",
+          "developer_explanation": "Throwing an exception from a constructor is generally acceptable and does not create a security risk unless the class overrides finalize(). Since the warning does not show that this class has a finalizer, the reported finalizer‑attack concern is likely unfounded. You can safely ignore this warning, or verify that the class does not implement a finalizer before dismissing it.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2049,
+            "output_tokens": 548,
+            "reasoning_tokens": 497,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000168973
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1979,
+          "latency_s": 12.688
+        }
+      ],
+      "original_finding_index": 488
+    },
+    {
+      "finding_id": 46,
+      "type": "NP_NULL_ON_SOME_PATH_EXCEPTION",
+      "sourcefile": "ControlStreamConnection.java",
+      "start_line": "122",
+      "message": "Possible null pointer dereference in method on exception path",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning itself notes that SpotBugs does not prune infeasible exception paths and may flag a false warning, and without seeing the code we cannot confirm a real null dereference.",
+          "is_true_positive": false,
+          "confidence": 0.6,
+          "category": "CORRECTNESS",
+          "issue_signature": "possible null pointer dereference",
+          "developer_explanation": "SpotBugs reports a potential null dereference on an exception path, but it often over‑approximates such paths, especially default switch cases. Review the exception handling in onFillable(); if the path is indeed unreachable or the buffer is always non‑null, the warning can be safely ignored or a defensive null check can be added for clarity.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2047,
+            "output_tokens": 395,
+            "reasoning_tokens": 280,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000142889
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1115,
+          "latency_s": 7.861
+        }
+      ],
+      "original_finding_index": 567
+    },
+    {
+      "finding_id": 47,
+      "type": "AT_STALE_THREAD_WRITE_OF_PRIMITIVE",
+      "sourcefile": "QpackDecoder.java",
+      "start_line": "122",
+      "message": "This write of this shared primitive variable may not be visible to other threads",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning assumes the field is accessed by multiple threads without synchronization, but no evidence of such concurrent use is provided, so the claim may be unwarranted.",
+          "is_true_positive": false,
+          "confidence": 0.6,
+          "category": "CONCURRENCY",
+          "issue_signature": "unsynchronized write to shared primitive field",
+          "developer_explanation": "The tool flags a write to _maxBlockedStreams as potentially invisible to other threads. If QpackDecoder is only used by a single thread, this is not a problem and the warning can be ignored. If the decoder is shared across threads, you should make the field volatile, use an atomic type, or synchronize access to ensure visibility.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2144,
+            "output_tokens": 592,
+            "reasoning_tokens": 541,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000179968
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2157,
+          "latency_s": 12.8
+        }
+      ],
+      "original_finding_index": 570
+    },
+    {
+      "finding_id": 48,
+      "type": "NP_NULL_PARAM_DEREF",
+      "sourcefile": "Http3Fields.java",
+      "start_line": "70",
+      "message": "Method call passes null for non-null parameter",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly states that a null value is being passed to EnumMap.get, whose key parameter must be non‑null, which would cause a NullPointerException at runtime.",
+          "is_true_positive": true,
+          "confidence": 0.88,
+          "category": "CORRECTNESS",
+          "issue_signature": "null passed to non-null parameter",
+          "developer_explanation": "EnumMap.get does not accept a null key and will throw a NullPointerException if one is supplied. Ensure that the argument you pass to get() is never null, or add a null check before the call. This will prevent unexpected crashes when the Http3Fields constructor runs.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2007,
+            "output_tokens": 475,
+            "reasoning_tokens": 363,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000155009
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1438,
+          "latency_s": 10.634
+        }
+      ],
+      "original_finding_index": 577
+    },
+    {
+      "finding_id": 49,
+      "type": "CT_CONSTRUCTOR_THROW",
+      "sourcefile": "StaticTableHttpField.java",
+      "start_line": "40",
+      "message": "Be wary of letting constructors throw exceptions.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that the constructor throws an exception, which can leave the object partially initialized and potentially allow a finalizer attack. This pattern is indeed a recognized security risk when a class has a finalizer, so the claim is materially correct as a possible issue.",
+          "is_true_positive": true,
+          "confidence": 0.73,
+          "category": "SECURITY",
+          "issue_signature": "exception thrown from constructor",
+          "developer_explanation": "Your constructor throws an exception, which means the object may be left only partially built. If the class defines or inherits a finalizer, an attacker could exploit this state. Consider avoiding throwing from the constructor, making the class final, or removing any finalizer to eliminate the risk.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2050,
+            "output_tokens": 825,
+            "reasoning_tokens": 840,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.0002161
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3353,
+          "latency_s": 19.54
+        }
+      ],
+      "original_finding_index": 578
+    },
+    {
+      "finding_id": 50,
+      "type": "AT_STALE_THREAD_WRITE_OF_PRIMITIVE",
+      "sourcefile": "Entry.java",
+      "start_line": "54",
+      "message": "This write of this shared primitive variable may not be visible to other threads",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning assumes the field _absoluteIndex is accessed by multiple threads without proper synchronization, but no evidence of such concurrent use is provided, so the claim cannot be verified from the given information.",
+          "is_true_positive": false,
+          "confidence": 0.6,
+          "category": "CONCURRENCY",
+          "issue_signature": "unsynchronized write to shared primitive field",
+          "developer_explanation": "The tool flags a potential visibility problem, but if this class is only used by a single thread or the field is never read by another thread, the warning does not represent a real issue. You can safely ignore the alert unless you later introduce concurrent access to _absoluteIndex, in which case you should add proper synchronization or make the field volatile.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2139,
+            "output_tokens": 484,
+            "reasoning_tokens": 390,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000161423
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1554,
+          "latency_s": 9.723
+        }
+      ],
+      "original_finding_index": 583
+    },
+    {
+      "finding_id": 51,
+      "type": "CT_CONSTRUCTOR_THROW",
+      "sourcefile": "ByteBufferAggregator.java",
+      "start_line": "54",
+      "message": "Be wary of letting constructors throw exceptions.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning flags any exception thrown in a constructor as a potential finalizer attack, but without evidence that the class defines a finalizer, this risk is speculative; many constructors legitimately throw exceptions and are safe.",
+          "is_true_positive": false,
+          "confidence": 0.78,
+          "category": "SECURITY",
+          "issue_signature": "exception thrown in constructor",
+          "developer_explanation": "The tool warns that throwing an exception from the ByteBufferAggregator constructor could enable a finalizer attack, but this class likely does not implement a finalizer, making the concern irrelevant. Throwing exceptions in constructors is a normal way to signal invalid arguments or resource failures, so you can safely ignore this warning unless the class defines a finalize method.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2041,
+            "output_tokens": 524,
+            "reasoning_tokens": 454,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000164597
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1803,
+          "latency_s": 10.352
+        }
+      ],
+      "original_finding_index": 620
+    },
+    {
+      "finding_id": 52,
+      "type": "RV_RETURN_VALUE_OF_PUTIFABSENT_IGNORED",
+      "sourcefile": "BundleIndex.java",
+      "start_line": "50",
+      "message": "Return value of putIfAbsent ignored, value passed to putIfAbsent reused",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that the code calls putIfAbsent, ignores its return value, and then reuses the original value, which can cause the program to use a value not stored in the map. This pattern is a known source of correctness bugs, so the claim is likely valid.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "CORRECTNESS",
+          "issue_signature": "ignored putIfAbsent return value reused",
+          "developer_explanation": "The method calls putIfAbsent but does not capture the returned value and continues to use the original object. If the map already contained a value for the key, the original object is not the one stored, leading to incorrect behavior. Capture the return value and use it, or check the map before reusing the object.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2080,
+            "output_tokens": 867,
+            "reasoning_tokens": 801,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00022435
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3189,
+          "latency_s": 17.268
+        }
+      ],
+      "original_finding_index": 795
+    },
+    {
+      "finding_id": 53,
+      "type": "RV_RETURN_VALUE_OF_PUTIFABSENT_IGNORED",
+      "sourcefile": "BundleIndex.java",
+      "start_line": "48",
+      "message": "Return value of putIfAbsent ignored, value passed to putIfAbsent reused",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that the code calls putIfAbsent, ignores its return value, and then reuses the original value, which can cause incorrect behavior if the map already contained a different value. This pattern is a known correctness issue, so the claim is likely valid.",
+          "is_true_positive": true,
+          "confidence": 0.78,
+          "category": "CORRECTNESS",
+          "issue_signature": "ignored return value of putIfAbsent",
+          "developer_explanation": "The code calls putIfAbsent but does not check the method's return value and continues to use the original object. If the map already had a value for the key, the program will operate on the wrong instance, leading to incorrect results. Capture the return value or use a method like computeIfAbsent to ensure you work with the value actually stored in the map.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2080,
+            "output_tokens": 495,
+            "reasoning_tokens": 369,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00016111
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1466,
+          "latency_s": 9.936
+        }
+      ],
+      "original_finding_index": 796
+    },
+    {
+      "finding_id": 54,
+      "type": "RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE",
+      "sourcefile": "JettyServerFactory.java",
+      "start_line": "86",
+      "message": "Nullcheck of value previously dereferenced",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that a variable is null‑checked after it has already been dereferenced, which means the check is redundant and indicates a logic error.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "CORRECTNESS",
+          "issue_signature": "redundant null check after dereference",
+          "developer_explanation": "The code checks the variable for null even though it was already used earlier, so if the variable were null an exception would have been thrown before the check. This makes the null check dead code and can hide the real intent. Remove the check or move it before the first dereference to avoid unnecessary code and potential confusion.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2049,
+            "output_tokens": 399,
+            "reasoning_tokens": 295,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000143643
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1170,
+          "latency_s": 7.758
+        }
+      ],
+      "original_finding_index": 807
+    },
+    {
+      "finding_id": 55,
+      "type": "CT_CONSTRUCTOR_THROW",
+      "sourcefile": "PackageAdminServiceListener.java",
+      "start_line": "57",
+      "message": "Be wary of letting constructors throw exceptions.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning claims that throwing an exception from the constructor makes the object vulnerable to finalizer attacks, but this is only true if the class has a finalizer or can be subclassed with one, which we cannot confirm without the code.",
+          "is_true_positive": false,
+          "confidence": 0.65,
+          "category": "SECURITY",
+          "issue_signature": "constructor throwing exception may enable finalizer attack",
+          "developer_explanation": "Throwing an exception from a constructor is not inherently unsafe; it only becomes a security concern if the class defines or can inherit a finalizer that could be abused. If this class does not have a finalizer (or is declared final), you can safely ignore the warning. Otherwise, consider making the class final or removing any finalizer logic.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2040,
+            "output_tokens": 762,
+            "reasoning_tokens": 750,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00020502
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2994,
+          "latency_s": 17.035
+        }
+      ],
+      "original_finding_index": 815
+    },
+    {
+      "finding_id": 56,
+      "type": "EI_EXPOSE_REP2",
+      "sourcefile": "PackageAdminServiceListener.java",
+      "start_line": "52",
+      "message": "May expose internal representation by incorporating reference to mutable object",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly states that the constructor stores a reference to a mutable BundleContext in an internal field, which can expose internal representation to untrusted code, so the claim of a potential security issue is material.",
+          "is_true_positive": true,
+          "confidence": 0.73,
+          "category": "SECURITY",
+          "issue_signature": "exposing internal representation via mutable object reference",
+          "developer_explanation": "The listener keeps a direct reference to the BundleContext passed in, which is mutable and could be altered by external code. This may let untrusted callers affect the listener's behavior or compromise security. Store an immutable copy or wrap the context, or ensure the listener is not exposed to untrusted code.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2052,
+            "output_tokens": 732,
+            "reasoning_tokens": 729,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000200364
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2901,
+          "latency_s": 14.152
+        }
+      ],
+      "original_finding_index": 816
+    },
+    {
+      "finding_id": 57,
+      "type": "CT_CONSTRUCTOR_THROW",
+      "sourcefile": "AckFrame.java",
+      "start_line": "43",
+      "message": "Be wary of letting constructors throw exceptions.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning assumes that any exception thrown from the AckFrame constructor makes the object vulnerable to finalizer attacks, but such vulnerability only exists if the class defines or inherits a finalizer, which is not indicated here.",
+          "is_true_positive": false,
+          "confidence": 0.78,
+          "category": "SECURITY",
+          "issue_signature": "constructor throwing exception enabling finalizer attack",
+          "developer_explanation": "Throwing an exception from a constructor does leave the object partially initialized, but a finalizer attack is only possible if the class has a finalizer. If AckFrame is final and does not implement a finalizer, the warning can be safely ignored. Consider making the class final or adding an empty finalizer only if you need to address a real finalizer risk.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2050,
+            "output_tokens": 881,
+            "reasoning_tokens": 892,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00022562
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3558,
+          "latency_s": 16.712
+        }
+      ],
+      "original_finding_index": 823
+    },
+    {
+      "finding_id": 58,
+      "type": "HSM_HIDING_METHOD",
+      "sourcefile": "JnaQuicheConnection.java",
+      "start_line": "257",
+      "message": "Method hiding should be avoided.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that a static method in JnaQuicheConnection has the same signature as a method in its superclass Quiche, which constitutes method hiding. This claim is a factual description of the code and method hiding is considered a correctness/maintainability problem because it can lead to unexpected behavior. Therefore the warning is a true positive.",
+          "is_true_positive": true,
+          "confidence": 0.88,
+          "category": "CORRECTNESS",
+          "issue_signature": "static method hiding in subclass",
+          "developer_explanation": "The negotiate method in JnaQuicheConnection is declared static and has the same signature as a method in Quiche, so it hides the superclass method. This can cause callers to invoke the wrong implementation depending on the reference type, leading to confusing bugs. Change the method to non‑static, make it private, or rename it to eliminate the hiding.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2123,
+            "output_tokens": 730,
+            "reasoning_tokens": 649,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000202651
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2583,
+          "latency_s": 14.142
+        }
+      ],
+      "original_finding_index": 898
+    },
+    {
+      "finding_id": 59,
+      "type": "NM_CLASS_NAMING_CONVENTION",
+      "sourcefile": "timespec.java",
+      "start_line": "19",
+      "message": "Class names should start with an upper case letter",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning correctly identifies that the class name \"timespec\" does not start with an upper‑case letter, which violates Java naming conventions.",
+          "is_true_positive": true,
+          "confidence": 0.96,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "class name not capitalized",
+          "developer_explanation": "The class is named \"timespec\", which starts with a lower‑case letter. This goes against standard Java naming conventions and can make the code harder to read and maintain. Rename the class to \"Timespec\" (or another appropriate capitalized noun) to follow the convention.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2016,
+            "output_tokens": 363,
+            "reasoning_tokens": 240,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000136302
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 954,
+          "latency_s": 7.922
+        }
+      ],
+      "original_finding_index": 1009
+    },
+    {
+      "finding_id": 60,
+      "type": "EI_EXPOSE_REP",
+      "sourcefile": "AbstractQuicheServerConnectionFactory.java",
+      "start_line": "48",
+      "message": "May expose internal representation by returning reference to mutable object",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning flags a getter that returns a mutable field, which can expose the object's internal representation and potentially allow external modification, so the claim of a possible issue is materially correct.",
+          "is_true_positive": true,
+          "confidence": 0.78,
+          "category": "SECURITY",
+          "issue_signature": "returning mutable internal object from getter",
+          "developer_explanation": "The getSslContextFactory method returns a reference to a mutable SslContextFactory stored in the class, allowing callers to change its state and possibly affect the server's security configuration. To prevent unintended modifications, return an immutable copy or a defensive wrapper instead of the original mutable instance.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2059,
+            "output_tokens": 607,
+            "reasoning_tokens": 587,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000179373
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2332,
+          "latency_s": 13.033
+        }
+      ],
+      "original_finding_index": 1028
+    },
+    {
+      "finding_id": 61,
+      "type": "AT_NONATOMIC_64BIT_PRIMITIVE",
+      "sourcefile": "ServerQuicheSession.java",
+      "start_line": "172",
+      "message": "This write of this 64-bit primitive variable may not be atomic",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that the write to the 64-bit primitive field may not be atomic, which is true for non‑volatile long/double fields under the Java memory model and can cause data races. Because atomicity is required only when the field is accessed by multiple threads, the tool flags a potential concurrency correctness issue.",
+          "is_true_positive": true,
+          "confidence": 0.73,
+          "category": "CONCURRENCY",
+          "issue_signature": "non-atomic write to 64-bit primitive",
+          "developer_explanation": "The field \"expireNanoTime\" is a plain long that is written without synchronization or the volatile keyword, so concurrent reads or writes could see a torn value. If this variable is accessed by more than one thread, protect it by declaring it volatile, using an AtomicLong, or synchronizing the accesses to ensure atomicity.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2150,
+            "output_tokens": 848,
+            "reasoning_tokens": 788,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00022371
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3142,
+          "latency_s": 16.954
+        }
+      ],
+      "original_finding_index": 1040
+    },
+    {
+      "finding_id": 62,
+      "type": "EI_EXPOSE_REP",
+      "sourcefile": "SecurityHandler.java",
+      "start_line": "157",
+      "message": "May expose internal representation by returning reference to mutable object",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning flags returning a field _authenticator as exposing a mutable internal object, but in typical Jetty usage the authenticator is intended to be accessed by trusted code and is not likely to be modified maliciously, making the alarm likely a false positive.",
+          "is_true_positive": false,
+          "confidence": 0.78,
+          "category": "SECURITY",
+          "issue_signature": "exposing mutable internal object via getter",
+          "developer_explanation": "SpotBugs warns that returning the authenticator may let callers modify internal state, but this method is part of a public API meant for trusted configuration code. Since the authenticator is not exposed to untrusted callers, the risk is minimal and the warning can be ignored. No code change is required unless you later expose this method to untrusted code.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2039,
+            "output_tokens": 588,
+            "reasoning_tokens": 534,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000175403
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2126,
+          "latency_s": 11.376
+        }
+      ],
+      "original_finding_index": 1062
+    },
+    {
+      "finding_id": 63,
+      "type": "SIC_INNER_SHOULD_BE_STATIC",
+      "sourcefile": "UserStore.java",
+      "start_line": "41",
+      "message": "Should be a static inner class",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that the inner class does not use its enclosing instance, which SpotBugs detected, indicating an unnecessary reference to the outer object.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "PERFORMANCE",
+          "issue_signature": "non-static inner class without outer reference",
+          "developer_explanation": "Your inner class currently holds an implicit reference to the outer UserStore instance even though it never accesses any of its members. This extra reference increases object size and can keep the outer object alive longer than needed, leading to unnecessary memory usage. Convert the class to a static inner class to remove the implicit reference.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2000,
+            "output_tokens": 534,
+            "reasoning_tokens": 482,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00016478
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1912,
+          "latency_s": 10.615
+        }
+      ],
+      "original_finding_index": 1071
+    },
+    {
+      "finding_id": 64,
+      "type": "AT_STALE_THREAD_WRITE_OF_PRIMITIVE",
+      "sourcefile": "AcceptRateLimit.java",
+      "start_line": "212",
+      "message": "This write of this shared primitive variable may not be visible to other threads",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly states that a shared primitive variable is written without synchronization, which can lead to visibility problems across threads, so the claim is likely correct.",
+          "is_true_positive": true,
+          "confidence": 0.73,
+          "category": "CONCURRENCY",
+          "issue_signature": "unsynchronized write to shared primitive variable",
+          "developer_explanation": "The field _limiting is accessed by more than one thread, but the write is not protected by volatile, atomic, or synchronized constructs. This can cause other threads to see an outdated value, leading to incorrect behavior. Declare the field volatile, use an Atomic* type, or synchronize the accesses to ensure proper visibility.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2142,
+            "output_tokens": 485,
+            "reasoning_tokens": 424,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000161704
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1685,
+          "latency_s": 9.75
+        }
+      ],
+      "original_finding_index": 1080
+    },
+    {
+      "finding_id": 65,
+      "type": "AT_STALE_THREAD_WRITE_OF_PRIMITIVE",
+      "sourcefile": "LowResourceMonitor.java",
+      "start_line": "203",
+      "message": "This write of this shared primitive variable may not be visible to other threads",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning claims that a write to the shared primitive field _period may not be visible to other threads, which is true if the field is accessed concurrently without synchronization or volatility. SpotBugs flags this pattern when a non‑volatile field is written in an unsynchronized method and read elsewhere, so the claim is likely correct.",
+          "is_true_positive": true,
+          "confidence": 0.78,
+          "category": "CONCURRENCY",
+          "issue_signature": "unsynchronized write to shared primitive field",
+          "developer_explanation": "The setPeriod method updates the _period field without using volatile, atomic types, or synchronization, so other threads may see an outdated value. This can cause incorrect behavior in a multithreaded environment. Declare the field volatile, use an AtomicLong, or synchronize access to ensure visibility.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2140,
+            "output_tokens": 608,
+            "reasoning_tokens": 546,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00018254
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2173,
+          "latency_s": 11.155
+        }
+      ],
+      "original_finding_index": 1189
+    },
+    {
+      "finding_id": 66,
+      "type": "SIC_INNER_SHOULD_BE_STATIC",
+      "sourcefile": "LowResourceMonitor.java",
+      "start_line": "537",
+      "message": "Should be a static inner class",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that the inner class does not use its outer reference, which SpotBugs detected, so the claim is that the class should be static to avoid unnecessary memory retention.",
+          "is_true_positive": true,
+          "confidence": 0.86,
+          "category": "PERFORMANCE",
+          "issue_signature": "inner class without outer reference should be static",
+          "developer_explanation": "The inner class currently holds an implicit reference to its enclosing LowResourceMonitor instance even though it never accesses any of its members. This extra reference increases object size and can keep the outer object alive longer than needed, leading to unnecessary memory usage. Convert the class to a static nested class to eliminate the hidden reference.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2005,
+            "output_tokens": 501,
+            "reasoning_tokens": 420,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000159355
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1667,
+          "latency_s": 9.952
+        }
+      ],
+      "original_finding_index": 1197
+    },
+    {
+      "finding_id": 67,
+      "type": "EI_EXPOSE_REP",
+      "sourcefile": "Server.java",
+      "start_line": "485",
+      "message": "May expose internal representation by returning reference to mutable object",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning reports that getByteBufferPool returns a mutable field, which SpotBugs flags as exposing the object's internal representation, a genuine encapsulation concern.",
+          "is_true_positive": true,
+          "confidence": 0.7,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "exposing mutable internal object via getter",
+          "developer_explanation": "The getByteBufferPool method returns the server's internal ByteBufferPool directly, allowing callers to modify the pool's state. This breaks encapsulation and can lead to unexpected behavior if the pool is altered. Consider returning an immutable view or a copy, or document that callers must treat the returned object as read‑only.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2040,
+            "output_tokens": 702,
+            "reasoning_tokens": 686,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00019482
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2733,
+          "latency_s": 13.904
+        }
+      ],
+      "original_finding_index": 1241
+    },
+    {
+      "finding_id": 68,
+      "type": "EI_EXPOSE_REP2",
+      "sourcefile": "Server.java",
+      "start_line": "188",
+      "message": "May expose internal representation by incorporating reference to mutable object",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that Server.setDefaultHandler stores a reference to a mutable Handler object in an internal field, which can expose internal representation, and this claim matches the EI_EXPOSE_REP2 pattern, so the issue is likely real.",
+          "is_true_positive": true,
+          "confidence": 0.73,
+          "category": "SECURITY",
+          "issue_signature": "exposing internal representation via mutable object reference",
+          "developer_explanation": "The setDefaultHandler method keeps a direct reference to the provided Handler, which may be mutable. If external code later modifies that Handler, it can change the server's behavior in unexpected or unsafe ways. Consider copying the handler or using an immutable implementation before storing it.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2042,
+            "output_tokens": 574,
+            "reasoning_tokens": 546,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000173134
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2177,
+          "latency_s": 10.803
+        }
+      ],
+      "original_finding_index": 1244
+    },
+    {
+      "finding_id": 69,
+      "type": "AT_STALE_THREAD_WRITE_OF_PRIMITIVE",
+      "sourcefile": "AbstractSessionManager.java",
+      "start_line": "856",
+      "message": "This write of this shared primitive variable may not be visible to other threads",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly states that a shared primitive field is written without synchronization, which can cause visibility problems across threads, so the claim is likely correct.",
+          "is_true_positive": true,
+          "confidence": 0.78,
+          "category": "CONCURRENCY",
+          "issue_signature": "unsynchronized write to shared primitive field",
+          "developer_explanation": "The field _checkingRemoteSessionIdEncoding is updated in setCheckingRemoteSessionIdEncoding without being declared volatile or protected by synchronization. This can lead to other threads seeing an outdated value. Declare the field volatile, use an Atomic type, or synchronize the access to ensure proper visibility.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2148,
+            "output_tokens": 655,
+            "reasoning_tokens": 654,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000190826
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2612,
+          "latency_s": 15.254
+        }
+      ],
+      "original_finding_index": 1285
+    },
+    {
+      "finding_id": 70,
+      "type": "AT_STALE_THREAD_WRITE_OF_PRIMITIVE",
+      "sourcefile": "AbstractSessionManager.java",
+      "start_line": "371",
+      "message": "This write of this shared primitive variable may not be visible to other threads",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that a shared primitive field is written without synchronization, which can cause visibility problems across threads, and SpotBugs flags this pattern as a potential concurrency bug.",
+          "is_true_positive": true,
+          "confidence": 0.73,
+          "category": "CONCURRENCY",
+          "issue_signature": "unsynchronized write to shared primitive variable",
+          "developer_explanation": "The field _dftMaxIdleSecs is accessed by multiple threads, but the write in setMaxInactiveInterval is not protected by synchronization or declared volatile. This can lead to other threads seeing an outdated value, causing incorrect session timeout behavior. Declare the field volatile, use an atomic type, or synchronize the access to ensure visibility.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2146,
+            "output_tokens": 513,
+            "reasoning_tokens": 455,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000166612
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1810,
+          "latency_s": 9.836
+        }
+      ],
+      "original_finding_index": 1286
+    },
+    {
+      "finding_id": 71,
+      "type": "AT_STALE_THREAD_WRITE_OF_PRIMITIVE",
+      "sourcefile": "AbstractSessionManager.java",
+      "start_line": "390",
+      "message": "This write of this shared primitive variable may not be visible to other threads",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning claims that a non‑volatile primitive field written in setRefreshCookieAge may be read by other threads without seeing the latest value, which indicates a potential data‑visibility problem. Because the field is described as shared and no synchronization is mentioned, this claim is likely correct.",
+          "is_true_positive": true,
+          "confidence": 0.73,
+          "category": "CONCURRENCY",
+          "issue_signature": "unsynchronized write to shared primitive variable",
+          "developer_explanation": "The field _refreshCookieAge is accessed by multiple threads without proper synchronization, so updates made in one thread may not become visible to others. This can cause stale session data and incorrect cookie handling. Declare the field volatile, use an AtomicLong, or synchronize the accesses to ensure visibility.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2144,
+            "output_tokens": 493,
+            "reasoning_tokens": 401,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000163138
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1593,
+          "latency_s": 11.946
+        }
+      ],
+      "original_finding_index": 1287
+    },
+    {
+      "finding_id": 72,
+      "type": "AT_NONATOMIC_64BIT_PRIMITIVE",
+      "sourcefile": "DefaultSessionIdManager.java",
+      "start_line": "185",
+      "message": "This write of this 64-bit primitive variable may not be atomic",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly says that writing the 64-bit field _reseed may not be atomic, which is a real risk when the field can be accessed by multiple threads without synchronization. Because the field is not declared volatile or protected by a lock in the description, the tool's claim is likely correct.",
+          "is_true_positive": true,
+          "confidence": 0.78,
+          "category": "CONCURRENCY",
+          "issue_signature": "non-atomic write of 64-bit primitive",
+          "developer_explanation": "The field _reseed is a long (or double) that is written without any synchronization or volatile declaration. On some JVMs this write can be split into two 32‑bit operations, leading to torn values when accessed concurrently. Declare the field volatile, use an AtomicLong/AtomicDouble, or synchronize the access to ensure atomic updates.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2150,
+            "output_tokens": 647,
+            "reasoning_tokens": 549,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00018954
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2190,
+          "latency_s": 12.528
+        }
+      ],
+      "original_finding_index": 1303
+    },
+    {
+      "finding_id": 73,
+      "type": "SBSC_USE_STRINGBUFFER_CONCATENATION",
+      "sourcefile": "DefaultSessionIdManager.java",
+      "start_line": "260",
+      "message": "Method concatenates strings using + in a loop",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly states that the method builds a String by using '+' concatenation inside a loop, which SpotBugs flags as a performance problem due to repeated allocations. This pattern indeed causes quadratic copying overhead, so the claim is materially correct.",
+          "is_true_positive": true,
+          "confidence": 0.93,
+          "category": "PERFORMANCE",
+          "issue_signature": "string concatenation in a loop",
+          "developer_explanation": "Your method creates a new String object on each iteration by using '+' inside the loop, which leads to many temporary objects and quadratic time cost. Replace the loop with a single StringBuilder (or StringBuffer) that appends each part and converts to a String once at the end. This will improve performance and reduce memory usage.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2065,
+            "output_tokens": 388,
+            "reasoning_tokens": 255,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000142365
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1012,
+          "latency_s": 7.88
+        }
+      ],
+      "original_finding_index": 1317
+    },
+    {
+      "finding_id": 74,
+      "type": "SQL_PREPARED_STATEMENT_GENERATED_FROM_NONCONSTANT_STRING",
+      "sourcefile": "JDBCSessionDataStore.java",
+      "start_line": "394",
+      "message": "A prepared statement is generated from a nonconstant String",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning flags a prepared statement built from a nonconstant String and assumes user‑controlled data could be concatenated, but in this Jetty class the variable part is likely a configurable table name, not attacker input, making the injection risk unlikely.",
+          "is_true_positive": false,
+          "confidence": 0.73,
+          "category": "SECURITY",
+          "issue_signature": "prepared statement built from nonconstant string",
+          "developer_explanation": "The alert is a false positive because the dynamic part of the SQL is probably the table name, which is set by configuration and not influenced by external users. Since user data is passed as parameters to the prepared statement, there is no realistic SQL injection risk. You can safely ignore this warning.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2045,
+            "output_tokens": 472,
+            "reasoning_tokens": 377,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000155905
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1500,
+          "latency_s": 11.629
+        }
+      ],
+      "original_finding_index": 1340
+    },
+    {
+      "finding_id": 75,
+      "type": "SQL_PREPARED_STATEMENT_GENERATED_FROM_NONCONSTANT_STRING",
+      "sourcefile": "JDBCSessionDataStore.java",
+      "start_line": "347",
+      "message": "A prepared statement is generated from a nonconstant String",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning flags that a prepared statement is built from a nonconstant String, but in this Jetty session store the strings are configuration values, not attacker‑controlled input, so the claimed SQL‑injection risk does not actually exist.",
+          "is_true_positive": false,
+          "confidence": 0.73,
+          "category": "SECURITY",
+          "issue_signature": "prepared statement built from nonconstant string",
+          "developer_explanation": "The method constructs the SQL using table and column names that come from configuration, not from user input, so there is no realistic injection vector. You can safely suppress this warning or annotate the code to indicate the parameters are trusted.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2046,
+            "output_tokens": 679,
+            "reasoning_tokens": 660,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000191132
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2628,
+          "latency_s": 15.561
+        }
+      ],
+      "original_finding_index": 1341
+    },
+    {
+      "finding_id": 76,
+      "type": "SQL_PREPARED_STATEMENT_GENERATED_FROM_NONCONSTANT_STRING",
+      "sourcefile": "JDBCSessionDataStore.java",
+      "start_line": "370",
+      "message": "A prepared statement is generated from a nonconstant String",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning flags a prepared statement built from a nonconstant String, but the nonconstant part likely comes from internal configuration or a long parameter, not from attacker-controlled input, so the claimed SQL injection risk does not materialize.",
+          "is_true_positive": false,
+          "confidence": 0.73,
+          "category": "SECURITY",
+          "issue_signature": "prepared statement built from nonconstant string",
+          "developer_explanation": "The SQL statement is assembled using values that are internal to the application (e.g., configuration or a timeout value) rather than data supplied by a user. Because no attacker-controlled data reaches the string construction, there is no realistic injection risk, and the warning can be safely ignored or suppressed.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2047,
+            "output_tokens": 569,
+            "reasoning_tokens": 502,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000172469
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1997,
+          "latency_s": 10.906
+        }
+      ],
+      "original_finding_index": 1342
+    },
+    {
+      "finding_id": 77,
+      "type": "CT_CONSTRUCTOR_THROW",
+      "sourcefile": "JSONPojoConvertorFactory.java",
+      "start_line": "32",
+      "message": "Be wary of letting constructors throw exceptions.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning assumes that any exception thrown in a constructor makes the object vulnerable to finalizer attacks, but such attacks only apply if the class defines a finalizer, which is unlikely for this Jetty class.",
+          "is_true_positive": false,
+          "confidence": 0.78,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "constructor throwing exception",
+          "developer_explanation": "Throwing an exception from a constructor is a common pattern for validation and does not pose a problem unless the class implements a finalizer. The JSONPojoConvertorFactory class likely has no finalize method, so the reported finalizer‑attack risk does not apply. You can safely keep the constructor as is.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2041,
+            "output_tokens": 526,
+            "reasoning_tokens": 452,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000164937
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1793,
+          "latency_s": 11.266
+        }
+      ],
+      "original_finding_index": 1472
+    },
+    {
+      "finding_id": 78,
+      "type": "CT_CONSTRUCTOR_THROW",
+      "sourcefile": "ArrayTernaryTrie.java",
+      "start_line": "112",
+      "message": "Be wary of letting constructors throw exceptions.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning reports that the constructor of ArrayTernaryTrie throws an exception, which SpotBugs flags as a potential finalizer attack risk. Throwing an exception from a constructor does leave the object partially initialized and can be exploitable if the class has a finalizer, so the claim about a possible security issue is materially correct.",
+          "is_true_positive": true,
+          "confidence": 0.68,
+          "category": "SECURITY",
+          "issue_signature": "exception thrown from constructor",
+          "developer_explanation": "Your constructor throws an exception, which can leave the object only partially built. If the class is subclassable or defines a finalizer, an attacker could exploit the partially initialized state. Consider making the class final, removing the finalizer, or redesigning the constructor to avoid throwing exceptions.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2041,
+            "output_tokens": 805,
+            "reasoning_tokens": 785,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000212367
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3133,
+          "latency_s": 15.076
+        }
+      ],
+      "original_finding_index": 1475
+    },
+    {
+      "finding_id": 79,
+      "type": "CT_CONSTRUCTOR_THROW",
+      "sourcefile": "ArrayTrie.java",
+      "start_line": "177",
+      "message": "Be wary of letting constructors throw exceptions.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning assumes that any exception thrown from the ArrayTrie constructor makes the object vulnerable to a finalizer attack, but this is only true if the class defines a finalizer, which is unlikely for this Jetty utility class.",
+          "is_true_positive": false,
+          "confidence": 0.78,
+          "category": "SECURITY",
+          "issue_signature": "constructor throwing exception enabling finalizer attack",
+          "developer_explanation": "The tool flags the constructor because it throws an exception, but unless ArrayTrie defines a finalizer (or is subclassed with one), there is no real security risk. You can safely ignore this warning if the class does not have a finalize method; otherwise, consider making the class final or removing the finalizer.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2030,
+            "output_tokens": 563,
+            "reasoning_tokens": 495,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00017082
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1963,
+          "latency_s": 10.351
+        }
+      ],
+      "original_finding_index": 1476
+    },
+    {
+      "finding_id": 80,
+      "type": "EI_EXPOSE_REP2",
+      "sourcefile": "Attributes.java",
+      "start_line": "274",
+      "message": "May expose internal representation by incorporating reference to mutable object",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that the constructor stores a reference to a mutable Map in an internal field, which can expose internal representation, and this claim is directly based on the code pattern detected.",
+          "is_true_positive": true,
+          "confidence": 0.73,
+          "category": "SECURITY",
+          "issue_signature": "exposing internal mutable object reference",
+          "developer_explanation": "The constructor saves the passed-in Map directly, allowing external code to modify the object's internal state. This can lead to unexpected behavior or security problems if the map is changed after construction. Consider copying the map or wrapping it in an unmodifiable view before storing it.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2041,
+            "output_tokens": 715,
+            "reasoning_tokens": 747,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000197067
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2982,
+          "latency_s": 14.337
+        }
+      ],
+      "original_finding_index": 1483
+    },
+    {
+      "finding_id": 81,
+      "type": "INT_BAD_COMPARISON_WITH_NONNEGATIVE_VALUE",
+      "sourcefile": "BufferUtil.java",
+      "start_line": "1454",
+      "message": "Bad comparison of nonnegative value with negative constant or zero",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that the code compares a value guaranteed to be non‑negative with zero, which SpotBugs flags as a bad comparison because it is always true or false, indicating a logic error. This claim directly points to a correctness issue if the guarantee holds. Therefore the warning is likely a true positive.",
+          "is_true_positive": true,
+          "confidence": 0.78,
+          "category": "CORRECTNESS",
+          "issue_signature": "redundant comparison of nonnegative integer with zero",
+          "developer_explanation": "The method is comparing a value that can never be negative against zero, making the condition always true or always false and resulting in dead or incorrect logic. Remove the unnecessary comparison or adjust the logic to test the intended condition. This will eliminate the redundant check and clarify the code's intent.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1985,
+            "output_tokens": 639,
+            "reasoning_tokens": 517,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000182075
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2054,
+          "latency_s": 11.867
+        }
+      ],
+      "original_finding_index": 1493
+    },
+    {
+      "finding_id": 82,
+      "type": "UPM_UNCALLED_PRIVATE_METHOD",
+      "sourcefile": "Callback.java",
+      "start_line": "855",
+      "message": "Private method is never called",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that the private method failed(...) is never called, which SpotBugs detected as dead code. Since private methods can only be invoked from within the same class, the analysis is likely correct unless reflection is used, which is uncommon. Therefore the claim of dead code is probably valid.",
+          "is_true_positive": true,
+          "confidence": 0.75,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "unused private method",
+          "developer_explanation": "The method failed(...) is not referenced anywhere in the class, so it serves no purpose and adds unnecessary code. Removing it will simplify the codebase and avoid confusion for future maintainers. If the method is intended to be called via reflection, verify that usage; otherwise, safely delete it.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1991,
+            "output_tokens": 518,
+            "reasoning_tokens": 415,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000161727
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1647,
+          "latency_s": 10.28
+        }
+      ],
+      "original_finding_index": 1497
+    },
+    {
+      "finding_id": 83,
+      "type": "UPM_UNCALLED_PRIVATE_METHOD",
+      "sourcefile": "Callback.java",
+      "start_line": "824",
+      "message": "Private method is never called",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly states that the private method is never called, which is the basis for deciding the verdict.",
+          "is_true_positive": true,
+          "confidence": 0.75,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "unused private method",
+          "developer_explanation": "The method is private and not referenced anywhere in the code base, so it adds unnecessary complexity and bloat. Removing it will simplify the class and reduce the compiled artifact size. If the method is intended to be invoked via reflection, add a comment or keep it, otherwise delete it.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1989,
+            "output_tokens": 404,
+            "reasoning_tokens": 322,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000142273
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1282,
+          "latency_s": 8.114
+        }
+      ],
+      "original_finding_index": 1498
+    },
+    {
+      "finding_id": 84,
+      "type": "RC_REF_COMPARISON_BAD_PRACTICE_BOOLEAN",
+      "sourcefile": "ClassMatcher.java",
+      "start_line": "837",
+      "message": "Suspicious reference comparison of Boolean values",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that the method uses == or != to compare Boolean objects, which can yield incorrect results if non‑cached Boolean instances exist, so the claim of a potential bug is materially correct.",
+          "is_true_positive": true,
+          "confidence": 0.78,
+          "category": "CORRECTNESS",
+          "issue_signature": "reference comparison of Boolean objects",
+          "developer_explanation": "The code compares Boolean instances with ==/!=, which checks object identity rather than logical value. If a Boolean created with new Boolean(...) reaches this code, the comparison may give the wrong outcome. Replace the reference comparison with .equals() or compare the primitive boolean values.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2063,
+            "output_tokens": 651,
+            "reasoning_tokens": 613,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000187001
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2444,
+          "latency_s": 12.871
+        }
+      ],
+      "original_finding_index": 1501
+    },
+    {
+      "finding_id": 85,
+      "type": "SE_BAD_FIELD",
+      "sourcefile": "ClassMatcher.java",
+      "start_line": null,
+      "message": "Non-transient non-serializable instance field in serializable class",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that the class defines a non-transient, non-serializable instance field while the class itself implements Serializable, which SpotBugs flags as a potential deserialization problem.",
+          "is_true_positive": true,
+          "confidence": 0.78,
+          "category": "CORRECTNESS",
+          "issue_signature": "non-serializable instance field in serializable class",
+          "developer_explanation": "Your serializable class contains a field whose declared type does not implement Serializable and is not marked transient. This can cause deserialization to fail if the field holds a non-serializable object. Consider making the field transient, changing its type to a Serializable one, or providing custom readObject/writeObject methods to handle serialization correctly.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2021,
+            "output_tokens": 1059,
+            "reasoning_tokens": 1078,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000254807
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 4295,
+          "latency_s": 19.308
+        }
+      ],
+      "original_finding_index": 1503
+    },
+    {
+      "finding_id": 86,
+      "type": "CT_CONSTRUCTOR_THROW",
+      "sourcefile": "ClassMatcher.java",
+      "start_line": "130",
+      "message": "Be wary of letting constructors throw exceptions.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning assumes that throwing an exception from the constructor makes the object vulnerable to a finalizer attack, but it provides no evidence that the class defines or inherits a finalize method, which is required for such an attack. Therefore the claim of a security risk is likely incorrect in this context.",
+          "is_true_positive": false,
+          "confidence": 0.78,
+          "category": "SECURITY",
+          "issue_signature": "constructor throws exception exposing finalizer attack",
+          "developer_explanation": "The class does not implement a finalize method (or inherit one), so a partially constructed instance will not have its finalizer invoked. Throwing an exception from this constructor is safe and does not create a security vulnerability. You can keep the constructor as is without changes.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2038,
+            "output_tokens": 619,
+            "reasoning_tokens": 565,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000180636
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2246,
+          "latency_s": 14.41
+        }
+      ],
+      "original_finding_index": 1508
+    },
+    {
+      "finding_id": 87,
+      "type": "CT_CONSTRUCTOR_THROW",
+      "sourcefile": "HostPort.java",
+      "start_line": "75",
+      "message": "Be wary of letting constructors throw exceptions.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning assumes that any constructor that throws an exception is vulnerable to a finalizer attack, but this is only true if the class defines a finalizer that can be exploited, which is unlikely for HostPort. Therefore the claim of a real security issue is probably incorrect.",
+          "is_true_positive": false,
+          "confidence": 0.73,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "throwing exception from constructor",
+          "developer_explanation": "HostPort likely does not implement a finalizer, so throwing an exception from its constructor does not create a security risk. Constructors may legitimately throw exceptions for invalid arguments or parsing errors. You can safely keep the current behavior without changes.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2032,
+            "output_tokens": 533,
+            "reasoning_tokens": 467,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000165794
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1865,
+          "latency_s": 10.753
+        }
+      ],
+      "original_finding_index": 1539
+    },
+    {
+      "finding_id": 88,
+      "type": "CT_CONSTRUCTOR_THROW",
+      "sourcefile": "LegacyQuotedStringTokenizer.java",
+      "start_line": "104",
+      "message": "Be wary of letting constructors throw exceptions.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning flags any constructor that throws an exception and claims a possible finalizer attack, but without evidence that the class defines a finalizer the risk is speculative, making the alarm likely incorrect.",
+          "is_true_positive": false,
+          "confidence": 0.85,
+          "category": "SECURITY",
+          "issue_signature": "constructor throws exception leading to finalizer attack risk",
+          "developer_explanation": "Throwing an exception from a constructor is a normal Java practice and does not by itself create a security problem. A finalizer attack is only possible if the class implements a finalizer, which this class does not appear to have. Therefore the warning can be safely ignored.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2051,
+            "output_tokens": 648,
+            "reasoning_tokens": 619,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000186047
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2466,
+          "latency_s": 12.0
+        }
+      ],
+      "original_finding_index": 1566
+    },
+    {
+      "finding_id": 89,
+      "type": "CT_CONSTRUCTOR_THROW",
+      "sourcefile": "RolloverFileOutputStream.java",
+      "start_line": "138",
+      "message": "Be wary of letting constructors throw exceptions.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning flags a constructor that throws an exception and claims the class may be vulnerable to finalizer attacks, but without seeing a finalizer in the class this risk is likely not present, making the alarm likely incorrect.",
+          "is_true_positive": false,
+          "confidence": 0.68,
+          "category": "SECURITY",
+          "issue_signature": "constructor throwing exception",
+          "developer_explanation": "SpotBugs warns that throwing an exception from the constructor could enable a finalizer attack, but this class does not define a finalizer, so the risk does not apply. You can safely ignore this warning unless you add a finalizer in the future.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2053,
+            "output_tokens": 828,
+            "reasoning_tokens": 826,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000216721
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3295,
+          "latency_s": 18.02
+        }
+      ],
+      "original_finding_index": 1579
+    },
+    {
+      "finding_id": 90,
+      "type": "URF_UNREAD_FIELD",
+      "sourcefile": "Scanner.java",
+      "start_line": "159",
+      "message": "Unread field",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly states that the field org.eclipse.jetty.util.Scanner$Visitor.root is never read, which is the basis for judging the alarm.",
+          "is_true_positive": true,
+          "confidence": 0.9,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "unused field",
+          "developer_explanation": "The field 'root' in the Visitor class is never accessed anywhere in the code, so it serves no purpose. Removing it will simplify the class and avoid unnecessary memory allocation. If the field is intended for reflective or serialization use, verify that and keep it; otherwise, delete it.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1960,
+            "output_tokens": 358,
+            "reasoning_tokens": 255,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00013338
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1011,
+          "latency_s": 8.495
+        }
+      ],
+      "original_finding_index": 1596
+    },
+    {
+      "finding_id": 91,
+      "type": "WMI_WRONG_MAP_ITERATOR",
+      "sourcefile": "ExtensionConfig.java",
+      "start_line": "211",
+      "message": "Inefficient use of keySet iterator instead of entrySet iterator",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that the method iterates over a map's keySet and then calls get(key) for each key, which is less efficient than iterating over the entrySet, and this claim is generally correct for map iteration performance.",
+          "is_true_positive": true,
+          "confidence": 0.88,
+          "category": "PERFORMANCE",
+          "issue_signature": "inefficient map iteration using keyset",
+          "developer_explanation": "The code currently loops over the map's keys and looks up each value with map.get(key), which adds an extra hash lookup for every entry. Switching to an entrySet iterator lets you access both key and value directly, eliminating the redundant lookups and improving performance. Update the loop to use map.entrySet().iterator() and retrieve values from the entry.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2007,
+            "output_tokens": 472,
+            "reasoning_tokens": 342,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000154499
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1358,
+          "latency_s": 11.324
+        }
+      ],
+      "original_finding_index": 1654
+    },
+    {
+      "finding_id": 92,
+      "type": "WMI_WRONG_MAP_ITERATOR",
+      "sourcefile": "ExtensionConfig.java",
+      "start_line": "232",
+      "message": "Inefficient use of keySet iterator instead of entrySet iterator",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that the method iterates over a map's keySet and then calls get(key) for each key, which is less efficient than iterating over the entrySet directly, and this claim is generally correct for typical Map implementations.",
+          "is_true_positive": true,
+          "confidence": 0.93,
+          "category": "PERFORMANCE",
+          "issue_signature": "inefficient map iteration using keySet",
+          "developer_explanation": "The code currently loops over the map's keys and looks up each value with Map.get, which adds an extra lookup per entry. This can degrade performance, especially for large maps. Refactor the loop to iterate over the map's entrySet and use the entry's key and value directly.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2013,
+            "output_tokens": 441,
+            "reasoning_tokens": 328,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000149451
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1302,
+          "latency_s": 10.524
+        }
+      ],
+      "original_finding_index": 1655
+    },
+    {
+      "finding_id": 93,
+      "type": "AT_STALE_THREAD_WRITE_OF_PRIMITIVE",
+      "sourcefile": "WebSocketCoreSession.java",
+      "start_line": "573",
+      "message": "This write of this shared primitive variable may not be visible to other threads",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning flags a write to a non‑volatile primitive field that may be accessed by multiple threads, which SpotBugs treats as a potential visibility problem; without evidence of synchronization the claim is likely correct.",
+          "is_true_positive": true,
+          "confidence": 0.66,
+          "category": "CONCURRENCY",
+          "issue_signature": "unsynchronized write to shared primitive field",
+          "developer_explanation": "The field \"autoFragment\" is written without volatile, atomic, or synchronized protection, so other threads might see an outdated value. This can cause incorrect behavior in concurrent use. Declare the field volatile, use an Atomic type, or synchronize the accesses to guarantee visibility.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2143,
+            "output_tokens": 554,
+            "reasoning_tokens": 522,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000173471
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2077,
+          "latency_s": 11.726
+        }
+      ],
+      "original_finding_index": 1695
+    },
+    {
+      "finding_id": 94,
+      "type": "AT_STALE_THREAD_WRITE_OF_PRIMITIVE",
+      "sourcefile": "WebSocketCoreSession.java",
+      "start_line": "609",
+      "message": "This write of this shared primitive variable may not be visible to other threads",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly states that a write to the shared primitive field \"inputBufferSize\" may not be visible to other threads, which is a classic visibility problem when the field is not volatile or synchronized. SpotBugs flagged this based on detected unsynchronized access patterns, so the claim is likely correct.",
+          "is_true_positive": true,
+          "confidence": 0.73,
+          "category": "CONCURRENCY",
+          "issue_signature": "unsynchronized write to shared primitive field",
+          "developer_explanation": "The setter updates a field that can be read by other threads without any synchronization, so other threads may see an outdated value. This can cause incorrect behavior in concurrent use. Declare the field volatile, use an atomic type, or synchronize the accesses to guarantee visibility.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2145,
+            "output_tokens": 635,
+            "reasoning_tokens": 594,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000187315
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2370,
+          "latency_s": 13.406
+        }
+      ],
+      "original_finding_index": 1696
+    },
+    {
+      "finding_id": 95,
+      "type": "CT_CONSTRUCTOR_THROW",
+      "sourcefile": "MessageOutputStream.java",
+      "start_line": "55",
+      "message": "Be wary of letting constructors throw exceptions.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning assumes that any constructor throwing an exception makes the class vulnerable to finalizer attacks, but this is only true if the class defines a finalizer, which is unlikely for MessageOutputStream. Without a finalizer, the described security risk does not exist, so the alarm is a false positive.",
+          "is_true_positive": false,
+          "confidence": 0.78,
+          "category": "SECURITY",
+          "issue_signature": "constructor throws exception exposing finalizer attack",
+          "developer_explanation": "This class probably does not implement a finalize method, so throwing an exception from its constructor does not create a finalizer attack risk. You can safely ignore this warning unless you add a finalizer to the class in the future.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2042,
+            "output_tokens": 595,
+            "reasoning_tokens": 529,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000176704
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2101,
+          "latency_s": 10.888
+        }
+      ],
+      "original_finding_index": 1724
+    },
+    {
+      "finding_id": 96,
+      "type": "NM_SAME_SIMPLE_NAME_AS_SUPERCLASS",
+      "sourcefile": "PartialByteBufferMessageSink.java",
+      "start_line": "26",
+      "message": "Class names shouldn't shadow simple name of superclass",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that the class PartialByteBufferMessageSink has the same simple name as its superclass PartialByteBufferMessageSink, which the description confirms, so the claim is correct. This naming overlap can cause confusion and maintenance difficulties, which the rule flags as a bad practice.",
+          "is_true_positive": true,
+          "confidence": 0.93,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "class name shadows superclass name",
+          "developer_explanation": "Your class shares its simple name with its superclass, which makes the code harder to read and can lead to mistakes when importing or overriding methods. Consider renaming the subclass to a distinct name that reflects its purpose, or restructure the packages to avoid the name clash.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2049,
+            "output_tokens": 444,
+            "reasoning_tokens": 342,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000151293
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1360,
+          "latency_s": 8.088
+        }
+      ],
+      "original_finding_index": 1779
+    },
+    {
+      "finding_id": 97,
+      "type": "CT_CONSTRUCTOR_THROW",
+      "sourcefile": "XmlConfiguration.java",
+      "start_line": "292",
+      "message": "Be wary of letting constructors throw exceptions.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning assumes that throwing an exception from the XmlConfiguration constructor makes the partially constructed object vulnerable to finalizer attacks, which is only true if the class defines a finalizer, and there is no evidence that it does.",
+          "is_true_positive": false,
+          "confidence": 0.7,
+          "category": "SECURITY",
+          "issue_signature": "constructor throws exception enabling finalizer attack",
+          "developer_explanation": "XmlConfiguration does not appear to implement a finalizer, so throwing an exception from its constructor does not create a security risk. Constructors can legitimately throw exceptions for error handling, and this warning can be safely ignored in this case.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2030,
+            "output_tokens": 600,
+            "reasoning_tokens": 563,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00017711
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2239,
+          "latency_s": 11.633
+        }
+      ],
+      "original_finding_index": 1791
+    },
+    {
+      "finding_id": 98,
+      "type": "WMI_WRONG_MAP_ITERATOR",
+      "sourcefile": "XmlConfiguration.java",
+      "start_line": "2082",
+      "message": "Inefficient use of keySet iterator instead of entrySet iterator",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that the code iterates over a map's keySet and then calls get(key) for each key, which is less efficient than iterating over the entrySet, so the claim of inefficiency is material.",
+          "is_true_positive": true,
+          "confidence": 0.92,
+          "category": "PERFORMANCE",
+          "issue_signature": "inefficient map iteration using keySet",
+          "developer_explanation": "The current loop retrieves each key from the map and then looks up its value with get(key), causing an extra lookup per entry. Replace the keySet loop with an entrySet iterator to access keys and values together, which reduces overhead and improves performance.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2005,
+            "output_tokens": 385,
+            "reasoning_tokens": 268,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000139635
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1062,
+          "latency_s": 7.259
+        }
+      ],
+      "original_finding_index": 1799
+    },
+    {
+      "finding_id": 99,
+      "type": "SBSC_USE_STRINGBUFFER_CONCATENATION",
+      "sourcefile": "XmlConfiguration.java",
+      "start_line": "811",
+      "message": "Method concatenates strings using + in a loop",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly states that the method concatenates strings using + inside a loop, which is known to cause quadratic time performance due to repeated string copying. This claim matches the rule's intent and is likely correct for the reported code.",
+          "is_true_positive": true,
+          "confidence": 0.92,
+          "category": "PERFORMANCE",
+          "issue_signature": "string concatenation in a loop",
+          "developer_explanation": "The method builds a String by repeatedly using the + operator inside a loop, which creates a new String object on each iteration and copies the existing characters, leading to poor performance. Replace the concatenation with a single StringBuilder (or StringBuffer) that appends inside the loop and converts to a String once after the loop finishes.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2067,
+            "output_tokens": 374,
+            "reasoning_tokens": 243,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000140059
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 967,
+          "latency_s": 7.211
+        }
+      ],
+      "original_finding_index": 1801
+    },
+    {
+      "finding_id": 100,
+      "type": "PERM_SUPER_NOT_CALLED_IN_GETPERMISSIONS",
+      "sourcefile": "WebAppClassLoader.java",
+      "start_line": "333",
+      "message": "Custom class loader does not call its superclass's getPermissions()",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly states that the custom class loader overrides getPermissions() without invoking the superclass implementation, which the rule defines as a security flaw. If true, this omission can cause classes to receive permissions that bypass the system policy, constituting a real security risk.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "SECURITY",
+          "issue_signature": "custom class loader missing super getpermissions call",
+          "developer_explanation": "Your class loader overrides getPermissions() but does not call super.getPermissions(). This means the returned PermissionCollection does not include the permissions defined by the system policy, potentially granting classes more privileges than intended. Add a call to super.getPermissions(codeSource) and then augment the returned permissions as needed.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2048,
+            "output_tokens": 559,
+            "reasoning_tokens": 475,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000170806
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1891,
+          "latency_s": 10.493
+        }
+      ],
+      "original_finding_index": 103
+    },
+    {
+      "finding_id": 101,
+      "type": "EQ_CHECK_FOR_OPERAND_NOT_COMPATIBLE_WITH_THIS",
+      "sourcefile": "JettyHttpExchange.java",
+      "start_line": "96",
+      "message": "Equals checks for incompatible operand",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that the equals method checks for an operand of an incompatible type (JettyHttpExchangeDelegate), which can break the equals contract of symmetry and transitivity, indicating a real correctness problem.",
+          "is_true_positive": true,
+          "confidence": 0.92,
+          "category": "CORRECTNESS",
+          "issue_signature": "equals method checks incompatible operand type",
+          "developer_explanation": "Your equals implementation compares against a different class, which can violate the symmetry and transitivity guarantees of Object.equals. This may cause unexpected behavior when instances are used in collections or compared with other objects. Refactor the method to only compare objects of the same type (or a proper subclass) or delegate equality in a way that preserves the contract.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2084,
+            "output_tokens": 473,
+            "reasoning_tokens": 398,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000157518
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1581,
+          "latency_s": 9.169
+        }
+      ],
+      "original_finding_index": 124
+    },
+    {
+      "finding_id": 102,
+      "type": "EI_EXPOSE_STATIC_REP2",
+      "sourcefile": "JettyHttpServerProvider.java",
+      "start_line": "36",
+      "message": "May expose internal static state by storing a mutable object into a static field",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that a mutable Server object is stored in a static field, which can expose internal state to external modification, a condition SpotBugs flags as a potential security issue. This pattern is generally unsafe because changes to the mutable object can affect global behavior. Therefore the claim is materially correct.",
+          "is_true_positive": true,
+          "confidence": 0.78,
+          "category": "SECURITY",
+          "issue_signature": "exposing mutable object via static field",
+          "developer_explanation": "Storing the Server instance in a static field makes it globally accessible, so any code that holds a reference can modify its state and potentially compromise the server's behavior or security. Consider storing an immutable copy, using defensive copying, or redesigning to avoid a mutable static reference.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2038,
+            "output_tokens": 611,
+            "reasoning_tokens": 550,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000179276
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2181,
+          "latency_s": 13.314
+        }
+      ],
+      "original_finding_index": 132
+    },
+    {
+      "finding_id": 103,
+      "type": "ES_COMPARING_PARAMETER_STRING_WITH_EQ",
+      "sourcefile": "HttpCookie.java",
+      "start_line": "869",
+      "message": "Comparison of String parameter using == or !=",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that the method compares a String parameter using == or !=, which checks reference equality instead of content, leading to incorrect behavior. This pattern is a known bug in Java code. Therefore the claim is materially correct.",
+          "is_true_positive": true,
+          "confidence": 0.96,
+          "category": "CORRECTNESS",
+          "issue_signature": "string reference comparison using ==",
+          "developer_explanation": "The method is using ==/!= to compare the incoming strings, which only tests whether they are the same object, not whether they have the same characters. This can cause the method to return false even when the strings are equal, breaking its intended functionality. Replace the ==/!= with String.equalsIgnoreCase (or equals) to compare the actual contents.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2028,
+            "output_tokens": 391,
+            "reasoning_tokens": 269,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000141506
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1064,
+          "latency_s": 8.317
+        }
+      ],
+      "original_finding_index": 144
+    },
+    {
+      "finding_id": 104,
+      "type": "AT_NONATOMIC_OPERATIONS_ON_SHARED_VARIABLE",
+      "sourcefile": "HttpParser.java",
+      "start_line": "1366",
+      "message": "Operation on shared variable is not atomic",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning claims that a write to the _length field in HttpParser is a non‑atomic compound operation on a shared variable, but without seeing the code we cannot confirm that the field is actually accessed by multiple threads; parsers are often instantiated per request and used only by a single thread, making the warning likely a false positive.",
+          "is_true_positive": false,
+          "confidence": 0.62,
+          "category": "CONCURRENCY",
+          "issue_signature": "non‑atomic compound write to shared field",
+          "developer_explanation": "The analysis flags a compound update to the _length field as a potential race, but if each HttpParser instance is used by only one thread, the field is not truly shared and no synchronization is needed. You can safely ignore this warning unless the parser is accessed concurrently, in which case you would need to synchronize or use an atomic type.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2145,
+            "output_tokens": 482,
+            "reasoning_tokens": 345,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000161305
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1373,
+          "latency_s": 10.966
+        }
+      ],
+      "original_finding_index": 172
+    },
+    {
+      "finding_id": 105,
+      "type": "VA_FORMAT_STRING_USES_NEWLINE",
+      "sourcefile": "HttpTester.java",
+      "start_line": "636",
+      "message": "Format string should use %n rather than \\n",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning flags a format string that contains a literal \\n character, and the rule claims it should use %n for platform independence, which is a valid recommendation.",
+          "is_true_positive": true,
+          "confidence": 0.92,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "format string uses \\n instead of %n",
+          "developer_explanation": "Your toString() method builds a format string with a literal newline (\\n). This ties the output to Unix line endings and can produce incorrect line separators on Windows. Replace \\n with the %n format specifier (or use System.lineSeparator()) to make the code portable across platforms.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2020,
+            "output_tokens": 544,
+            "reasoning_tokens": 430,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00016722
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1707,
+          "latency_s": 10.717
+        }
+      ],
+      "original_finding_index": 201
+    },
+    {
+      "finding_id": 106,
+      "type": "RV_NEGATING_RESULT_OF_COMPARETO",
+      "sourcefile": "QuotedQualityCSV.java",
+      "start_line": "335",
+      "message": "Negating the result of compareTo()/compare()",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning flags negating the result of Integer.compare, but Integer.compare only returns -1, 0, or 1, so negating cannot produce an incorrect sign, making the claim of a bug incorrect.",
+          "is_true_positive": false,
+          "confidence": 0.92,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "negating result of compare method",
+          "developer_explanation": "The code negates the value returned by Integer.compare, which only yields -1, 0, or 1, so the sign is always correctly flipped. This pattern is harmless but unnecessary; you can simply reverse the operand order for clarity. The warning can be ignored as it does not indicate a functional problem.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2041,
+            "output_tokens": 651,
+            "reasoning_tokens": 529,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000186187
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2101,
+          "latency_s": 12.518
+        }
+      ],
+      "original_finding_index": 223
+    },
+    {
+      "finding_id": 107,
+      "type": "MS_PKGPROTECT",
+      "sourcefile": "Http3Fields.java",
+      "start_line": "37",
+      "message": "Field should be package protected",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that a mutable static field is public and should be package protected, which indicates a security risk of unintended modification.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "SECURITY",
+          "issue_signature": "public mutable static field",
+          "developer_explanation": "The field is static, mutable, and publicly accessible, allowing any code to change its value, which can lead to unexpected behavior or security problems. Reduce its visibility by making it package‑private or, better, make the field immutable (e.g., wrap it in an unmodifiable collection or declare it final). This limits who can modify the data and protects the integrity of the class.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1988,
+            "output_tokens": 634,
+            "reasoning_tokens": 569,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000181336
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2267,
+          "latency_s": 13.608
+        }
+      ],
+      "original_finding_index": 400
+    },
+    {
+      "finding_id": 108,
+      "type": "NM_SAME_SIMPLE_NAME_AS_INTERFACE",
+      "sourcefile": "InitialContextFactory.java",
+      "start_line": "34",
+      "message": "Class names shouldn't shadow simple name of implemented interface",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning correctly identifies that the class name org.eclipse.jetty.jndi.InitialContextFactory is identical to the simple name of the implemented interface javax.naming.spi.InitialContextFactory, which the rule flags as a naming conflict. This naming overlap can cause confusion and maintenance difficulties, so the claim is valid. Therefore the warning is a true positive.",
+          "is_true_positive": true,
+          "confidence": 0.96,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "class name shadows interface simple name",
+          "developer_explanation": "Your class shares the same simple name as the interface it implements, which can make the code harder to read and increase the risk of mistakenly overriding methods. Consider renaming the class or moving it to a distinct package to avoid this confusion and improve maintainability.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2039,
+            "output_tokens": 450,
+            "reasoning_tokens": 344,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000151943
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1364,
+          "latency_s": 10.417
+        }
+      ],
+      "original_finding_index": 480
+    },
+    {
+      "finding_id": 109,
+      "type": "OS_OPEN_STREAM",
+      "sourcefile": "AbstractForkedChild.java",
+      "start_line": "177",
+      "message": "Method may fail to close stream",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that the method creates a stream and does not close it on any path, which can cause a file descriptor leak, indicating a real resource‑cleanup problem.",
+          "is_true_positive": true,
+          "confidence": 0.9,
+          "category": "CORRECTNESS",
+          "issue_signature": "stream not closed leading to resource leak",
+          "developer_explanation": "The loadWebAppProps method opens an I/O stream but never closes it, which can exhaust file descriptors over time. Ensure the stream is closed on every exit path, for example by using a try‑with‑resources block or a finally clause that calls close().",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2035,
+            "output_tokens": 452,
+            "reasoning_tokens": 359,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000152135
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1426,
+          "latency_s": 8.952
+        }
+      ],
+      "original_finding_index": 487
+    },
+    {
+      "finding_id": 110,
+      "type": "MS_SHOULD_BE_FINAL",
+      "sourcefile": "MavenServerConnector.java",
+      "start_line": "39",
+      "message": "Field isn't final but should be",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that a public static field is not final and could be changed by malicious code, which matches the definition of CWE-500, indicating a real security concern.",
+          "is_true_positive": true,
+          "confidence": 0.88,
+          "category": "SECURITY",
+          "issue_signature": "public static field not final",
+          "developer_explanation": "The field PORT_SYSPROPERTY is declared public static without the final modifier, allowing any code to modify its value at runtime, which can lead to unintended behavior or security issues. If the field is intended to be a constant, mark it as final (or reduce its visibility). Updating the declaration to `public static final` will prevent accidental or malicious changes.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1998,
+            "output_tokens": 580,
+            "reasoning_tokens": 502,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000172526
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1999,
+          "latency_s": 10.75
+        }
+      ],
+      "original_finding_index": 523
+    },
+    {
+      "finding_id": 111,
+      "type": "MS_MUTABLE_COLLECTION_PKGPROTECT",
+      "sourcefile": "SelectiveJarResource.java",
+      "start_line": "52",
+      "message": "Field is a mutable collection which should be package protected",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that a static final field holds a mutable collection that is not package protected, which allows other code to modify it, indicating a real risk. This matches the tool's claim that the field can be changed by malicious or accidental code.",
+          "is_true_positive": true,
+          "confidence": 0.88,
+          "category": "SECURITY",
+          "issue_signature": "public mutable static collection field",
+          "developer_explanation": "The static final field references a mutable collection that can be altered by any code that can access it, potentially leading to incorrect behavior or security issues. Restrict the field's visibility to package-private or wrap the collection with an unmodifiable view to prevent external modification.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2017,
+            "output_tokens": 660,
+            "reasoning_tokens": 649,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000186829
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2579,
+          "latency_s": 12.304
+        }
+      ],
+      "original_finding_index": 537
+    },
+    {
+      "finding_id": 112,
+      "type": "DM_EXIT",
+      "sourcefile": "ShutdownService.java",
+      "start_line": "348",
+      "message": "Method invokes System.exit(...)",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning reports that the method calls System.exit, which indeed terminates the whole JVM, and flags this as a bad practice. Because invoking System.exit can make the code hard to reuse and may be inappropriate in many contexts, the claim is materially correct. Therefore the warning is a true positive.",
+          "is_true_positive": true,
+          "confidence": 0.78,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "call to System.exit in application code",
+          "developer_explanation": "Calling System.exit forces the entire JVM to shut down, which can prevent other components from continuing to run and makes the code difficult to embed or test. Consider whether terminating the process is truly required here; if not, replace the call with a graceful shutdown mechanism or throw an exception to let the surrounding framework handle termination.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2013,
+            "output_tokens": 776,
+            "reasoning_tokens": 719,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000206401
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2874,
+          "latency_s": 13.989
+        }
+      ],
+      "original_finding_index": 740
+    },
+    {
+      "finding_id": 113,
+      "type": "DMI_RANDOM_USED_ONLY_ONCE",
+      "sourcefile": "DefaultSessionIdManager.java",
+      "start_line": "356",
+      "message": "Random object created and used only once",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that a java.util.Random is instantiated, used only once, and then discarded, which can lead to predictable random numbers and unnecessary object allocation.",
+          "is_true_positive": true,
+          "confidence": 0.92,
+          "category": "SECURITY",
+          "issue_signature": "single-use java.util.Random instance",
+          "developer_explanation": "Creating a new Random for each session ID makes the generated IDs easier to predict and wastes resources. Reuse a single Random instance or, preferably, use a SecureRandom for generating session identifiers. This will improve security and avoid unnecessary object creation.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2090,
+            "output_tokens": 465,
+            "reasoning_tokens": 399,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00015638
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1585,
+          "latency_s": 8.763
+        }
+      ],
+      "original_finding_index": 773
+    },
+    {
+      "finding_id": 114,
+      "type": "NP_BOOLEAN_RETURN_NULL",
+      "sourcefile": "JettyLoggerConfiguration.java",
+      "start_line": "79",
+      "message": "Method with Boolean return type returns explicit null",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that the method returns an explicit null despite having a Boolean return type, which can lead to a NullPointerException when the result is unboxed. This claim is materially correct because returning null from a Boolean is allowed but unsafe if unboxed, so the issue is real.",
+          "is_true_positive": true,
+          "confidence": 0.88,
+          "category": "CORRECTNESS",
+          "issue_signature": "returning null from Boolean method",
+          "developer_explanation": "Your lambda returns null even though its return type is Boolean. If any caller automatically unboxes the result to a primitive boolean, a NullPointerException will be thrown. Return Boolean.TRUE or Boolean.FALSE instead, or change the return type to boolean if null is not a meaningful value.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2027,
+            "output_tokens": 517,
+            "reasoning_tokens": 402,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000162889
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1601,
+          "latency_s": 9.965
+        }
+      ],
+      "original_finding_index": 808
+    },
+    {
+      "finding_id": 115,
+      "type": "UL_UNRELEASED_LOCK_EXCEPTION_PATH",
+      "sourcefile": "Blocker.java",
+      "start_line": "449",
+      "message": "Method does not release lock on all exception paths",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly states that the method acquires a JSR‑166 lock but fails to release it on some exception paths, which is the claim being evaluated.",
+          "is_true_positive": true,
+          "confidence": 0.78,
+          "category": "CORRECTNESS",
+          "issue_signature": "lock not released on exception path",
+          "developer_explanation": "The close() method acquires a lock but does not guarantee unlocking when an exception occurs, which can lead to deadlocks and incorrect program behavior. Ensure the lock is released in a finally block or use try‑with‑resources to guarantee unlocking even when exceptions are thrown.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2043,
+            "output_tokens": 417,
+            "reasoning_tokens": 322,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000146481
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1281,
+          "latency_s": 8.289
+        }
+      ],
+      "original_finding_index": 838
+    },
+    {
+      "finding_id": 116,
+      "type": "IT_NO_SUCH_ELEMENT",
+      "sourcefile": "BlockingArrayQueue.java",
+      "start_line": "919",
+      "message": "Iterator next() method cannot throw NoSuchElementException",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that the iterator's next() method does not throw NoSuchElementException, which violates the Iterator contract, so the claim is a real correctness problem.",
+          "is_true_positive": true,
+          "confidence": 0.86,
+          "category": "CORRECTNESS",
+          "issue_signature": "iterator next method not throwing NoSuchElementException",
+          "developer_explanation": "The next() implementation in BlockingArrayQueue's iterator does not throw NoSuchElementException when the iterator is exhausted, violating the Iterator contract. This can lead to callers receiving incorrect results or unexpected behavior. Modify next() to detect the end of the collection and throw NoSuchElementException accordingly.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2006,
+            "output_tokens": 576,
+            "reasoning_tokens": 519,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000172142
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2064,
+          "latency_s": 11.205
+        }
+      ],
+      "original_finding_index": 844
+    },
+    {
+      "finding_id": 117,
+      "type": "NM_CLASS_NOT_EXCEPTION",
+      "sourcefile": "ExceptionUtil.java",
+      "start_line": "304",
+      "message": "Class is not derived from an Exception, even though it is named as such",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that the class name ends with 'Exception' but the class does not extend java.lang.Exception, which is a factual mismatch between name and type. This naming inconsistency can mislead developers and is a maintainability concern, so the claim is correct.",
+          "is_true_positive": true,
+          "confidence": 0.93,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "class named like exception but not extending exception",
+          "developer_explanation": "The class name suggests it is an exception type, yet it does not inherit from java.lang.Exception, which can confuse users of the API. Consider renaming the class to remove the 'Exception' suffix or make it extend Exception to align its name with its behavior.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1986,
+            "output_tokens": 409,
+            "reasoning_tokens": 286,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000143012
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1140,
+          "latency_s": 7.889
+        }
+      ],
+      "original_finding_index": 860
+    },
+    {
+      "finding_id": 118,
+      "type": "CN_IDIOM",
+      "sourcefile": "LazyList.java",
+      "start_line": "60",
+      "message": "Class implements Cloneable but does not define or use clone method",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that the class implements Cloneable but does not define or use a clone method, which is a factual claim about the code. This is indeed a design flaw because implementing Cloneable without providing a clone implementation makes the Cloneable contract ineffective and can mislead users. Therefore the warning correctly identifies a problem.",
+          "is_true_positive": true,
+          "confidence": 0.92,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "class implements Cloneable without clone method",
+          "developer_explanation": "Your class declares that it implements Cloneable but never overrides or calls clone, so the Cloneable marker is meaningless. This can confuse callers who expect the object to be cloneable and may lead to runtime errors if cloning is attempted. Remove the Cloneable interface or provide a proper clone implementation.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1969,
+            "output_tokens": 651,
+            "reasoning_tokens": 559,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000183523
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2230,
+          "latency_s": 12.504
+        }
+      ],
+      "original_finding_index": 880
+    },
+    {
+      "finding_id": 119,
+      "type": "SE_COMPARATOR_SHOULD_BE_SERIALIZABLE",
+      "sourcefile": "TopologicalSort.java",
+      "start_line": "183",
+      "message": "Comparator doesn't implement Serializable",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning correctly states that the class implements Comparator but not Serializable, but this is only a best‑practice suggestion and not necessarily a bug in the code.",
+          "is_true_positive": false,
+          "confidence": 0.65,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "comparator missing Serializable implementation",
+          "developer_explanation": "The comparator does not implement Serializable, which SpotBugs flags as a defensive‑programming recommendation. If this comparator is never serialized or used in a serializable collection, the warning can be safely ignored. Implement Serializable only if you need the comparator to be part of a serialized object graph.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2039,
+            "output_tokens": 650,
+            "reasoning_tokens": 652,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000185943
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2603,
+          "latency_s": 13.024
+        }
+      ],
+      "original_finding_index": 902
+    }
+  ]
+}

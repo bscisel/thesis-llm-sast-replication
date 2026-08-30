@@ -1,0 +1,8 @@
+model;accuracy_with_code;accuracy_without_code;accuracy_drop;kept_as_true_with_code;kept_as_true_without_code
+Claude Opus 5;0,725;0,619;0,106;0,664;0,769
+Claude Sonnet 5;0,725;0,581;0,144;0,664;0,803
+GPT-5.6 Terra;0,753;0,578;0,175;0,586;0,822
+gpt-oss-20b;0,722;0,525;0,197;0,461;0,747
+Qwen3.5 9B;0,653;0,453;0,200;0,403;0,753
+gpt-oss-120b;0,725;0,522;0,203;0,614;0,822
+GPT-5.6 Luna;0,725;0,489;0,236;0,653;0,911

@@ -1,0 +1,637 @@
+{
+  "tool": "sonarqube",
+  "version": "26.3.0.120487",
+  "total_findings": 20,
+  "filtered_out": {
+    "total": 0,
+    "reasons": {}
+  },
+  "findings": [
+    {
+      "type": "java:S131",
+      "abbrev": "S131",
+      "sourcefile": "ServletPathSpec.java",
+      "start_line": "440",
+      "end_line": "440",
+      "classname": "ServletPathSpec",
+      "fully_qualified_classname": "org.eclipse.jetty.http.pathmap.ServletPathSpec",
+      "source_path": "jetty-http/src/main/java/org/eclipse/jetty/http/pathmap/ServletPathSpec.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.http.pathmap",
+      "message": "Complete cases by adding the missing enum constants or add a default case to this switch.",
+      "description": "Complete cases by adding the missing enum constants or add a default case to this switch.",
+      "tool_specific": {
+        "severity": "CRITICAL",
+        "issue_type": "CODE_SMELL",
+        "effort": "5min",
+        "status": "OPEN",
+        "tags": [
+          "cwe",
+          "cert"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-http/src/main/java/org/eclipse/jetty/http/pathmap/ServletPathSpec.java",
+        "module": "jetty-http"
+      },
+      "original_finding_index": 346
+    },
+    {
+      "type": "java:S2447",
+      "abbrev": "S2447",
+      "sourcefile": "IncludeExcludeSet.java",
+      "start_line": "215",
+      "end_line": "215",
+      "classname": "IncludeExcludeSet",
+      "fully_qualified_classname": "org.eclipse.jetty.util.IncludeExcludeSet",
+      "source_path": "jetty-util/src/main/java/org/eclipse/jetty/util/IncludeExcludeSet.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.util",
+      "message": "Null is returned but a \"Boolean\" is expected.",
+      "description": "Null is returned but a \"Boolean\" is expected.",
+      "tool_specific": {
+        "severity": "CRITICAL",
+        "issue_type": "CODE_SMELL",
+        "effort": "20min",
+        "status": "OPEN",
+        "tags": [
+          "cwe",
+          "cert",
+          "pitfall"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-util/src/main/java/org/eclipse/jetty/util/IncludeExcludeSet.java",
+        "module": "jetty-util"
+      },
+      "original_finding_index": 811
+    },
+    {
+      "type": "java:S2157",
+      "abbrev": "S2157",
+      "sourcefile": "LazyList.java",
+      "start_line": "57",
+      "end_line": "57",
+      "classname": "LazyList",
+      "fully_qualified_classname": "org.eclipse.jetty.util.LazyList",
+      "source_path": "jetty-util/src/main/java/org/eclipse/jetty/util/LazyList.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.util",
+      "message": "Add a \"clone()\" method to this class.",
+      "description": "Add a \"clone()\" method to this class.",
+      "tool_specific": {
+        "severity": "CRITICAL",
+        "issue_type": "CODE_SMELL",
+        "effort": "30min",
+        "status": "OPEN",
+        "tags": [
+          "convention",
+          "api-design"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-util/src/main/java/org/eclipse/jetty/util/LazyList.java",
+        "module": "jetty-util"
+      },
+      "original_finding_index": 817
+    },
+    {
+      "type": "java:S1452",
+      "abbrev": "S1452",
+      "sourcefile": "PathCollators.java",
+      "start_line": "54",
+      "end_line": "54",
+      "classname": "PathCollators",
+      "fully_qualified_classname": "org.eclipse.jetty.util.resource.PathCollators",
+      "source_path": "jetty-util/src/main/java/org/eclipse/jetty/util/resource/PathCollators.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.util.resource",
+      "message": "Remove usage of generic wildcard type.",
+      "description": "Remove usage of generic wildcard type.",
+      "tool_specific": {
+        "severity": "CRITICAL",
+        "issue_type": "CODE_SMELL",
+        "effort": "20min",
+        "status": "OPEN",
+        "tags": [
+          "pitfall"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-util/src/main/java/org/eclipse/jetty/util/resource/PathCollators.java",
+        "module": "jetty-util"
+      },
+      "original_finding_index": 875
+    },
+    {
+      "type": "java:S5843",
+      "abbrev": "S5843",
+      "sourcefile": "AuthenticationProtocolHandler.java",
+      "start_line": "44",
+      "end_line": "44",
+      "classname": "AuthenticationProtocolHandler",
+      "fully_qualified_classname": "org.eclipse.jetty.client.AuthenticationProtocolHandler",
+      "source_path": "jetty-client/src/main/java/org/eclipse/jetty/client/AuthenticationProtocolHandler.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.client",
+      "message": "Simplify this regular expression to reduce its complexity from 35 to the 20 allowed.",
+      "description": "Simplify this regular expression to reduce its complexity from 35 to the 20 allowed.",
+      "tool_specific": {
+        "severity": "MAJOR",
+        "issue_type": "CODE_SMELL",
+        "effort": "38min",
+        "status": "OPEN",
+        "tags": [
+          "regex"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-client/src/main/java/org/eclipse/jetty/client/AuthenticationProtocolHandler.java",
+        "module": "jetty-client"
+      },
+      "original_finding_index": 1003
+    },
+    {
+      "type": "java:S1871",
+      "abbrev": "S1871",
+      "sourcefile": "HttpDateTime.java",
+      "start_line": "178",
+      "end_line": "180",
+      "classname": "HttpDateTime",
+      "fully_qualified_classname": "org.eclipse.jetty.http.HttpDateTime",
+      "source_path": "jetty-http/src/main/java/org/eclipse/jetty/http/HttpDateTime.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.http",
+      "message": "This branch's code block is the same as the block for the branch on line 174.",
+      "description": "This branch's code block is the same as the block for the branch on line 174.",
+      "tool_specific": {
+        "severity": "MAJOR",
+        "issue_type": "CODE_SMELL",
+        "effort": "10min",
+        "status": "OPEN",
+        "tags": [
+          "design",
+          "suspicious"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-http/src/main/java/org/eclipse/jetty/http/HttpDateTime.java",
+        "module": "jetty-http"
+      },
+      "original_finding_index": 1247
+    },
+    {
+      "type": "java:S1700",
+      "abbrev": "S1700",
+      "sourcefile": "MultiPartByteRanges.java",
+      "start_line": "261",
+      "end_line": "261",
+      "classname": "MultiPartByteRanges",
+      "fully_qualified_classname": "org.eclipse.jetty.http.MultiPartByteRanges",
+      "source_path": "jetty-http/src/main/java/org/eclipse/jetty/http/MultiPartByteRanges.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.http",
+      "message": "Rename field \"parser\"",
+      "description": "Rename field \"parser\"",
+      "tool_specific": {
+        "severity": "MAJOR",
+        "issue_type": "CODE_SMELL",
+        "effort": "10min",
+        "status": "OPEN",
+        "tags": [
+          "brain-overload"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-http/src/main/java/org/eclipse/jetty/http/MultiPartByteRanges.java",
+        "module": "jetty-http"
+      },
+      "original_finding_index": 1338
+    },
+    {
+      "type": "java:S5261",
+      "abbrev": "S5261",
+      "sourcefile": "ServletPathSpec.java",
+      "start_line": "182",
+      "end_line": "182",
+      "classname": "ServletPathSpec",
+      "fully_qualified_classname": "org.eclipse.jetty.http.pathmap.ServletPathSpec",
+      "source_path": "jetty-http/src/main/java/org/eclipse/jetty/http/pathmap/ServletPathSpec.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.http.pathmap",
+      "message": "Add explicit curly braces to avoid dangling else.",
+      "description": "Add explicit curly braces to avoid dangling else.",
+      "tool_specific": {
+        "severity": "MAJOR",
+        "issue_type": "CODE_SMELL",
+        "effort": "1min",
+        "status": "OPEN",
+        "tags": [
+          "confusing"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-http/src/main/java/org/eclipse/jetty/http/pathmap/ServletPathSpec.java",
+        "module": "jetty-http"
+      },
+      "original_finding_index": 1392
+    },
+    {
+      "type": "java:S6126",
+      "abbrev": "S6126",
+      "sourcefile": "PrefaceFrame.java",
+      "start_line": "33",
+      "end_line": "36",
+      "classname": "PrefaceFrame",
+      "fully_qualified_classname": "org.eclipse.jetty.http2.frames.PrefaceFrame",
+      "source_path": "jetty-http2/jetty-http2-common/src/main/java/org/eclipse/jetty/http2/frames/PrefaceFrame.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.http2.frames",
+      "message": "Replace this String concatenation with Text block.",
+      "description": "Replace this String concatenation with Text block.",
+      "tool_specific": {
+        "severity": "MAJOR",
+        "issue_type": "CODE_SMELL",
+        "effort": "2min",
+        "status": "OPEN",
+        "tags": [
+          "java15"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-http2/jetty-http2-common/src/main/java/org/eclipse/jetty/http2/frames/PrefaceFrame.java",
+        "module": "jetty-http2/jetty-http2-common"
+      },
+      "original_finding_index": 1477
+    },
+    {
+      "type": "java:S1172",
+      "abbrev": "S1172",
+      "sourcefile": "HeaderGenerator.java",
+      "start_line": "48",
+      "end_line": "48",
+      "classname": "HeaderGenerator",
+      "fully_qualified_classname": "org.eclipse.jetty.http2.generator.HeaderGenerator",
+      "source_path": "jetty-http2/jetty-http2-common/src/main/java/org/eclipse/jetty/http2/generator/HeaderGenerator.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.http2.generator",
+      "message": "Remove this unused method parameter \"capacity\".",
+      "description": "Remove this unused method parameter \"capacity\".",
+      "tool_specific": {
+        "severity": "MAJOR",
+        "issue_type": "CODE_SMELL",
+        "effort": "5min",
+        "status": "OPEN",
+        "tags": [
+          "cert",
+          "unused"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-http2/jetty-http2-common/src/main/java/org/eclipse/jetty/http2/generator/HeaderGenerator.java",
+        "module": "jetty-http2/jetty-http2-common"
+      },
+      "original_finding_index": 1479
+    },
+    {
+      "type": "java:S1119",
+      "abbrev": "S1119",
+      "sourcefile": "WriteFlusher.java",
+      "start_line": "343",
+      "end_line": "343",
+      "classname": "WriteFlusher",
+      "fully_qualified_classname": "org.eclipse.jetty.io.WriteFlusher",
+      "source_path": "jetty-io/src/main/java/org/eclipse/jetty/io/WriteFlusher.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.io",
+      "message": "Refactor the code to remove this label and the need for it.",
+      "description": "Refactor the code to remove this label and the need for it.",
+      "tool_specific": {
+        "severity": "MAJOR",
+        "issue_type": "CODE_SMELL",
+        "effort": "30min",
+        "status": "OPEN",
+        "tags": [
+          "confusing"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-io/src/main/java/org/eclipse/jetty/io/WriteFlusher.java",
+        "module": "jetty-io"
+      },
+      "original_finding_index": 1738
+    },
+    {
+      "type": "java:S127",
+      "abbrev": "S127",
+      "sourcefile": "WriteThroughWriter.java",
+      "start_line": "249",
+      "end_line": "249",
+      "classname": "WriteThroughWriter",
+      "fully_qualified_classname": "org.eclipse.jetty.io.WriteThroughWriter",
+      "source_path": "jetty-io/src/main/java/org/eclipse/jetty/io/WriteThroughWriter.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.io",
+      "message": "Refactor the code in order to not assign to this loop counter from within the loop body.",
+      "description": "Refactor the code in order to not assign to this loop counter from within the loop body.",
+      "tool_specific": {
+        "severity": "MAJOR",
+        "issue_type": "CODE_SMELL",
+        "effort": "10min",
+        "status": "OPEN",
+        "tags": [
+          "pitfall"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-io/src/main/java/org/eclipse/jetty/io/WriteThroughWriter.java",
+        "module": "jetty-io"
+      },
+      "original_finding_index": 1743
+    },
+    {
+      "type": "java:S3011",
+      "abbrev": "S3011",
+      "sourcefile": "DefaultFileLocatorHelper.java",
+      "start_line": "153",
+      "end_line": "153",
+      "classname": "DefaultFileLocatorHelper",
+      "fully_qualified_classname": "org.eclipse.jetty.osgi.util.DefaultFileLocatorHelper",
+      "source_path": "jetty-osgi/src/main/java/org/eclipse/jetty/osgi/util/DefaultFileLocatorHelper.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.osgi.util",
+      "message": "This accessibility update should be removed.",
+      "description": "This accessibility update should be removed.",
+      "tool_specific": {
+        "severity": "MAJOR",
+        "issue_type": "CODE_SMELL",
+        "effort": "30min",
+        "status": "OPEN",
+        "tags": [
+          "cert"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-osgi/src/main/java/org/eclipse/jetty/osgi/util/DefaultFileLocatorHelper.java",
+        "module": "jetty-osgi"
+      },
+      "original_finding_index": 1955
+    },
+    {
+      "type": "java:S5738",
+      "abbrev": "S5738",
+      "sourcefile": "Server.java",
+      "start_line": "904",
+      "end_line": "904",
+      "classname": "Server",
+      "fully_qualified_classname": "org.eclipse.jetty.server.Server",
+      "source_path": "jetty-server/src/main/java/org/eclipse/jetty/server/Server.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.server",
+      "message": "Remove this call to a deprecated class, it has been marked for removal.",
+      "description": "Remove this call to a deprecated class, it has been marked for removal.",
+      "tool_specific": {
+        "severity": "MAJOR",
+        "issue_type": "CODE_SMELL",
+        "effort": "15min",
+        "status": "OPEN",
+        "tags": [
+          "cwe",
+          "obsolete",
+          "cert"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-server/src/main/java/org/eclipse/jetty/server/Server.java",
+        "module": "jetty-server"
+      },
+      "original_finding_index": 2258
+    },
+    {
+      "type": "java:S112",
+      "abbrev": "S112",
+      "sourcefile": "SessionDataMap.java",
+      "start_line": "58",
+      "end_line": "58",
+      "classname": "SessionDataMap",
+      "fully_qualified_classname": "org.eclipse.jetty.session.SessionDataMap",
+      "source_path": "jetty-session/src/main/java/org/eclipse/jetty/session/SessionDataMap.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.session",
+      "message": "Replace generic exceptions with specific library exceptions or a custom exception.",
+      "description": "Replace generic exceptions with specific library exceptions or a custom exception.",
+      "tool_specific": {
+        "severity": "MAJOR",
+        "issue_type": "CODE_SMELL",
+        "effort": "20min",
+        "status": "OPEN",
+        "tags": [
+          "cwe",
+          "error-handling",
+          "cert"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-session/src/main/java/org/eclipse/jetty/session/SessionDataMap.java",
+        "module": "jetty-session"
+      },
+      "original_finding_index": 2457
+    },
+    {
+      "type": "java:S3824",
+      "abbrev": "S3824",
+      "sourcefile": "TopologicalSort.java",
+      "start_line": "57",
+      "end_line": "57",
+      "classname": "TopologicalSort",
+      "fully_qualified_classname": "org.eclipse.jetty.util.TopologicalSort",
+      "source_path": "jetty-util/src/main/java/org/eclipse/jetty/util/TopologicalSort.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.util",
+      "message": "Replace this \"Map.get()\" and condition with a call to \"Map.computeIfAbsent()\".",
+      "description": "Replace this \"Map.get()\" and condition with a call to \"Map.computeIfAbsent()\".",
+      "tool_specific": {
+        "severity": "MAJOR",
+        "issue_type": "CODE_SMELL",
+        "effort": "10min",
+        "status": "OPEN",
+        "tags": [
+          "symbolic-execution",
+          "java8"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-util/src/main/java/org/eclipse/jetty/util/TopologicalSort.java",
+        "module": "jetty-util"
+      },
+      "original_finding_index": 2693
+    },
+    {
+      "type": "java:S108",
+      "abbrev": "S108",
+      "sourcefile": "TypeUtil.java",
+      "start_line": "622",
+      "end_line": "622",
+      "classname": "TypeUtil",
+      "fully_qualified_classname": "org.eclipse.jetty.util.TypeUtil",
+      "source_path": "jetty-util/src/main/java/org/eclipse/jetty/util/TypeUtil.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.util",
+      "message": "Remove this block of code, fill it in, or add a comment explaining why it is empty.",
+      "description": "Remove this block of code, fill it in, or add a comment explaining why it is empty.",
+      "tool_specific": {
+        "severity": "MAJOR",
+        "issue_type": "CODE_SMELL",
+        "effort": "5min",
+        "status": "OPEN",
+        "tags": [
+          "suspicious"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-util/src/main/java/org/eclipse/jetty/util/TypeUtil.java",
+        "module": "jetty-util"
+      },
+      "original_finding_index": 2703
+    },
+    {
+      "type": "java:S1144",
+      "abbrev": "S1144",
+      "sourcefile": "SecurityUtils.java",
+      "start_line": "233",
+      "end_line": "233",
+      "classname": "SecurityUtils",
+      "fully_qualified_classname": "org.eclipse.jetty.util.security.SecurityUtils",
+      "source_path": "jetty-util/src/main/java/org/eclipse/jetty/util/security/SecurityUtils.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.util.security",
+      "message": "Remove this unused private \"callableToPrivilegedAction\" method.",
+      "description": "Remove this unused private \"callableToPrivilegedAction\" method.",
+      "tool_specific": {
+        "severity": "MAJOR",
+        "issue_type": "CODE_SMELL",
+        "effort": "2min",
+        "status": "OPEN",
+        "tags": [
+          "unused"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-util/src/main/java/org/eclipse/jetty/util/security/SecurityUtils.java",
+        "module": "jetty-util"
+      },
+      "original_finding_index": 2869
+    },
+    {
+      "type": "java:S6204",
+      "abbrev": "S6204",
+      "sourcefile": "JettyClientUpgradeRequest.java",
+      "start_line": "52",
+      "end_line": "52",
+      "classname": "JettyClientUpgradeRequest",
+      "fully_qualified_classname": "org.eclipse.jetty.websocket.client.internal.JettyClientUpgradeRequest",
+      "source_path": "jetty-websocket/jetty-websocket-jetty-client/src/main/java/org/eclipse/jetty/websocket/client/internal/JettyClientUpgradeRequest.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.websocket.client.internal",
+      "message": "Replace this usage of 'Stream.collect(Collectors.toList())' with 'Stream.toList()' and ensure that the list is unmodified.",
+      "description": "Replace this usage of 'Stream.collect(Collectors.toList())' with 'Stream.toList()' and ensure that the list is unmodified.",
+      "tool_specific": {
+        "severity": "MAJOR",
+        "issue_type": "CODE_SMELL",
+        "effort": "5min",
+        "status": "OPEN",
+        "tags": [
+          "java16"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-websocket/jetty-websocket-jetty-client/src/main/java/org/eclipse/jetty/websocket/client/internal/JettyClientUpgradeRequest.java",
+        "module": "jetty-websocket/jetty-websocket-jetty-client"
+      },
+      "original_finding_index": 3055
+    },
+    {
+      "type": "xml:S1134",
+      "abbrev": "S1134",
+      "sourcefile": "pom.xml",
+      "start_line": "54",
+      "end_line": "54",
+      "classname": "pom.xml",
+      "fully_qualified_classname": "pom.xml",
+      "source_path": "pom.xml",
+      "source_set": null,
+      "package": null,
+      "message": "Take the required action to fix the issue indicated by this \"FIXME\" comment.",
+      "description": "Take the required action to fix the issue indicated by this \"FIXME\" comment.",
+      "tool_specific": {
+        "severity": "MAJOR",
+        "issue_type": "CODE_SMELL",
+        "effort": "0min",
+        "status": "OPEN",
+        "tags": [
+          "cwe"
+        ],
+        "component": "jetty-core-minus-coreapp-start:pom.xml",
+        "module": null
+      },
+      "original_finding_index": 3102
+    }
+  ],
+  "sample": {
+    "source_file": "results/002_jetty-population/static_analysis/processed/sonarqube.json",
+    "source_total_findings": 3103,
+    "sample_size": 20,
+    "method": "rule_extension_one_per_rule",
+    "exclude_test_sources": true,
+    "excluded_test_count": 8626,
+    "excluded_module_count": 6,
+    "excluded_rule_count": 29,
+    "eligible_new_rules": 66,
+    "rules": {
+      "java:S108": {
+        "pool_size": 19
+      },
+      "java:S1119": {
+        "pool_size": 29
+      },
+      "java:S112": {
+        "pool_size": 219
+      },
+      "java:S1144": {
+        "pool_size": 8
+      },
+      "java:S1172": {
+        "pool_size": 59
+      },
+      "java:S127": {
+        "pool_size": 65
+      },
+      "java:S131": {
+        "pool_size": 29
+      },
+      "java:S1452": {
+        "pool_size": 16
+      },
+      "java:S1700": {
+        "pool_size": 17
+      },
+      "java:S1871": {
+        "pool_size": 4
+      },
+      "java:S2157": {
+        "pool_size": 1
+      },
+      "java:S2447": {
+        "pool_size": 1
+      },
+      "java:S3011": {
+        "pool_size": 12
+      },
+      "java:S3824": {
+        "pool_size": 5
+      },
+      "java:S5261": {
+        "pool_size": 1
+      },
+      "java:S5738": {
+        "pool_size": 76
+      },
+      "java:S5843": {
+        "pool_size": 2
+      },
+      "java:S6126": {
+        "pool_size": 3
+      },
+      "java:S6204": {
+        "pool_size": 29
+      },
+      "xml:S1134": {
+        "pool_size": 1
+      }
+    },
+    "original_indices": [
+      346,
+      811,
+      817,
+      875,
+      1003,
+      1247,
+      1338,
+      1392,
+      1477,
+      1479,
+      1738,
+      1743,
+      1955,
+      2258,
+      2457,
+      2693,
+      2703,
+      2869,
+      3055,
+      3102
+    ]
+  }
+}

@@ -1,0 +1,1298 @@
+{
+  "model": "qwen3.5:9b",
+  "tool": "sonarqube",
+  "num_runs": 3,
+  "runs_per_invocation": 3,
+  "source_root": "jetty.project",
+  "call_parameters": {
+    "temperature": null,
+    "concurrency": 1,
+    "response_format": "json_schema",
+    "num_ctx": 32768,
+    "request_timeout_s": 900,
+    "base_url": "http://localhost:11434"
+  },
+  "system_prompt_variant": "jetty",
+  "system_prompt_sha256": "b5b634e0a9109c59",
+  "user_prompt_sha256": "233249fc03b8f699",
+  "timestamp": "2026-08-15T10:25:31.426698+00:00",
+  "updated_at": "2026-08-15T10:25:31.426698+00:00",
+  "findings": [
+    {
+      "finding_id": 0,
+      "type": "java:S131",
+      "sourcefile": "ServletPathSpec.java",
+      "start_line": "440",
+      "message": "Complete cases by adding the missing enum constants or add a default case to this switch.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "Each branch in this switch statement (EXACT, PREFIX_GLOB, SUFFIX_GLOB, ROOT, DEFAULT) has explicit logic that either returns a value before breaking. The switch also includes a final 'default' clause at lines 487-489 and an implicit fallback return null outside the switch block.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "incomplete enum switch statement missing case or default clause",
+          "developer_explanation": "This warning can be safely dismissed because each branch in the matched() switch has explicit handling with appropriate returns before breaking statements. Every possible PathSpecGroup value receives its own case, and any unrecognized values fall back to returning null via the final return outside the switch block.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 6293,
+            "output_tokens": 186
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 7408,
+          "latency_s": 22.239
+        },
+        {
+          "reasoning": "The switch statement on line 437-? (matched method) shows case EXACT with early return followed by break statements between cases, then PREFIX_GLOB/PREFIX blocks with similar structure before SUFFIX and ROOT handlers appear in matches() below. Each enum constant has either an explicit handler or the pattern suggests consistent default handling returning null; Java compiler allows incomplete switches but tool flags it conservatively.",
+          "is_true_positive": false,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "enum switch missing complete cases or explicit default handler",
+          "developer_explanation": "This warning can be safely dismissed because your code already handles each possible enum value properly through individual case blocks with break statements and early returns. Even if a new enum constant is added later, the existing pattern will handle it consistently (returning null via fallthrough), which maintains correct behavior without risk of unexpected results.",
+          "run": 2,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 13253,
+            "output_tokens": 210
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 43043,
+          "latency_s": 104.4
+        },
+        {
+          "reasoning": "The switch statement on _group (lines 440-467) includes explicit case handlers for EXACT, PREFIX_GLOB, SUFFIX_GLOB, ROOT, DEFAULT plus an explicit default clause returning null at line 467. The tool's claim that cases are incomplete is false because all enum values are covered either by specific case branches or the catch-all default handler.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "incomplete switch statement on enumeration constant",
+          "developer_explanation": "This warning can be safely dismissed because the switch already handles all possible values of _group through explicit case statements plus a default catch-all clause. Adding more cases would change behavior for unlisted enum constants, which is not intended here.",
+          "run": 3,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 5186,
+            "output_tokens": 190
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2451,
+          "latency_s": 9.399
+        }
+      ],
+      "original_finding_index": 346
+    },
+    {
+      "finding_id": 1,
+      "type": "java:S2447",
+      "sourcefile": "IncludeExcludeSet.java",
+      "start_line": "215",
+      "message": "Null is returned but a \"Boolean\" is expected.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The implementation returns null at line 215 which matches the javadoc comment on lines 206–207 stating that null is returned if neither include nor exclude conditions match; this explicit design intention contradicts SonarQube's expectation for a non-null Boolean here, making it a false positive.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "returning null from boxed bool method",
+          "developer_explanation": "This alarm can be safely dismissed because the method documentation explicitly states that returning null signals a specific state where neither included nor excluded items match; since your code follows this documented contract and does not cause an error or crash here, you do not need to change the return statement.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 19230,
+            "output_tokens": 184
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 67229,
+          "latency_s": 179.961
+        },
+        {
+          "reasoning": "The method `isIncludedAndNotExcluded` explicitly documents in its Javadoc that it can return null when 'neither' condition matches (lines 206-207), but returns a raw Boolean object type rather than primitive boolean, which SonarQube's S2447 rule flags as returning null from an expected Boolean. This is a code quality issue because using Boolean objects for true/false return values invites NullPointerExceptions when callers unbox without checking, despite the documented contract.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "null returned from method expecting boolean value object type",
+          "developer_explanation": "This warning can be safely dismissed because your Javadoc explicitly documents that returning null is an intentional API contract for the 'neither' case. The Boolean return type with possible null values matches what callers expect based on the documentation, and this design appears to intentionally distinguish three states rather than hiding exceptions behind a boolean primitive.",
+          "run": 2,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 5198,
+            "output_tokens": 232
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2542,
+          "latency_s": 11.145
+        },
+        {
+          "reasoning": "The method isIncludedAndNotExcluded explicitly documents in JavaDoc (lines 206-207) that it returns 'null if neither' — meaning three states: true, false, or null for the 'neither' condition.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "nullable boolean object return with documented contract",
+          "developer_explanation": "This warning can be dismissed because the method intentionally uses a three-state design: true for included items, false for excluded items, and null to indicate neither state. The JavaDoc documents this behavior explicitly.",
+          "run": 3,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 5546,
+            "output_tokens": 156
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 4201,
+          "latency_s": 13.366
+        }
+      ],
+      "original_finding_index": 811
+    },
+    {
+      "finding_id": 2,
+      "type": "java:S2157",
+      "sourcefile": "LazyList.java",
+      "start_line": "57",
+      "message": "Add a \"clone()\" method to this class.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "This code implements Cloneable but does not override clone(), which SonarQube flags as a CODE_SMELL warning (S2157). The class also implements Serializable, indicating that object transfer should use serialization instead of manual cloning to avoid issues with mutable internal state. Implementing Cloneable without overriding clone() is accepted Java practice when the shallow-clone semantics would be incorrect or dangerous.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "class implements cloneable without override method",
+          "developer_explanation": "This warning can be safely dismissed because the class uses Serializable for copying objects rather than relying on default shallow cloning semantics. Since LazyList holds mutable internal references, a standard Object.clone() would incorrectly share those references between copies instead of deep-copying them properly.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 5273,
+            "output_tokens": 195
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3099,
+          "latency_s": 12.423
+        },
+        {
+          "reasoning": "The class implements `Cloneable` interface but does not override or define a `clone()` method in its implementation (only shows private constructor and static factory methods). This means any caller invoking `.clone()` would get Object's default shallow-copy behavior, which can lead to unexpected sharing of mutable internal state.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "class implements cloneable without cloning logic",
+          "developer_explanation": "This class declares it supports object copying via the Cloneable interface but provides no override for the clone method. If anyone calls .clone() on an instance, they'll get a shallow copy where reference fields are duplicated - this can lead to bugs if any internal state is mutable and shared between copies.",
+          "run": 2,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 6173,
+            "output_tokens": 184
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 7846,
+          "latency_s": 20.916
+        },
+        {
+          "reasoning": "The snippet shows LazyList implements Cloneable and Serializable but has only private instance variables (if any) declared as static final array, with all public methods being factory-style returning generic Objects without exposing a constructor to allow user instantiation for cloning calls.",
+          "is_true_positive": false,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "clone method missing on cloneable class",
+          "developer_explanation": "This warning claims the Cloneable interface requires a public clone() implementation to avoid runtime exceptions or shallow copy issues when cloned via reflection.\n\nHowever: The private default constructor prevents users from creating instances directly, so no user code can call .clone() normally. Additionally, there are no instance variables storing mutable backing list state visible in this snippet (lines 57–207) which would make serialization/cloning meaningful anyway. Implementing these interfaces on a utility class without public constructors is usually legacy or misconfigured noise here.",
+          "run": 3,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 24090,
+            "output_tokens": 220
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 100771,
+          "latency_s": 214.134
+        }
+      ],
+      "original_finding_index": 817
+    },
+    {
+      "finding_id": 3,
+      "type": "java:S1452",
+      "sourcefile": "PathCollators.java",
+      "start_line": "54",
+      "message": "Remove usage of generic wildcard type.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The flagged code returns `Comparator<? super Path>`, which is standard Java practice for factory methods returning polymorphic comparators via PECS variance patterns, and this usage does not introduce any correctness or security issue. While SonarQube flags wildcard types as Code Smells in signatures where concrete types might suffice (since the implementation uses a specific comparator object), such wildcards here support valid API contracts without causing harm; dismissing them is purely stylistic rather than fixing an actual quality defect.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "unnecessary generic wildcard usage in signature",
+          "developer_explanation": "This warning claims that the use of `< ? super Path>` in your method return type is a code smell to be removed. However, this pattern (PECS variance) is standard and safe Java practice for public API factory methods returning comparators; it enables callers using their own subtype-based implementations without casting issues here.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 18498,
+            "output_tokens": 225
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 67554,
+          "latency_s": 165.142
+        },
+        {
+          "reasoning": "The warning flags the usage of upper-bounded wildcards (`? super Path`) in method return type signatures and field declarations for static constant comparators where Java's type erasure renders them functionally equivalent to raw or concrete types, making these generic annotations unnecessary noise that reduces code clarity (maintainability).",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "unnecessary use of upper-bounded wildcard in type declarations",
+          "developer_explanation": "This warning suggests simplifying your generic signatures because using `? super` for return types here adds noise without functional benefit. These comparators are static constants, so removing the unnecessary wildcards will improve code readability and reduce maintenance overhead.",
+          "run": 2,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 21087,
+            "output_tokens": 177
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 83666,
+          "latency_s": 195.813
+        },
+        {
+          "reasoning": "The warning flags the use of a generic wildcard in return types that simply expose private constants already declared with matching upper-bound wildcards elsewhere in this file (lines 27,40-51). The claim is materially wrong here because removing the wildcard from these public method signatures would require modifying underlying field declarations or result in unchecked cast issues unless broader refactoring occurs. Thus it is not an unneeded issue but rather part of a consistent API contract.",
+          "is_true_positive": false,
+          "confidence": 0.92,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "unnecessary wildcard on method return type",
+          "developer_explanation": "This warning is likely based on SonarQube’s general advice to avoid generic wildcards where they can be omitted for simplicity. However here the public methods simply expose private static constants that are already typed with upper-bound wildcards; removing them from just these signatures would break consistency or require changes throughout, so this alarm does not represent an actual quality issue in this context.",
+          "run": 3,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 24632,
+            "output_tokens": 223
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 101096,
+          "latency_s": 261.68
+        }
+      ],
+      "original_finding_index": 875
+    },
+    {
+      "finding_id": 4,
+      "type": "java:S5843",
+      "sourcefile": "AuthenticationProtocolHandler.java",
+      "start_line": "44",
+      "message": "Simplify this regular expression to reduce its complexity from 35 to the 20 allowed.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The tool flags line 44's regular expression as having complexity of 35 exceeding its internal threshold (approximately 20), claiming it should be simplified. While regex complexity is inherently difficult to quantify and the exact numeric metric can vary between tools, extremely complex patterns like this one genuinely create maintainability issues by making them hard to read, debug, test, and modify without introducing subtle errors.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "too complex regular expression pattern",
+          "developer_explanation": "This regex is significantly more complex than typical patterns and will be hard to understand if you need to modify it later or debug issues with authentication parsing. Consider breaking this into multiple simpler alternatives, using a switch statement on auth types when possible, or simplifying character class expressions where there's no benefit from grouping them together.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 5302,
+            "output_tokens": 206
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3035,
+          "latency_s": 11.249
+        },
+        {
+          "reasoning": "The flagged code defines a single static regex pattern with high complexity (reported as 35 tokens/characters) used for parsing authentication headers. While this logic attempts to parse RFC-compliant header structures which are verbose by nature, SonarQube correctly identifies that such monolithic patterns exceed recommended thresholds and degrade maintainability.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "complex regular expression pattern",
+          "developer_explanation": "The static analysis tool flagged a single regex string that parses authentication headers as overly complex for maintenance purposes (35 vs allowed 20). Even if splitting this logic is difficult due to RFC requirements, it represents valid technical debt and should be simplified into smaller patterns or separate validation steps over time.",
+          "run": 2,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 9803,
+            "output_tokens": 185
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 23401,
+          "latency_s": 61.755
+        },
+        {
+          "reasoning": "The regex pattern is used once per header value to parse authentication challenges (RFC 6750 compliant parsing). The claim about complexity exceeding thresholds relates primarily to readability and maintainability concerns, not security vulnerabilities or correctness issues.",
+          "is_true_positive": true,
+          "confidence": 0.9,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "overly complex regular expression pattern requiring simplification for better code understandability",
+          "developer_explanation": "This regex is indeed quite complex and will be difficult to read or modify if you need to change it in the future. Complex patterns increase cognitive load when debugging issues or adding new feature support for authentication schemes. Consider breaking this into simpler sub-patterns with clear names that make what each alternative matches easier to reason about.",
+          "run": 3,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 6525,
+            "output_tokens": 179
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 9437,
+          "latency_s": 24.066
+        }
+      ],
+      "original_finding_index": 1003
+    },
+    {
+      "finding_id": 5,
+      "type": "java:S1871",
+      "sourcefile": "HttpDateTime.java",
+      "start_line": "178",
+      "message": "This branch's code block is the same as the block for the branch on line 174.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "SonarQube detected that lines 178-180 (the else-if branch for token.length() == 4) contains identical code to an earlier branch at line 175, both executing year = StringUtil.toInt(token, 0); This duplication represents redundant conditional logic where the same operation is performed in separate branches. While this doesn't affect correctness or introduce a bug—it merely suggests opportunity for refactoring—the warning accurately describes a CODE_SMELL about duplicated code patterns.",
+          "is_true_positive": true,
+          "confidence": 1.0,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "duplicate condition bodies across multiple branches",
+          "developer_explanation": "The tool flagged duplicate logic in your year-parsing branch: both the <=2 case and the ==4 case assign to 'year' using identical code. This is a maintainability concern because combining these into a single combined condition would be cleaner without changing behavior.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 6305,
+            "output_tokens": 214
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3370,
+          "latency_s": 13.224
+        },
+        {
+          "reasoning": "The parse method contains identical assignment statements (`year = StringUtil.toInt(token, 0)`) inside two mutually exclusive branches checking token length, which matches the tool's claim of a duplicated block and presents a maintainability concern where merging guards would simplify code without changing behavior.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "duplicate logic inside mutually exclusive branches",
+          "developer_explanation": "The tool flags duplicated assignment statements for the year variable within separate conditionals in this parsing loop; merging those checks into a single branch guarded by combined length conditions would reduce code duplication and improve maintainability without affecting correctness.",
+          "run": 2,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 27260,
+            "output_tokens": 160
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 93247,
+          "latency_s": 270.629
+        },
+        {
+          "reasoning": "The flagged lines (178-180) contain identical code to line 175 but this duplication serves distinct parsing paths: one handles tokens of length ≤2 while the other specifically handles four-digit year strings. These are not truly redundant branches—they have different conditions that trigger them separately in HTTP date format parsing logic.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "duplicate code across multiple conditional branches",
+          "developer_explanation": "This SonarQube warning flags what appears to be duplicate year-parsing logic in two different if-branches (lines 174 and 178), but both serve valid distinct purposes. One branch handles short tokens for month-year parsing, while the other specifically processes four-digit years from RFC date strings like '2023'. Each condition (`token.length() <= 2` vs `== 4`) represents a different legitimate format case, so no refactoring is needed.",
+          "run": 3,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 6415,
+            "output_tokens": 231
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3541,
+          "latency_s": 13.686
+        }
+      ],
+      "original_finding_index": 1247
+    },
+    {
+      "finding_id": 6,
+      "type": "java:S1700",
+      "sourcefile": "MultiPartByteRanges.java",
+      "start_line": "261",
+      "message": "Rename field \"parser\"",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The field 'parser' at line 261 is legitimately initialized in the constructor (line 266) and used multiple times throughout: via parser.parse() on line 278, parser.getBoundary() on line 302, and passed to super().constructor calls. S1700's rename recommendation appears to be about naming conventions or potential confusion with the outer class Parser rather than any actual code defect.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "private field name causes scope confusion",
+          "developer_explanation": "This warning is a false positive because the parser field serves real purposes throughout this class - it's initialized in every constructor and accessed multiple times via both methods. The naming follows standard conventions; any rename would only be for cosmetic style reasons rather than fixing an actual bug or maintainability problem.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 6458,
+            "output_tokens": 210
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 4455,
+          "latency_s": 15.344
+        },
+        {
+          "reasoning": "The field 'parser' on line 261 has type MultiPart.Parser (line number mismatch but the actual issue is about naming convention). This follows standard Java conventions where private fields use lowercase variable names that derive from their class/type name, which is not a correctness problem - it's merely a code style preference.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "unnamed field matching its type word exactly",
+          "developer_explanation": "This warning is based on naming preferences that don't affect code correctness or clarity in standard Java projects. The lowercase variable name for a field derived from its class name follows normal conventions and does not confuse readers - this can be safely ignored.",
+          "run": 2,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 5968,
+            "output_tokens": 177
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2224,
+          "latency_s": 8.043
+        },
+        {
+          "reasoning": "The field 'parser' is of type MultiPart.Parser (fully qualified), while a nested static class named 'Parser' exists at lines 258-376 as an outer sibling, not within the same scope. The naming confusion rule would apply if they were in overlapping scopes where ambiguity could occur; here both are accessible via their fully qualified names without conflict.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "confusing field name matches nested class name",
+          "developer_explanation": "The warning is a false positive because this Java code has no actual naming conflict—the type 'MultiPart.Parser parser' uses the fully qualified class name, and there's only one level of nesting where both could coexist. Renaming would be purely cosmetic without fixing any real problem.",
+          "run": 3,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 6046,
+            "output_tokens": 197
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2420,
+          "latency_s": 9.448
+        }
+      ],
+      "original_finding_index": 1338
+    },
+    {
+      "finding_id": 7,
+      "type": "java:S5261",
+      "sourcefile": "ServletPathSpec.java",
+      "start_line": "182",
+      "message": "Add explicit curly braces to avoid dangling else.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The tool flags line 182 which appears in a standard if-else-if chain within the relativePath method, but this structure does not actually create semantic ambiguity or execution issues because each conditional has its own scope. In Java specifically, this pattern works correctly regardless of brace placement since there's no language-level dangling else semantics to exploit.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "dangling else without braces in if chain",
+          "developer_explanation": "This warning can be safely dismissed because Java handles if-else scopes differently from languages like Python or C where this would actually cause a bug. The code here follows standard sequential conditionals with proper control flow semantics—no incorrect logic results and the execution is predictable regardless of brace style.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 8692,
+            "output_tokens": 190
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 12111,
+          "latency_s": 33.177
+        },
+        {
+          "reasoning": "The code at line 182 shows an if-else chain where one branch is followed by another independent condition without braces on the first block. In Java, else associates with the nearest unmatched if statement (dangling else problem). The structure 'if X { } else' followed immediately by 'if Y {...}' creates ambiguity about which conditions the final else belongs to since the nested conditional chain lacks explicit brace grouping for all branches.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "ambiguous control flow without braces in if-else chains",
+          "developer_explanation": "Your code has a dangling else issue that can confuse readers about which condition each else branch handles. Without explicit curly braces grouping the first conditional, it's unclear whether the 'else' belongs to the nested or outer condition when reading from top down. This doesn't cause incorrect behavior since Java resolves ambiguity consistently by pairing with the nearest if statement, but adding braces makes control flow immediately obvious and prevents future modification errors.",
+          "run": 2,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 8134,
+            "output_tokens": 237
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 8589,
+          "latency_s": 25.855
+        },
+        {
+          "run": 3,
+          "error": "parse_failed",
+          "raw": "",
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 6189,
+            "output_tokens": 21557
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 96600,
+          "latency_s": 266.423
+        }
+      ],
+      "original_finding_index": 1392
+    },
+    {
+      "finding_id": 8,
+      "type": "java:S6126",
+      "sourcefile": "PrefaceFrame.java",
+      "start_line": "33",
+      "message": "Replace this String concatenation with Text block.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The code uses string concatenation to build a static final byte array containing HTTP/2 protocol preface text literals. Both approaches (concatenation vs text blocks in Java 15+) produce identical runtime behavior with no correctness, security, or performance differences here—the claim that this must be replaced does not identify an actual problem with current code.",
+          "is_true_positive": false,
+          "confidence": 0.98,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "string concatenation instead of text blocks for multiline literals",
+          "developer_explanation": "This warning suggests refactoring to use Java 15+ text blocks, but both approaches compile and run identically here since the string content is purely static protocol header data. The current code has no correctness or security issues—this is a stylistic preference that can be safely ignored unless your team specifically requires text block syntax.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 4055,
+            "output_tokens": 202
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 7949,
+          "latency_s": 20.813
+        },
+        {
+          "reasoning": "The code shows multi-line string literals joined via '+' operators that are immediately passed to .getBytes() for creating a constant byte array of HTTP/2 protocol headers. While SonarQube's S6126 rule recommends using Java text blocks (introduced in JDK 9+) instead of concatenation, the claim here is only about style preference rather than correctness or maintainability issues that materially exist.",
+          "is_true_positive": false,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "multi-line string concatenated instead of text block",
+          "developer_explanation": "This SonarQube warning is recommending you use Java's text blocks (triple-quote syntax) to write multi-line strings cleanly. The current code works perfectly fine though - concatenating the pieces and converting directly to bytes at classload time achieves your goal without issues. You can safely ignore this since it only represents a style preference that may not align with how or when you'd want Java text blocks in your particular project.",
+          "run": 2,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 3901,
+            "output_tokens": 232
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 6926,
+          "latency_s": 19.906
+        },
+        {
+          "reasoning": "The code correctly forms a byte array from multi-line string literals using concatenation before calling .getBytes(). String concatenation and text blocks produce identical runtime behavior for this case, so the warning's claim that replacement is needed represents only a stylistic preference rather than any correctness or maintainability issue. The tool flags all multi-line concatenated strings regardless of whether there would be genuine readability benefits from switching to Text Blocks in every context.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "multi-line string concatenation should use text blocks",
+          "developer_explanation": "This warning is a style recommendation rather than an actual problem—both the current concatenation and using Text Blocks would work identically here. The code correctly produces the required HTTP/2 preface bytes, so you can safely ignore this alert.",
+          "run": 3,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 3175,
+            "output_tokens": 199
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3097,
+          "latency_s": 9.63
+        }
+      ],
+      "original_finding_index": 1477
+    },
+    {
+      "finding_id": 9,
+      "type": "java:S1172",
+      "sourcefile": "HeaderGenerator.java",
+      "start_line": "48",
+      "message": "Remove this unused method parameter \"capacity\".",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The parameter 'capacity' declared on line 48 appears nowhere else in lines 50-53; no variable or field named capacity is referenced in the method body, making this a genuinely unused parameter that adds confusion without purpose.",
+          "is_true_positive": true,
+          "confidence": 1.0,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "unused method parameter should be removed to reduce code smell and improve readability",
+          "developer_explanation": "The 'capacity' parameter in the generate() method is not used anywhere in its body—it's declared but never referenced. Removing it will prevent confusion for anyone reading or modifying this API, ensuring callers don't pass unnecessary values. This also reduces cognitive load when understanding what parameters actually affect behavior.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 3509,
+            "output_tokens": 176
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3101,
+          "latency_s": 11.368
+        },
+        {
+          "reasoning": "The method body on lines 49–53 references accumulator, frameType, length, flags, and streamId, but the parameter capacity is never read or written anywhere inside its scope; therefore the tool's factual claim about unusedness matches visible code.",
+          "is_true_positive": true,
+          "confidence": 0.98,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "unused method parameter",
+          "developer_explanation": "This warning correctly identifies that the capacity argument is passed but never used inside generate(), which can confuse readers about what affects output or behavior and may indicate dead code logic. Remove this unused parameter to reduce API clutter unless it serves a specific backward-compatibility contract, in which case rename it _capacity or suppress appropriately.",
+          "run": 2,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 11948,
+            "output_tokens": 175
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 42541,
+          "latency_s": 111.842
+        },
+        {
+          "reasoning": "The parameter capacity appears only in the method signature on line 48 but has no references within the method body (lines 49-53), which means SonarQube's claim that this parameter is unused is factually correct for the code shown. While external callers might document a contract reason for keeping it, without seeing caller documentation or @SuppressWarnings annotations we cannot validate such justification from the snippet provided.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "unused method parameter in public api",
+          "developer_explanation": "This unused parameter adds confusion to your API surface and makes it harder for readers of the code to understand what parameters actually affect behavior versus which are legacy placeholders. Consider documenting its contract purpose if callers depend on it semantically, or removing it from the signature along with any necessary deprecation notices.",
+          "run": 3,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 4433,
+            "output_tokens": 205
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 8110,
+          "latency_s": 22.685
+        }
+      ],
+      "original_finding_index": 1479
+    },
+    {
+      "finding_id": 10,
+      "type": "java:S1119",
+      "sourcefile": "WriteFlusher.java",
+      "start_line": "343",
+      "message": "Refactor the code to remove this label and the need for it.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The flagged pattern is labeled `loop:` at line 343 with corresponding `break loop;` used when handling FAILED state (line 362). S1119 flags any use of labels in break statements as code smell since they complicate understanding—readers must find the label to understand where control exits.",
+          "is_true_positive": false,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "labelled break in switch statement loop",
+          "developer_explanation": "This alarm can be safely dismissed here because the labeled break serves a clear semantic purpose: distinguishing immediate exit for successful CAS (CANCEL) versus continuing to collect causes when FAILED state is encountered but not immediately transitionable. Rewriting without labels would require restructuring into do-while or adding explicit counter checks that could actually reduce clarity in this FSM context.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 6725,
+            "output_tokens": 200
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3568,
+          "latency_s": 12.88
+        },
+        {
+          "reasoning": "The flagged labeled loop `loop:` on line 343 is used with explicit breaks in cases FAILED (line 362) and through implicit returns/continues elsewhere, which is a common pattern for structured early-exit handling in complex state machines. The use of labels here provides readable control flow where the infinite while(Loop) needs multiple exit points based on different switch cases, avoiding deep nesting or excessive conditionals that would otherwise clutter the method.",
+          "is_true_positive": false,
+          "confidence": 0.92,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "labeled loop used for early exit control flow",
+          "developer_explanation": "The labeled break here is actually a valid and idiomatic approach to managing multiple early-exit scenarios from an infinite while(true) loop. The label provides clear semantics: you're jumping out of the state-handling switch when certain outcomes occur, rather than using numerous return statements that would make the control flow harder to follow at first glance. Modern Java style accepts this pattern for loops with explicit continue/break labels used to manage complex iteration logic like this one.",
+          "run": 2,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 6448,
+            "output_tokens": 251
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2326,
+          "latency_s": 9.483
+        },
+        {
+          "reasoning": "The code at line 343 introduces a 'loop' label before an infinite while loop that uses it as an explicit jump target for specific case branches in the switch statement (particularly cases FAILED and default). This is legitimate use of local labels for structured exit control from nested/complex loops with multiple possible break points, which aligns with S1119's intent to flag confusing or unnecessary label patterns rather than legitimate goto-like semantics.",
+          "is_true_positive": false,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "local labels in loops for structured exit control",
+          "developer_explanation": "This label provides a named target that clarifies the program flow when exiting from multiple switch branches within a single infinite loop handling state machine transitions. The labeled break pattern here makes it explicit which statement causes an early exit, especially important given this method's complexity with various failure states and callbacks.",
+          "run": 3,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 7253,
+            "output_tokens": 212
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 6382,
+          "latency_s": 19.044
+        }
+      ],
+      "original_finding_index": 1738
+    },
+    {
+      "finding_id": 11,
+      "type": "java:S127",
+      "sourcefile": "WriteThroughWriter.java",
+      "start_line": "249",
+      "message": "Refactor the code in order to not assign to this loop counter from within the loop body.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The flagged code on line 249 modifies `i--` inside a for-loop to deliberately reprocess the current index after processing a low surrogate that completed pairing with a previously stored high surrogate, which is standard UTF-8 handling logic using Java's Character API. This decrement intentionally compensates for the automatic post-increment (`++`) in each iteration to ensure we don't skip characters when combining surrogates.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "loop counter modified inside loop body for surrogate handling",
+          "developer_explanation": "This warning is a false positive because the `i--` here serves an intentional and necessary purpose in correct UTF-8 encoding logic. After processing one half of a Unicode surrogate pair, the code needs to stay on that same character index so it can combine it with the following low-surrogate char into a valid 4-byte sequence before moving forward.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 7103,
+            "output_tokens": 221
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3590,
+          "latency_s": 13.423
+        },
+        {
+          "reasoning": "The SonarQube S127 warning claims that the loop counter is assigned within its own body at line 249 in WriteThroughWriter.java, which is visible within the provided snippet range (lines ~36–? relative to view but absolute indices per header). The code inside Utf8Writer's append method contains surrogate-handling logic involving a for-loop. If an assignment like `i--` or similar modifies loop control variable (e.g., offset) in that inner body, then the tool’s claim of pattern existence holds; such modifications are flagged as maintainability smells regardless of functional correctness.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "loop counter modified inside loop body code smell",
+          "developer_explanation": "SonarQube flags assignments to the loop variable inside a for-loop as a maintainability concern because it can make iteration logic harder to read and reason about. In your UTF-8 encoder, you use state variables like `_surrogate` instead of modifying counters directly; if such modification exists in this code (or similar loops), consider refactoring away from changing the counter variable within its body for clarity.",
+          "run": 2,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 30364,
+            "output_tokens": 271
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 103066,
+          "latency_s": 312.406
+        },
+        {
+          "reasoning": "The code at line 249 modifies the loop counter 'i' in a for-loop to implement proper surrogate pair handling logic where decrementing ensures the same offset is reprocessed when encountering high/low Unicode surrogates that need special pairing before advancing.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "modifying loop counter inside for-loop body",
+          "developer_explanation": "The tool is flagging modification of the loop variable 'i' as a bad practice, but in this specific UTF-8 encoding context it serves an actual purpose: handling high-low surrogate pairs requires backtracking to reprocess characters that were stored pending. Removing i-- would cause incorrect character consumption and malformed output for Unicode code points beyond U+FFFF.",
+          "run": 3,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 9249,
+            "output_tokens": 188
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 12803,
+          "latency_s": 41.605
+        }
+      ],
+      "original_finding_index": 1743
+    },
+    {
+      "finding_id": 12,
+      "type": "java:S3011",
+      "sourcefile": "DefaultFileLocatorHelper.java",
+      "start_line": "153",
+      "message": "This accessibility update should be removed.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The code uses setAccessible(true) on reflection-accessed OSGi framework internals across multiple lines (123-159). This is a standard pattern when accessing private fields of external classes that have no public API surface, specifically to handle incompatibilities between different bundle implementations. The warnings at line 154 are false positives because the code is correctly using reflection internally within package-private utility methods where untrusted input cannot reach these reflective calls.",
+          "is_true_positive": false,
+          "confidence": 0.98,
+          "category": "OTHER",
+          "issue_signature": "reflection making private field accessible via setAccessible true call on OSGi bundle internals when handling heterogeneous framework implementations",
+          "developer_explanation": "This warning can be safely dismissed because the code uses reflection as a standard workaround to access internal fields of different bundle frameworks that don't expose them publicly. The method is package-private and not exposed in any public API where untrusted callers could abuse these reflective accesses.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 7042,
+            "output_tokens": 220
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3022,
+          "latency_s": 10.589
+        },
+        {
+          "reasoning": "The code calls BUNDLE_FILE_FIELD_FOR_DIR_ZIP_BUNDLE_ENTRY.setAccessible(true) on line 153 as part of using reflection to access private fields from OSGi framework classes. This is a legitimate use case where multiple different implementations (Eclipse Equinox, Felix) require accessing non-public member variables through their respective internal APIs.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "reflection call bypasses access control checks",
+          "developer_explanation": "This alarm is a legitimate warning because setAccessible(true) does violate Java's encapsulation principles by allowing access to private fields that should remain protected. While your use case requires cross-compatibility with different OSGi frameworks and has no direct security vulnerability, it still represents poor design since the code depends on internal implementation details of third-party APIs.",
+          "run": 2,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 6978,
+            "output_tokens": 203
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2714,
+          "latency_s": 7.897
+        },
+        {
+          "reasoning": "The code on line 153 calls setAccessible(true) to make a package-private field accessible via reflection for introspection purposes in OSGi bundle handling.",
+          "is_true_positive": false,
+          "confidence": 0.9,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "field made accessible using reflection bypassing access control",
+          "developer_explanation": "This alarm can be safely dismissed here because the setAccessible call is used for compatibility across different OSGi framework implementations (Equinox, Felix), not to enable an attacker. The code only accesses known internal fields of specific bundle entry classes that cannot be instantiated by external attackers in normal deployment.",
+          "run": 3,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 7634,
+            "output_tokens": 157
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 6554,
+          "latency_s": 13.777
+        }
+      ],
+      "original_finding_index": 1955
+    },
+    {
+      "finding_id": 13,
+      "type": "java:S5738",
+      "sourcefile": "Server.java",
+      "start_line": "904",
+      "message": "Remove this call to a deprecated class, it has been marked for removal.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The code at the flagged line uses a static field reference to FileSystemPool.INSTANCE within argument list of method call. The tool warns it was deprecated and marked for removal, which is valid maintainability concern even if only referenced as object passed without direct invocation since using such an API in own project requires eventual migration.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "use of deprecated static instance passing to method argument",
+          "developer_explanation": "This warning indicates that code uses an API (via FileSystemPool.INSTANCE) which is marked as scheduled for removal in your framework/library. Although it still works currently, continuing to use deprecation-marked APIs exposes you to future breakage when the removed implementation no longer compiles or behaves consistently.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 28414,
+            "output_tokens": 186
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 107333,
+          "latency_s": 251.777
+        },
+        {
+          "reasoning": "The code passes `FileSystemPool.INSTANCE` as an argument within the `dump()` method, which appears to be an internal Jetty utility class used for logging or state serialization purposes. The static analysis warning claims this class has been marked for removal (deprecated), but there is no deprecation annotation visible in the provided snippet and such warnings on private/internal implementation classes typically arise from tool sensitivity rather than actual official `@Deprecated` status until a breaking change version ships.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "use of deprecated class in codebase",
+          "developer_explanation": "The warning is likely a tool-specific alert based on how the analysis engine interprets legacy or internal API usage rather than an actual deprecation annotation visible in your source. You can safely ignore this flag here because `FileSystemPool` appears to be used as an implementation detail for dumping data without any public-facing contract changes yet, so it does not represent a correctness issue.",
+          "run": 2,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 15907,
+            "output_tokens": 231
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 49112,
+          "latency_s": 117.146
+        },
+        {
+          "reasoning": "The flagged line uses FileSystemPool.INSTANCE which is an internal Jetty implementation class that has been officially marked for deprecation/removal by the framework maintainers. Using deprecated APIs means code will break when future versions ship without supporting this obsolete API.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "use of deprecated api marked for removal",
+          "developer_explanation": "This code uses an internal Jetty class (FileSystemPool) that has been officially scheduled for removal in future versions. Continuing to use it risks breakage when the framework team removes this API; migrate to supported alternatives before upgrading.",
+          "run": 3,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 6169,
+            "output_tokens": 158
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 5077,
+          "latency_s": 12.56
+        }
+      ],
+      "original_finding_index": 2258
+    },
+    {
+      "finding_id": 14,
+      "type": "java:S112",
+      "sourcefile": "SessionDataMap.java",
+      "start_line": "58",
+      "message": "Replace generic exceptions with specific library exceptions or a custom exception.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "This is an interface definition file (not implementation code) where the generic Exception declaration represents a deliberate API design choice allowing multiple implementations to throw different specific checked exceptions behind the same contract. While S112 generally recommends more specific exception types, in framework APIs with public interfaces, throwing broad Exception provides intentional flexibility for implementers and callers who must handle potentially diverse failure modes without knowing them at compile time.",
+          "is_true_positive": false,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "generic exception used in interface declaration instead of specific exceptions",
+          "developer_explanation": "This warning is a known limitation for Java framework APIs that define public interfaces with multiple implementations behind them. The broad Exception contract allows each implementation to throw whatever checked exceptions make sense for its storage mechanism, network layer, etc., without forcing callers into impossible catch-all situations.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 3479,
+            "output_tokens": 201
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3840,
+          "latency_s": 10.074
+        },
+        {
+          "reasoning": "The warning targets broad `Exception` declarations at an interface boundary (SessionDataMap is a framework API for session storage). However, using generic Exception in library/framework interfaces to decouple implementation details from public contracts and allow implementers their own error hierarchies below this layer is standard practice that makes the specific exception claim invalid here.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "generic exceptions in public interfaces obscuring concrete error types",
+          "developer_explanation": "This alarm can be safely dismissed because using Exception in framework library interfaces is deliberate design for API flexibility - the interface contracts should remain independent of implementation-specific errors. The underlying code follows standard Java practice where broader exception declarations at layer boundaries are acceptable, especially when this component serves as an abstraction that other modules will consume.",
+          "run": 2,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 5087,
+            "output_tokens": 196
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 13757,
+          "latency_s": 27.85
+        },
+        {
+          "reasoning": "The snippet shows an interface method `delete` on line 58 declaring a generic checked exception type (`Exception`). This usage is consistent with other methods in this session management API (like `load`, `store`) which use the same broad contract for implementers who may encounter varied failure reasons not covered by standard I/O exceptions or specific Jetty custom types available at interface design time. While S112 recommends specificity, library framework APIs often rely on generic checked exceptions to avoid forcing callers into handling subclasses that aren't yet standardized across all session store providers within this project scope.",
+          "is_true_positive": false,
+          "confidence": 0.9,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "generic exception declaration on interface method signatures",
+          "developer_explanation": "Although generic exceptions are generally discouraged in application code for better error tracing, this usage is valid here as part of a framework API contract where implementers must handle varied failure modes without being constrained to specific subclasses. The warning can be dismissed because the broad `Exception` signature supports flexible plugin implementations and does not represent an actual correctness or maintainability defect at runtime.",
+          "run": 3,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 14931,
+            "output_tokens": 251
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 60266,
+          "latency_s": 140.078
+        }
+      ],
+      "original_finding_index": 2457
+    },
+    {
+      "finding_id": 15,
+      "type": "java:S3824",
+      "sourcefile": "TopologicalSort.java",
+      "start_line": "57",
+      "message": "Replace this \"Map.get()\" and condition with a call to \"Map.computeIfAbsent()\".",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The code uses the classic Map.get() followed by null-check-then-purtern which SonarQube flags as CODE_SMELL under rule java:S3824, recommending computeIfAbsent(). While this isn't a correctness or security issue in single-threaded context (which appears to be the case here), the warning represents recognized code quality guidance: using Map.get() with explicit null-check followed by put is generally considered suboptimal practice compared to atomic getOrPut/computeIfAbsent patterns. The tool claims this pattern should be improved, which aligns with modern Java best practices for map usage.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "get check then put replaced with computeIfAbsent",
+          "developer_explanation": "This pattern of getting a value from the map and manually checking for null before putting is considered outdated Java practice. Using Map.computeIfAbsent() provides cleaner semantics that work correctly whether single-threaded or potentially concurrent, without any special guards needed.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 6111,
+            "output_tokens": 238
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 6596,
+          "latency_s": 18.146
+        },
+        {
+          "reasoning": "The rule S3824 flags the manual get + null-check pattern as a code smell to replace with computeIfAbsent for improved readability and reduced error-proneness, which aligns with MAINTAINABILITY concerns even without concurrency issues.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "redundant get null check followed by map put pattern in code maintenance context",
+          "developer_explanation": "Using computeIfAbsent simplifies the lazy initialization logic and reduces potential for errors like returning null or forgetting to handle missing keys, making the code easier to understand. This is a valid maintainability improvement regardless of thread-safety guarantees.",
+          "run": 2,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 15656,
+            "output_tokens": 169
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 53527,
+          "latency_s": 126.168
+        },
+        {
+          "reasoning": "The existing pattern of calling get() followed by null check is functionally correct and produces the same result as computeIfAbsent(). This suggests a style preference rather than addressing an actual bug.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "unnecessary null check before map get",
+          "developer_explanation": "This is a code smell about using Map.computeIfAbsent() instead of the classic get-and-check pattern, but it's not an actual problem here. The current implementation works correctly without any concurrency or correctness issues since this runs in single-threaded context with HashMap.",
+          "run": 3,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 5310,
+            "output_tokens": 154
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2302,
+          "latency_s": 8.29
+        }
+      ],
+      "original_finding_index": 2693
+    },
+    {
+      "finding_id": 16,
+      "type": "java:S108",
+      "sourcefile": "TypeUtil.java",
+      "start_line": "622",
+      "message": "Remove this block of code, fill it in, or add a comment explaining why it is empty.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The try-catch at line 621 wraps a URL-to-URI conversion operation which can theoretically throw URISyntaxException but the catch block contains only empty braces with no logging or explanation. This silent exception swallowing without comment violates code quality expectations for maintainability and debuggability, making this claim materially correct despite low likelihood in normal cases.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "empty block catching checked exception silently ignored",
+          "developer_explanation": "This catch block silently ignores an exception without logging or comment, hiding runtime issues that could affect production if malformed class loaders occur in unexpected environments. You should either add a brief comment explaining why ignoring this error is safe here (e.g., expected in fallback strategies) and/or log it so debugging remains effective rather than letting exceptions vanish into thin air silently.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 10132,
+            "output_tokens": 203
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 19344,
+          "latency_s": 47.232
+        },
+        {
+          "reasoning": "The code at lines 621-634 intentionally catches URISyntaxException from url.toURI() and returns null as part of a documented multi-fallback location resolution strategy that gracefully accepts null values.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "OTHER",
+          "issue_signature": "empty code block requiring fill or comment",
+          "developer_explanation": "This can be safely dismissed because the catch block intentionally handles URISyntaxException that could theoretically occur from url.toURI() when converting URLs with invalid characters for URI construction. The method is designed to return null in failure cases and fall back on getCodeSourceLocation() or getModuleLocation(). This empty catch has deliberate purpose matching similar patterns elsewhere in this utility class.",
+          "run": 2,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 7573,
+            "output_tokens": 173
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 6257,
+          "latency_s": 16.997
+        },
+        {
+          "reasoning": "The SonarQube rule S108 flags empty catch blocks as CODE_SMELL because they represent potential silent failures that should either be documented or handled explicitly (logging/rethrowing). Here the code catches URISyntaxException inside an utility method returning null on failure without any comment explaining why ignoring it is acceptable, violating maintainability guidelines for exception handling documentation.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "empty catch block in utility method",
+          "developer_explanation": "This warning points to an empty catch clause that swallows a URISyntaxException without explaining why it is ignored. While the fallback of returning null may be intentional for this utility, static analysis expects explicit comments or logging when ignoring exceptions to preserve debug traceability and help future developers understand intent.",
+          "run": 3,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 14959,
+            "output_tokens": 191
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 38260,
+          "latency_s": 103.183
+        }
+      ],
+      "original_finding_index": 2703
+    },
+    {
+      "finding_id": 17,
+      "type": "java:S1144",
+      "sourcefile": "SecurityUtils.java",
+      "start_line": "233",
+      "message": "Remove this unused private \"callableToPrivilegedAction\" method.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The tool flags a private static method callableToPrivilegedAction as unused based on analysis of the single file shown (lines 83-255). Within this excerpt, I can see no invocation sites for this private method in other public methods like callAs() or doPrivileged(). Since it's marked private and there are no visible callers within SecurityUtils.java itself, the claim that the method is unused appears materially correct.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "unused code in a class file",
+          "developer_explanation": "This private helper method has no callers visible within SecurityUtils.java and serves only as dead code that clutters the namespace. Removing it improves maintainability by reducing unnecessary methods without affecting functionality, since other packages cannot call your private members anyway.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 4938,
+            "output_tokens": 198
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3500,
+          "latency_s": 12.304
+        },
+        {
+          "reasoning": "The code shows a private static helper method callableToPrivilegedAction at lines 233-250, and scanning all visible methods (doAs, callAs, doPrivileged, security manager lookups) in the provided snippet reveals no invocations of this helper. Since there is no evidence within the shown file excerpt that any caller invokes private static callableToPrivilegedAction, SonarQube's unused flag accurately describes a method with no callers visible.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "unused private helper method that can be removed to reduce dead code",
+          "developer_explanation": "This unused conversion method has no callers in the visible portion of your file and should likely be deleted. Dead code increases maintenance burden, complicates future changes by introducing unnecessary paths through hot classes, and makes code reviews harder since readers must understand implementation details nobody uses.",
+          "run": 2,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 4623,
+            "output_tokens": 217
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1931,
+          "latency_s": 7.762
+        },
+        {
+          "reasoning": "The static analysis report states there are no callers for private method callableToPrivilegedAction within SecurityUtils.java (or any other files that could access this private member). Since Java's visibility rules restrict calls to this private method exclusively to code inside the same class, and SonarQube has scanned all of SecurityUtils.java showing zero invocations of this static helper - it is genuinely unused dead code.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "unused private method with no callers in class scope",
+          "developer_explanation": "This private helper method is never called by any code within SecurityUtils.java since Java's private visibility prevents external files from accessing it. Removing unnecessary unused methods reduces confusion about what functionality actually exists and simplifies future maintenance.",
+          "run": 3,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 6980,
+            "output_tokens": 190
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 14302,
+          "latency_s": 33.681
+        }
+      ],
+      "original_finding_index": 2869
+    },
+    {
+      "finding_id": 18,
+      "type": "java:S6204",
+      "sourcefile": "JettyClientUpgradeRequest.java",
+      "start_line": "52",
+      "message": "Replace this usage of 'Stream.collect(Collectors.toList())' with 'Stream.toList()' and ensure that the list is unmodified.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning claims we should replace Collectors.toList() with Stream.toList(), which is purely about using modern Java APIs rather than fixing an actual bug or vulnerability. Both approaches produce identical behavior in this constructor - creating a mutable ArrayList-backed list that becomes internal field state.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "prefer stream tolist over collectors tolist for modern java style",
+          "developer_explanation": "This warning suggests using Stream.toList() instead of Collectors.to List(), but both approaches create identical mutable lists here since the result is used only as internal field state, not exposed externally. The claim doesn't describe a correctness or security problem - it's just recommending API modernization that can be addressed for style reasons rather than being required to fix any bug.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 4475,
+            "output_tokens": 193
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 6953,
+          "latency_s": 17.497
+        },
+        {
+          "reasoning": "The warning suggests replacing Collectors.toList() with Stream.toList(), which is a modernization suggestion about using newer Java APIs rather than addressing an actual defect. The current collect(Collectors.toList()) usage produces correct behavior for collecting extension configs into a list, and there's no correctness or security issue inherent in this pattern itself.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "preference to use modern java stream api methods instead of collectors",
+          "developer_explanation": "This warning is recommending a style improvement rather than pointing out an actual bug in your code. Both Collectors.toList() and Stream.toList() will behave identically here - they produce the same result by collecting extension configurations into a new list without side effects. If you're targeting Java 19+ or have no constraints on API usage, modernization may be worthwhile as good practice; otherwise this can safely be ignored since there's no correctness issue to fix.",
+          "run": 2,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 4220,
+            "output_tokens": 223
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 5742,
+          "latency_s": 15.222
+        },
+        {
+          "reasoning": "This warning recommends replacing `Collectors.toList()` with `Stream.toList()`, but both methods produce functionally equivalent results in this context—they both create a new ArrayList from stream elements without any correctness or security issues. The claim that the current pattern is problematic is not materially correct; it's merely encouraging modern Java API usage rather than fixing an actual defect.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "replace standard collector with newer stream method for cleaner syntax",
+          "developer_explanation": "This warning is a style suggestion rather than identifying an actual bug or code quality problem in your current implementation. Both `Collectors.toList()` and the proposed replacement work correctly here, so there's no correctness issue to fix. You can safely ignore this recommendation unless you specifically want to modernize your API usage beyond necessity.",
+          "run": 3,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 4019,
+            "output_tokens": 201
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 4776,
+          "latency_s": 13.522
+        }
+      ],
+      "original_finding_index": 3055
+    },
+    {
+      "finding_id": 19,
+      "type": "xml:S1134",
+      "sourcefile": "pom.xml",
+      "start_line": "54",
+      "message": "Take the required action to fix the issue indicated by this \"FIXME\" comment.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The flagged line contains an <organizationUrl> element within the developer metadata of a Maven POM file, but no 'FIXME' comment pattern (e.g., <!-- FIXME -->) is visible in this location or surrounding code context. This suggests that SonarQube has either mis-parsed the XML structure to detect such comments where none exist as executable source logic.",
+          "is_true_positive": false,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "FIXME comment",
+          "developer_explanation": "This warning is likely a misinterpretation by the static analysis tool because there are no actual FIXME comments in your project metadata; POM files describe build configuration and developers list rather than executable code, so technical debt indicators like TODO/FIXME notes usually apply to logic sections.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 21184,
+            "output_tokens": 186
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 64187,
+          "latency_s": 187.698
+        },
+        {
+          "reasoning": "The provided code snippet for pom.xml shows project metadata definitions and developer information but does not contain any 'FIXME' comments near line 54 as asserted by the warning. Additionally, applying a source-code bug tracking rule (S1134) to configuration files where such markers typically denote documentation notes rather than executable logic issues results in an incorrect alarm.",
+          "is_true_positive": false,
+          "confidence": 0.92,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "fixme comment missing issue link or resolution",
+          "developer_explanation": "This warning can be safely dismissed because there is no FIXME text present in the visible lines of your pom.xml configuration file to require action. The rule typically applies to source code logic where comments denote pending bug fixes, but this XML metadata section only declares developer contact information which does not support or imply such unresolved technical debt.",
+          "run": 2,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 10699,
+            "output_tokens": 200
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 22212,
+          "latency_s": 62.706
+        },
+        {
+          "reasoning": "The flagged line is within a developer metadata block of pom.xml (a Maven configuration file) which contains static information about contributors rather than executable logic or security-sensitive code paths.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "todo or FIXME comment found in source file",
+          "developer_explanation": "This warning can be safely dismissed because pom.xml is a configuration metadata file where comments often serve as documentation for future data updates rather than runtime bugs. Static analysis tools typically flag TODO/FIXME comments indiscriminately, but these are acceptable notes to leave until manually updated by maintainers who understand the project build context.",
+          "run": 3,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 9539,
+            "output_tokens": 163
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 17906,
+          "latency_s": 49.678
+        }
+      ],
+      "original_finding_index": 3102
+    }
+  ]
+}

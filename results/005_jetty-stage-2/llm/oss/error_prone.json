@@ -1,0 +1,1546 @@
+{
+  "model": "openai/gpt-oss-120b",
+  "tool": "error-prone",
+  "num_runs": 3,
+  "runs_per_invocation": 3,
+  "source_root": "jetty.project",
+  "call_parameters": {
+    "temperature": null,
+    "concurrency": 3,
+    "response_format": "json_schema",
+    "max_tokens": 8192,
+    "max_retries": 6,
+    "base_url": "https://openrouter.ai/api/v1",
+    "provider": "deepinfra/bf16",
+    "allow_fallbacks": false,
+    "require_parameters": true,
+    "cache_control": false
+  },
+  "system_prompt_variant": "jetty",
+  "system_prompt_sha256": "b5b634e0a9109c59",
+  "user_prompt_sha256": "3963ac13371abed5",
+  "timestamp": "2026-08-15T08:43:04.802570+00:00",
+  "updated_at": "2026-08-15T08:43:04.802570+00:00",
+  "findings": [
+    {
+      "finding_id": 0,
+      "type": "CatchAndPrintStackTrace",
+      "sourcefile": "JettyLoggerFactory.java",
+      "start_line": "235",
+      "message": "Logging or rethrowing exceptions should usually be preferred to catching and calling printStackTrace",
+      "tool_specific": {
+        "column": "17"
+      },
+      "runs": [
+        {
+          "reasoning": "The code catches a generic Exception and calls e.printStackTrace() inside getAttributes and setAttributes. This matches the rule that catching and printing a stack trace is discouraged, so the warning correctly identifies a code‑quality issue.",
+          "is_true_positive": true,
+          "confidence": 0.96,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "catching exception and printing stack trace",
+          "developer_explanation": "The methods swallow any exception and print its stack trace to standard error, which is not appropriate for production code and makes debugging harder. Replace the printStackTrace call with proper logging or propagate the error where possible. This will improve observability and align with best practices.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 4703,
+            "output_tokens": 591,
+            "reasoning_tokens": 533,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000274481
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2121,
+          "latency_s": 28.63
+        },
+        {
+          "reasoning": "The code catches a generic Exception and calls e.printStackTrace() inside getAttributes and setAttributes. This matches the rule that catching and printing a stack trace is discouraged, so the warning correctly identifies a code‑quality issue.",
+          "is_true_positive": true,
+          "confidence": 0.96,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "catching exception and printing stack trace",
+          "developer_explanation": "The methods swallow any exception and print its stack trace to standard error, which is not appropriate for production code and makes debugging harder. Replace the printStackTrace call with proper logging or propagate the error where possible. This will improve observability and align with best practices.",
+          "run": 2,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 4703,
+            "output_tokens": 591,
+            "reasoning_tokens": 533,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000274481
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2121,
+          "latency_s": 33.025
+        },
+        {
+          "reasoning": "The code catches a generic Exception and calls e.printStackTrace() inside getAttributes and setAttributes. This matches the rule that catching and printing a stack trace is discouraged, so the warning correctly identifies a code‑quality issue.",
+          "is_true_positive": true,
+          "confidence": 0.96,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "catching exception and printing stack trace",
+          "developer_explanation": "The methods swallow any exception and print its stack trace to standard error, which is not appropriate for production code and makes debugging harder. Replace the printStackTrace call with proper logging or propagate the error where possible. This will improve observability and align with best practices.",
+          "run": 3,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 4703,
+            "output_tokens": 591,
+            "reasoning_tokens": 533,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000274481
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2121,
+          "latency_s": 47.223
+        }
+      ],
+      "original_finding_index": 6
+    },
+    {
+      "finding_id": 1,
+      "type": "LockNotBeforeTry",
+      "sourcefile": "Blocker.java",
+      "start_line": "422",
+      "message": "Prefer locking *immediately* before the try block which releases the lock to avoid the possibility of any intermediate statements throwing.",
+      "tool_specific": {
+        "column": "27"
+      },
+      "runs": [
+        {
+          "reasoning": "The lock is acquired on line 422 and the only statement before the try block is a harmless local variable declaration that cannot throw, so there is no risk of the lock being held while an exception occurs.",
+          "is_true_positive": false,
+          "confidence": 0.96,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "lock acquisition not immediately before try",
+          "developer_explanation": "The lock is already taken right before the try block, and the intervening code is just a variable declaration that cannot throw an exception. Therefore the warning about a possible exception between lock and try is a false positive and can be safely ignored.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 4334,
+            "output_tokens": 696,
+            "reasoning_tokens": 671,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000278678
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2650,
+          "latency_s": 42.598
+        },
+        {
+          "reasoning": "The lock is acquired on line 422 and the only statement before the try block is a harmless local variable declaration that cannot throw, so there is no risk of the lock being held while an exception occurs.",
+          "is_true_positive": false,
+          "confidence": 0.96,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "lock acquisition not immediately before try",
+          "developer_explanation": "The lock is already taken right before the try block, and the intervening code is just a variable declaration that cannot throw an exception. Therefore the warning about a possible exception between lock and try is a false positive and can be safely ignored.",
+          "run": 2,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 4334,
+            "output_tokens": 696,
+            "reasoning_tokens": 671,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000278678
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2650,
+          "latency_s": 53.241
+        },
+        {
+          "reasoning": "The code acquires the lock, then declares a local variable before the try block, but that declaration cannot throw an exception, so the lock will always be released in the finally clause.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "lock not acquired immediately before try",
+          "developer_explanation": "The lock is taken and a simple variable declaration follows before the try block; this statement cannot throw, so the lock will be released correctly in the finally block. The warning can be safely ignored because there is no risk of the lock being held due to an exception between lock acquisition and the try.",
+          "run": 3,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 4334,
+            "output_tokens": 610,
+            "reasoning_tokens": 555,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000264058
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2184,
+          "latency_s": 28.309
+        }
+      ],
+      "original_finding_index": 34
+    },
+    {
+      "finding_id": 2,
+      "type": "ClassCanBeStatic",
+      "sourcefile": "WriteFlusher.java",
+      "start_line": "250",
+      "message": "Inner class is non-static but does not reference enclosing class",
+      "tool_specific": {
+        "column": "13"
+      },
+      "runs": [
+        {
+          "reasoning": "CancellingState is declared as a non‑static inner class but its body does not use any members of the enclosing WriteFlusher class. Therefore it can be made static without changing behavior.",
+          "is_true_positive": true,
+          "confidence": 0.97,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "inner class that does not reference outer class",
+          "developer_explanation": "The CancellingState class does not need an implicit reference to the outer WriteFlusher instance, so it should be declared static. Making it static removes an unnecessary hidden field, reduces memory usage, and makes the code clearer. Change the declaration to \"private static class CancellingState extends State\".",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 5174,
+            "output_tokens": 640,
+            "reasoning_tokens": 554,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000300238
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2197,
+          "latency_s": 37.628
+        },
+        {
+          "reasoning": "CancellingState is declared as a non‑static inner class but its body does not use any members of the enclosing WriteFlusher class, so it does not need an implicit reference to the outer instance. Therefore the tool correctly flags it as a class that can be made static.",
+          "is_true_positive": true,
+          "confidence": 0.97,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "inner class can be static",
+          "developer_explanation": "The CancellingState class does not access any fields or methods of WriteFlusher, so it does not need to be tied to an outer instance. Declaring it static removes the hidden reference to the outer object, reducing memory overhead and avoiding unnecessary coupling. Change the declaration to \"private static class CancellingState extends State\".",
+          "run": 2,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 5174,
+            "output_tokens": 571,
+            "reasoning_tokens": 474,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000288508
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1877,
+          "latency_s": 56.593
+        },
+        {
+          "reasoning": "CancellingState is declared as a non‑static inner class but its body does not reference any member of the enclosing WriteFlusher class. Therefore it can be made static without changing behavior.",
+          "is_true_positive": true,
+          "confidence": 0.97,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "inner class can be static",
+          "developer_explanation": "The CancellingState class does not use the outer WriteFlusher instance, so it should be declared static. Making it static removes an unnecessary hidden reference, reduces per‑instance memory overhead, and makes the code clearer. Change the declaration to \"private static class CancellingState extends State\".",
+          "run": 3,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 5174,
+            "output_tokens": 609,
+            "reasoning_tokens": 566,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000294968
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2246,
+          "latency_s": 48.71
+        }
+      ],
+      "original_finding_index": 161
+    },
+    {
+      "finding_id": 3,
+      "type": "UnusedMethod",
+      "sourcefile": "ArrayByteBufferPool.java",
+      "start_line": "811",
+      "message": "Method 'remove' is never used.",
+      "tool_specific": {
+        "column": "14"
+      },
+      "runs": [
+        {
+          "reasoning": "The method remove() is referenced via a method reference in clear(): getPool().stream().forEach(Pool.Entry::remove), which calls this method on each pool entry, so it is used despite not being called directly. The tool missed the method reference usage.",
+          "is_true_positive": false,
+          "confidence": 0.93,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "unused method",
+          "developer_explanation": "The remove() method is invoked through the method reference Pool.Entry::remove in the clear() method, so it is actually used. The static analysis tool does not recognize method references as usages, leading to a false alarm. You can safely ignore this warning.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 5541,
+            "output_tokens": 672,
+            "reasoning_tokens": 595,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000319257
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2365,
+          "latency_s": 41.813
+        },
+        {
+          "reasoning": "The remove() method defined in the PooledBuffer inner class is not referenced anywhere in the shown snippet, and no other code in this file calls it.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "unused method",
+          "developer_explanation": "The remove() method is never invoked, making it dead code. Keeping unused methods increases maintenance burden and can cause confusion. Consider removing the method or, if it is needed for future functionality, add a call to it where appropriate.",
+          "run": 2,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 5541,
+            "output_tokens": 916,
+            "reasoning_tokens": 885,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000360737
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3528,
+          "latency_s": 75.087
+        },
+        {
+          "reasoning": "The remove() method defined in the PooledBuffer inner class is not referenced anywhere in the shown code; the only remove calls target other types such as Pool.Entry, not this method.",
+          "is_true_positive": true,
+          "confidence": 0.9,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "unused method",
+          "developer_explanation": "The remove() method in PooledBuffer is dead code—it is never called, which adds unnecessary maintenance burden and may hide intended behavior. Consider removing the method or adding calls where appropriate. If the method is meant for future use, document that intention or keep it in a separate utility class.",
+          "run": 3,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 5541,
+            "output_tokens": 903,
+            "reasoning_tokens": 861,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000358527
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3430,
+          "latency_s": 52.473
+        }
+      ],
+      "original_finding_index": 165
+    },
+    {
+      "finding_id": 4,
+      "type": "UnnecessaryLambda",
+      "sourcefile": "ByteArrayEndPoint.java",
+      "start_line": "59",
+      "message": "Returning a lambda from a helper method or saving it in a constant is unnecessary; prefer to implement the functional interface method directly and use a method reference instead.",
+      "tool_specific": {
+        "column": "28"
+      },
+      "runs": [
+        {
+          "reasoning": "The code defines a final Runnable field initialized with a lambda that simply calls getFillInterest().fillable(), which the rule flags as an unnecessary lambda that could be replaced by a method reference or direct call.",
+          "is_true_positive": true,
+          "confidence": 0.97,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "unnecessary lambda stored in field",
+          "developer_explanation": "The Runnable field holds a lambda that only forwards to getFillInterest().fillable(). This extra lambda object is unnecessary and makes the code harder to read. Replace the field with a method reference (e.g., this::runFillable) or call the method directly where needed to simplify the code and avoid the needless allocation.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 4381,
+            "output_tokens": 730,
+            "reasoning_tokens": 696,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000286197
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2762,
+          "latency_s": 63.754
+        },
+        {
+          "reasoning": "The field _runFillable stores a lambda that simply calls getFillInterest().fillable(), which could be replaced by a method reference or direct method call, making the lambda unnecessary.",
+          "is_true_positive": true,
+          "confidence": 0.93,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "unnecessary lambda stored in field",
+          "developer_explanation": "The lambda assigned to _runFillable does nothing more than invoke getFillInterest().fillable(). Keeping it as a field creates an extra object without benefit. Replace it with a method reference (e.g., this::runFillable) or call the method directly where needed to simplify the code and avoid the unnecessary allocation.",
+          "run": 2,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 4381,
+            "output_tokens": 1012,
+            "reasoning_tokens": 1072,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000334137
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 4264,
+          "latency_s": 76.559
+        },
+        {
+          "reasoning": "The field _runFillable stores a lambda that only calls getFillInterest().fillable(), which can be replaced by a method reference or direct call, making the lambda unnecessary.",
+          "is_true_positive": true,
+          "confidence": 0.97,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "unnecessary lambda stored in field",
+          "developer_explanation": "The _runFillable field holds a lambda that does nothing but invoke getFillInterest().fillable(). This adds indirection without any benefit. Replace the field with a method reference (e.g., this::runFillable) or call the method directly where needed to simplify the code and improve readability.",
+          "run": 3,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 4381,
+            "output_tokens": 560,
+            "reasoning_tokens": 506,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000257297
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2006,
+          "latency_s": 34.21
+        }
+      ],
+      "original_finding_index": 171
+    },
+    {
+      "finding_id": 5,
+      "type": "BadInstanceof",
+      "sourcefile": "ByteArrayEndPoint.java",
+      "start_line": "475",
+      "message": "`_buffer` is an instance of RetainableByteBuffer.DynamicCapacity which is a subtype of RetainableByteBuffer.DynamicCapacity, so this is equivalent to a null check.",
+      "tool_specific": {
+        "column": "24"
+      },
+      "runs": [
+        {
+          "reasoning": "The code checks `_buffer instanceof RetainableByteBuffer.DynamicCapacity` to determine whether the buffer supports dynamic capacity, and `_buffer` is used via methods defined in the base `RetainableByteBuffer` type, so the check can be false for non‑dynamic implementations. The tool’s claim that this instanceof is equivalent to a null check is incorrect in this context, making the warning a false positive.",
+          "is_true_positive": false,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "redundant instanceof check",
+          "developer_explanation": "The warning can be ignored because the instanceof test is meaningful: `_buffer` may be an instance of a different subclass of `RetainableByteBuffer`, so the result is not always true. The check correctly reports whether the buffer has dynamic capacity, and no code change is needed.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 3808,
+            "output_tokens": 1185,
+            "reasoning_tokens": 1131,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000342346
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 4504,
+          "latency_s": 96.034
+        },
+        {
+          "reasoning": "The field _buffer is declared as the base type RetainableByteBuffer, so checking instanceof RetainableByteBuffer.DynamicCapacity can be true for non‑null values that are of the dynamic subclass, making the check meaningful, not just a null test.",
+          "is_true_positive": false,
+          "confidence": 0.92,
+          "category": "CORRECTNESS",
+          "issue_signature": "redundant instanceof check",
+          "developer_explanation": "In this class _buffer is a RetainableByteBuffer that may be either a fixed‑capacity or a DynamicCapacity implementation. The instanceof test correctly distinguishes those cases, so the warning is a false positive. You can safely keep the check as it provides useful information about the buffer type.",
+          "run": 2,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 3808,
+            "output_tokens": 1039,
+            "reasoning_tokens": 1008,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000317526
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 4016,
+          "latency_s": 70.954
+        },
+        {
+          "reasoning": "The code returns `_buffer instanceof RetainableByteBuffer.DynamicCapacity` and `_buffer` is declared as a supertype (RetainableByteBuffer), so the instanceof check distinguishes the actual runtime type and is not equivalent to a null check.",
+          "is_true_positive": false,
+          "confidence": 0.85,
+          "category": "CORRECTNESS",
+          "issue_signature": "redundant instanceof check",
+          "developer_explanation": "The warning incorrectly assumes that `_buffer` is already of type `RetainableByteBuffer.DynamicCapacity`. In this class `_buffer` is a more general type, so the instanceof test is needed to determine if the buffer supports dynamic capacity. You can safely ignore this warning.",
+          "run": 3,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 3808,
+            "output_tokens": 1128,
+            "reasoning_tokens": 1109,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000332656
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 4413,
+          "latency_s": 83.91
+        }
+      ],
+      "original_finding_index": 183
+    },
+    {
+      "finding_id": 6,
+      "type": "JavaTimeDefaultTimeZone",
+      "sourcefile": "ManagedSelector.java",
+      "start_line": "474",
+      "message": "ZonedDateTime.now() is not allowed because it silently uses the system default time-zone. You must pass an explicit time-zone (e.g., ZoneId.of(\"America/Los_Angeles\")) to this method.",
+      "tool_specific": {
+        "column": "92"
+      },
+      "runs": [
+        {
+          "reasoning": "The code calls ZonedDateTime.now() without providing a ZoneId, which therefore uses the system default time zone. Although the rule flags this as a problem, using the default zone here only affects the timestamp format for diagnostic output and does not cause incorrect behavior, so the warning is not a real bug in this context.",
+          "is_true_positive": false,
+          "confidence": 0.88,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "use of default time zone in ZonedDateTime.now",
+          "developer_explanation": "The warning points out that ZonedDateTime.now() relies on the system default time zone. For this diagnostic dump method, the local zone is acceptable and does not introduce a correctness issue, so you can safely ignore the warning or suppress it. If you need a specific zone for logs, you can explicitly pass one, but it is not required here.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 5071,
+            "output_tokens": 958,
+            "reasoning_tokens": 881,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000350487
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3498,
+          "latency_s": 79.025
+        },
+        {
+          "reasoning": "The code calls ZonedDateTime.now() without providing a ZoneId, which therefore uses the system default time zone. Although the rule flags this as a problem, using the default zone here only affects the timestamp format for diagnostic output and does not cause incorrect behavior, so the warning is not a real bug in this context.",
+          "is_true_positive": false,
+          "confidence": 0.88,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "use of default time zone in ZonedDateTime.now",
+          "developer_explanation": "The warning points out that ZonedDateTime.now() relies on the system default time zone. For this dump method the timestamp is only used for logging, and the default zone does not introduce a correctness issue, so you can safely ignore the warning or keep the code as is.",
+          "run": 2,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 5071,
+            "output_tokens": 943,
+            "reasoning_tokens": 881,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000347937
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3498,
+          "latency_s": 52.449
+        },
+        {
+          "reasoning": "The code calls ZonedDateTime.now() without providing a ZoneId, which therefore uses the system default time zone. Although the rule flags this as a problem, using the default zone here only affects the timestamp format for diagnostic output and does not cause incorrect behavior, so the warning is not a real bug in this context.",
+          "is_true_positive": false,
+          "confidence": 0.88,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "use of default time zone in ZonedDateTime.now",
+          "developer_explanation": "The warning points out that ZonedDateTime.now() relies on the system default time zone. For this dump method the timestamp is only used for logging, and the default zone does not introduce a correctness issue, so you can safely ignore the warning or keep the code as is.",
+          "run": 3,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 5071,
+            "output_tokens": 943,
+            "reasoning_tokens": 881,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000347937
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3498,
+          "latency_s": 92.338
+        }
+      ],
+      "original_finding_index": 204
+    },
+    {
+      "finding_id": 7,
+      "type": "JavaLangClash",
+      "sourcefile": "HttpException.java",
+      "start_line": "83",
+      "message": "org.eclipse.jetty.http.HttpException.RuntimeException clashes with java.lang.RuntimeException",
+      "tool_specific": {
+        "column": "5"
+      },
+      "runs": [
+        {
+          "reasoning": "The file defines a nested class named RuntimeException that has the same simple name as java.lang.RuntimeException, creating a naming clash. The tool correctly identifies this overlap, which can lead to confusion when the type is referenced without a fully qualified name.",
+          "is_true_positive": true,
+          "confidence": 0.96,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "class name clashes with java.lang class",
+          "developer_explanation": "You have introduced a class called RuntimeException inside HttpException, which shares its simple name with java.lang.RuntimeException. This can be confusing for readers and may cause accidental misuse of the wrong type. Consider renaming the class to something more specific, such as HttpExceptionRuntimeException, to avoid the clash.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 4087,
+            "output_tokens": 584,
+            "reasoning_tokens": 522,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000250499
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2074,
+          "latency_s": 43.872
+        },
+        {
+          "reasoning": "The file defines a nested class HttpException.RuntimeException that has the same simple name as java.lang.RuntimeException, creating a name clash that the rule flags. This naming conflict is present in the shown code and matches the warning's claim.",
+          "is_true_positive": true,
+          "confidence": 0.96,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "class name clashes with java.lang class",
+          "developer_explanation": "You have defined a class named RuntimeException inside the HttpException interface, which shares its simple name with java.lang.RuntimeException. This can cause confusion for developers and lead to accidental imports of the wrong type. Consider renaming the class to avoid the clash, e.g., HttpExceptionRuntimeException or HttpExceptionException.",
+          "run": 2,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 4087,
+            "output_tokens": 668,
+            "reasoning_tokens": 602,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000264779
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2395,
+          "latency_s": 45.443
+        },
+        {
+          "reasoning": "The file defines a nested class named RuntimeException that has the same simple name as java.lang.RuntimeException, creating a naming clash. The tool correctly identifies this overlap, which can lead to confusion when the type is referenced without a fully qualified name.",
+          "is_true_positive": true,
+          "confidence": 0.96,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "class name clashes with java.lang class",
+          "developer_explanation": "You have introduced a class called RuntimeException inside HttpException, which shares its simple name with java.lang.RuntimeException. This can be confusing for readers and may cause accidental misuse of the wrong type. Consider renaming the class to something more specific, such as HttpExceptionRuntimeException, to avoid the clash.",
+          "run": 3,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 4087,
+            "output_tokens": 584,
+            "reasoning_tokens": 522,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000250499
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2074,
+          "latency_s": 43.862
+        }
+      ],
+      "original_finding_index": 207
+    },
+    {
+      "finding_id": 8,
+      "type": "EnumOrdinal",
+      "sourcefile": "Generator.java",
+      "start_line": "50",
+      "message": "You should almost never invoke the Enum.ordinal() method.",
+      "tool_specific": {
+        "column": "76"
+      },
+      "runs": [
+        {
+          "reasoning": "The code uses FrameType.CONTINUATION.ordinal() to compute the size of an array, which ties the array length to the enum declaration order.",
+          "is_true_positive": true,
+          "confidence": 0.92,
+          "category": "CORRECTNESS",
+          "issue_signature": "enum ordinal used for array sizing",
+          "developer_explanation": "Using Enum.ordinal() to size the generators array makes the code fragile: if the order of FrameType constants changes, the array may be too small and cause an ArrayIndexOutOfBoundsException. Replace the ordinal‑based size with FrameType.values().length or a constant that reflects the maximum ordinal, so the array size stays correct regardless of enum ordering.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 3197,
+            "output_tokens": 451,
+            "reasoning_tokens": 336,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000194959
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1334,
+          "latency_s": 28.468
+        },
+        {
+          "reasoning": "The code calls FrameType.CONTINUATION.ordinal() only to compute the size of an array, which is a legitimate use and does not introduce a correctness problem.",
+          "is_true_positive": false,
+          "confidence": 0.88,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "enum ordinal invocation",
+          "developer_explanation": "Calling ordinal() here is used to determine the number of enum values for array sizing, which is safe and intentional. The warning can be ignored because this usage does not cause bugs or maintenance issues in this context.",
+          "run": 2,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 3197,
+            "output_tokens": 506,
+            "reasoning_tokens": 443,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000204309
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1760,
+          "latency_s": 23.55
+        },
+        {
+          "reasoning": "The code uses FrameType.CONTINUATION.ordinal() to compute the size of an array, which ties the array length to the enum declaration order.",
+          "is_true_positive": true,
+          "confidence": 0.92,
+          "category": "CORRECTNESS",
+          "issue_signature": "enum ordinal used for array sizing",
+          "developer_explanation": "Using Enum.ordinal() to size the generators array makes the code fragile: if the order of FrameType constants changes, the array may be too small and cause an ArrayIndexOutOfBoundsException. Replace the ordinal‑based size with FrameType.values().length or a constant that reflects the maximum ordinal, so the array size stays correct regardless of enum ordering.",
+          "run": 3,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 3197,
+            "output_tokens": 451,
+            "reasoning_tokens": 336,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000194959
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1334,
+          "latency_s": 37.641
+        }
+      ],
+      "original_finding_index": 357
+    },
+    {
+      "finding_id": 9,
+      "type": "InconsistentCapitalization",
+      "sourcefile": "HTTP2StreamEndPoint.java",
+      "start_line": "558",
+      "message": "Found the field 'endpoint' with the same name as the parameter 'endPoint' but with different capitalization.",
+      "tool_specific": {
+        "column": "62"
+      },
+      "runs": [
+        {
+          "reasoning": "The constructor defines a parameter named 'endPoint' while the class has a field named 'endpoint', differing only by capitalization. This mismatch triggers the InconsistentCapitalization rule.",
+          "is_true_positive": true,
+          "confidence": 0.99,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "field and parameter name case mismatch",
+          "developer_explanation": "The parameter name 'endPoint' does not match the field name 'endpoint', which can be confusing for readers and maintainers. Rename the parameter to 'endpoint' (or rename the field) so that the names are consistent in spelling and case.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 3685,
+            "output_tokens": 525,
+            "reasoning_tokens": 466,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000225595
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1840,
+          "latency_s": 36.169
+        },
+        {
+          "reasoning": "The constructor defines a parameter named 'endPoint' while the class has a field named 'endpoint', differing only by capitalization. This mismatch triggers the InconsistentCapitalization rule.",
+          "is_true_positive": true,
+          "confidence": 0.99,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "field and parameter name case mismatch",
+          "developer_explanation": "The parameter name 'endPoint' does not match the field name 'endpoint', which can be confusing for readers and maintainers. Rename the parameter to 'endpoint' (or rename the field) so that the names are consistent in spelling and case.",
+          "run": 2,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 3685,
+            "output_tokens": 525,
+            "reasoning_tokens": 466,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000225595
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1840,
+          "latency_s": 30.744
+        },
+        {
+          "reasoning": "The constructor defines a parameter named 'endPoint' while the class has a field named 'endpoint', differing only by capitalization. This mismatch triggers the InconsistentCapitalization rule.",
+          "is_true_positive": true,
+          "confidence": 0.99,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "field and parameter name case mismatch",
+          "developer_explanation": "The parameter name 'endPoint' does not match the field name 'endpoint', which can be confusing for readers and maintainers. Rename the parameter to 'endpoint' (or rename the field) so that the names are consistent in spelling and case.",
+          "run": 3,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 3685,
+            "output_tokens": 525,
+            "reasoning_tokens": 466,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000225595
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1840,
+          "latency_s": 30.928
+        }
+      ],
+      "original_finding_index": 363
+    },
+    {
+      "finding_id": 10,
+      "type": "MalformedInlineTag",
+      "sourcefile": "HeaderBlockParser.java",
+      "start_line": "53",
+      "message": "The correct syntax to open this inline tag is {@code.",
+      "tool_specific": {
+        "column": "15"
+      },
+      "runs": [
+        {
+          "reasoning": "The Javadoc comment on line 53 uses \"@{code\" instead of the correct \"{@code\" syntax, creating a malformed inline tag.",
+          "is_true_positive": true,
+          "confidence": 0.99,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "malformed javadoc inline tag",
+          "developer_explanation": "The Javadoc comment has a typo: it writes \"@{code\" rather than \"{@code\". This prevents the documentation tool from rendering the inline code correctly. Change the comment to \"{@code blockLength}\" (and similarly for other tags) to fix the documentation.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 3643,
+            "output_tokens": 409,
+            "reasoning_tokens": 291,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000204321
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1150,
+          "latency_s": 26.686
+        },
+        {
+          "reasoning": "The Javadoc comment on line 53 uses \"@{code\" instead of the correct \"{@code\" syntax, creating a malformed inline tag.",
+          "is_true_positive": true,
+          "confidence": 0.99,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "malformed javadoc inline tag",
+          "developer_explanation": "The Javadoc comment has a typo: it writes \"@{code\" rather than \"{@code\". This prevents the documentation tool from rendering the inline code correctly. Change the comment to \"{@code blockLength}\" (and similarly for other tags) to fix the documentation.",
+          "run": 2,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 3643,
+            "output_tokens": 409,
+            "reasoning_tokens": 291,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000204321
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1150,
+          "latency_s": 31.899
+        },
+        {
+          "reasoning": "The Javadoc comment on line 53 uses \"@{code\" instead of the correct \"{@code\" syntax, creating a malformed inline tag.",
+          "is_true_positive": true,
+          "confidence": 0.99,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "malformed javadoc inline tag",
+          "developer_explanation": "The Javadoc comment has a typo: it writes \"@{code\" rather than \"{@code\". This prevents the documentation tool from rendering the inline code correctly. Change the comment to \"{@code blockLength}\" (and similarly for other tags) to fix the documentation.",
+          "run": 3,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 3643,
+            "output_tokens": 409,
+            "reasoning_tokens": 291,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000204321
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1150,
+          "latency_s": 26.954
+        }
+      ],
+      "original_finding_index": 365
+    },
+    {
+      "finding_id": 11,
+      "type": "InlineMeSuggester",
+      "sourcefile": "Response.java",
+      "start_line": "566",
+      "message": "This deprecated API looks inlineable. If you'd like the body of the API to be automatically inlined to its callers, please annotate it with @InlineMe. NOTE: the suggested fix makes the method final if it was not already.",
+      "tool_specific": {
+        "column": "17"
+      },
+      "runs": [
+        {
+          "reasoning": "The replaceCookie method is deprecated and its body only calls putCookie with the same arguments, which matches the pattern that InlineMeSuggester flags as inlineable. The tool correctly identifies this simple delegating method as a candidate for inlining.",
+          "is_true_positive": true,
+          "confidence": 0.97,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "inlineable deprecated method",
+          "developer_explanation": "The replaceCookie method does nothing but forward to putCookie, so it can be annotated with @InlineMe or removed to simplify the API. Adding the annotation will let callers be automatically updated and keep the codebase cleaner. If you need to keep the method for backward compatibility, you can safely ignore the suggestion.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 5622,
+            "output_tokens": 758,
+            "reasoning_tokens": 711,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000336874
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2828,
+          "latency_s": 36.785
+        },
+        {
+          "reasoning": "The replaceCookie method is deprecated and its body only forwards the call to putCookie, which matches the InlineMeSuggester's pattern for an inlineable API.",
+          "is_true_positive": true,
+          "confidence": 0.96,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "inlineable deprecated method",
+          "developer_explanation": "replaceCookie is a simple delegating wrapper that is marked @Deprecated. The tool correctly identifies that its implementation can be inlined into callers. Consider annotating it with @InlineMe or removing the method if it is no longer needed, to simplify the API and avoid unnecessary indirection.",
+          "run": 2,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 5622,
+            "output_tokens": 691,
+            "reasoning_tokens": 660,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000325484
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2627,
+          "latency_s": 54.631
+        },
+        {
+          "reasoning": "The replaceCookie method is deprecated and its body only forwards the call to putCookie, which matches the InlineMeSuggester's pattern for an inlineable API.",
+          "is_true_positive": true,
+          "confidence": 0.96,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "inlineable deprecated method",
+          "developer_explanation": "replaceCookie is a simple delegating wrapper that is marked @Deprecated. The tool correctly identifies that its implementation can be inlined into callers. Consider annotating it with @InlineMe or removing the method if it is no longer needed, to simplify the API and avoid unnecessary indirection.",
+          "run": 3,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 5622,
+            "output_tokens": 691,
+            "reasoning_tokens": 660,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000325484
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2627,
+          "latency_s": 46.727
+        }
+      ],
+      "original_finding_index": 429
+    },
+    {
+      "finding_id": 12,
+      "type": "NarrowCalculation",
+      "sourcefile": "AbstractSessionDataStore.java",
+      "start_line": "298",
+      "message": "This product of integers could overflow before being implicitly cast to a long.",
+      "tool_specific": {
+        "column": "65"
+      },
+      "runs": [
+        {
+          "reasoning": "The expression 10 * _gracePeriodSec is evaluated as an int multiplication, which can overflow before being widened to a long for TimeUnit.SECONDS.toMillis, so the warning correctly identifies a potential overflow.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "integer multiplication overflow before widening to long",
+          "developer_explanation": "The multiplication of the int field _gracePeriodSec by 10 is performed using 32‑bit arithmetic, which can wrap if the value is large enough, leading to an incorrect millisecond value passed to cleanOrphans. Cast the operand to long before multiplying or use long arithmetic to avoid the overflow.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 4506,
+            "output_tokens": 672,
+            "reasoning_tokens": 577,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000280962
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2298,
+          "latency_s": 42.195
+        },
+        {
+          "reasoning": "The expression 10 * _gracePeriodSec is evaluated as an int multiplication, which can overflow before being widened to long for TimeUnit.SECONDS.toMillis.",
+          "is_true_positive": true,
+          "confidence": 0.96,
+          "category": "CORRECTNESS",
+          "issue_signature": "integer multiplication overflow before widening to long",
+          "developer_explanation": "The product 10 * _gracePeriodSec is computed using int arithmetic, so if _gracePeriodSec is large the multiplication can overflow and produce an incorrect millisecond value. Cast one operand to long (e.g., 10L * _gracePeriodSec) or perform the multiplication in long space to avoid the overflow.",
+          "run": 2,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 4506,
+            "output_tokens": 813,
+            "reasoning_tokens": 692,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000304932
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2749,
+          "latency_s": 69.561
+        },
+        {
+          "reasoning": "The expression 10 * _gracePeriodSec is evaluated using int arithmetic, which can overflow before being widened to long for the toMillis call.",
+          "is_true_positive": true,
+          "confidence": 0.92,
+          "category": "CORRECTNESS",
+          "issue_signature": "integer multiplication overflow before widening",
+          "developer_explanation": "The multiplication 10 * _gracePeriodSec is performed as an int and may overflow if _gracePeriodSec is large, producing an incorrect millisecond value. This can cause the time calculation passed to cleanOrphans to be wrong. Cast one operand to long (e.g., 10L * _gracePeriodSec) or compute the product as a long before calling toMillis.",
+          "run": 3,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 4506,
+            "output_tokens": 700,
+            "reasoning_tokens": 597,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000285722
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2368,
+          "latency_s": 45.011
+        }
+      ],
+      "original_finding_index": 499
+    },
+    {
+      "finding_id": 13,
+      "type": "EqualsGetClass",
+      "sourcefile": "DeploymentScanner.java",
+      "start_line": "1389",
+      "message": "Prefer instanceof to getClass when implementing Object#equals.",
+      "tool_specific": {
+        "column": "24"
+      },
+      "runs": [
+        {
+          "reasoning": "The equals method compares classes with getClass() instead of using instanceof. This pattern is a style recommendation, not a correctness defect, and the class is not declared final, so using getClass() is acceptable in this context. Therefore the warning is a false positive.",
+          "is_true_positive": false,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "use instanceof instead of getclass in equals",
+          "developer_explanation": "The tool flags the use of getClass() in the equals method, but this is a stylistic suggestion rather than a bug. Since PathsApp is not intended for inheritance, the current implementation is valid and does not cause incorrect behavior. You can safely ignore this warning.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 5144,
+            "output_tokens": 669,
+            "reasoning_tokens": 600,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000304058
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2388,
+          "latency_s": 55.57
+        },
+        {
+          "reasoning": "The equals method checks o.getClass() != getClass() which the rule flags, but using getClass() for equality is a valid design choice and not a correctness bug in this context.",
+          "is_true_positive": false,
+          "confidence": 0.9,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "use instanceof instead of getClass in equals",
+          "developer_explanation": "The tool warns that equals should use instanceof rather than a getClass() check. In this class, the getClass() comparison is intentional and does not cause a correctness problem, so the warning can be ignored. No code change is required unless you decide to allow subclass equality.",
+          "run": 2,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 5144,
+            "output_tokens": 716,
+            "reasoning_tokens": 691,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000312048
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2751,
+          "latency_s": 47.662
+        },
+        {
+          "reasoning": "The equals method checks o.getClass() != getClass() which the rule flags, but using getClass() for equality is a valid design choice and not a correctness bug in this context.",
+          "is_true_positive": false,
+          "confidence": 0.9,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "use instanceof instead of getClass in equals",
+          "developer_explanation": "The tool warns that equals should use instanceof rather than a getClass() check. In this class, the getClass() comparison is intentional and does not cause a correctness problem, so the warning can be ignored. No code change is required unless you decide to allow subclass equality.",
+          "run": 3,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 5144,
+            "output_tokens": 716,
+            "reasoning_tokens": 691,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000312048
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2751,
+          "latency_s": 47.626
+        }
+      ],
+      "original_finding_index": 730
+    },
+    {
+      "finding_id": 14,
+      "type": "AnnotateFormatMethod",
+      "sourcefile": "MetaDataBuilder.java",
+      "start_line": "238",
+      "message": "This method uses a pair of parameters as a format string and its arguments, but the enclosing method wasn't annotated @FormatMethod. Doing so gives compile-time rather than run-time protection against malformed format strings.",
+      "tool_specific": {
+        "column": "20"
+      },
+      "runs": [
+        {
+          "reasoning": "The method streamException takes a format string and varargs and calls String.format, but it is not annotated with @FormatMethod, which the rule requires. Therefore the tool correctly identifies a missing annotation.",
+          "is_true_positive": true,
+          "confidence": 0.96,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "missing @formatmethod annotation",
+          "developer_explanation": "The streamException method builds its error message with String.format, so it should be annotated with @FormatMethod. Adding the annotation will enable compile‑time validation of the format string and arguments, preventing possible runtime formatting errors. Apply @FormatMethod to the method signature.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 4546,
+            "output_tokens": 905,
+            "reasoning_tokens": 966,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000322052
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3849,
+          "latency_s": 50.803
+        },
+        {
+          "reasoning": "The method streamException takes a format string and varargs and calls String.format, but it is not annotated with @FormatMethod, which the rule requires. Therefore the tool correctly identifies a missing annotation.",
+          "is_true_positive": true,
+          "confidence": 0.96,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "missing @formatmethod annotation",
+          "developer_explanation": "The streamException method builds its error message with String.format, so it should be annotated with @FormatMethod. Adding the annotation will enable compile‑time validation of the format string and arguments, preventing possible runtime formatting errors. Apply @FormatMethod to the method signature.",
+          "run": 2,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 4546,
+            "output_tokens": 905,
+            "reasoning_tokens": 966,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000322052
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3849,
+          "latency_s": 46.35
+        },
+        {
+          "reasoning": "The method streamException takes a format string and varargs and calls String.format, but it is not annotated with @FormatMethod, which the rule specifically checks for.",
+          "is_true_positive": true,
+          "confidence": 0.96,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "missing @formatmethod annotation",
+          "developer_explanation": "The streamException method accepts a format string and arguments but lacks the @FormatMethod annotation, so callers do not get compile‑time validation of the format string. Add the @FormatMethod annotation (and import it) to this method to enable Error Prone to check format strings at call sites.",
+          "run": 3,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 4546,
+            "output_tokens": 643,
+            "reasoning_tokens": 614,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000277512
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2442,
+          "latency_s": 28.707
+        }
+      ],
+      "original_finding_index": 782
+    },
+    {
+      "finding_id": 15,
+      "type": "OverrideThrowableToString",
+      "sourcefile": "QuicException.java",
+      "start_line": "81",
+      "message": "To return a custom message with a Throwable class, one should override getMessage() instead of toString().",
+      "tool_specific": {
+        "column": "19"
+      },
+      "runs": [
+        {
+          "reasoning": "The class overrides Throwable.toString() to provide a formatted representation, but it does not attempt to change the exception message itself; the rule expects getMessage() to be overridden for custom messages, which does not apply here.",
+          "is_true_positive": false,
+          "confidence": 0.96,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "overriding throwable toString() instead of getMessage",
+          "developer_explanation": "In this case the toString() method is used only to produce a custom string for debugging that includes the error code and frame type, not to replace the exception's message. Overriding toString() is acceptable here, so the warning can be ignored. If you ever need a custom exception message, override getMessage() instead.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2921,
+            "output_tokens": 795,
+            "reasoning_tokens": 759,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000243227
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3019,
+          "latency_s": 63.837
+        },
+        {
+          "reasoning": "The class overrides toString() to provide a formatted representation of the exception while still using the superclass message via getMessage(). Overriding toString() for this purpose does not change the exception's message and is a valid design choice, so the tool's claim that this is incorrect is not materially true.",
+          "is_true_positive": false,
+          "confidence": 0.9,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "overriding throwable toString instead of getMessage",
+          "developer_explanation": "The warning can be ignored because the code is only customizing the exception's string representation, not the message returned by getMessage(). Overriding toString() here is harmless and provides useful debugging information. No change is required.",
+          "run": 2,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2921,
+            "output_tokens": 654,
+            "reasoning_tokens": 585,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000219257
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2327,
+          "latency_s": 52.45
+        },
+        {
+          "reasoning": "The class overrides toString() to provide a formatted representation of the exception while still using the superclass message via getMessage(). Overriding toString() for this purpose does not change the exception's message and is a valid design choice, so the tool's claim that this is incorrect is not materially true.",
+          "is_true_positive": false,
+          "confidence": 0.9,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "overriding throwable toString instead of getMessage",
+          "developer_explanation": "The warning can be ignored because the code is only customizing the exception's string representation, not the message returned by getMessage(). Overriding toString() here is harmless and provides useful debugging information. No change is required.",
+          "run": 3,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2921,
+            "output_tokens": 654,
+            "reasoning_tokens": 585,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000219257
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2327,
+          "latency_s": 54.179
+        }
+      ],
+      "original_finding_index": 797
+    },
+    {
+      "finding_id": 16,
+      "type": "StringSplitter",
+      "sourcefile": "AbstractForkedChild.java",
+      "start_line": "154",
+      "message": "String.split(String) has surprising behavior",
+      "tool_specific": {
+        "column": "48"
+      },
+      "runs": [
+        {
+          "reasoning": "The code splits each argument on \"=\" and only processes the result when the split array has exactly two elements, so the loss of a trailing empty string (e.g., \"key=\") does not affect the intended behavior. Therefore the warning about surprising split behavior is not applicable here.",
+          "is_true_positive": false,
+          "confidence": 0.9,
+          "category": "CORRECTNESS",
+          "issue_signature": "string split discarding trailing empty strings",
+          "developer_explanation": "The warning flags the fact that String.split can drop trailing empty strings, but this code only cares about arguments that contain a non‑empty value (tmp.length == 2). Empty values are ignored by design, so the split behavior does not cause a bug. You can safely dismiss this warning.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 4138,
+            "output_tokens": 827,
+            "reasoning_tokens": 743,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000293696
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2942,
+          "latency_s": 78.663
+        },
+        {
+          "reasoning": "The code uses String.split(\"=\") to parse key=value arguments and then checks for exactly two parts, but String.split discards trailing empty strings, so a key with an empty value will be ignored, which can lead to incorrect behavior.",
+          "is_true_positive": true,
+          "confidence": 0.88,
+          "category": "CORRECTNESS",
+          "issue_signature": "string split discards trailing empty tokens",
+          "developer_explanation": "String.split treats the delimiter as a regular expression and removes trailing empty strings, so arguments like \"key=\" will produce a single element array and be skipped by the length check. This can cause valid properties with empty values to be lost. Replace the split with a safer alternative such as Guava's Splitter or handle the empty-value case explicitly.",
+          "run": 2,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 4138,
+            "output_tokens": 812,
+            "reasoning_tokens": 739,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000291146
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2941,
+          "latency_s": 55.099
+        },
+        {
+          "reasoning": "The code uses String.split(\"=\") to parse key=value arguments and then checks for exactly two parts, but String.split discards trailing empty strings, so a key with an empty value will be ignored, which can lead to incorrect behavior.",
+          "is_true_positive": true,
+          "confidence": 0.88,
+          "category": "CORRECTNESS",
+          "issue_signature": "string split discards trailing empty tokens",
+          "developer_explanation": "String.split treats the delimiter as a regular expression and removes trailing empty strings, so arguments like \"key=\" will produce a single element array and be skipped by the length check. This can cause valid properties with empty values to be lost. Replace the split with a safer alternative such as Guava's Splitter or handle the empty-value case explicitly.",
+          "run": 3,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 4138,
+            "output_tokens": 812,
+            "reasoning_tokens": 739,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000291146
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2941,
+          "latency_s": 67.681
+        }
+      ],
+      "original_finding_index": 871
+    },
+    {
+      "finding_id": 17,
+      "type": "EmptyCatch",
+      "sourcefile": "NamingEntryUtil.java",
+      "start_line": "86",
+      "message": "Caught exceptions should not be ignored",
+      "tool_specific": {
+        "column": "9"
+      },
+      "runs": [
+        {
+          "reasoning": "The catch block for NameNotFoundException at line 86 is empty and deliberately ignores the exception, which is used to treat a missing naming entry as a non‑error and return null. Therefore the tool's claim that the exception is improperly ignored is not correct in this context.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "empty catch block ignoring exception",
+          "developer_explanation": "The empty catch is intentional: when a NameNotFoundException occurs the method should simply return null, indicating the entry does not exist. Since this behavior is correct and expected, the warning can be safely dismissed. If you want to make the intent clearer, consider adding a comment or logging instead of removing the catch.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 4522,
+            "output_tokens": 590,
+            "reasoning_tokens": 498,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000267614
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1980,
+          "latency_s": 30.222
+        },
+        {
+          "reasoning": "The catch block for NameNotFoundException is intentionally empty, and the method returns null to indicate the entry was not found, which matches the intended behavior of lookupNamingEntry. Therefore the tool's claim that the exception should not be ignored is not correct in this context.",
+          "is_true_positive": false,
+          "confidence": 0.9,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "empty catch block ignoring exception",
+          "developer_explanation": "The empty catch for NameNotFoundException is deliberate: a missing naming entry is treated as a normal case and the method returns null. Since this behavior is intentional and documented, the warning can be safely dismissed. If you want, you could add a comment explaining why the exception is ignored to improve readability.",
+          "run": 2,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 4522,
+            "output_tokens": 595,
+            "reasoning_tokens": 509,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000268464
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2022,
+          "latency_s": 37.271
+        },
+        {
+          "reasoning": "The catch block for NameNotFoundException at line 86 is empty and deliberately ignores the exception, which is used to treat a missing naming entry as a non‑error and return null. Therefore the tool's claim that the exception is improperly ignored is not correct in this context.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "empty catch block ignoring exception",
+          "developer_explanation": "The empty catch is intentional: when a NameNotFoundException occurs the method should simply return null, indicating the entry does not exist. Since this behavior is correct and expected, the warning can be safely dismissed. If you want to make the intent clearer, consider adding a comment or logging instead of removing the catch.",
+          "run": 3,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 4522,
+            "output_tokens": 590,
+            "reasoning_tokens": 498,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000267614
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1980,
+          "latency_s": 27.812
+        }
+      ],
+      "original_finding_index": 919
+    },
+    {
+      "finding_id": 18,
+      "type": "SuperCallToObjectMethod",
+      "sourcefile": "Frame.java",
+      "start_line": "407",
+      "message": "`super.hashCode()` is equivalent to `System.identityHashCode(this)` here",
+      "tool_specific": {
+        "column": "52"
+      },
+      "runs": [
+        {
+          "reasoning": "The Frame class does not override hashCode, so super.hashCode() calls Object.hashCode which returns the object's identity hash code, making it equivalent to System.identityHashCode(this).",
+          "is_true_positive": true,
+          "confidence": 0.96,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "super call to Object.hashCode",
+          "developer_explanation": "Calling super.hashCode() here merely returns the identity hash code, which is clearer when expressed as System.identityHashCode(this). Replace the super call with the static method to improve readability and avoid the impression that a custom hashCode implementation is being used.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 4976,
+            "output_tokens": 652,
+            "reasoning_tokens": 600,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000294952
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2386,
+          "latency_s": 46.846
+        },
+        {
+          "reasoning": "The method calls super.hashCode() which, because Frame does not override hashCode, invokes Object.hashCode() and thus returns the object's identity hash code. This matches the tool's claim that super.hashCode() is equivalent to System.identityHashCode(this), indicating the warning correctly identifies a confusing use of a super call to an Object method.",
+          "is_true_positive": true,
+          "confidence": 0.97,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "super call to Object.hashCode",
+          "developer_explanation": "Calling super.hashCode() in toString() only yields the default identity hash code, which can be confusing and suggests a mistaken use of the super call. Replace it with System.identityHashCode(this) for clarity, or override hashCode if a logical hash is needed.",
+          "run": 2,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 4976,
+            "output_tokens": 745,
+            "reasoning_tokens": 670,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000310762
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2671,
+          "latency_s": 50.874
+        },
+        {
+          "reasoning": "The method calls super.hashCode() which, because Frame does not override hashCode, invokes Object.hashCode() and thus returns the object's identity hash code. This matches the tool's claim that super.hashCode() is equivalent to System.identityHashCode(this), indicating the warning correctly identifies a confusing use of a super call to an Object method.",
+          "is_true_positive": true,
+          "confidence": 0.97,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "super call to Object.hashCode",
+          "developer_explanation": "Calling super.hashCode() in toString() only yields the default identity hash code, which can be confusing and suggests a mistaken use of the super call. Replace it with System.identityHashCode(this) for clarity, or override hashCode if a logical hash is needed.",
+          "run": 3,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 4976,
+            "output_tokens": 745,
+            "reasoning_tokens": 670,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000310762
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2671,
+          "latency_s": 59.892
+        }
+      ],
+      "original_finding_index": 956
+    },
+    {
+      "finding_id": 19,
+      "type": "NonCanonicalType",
+      "sourcefile": "PerMessageDeflateExtension.java",
+      "start_line": "60",
+      "message": "The type `CompressionPool.Entry` was referred to by the non-canonical name `InflaterPool.Entry`. This may be misleading.",
+      "tool_specific": {
+        "column": "25"
+      },
+      "runs": [
+        {
+          "reasoning": "The field is declared as InflaterPool.Entry, but the actual nested class is defined in CompressionPool, making InflaterPool.Entry a non‑canonical reference. The tool correctly identifies this potentially misleading naming.",
+          "is_true_positive": true,
+          "confidence": 0.96,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "non-canonical nested class reference",
+          "developer_explanation": "You are referring to the nested class Entry via InflaterPool, which is not the canonical name (CompressionPool.Entry). This can confuse readers about the actual type. Consider declaring the field using the canonical type CompressionPool.Entry or add a comment clarifying the alias.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 4415,
+            "output_tokens": 875,
+            "reasoning_tokens": 870,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000312105
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3458,
+          "latency_s": 51.215
+        },
+        {
+          "reasoning": "The field is declared as InflaterPool.Entry even though the canonical type for that entry is CompressionPool.Entry, which matches the NonCanonicalType rule's condition. This non‑canonical reference can be misleading to readers.",
+          "is_true_positive": true,
+          "confidence": 0.96,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "non-canonical type reference",
+          "developer_explanation": "You are using InflaterPool.Entry to hold the inflater, but the canonical type for that entry is CompressionPool.Entry. This can confuse maintainers about the actual type being used. Change the field declaration to use CompressionPool.Entry (or the appropriate canonical type) to make the code clearer.",
+          "run": 2,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 4415,
+            "output_tokens": 605,
+            "reasoning_tokens": 534,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000266205
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2128,
+          "latency_s": 45.665
+        },
+        {
+          "reasoning": "The code declares a field of type InflaterPool.Entry while the canonical type for that entry is CompressionPool.Entry, which matches the tool's description of a non‑canonical reference. This naming choice can be misleading to readers.",
+          "is_true_positive": true,
+          "confidence": 0.96,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "non-canonical type reference",
+          "developer_explanation": "You are using InflaterPool.Entry to hold an inflater, but the actual entry type is defined in CompressionPool and should be referenced as CompressionPool.Entry. Using the canonical name makes the code clearer and avoids confusion. Change the field declaration to use CompressionPool.Entry instead of InflaterPool.Entry.",
+          "run": 3,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 4415,
+            "output_tokens": 698,
+            "reasoning_tokens": 636,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000282015
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2536,
+          "latency_s": 54.336
+        }
+      ],
+      "original_finding_index": 977
+    }
+  ]
+}

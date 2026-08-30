@@ -1,0 +1,12 @@
+# Klucze API — nigdy do repozytorium.
+.env
+
+# Środowisko i artefakty Pythona.
+.venv/
+__pycache__/
+*.py[cod]
+
+# Śmieci edytora i systemu.
+.idea/
+.vscode/
+.DS_Store

@@ -1,0 +1,542 @@
+{
+  "tool": "error-prone",
+  "version": "2.26.1",
+  "total_findings": 20,
+  "findings": [
+    {
+      "type": "CatchAndPrintStackTrace",
+      "abbrev": "CAT",
+      "sourcefile": "JettyLoggerFactory.java",
+      "start_line": "235",
+      "end_line": "235",
+      "classname": "JettyLoggerFactory",
+      "fully_qualified_classname": "org.eclipse.jetty.logging.JettyLoggerFactory",
+      "source_path": "jetty-core/jetty-slf4j-impl/src/main/java/org/eclipse/jetty/logging/JettyLoggerFactory.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.logging",
+      "message": "Logging or rethrowing exceptions should usually be preferred to catching and calling printStackTrace",
+      "description": "CatchAndPrintStackTrace: Logging or rethrowing exceptions should usually be preferred to catching and calling printStackTrace",
+      "tool_specific": {
+        "column": "17",
+        "module": "jetty-core/jetty-slf4j-impl",
+        "filepath": "jetty.project/jetty-core/jetty-slf4j-impl/src/main/java/org/eclipse/jetty/logging/JettyLoggerFactory.java",
+        "bugpattern_url": "https://errorprone.info/bugpattern/CatchAndPrintStackTrace",
+        "suggestion": null
+      },
+      "original_finding_index": 6
+    },
+    {
+      "type": "LockNotBeforeTry",
+      "abbrev": "LOC",
+      "sourcefile": "Blocker.java",
+      "start_line": "422",
+      "end_line": "422",
+      "classname": "Blocker",
+      "fully_qualified_classname": "org.eclipse.jetty.util.Blocker",
+      "source_path": "jetty-core/jetty-util/src/main/java/org/eclipse/jetty/util/Blocker.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.util",
+      "message": "Prefer locking *immediately* before the try block which releases the lock to avoid the possibility of any intermediate statements throwing.",
+      "description": "LockNotBeforeTry: Prefer locking *immediately* before the try block which releases the lock to avoid the possibility of any intermediate statements throwing.",
+      "tool_specific": {
+        "column": "27",
+        "module": "jetty-core/jetty-util",
+        "filepath": "jetty.project/jetty-core/jetty-util/src/main/java/org/eclipse/jetty/util/Blocker.java",
+        "bugpattern_url": "https://errorprone.info/bugpattern/LockNotBeforeTry",
+        "suggestion": "_lock.lock();try"
+      },
+      "original_finding_index": 34
+    },
+    {
+      "type": "ClassCanBeStatic",
+      "abbrev": "CLA",
+      "sourcefile": "WriteFlusher.java",
+      "start_line": "250",
+      "end_line": "250",
+      "classname": "WriteFlusher",
+      "fully_qualified_classname": "org.eclipse.jetty.io.WriteFlusher",
+      "source_path": "jetty-core/jetty-io/src/main/java/org/eclipse/jetty/io/WriteFlusher.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.io",
+      "message": "Inner class is non-static but does not reference enclosing class",
+      "description": "ClassCanBeStatic: Inner class is non-static but does not reference enclosing class",
+      "tool_specific": {
+        "column": "13",
+        "module": "jetty-core/jetty-io",
+        "filepath": "jetty.project/jetty-core/jetty-io/src/main/java/org/eclipse/jetty/io/WriteFlusher.java",
+        "bugpattern_url": "https://errorprone.info/bugpattern/ClassCanBeStatic",
+        "suggestion": "private static class CancellingState extends State"
+      },
+      "original_finding_index": 161
+    },
+    {
+      "type": "UnusedMethod",
+      "abbrev": "UNU",
+      "sourcefile": "ArrayByteBufferPool.java",
+      "start_line": "811",
+      "end_line": "811",
+      "classname": "ArrayByteBufferPool",
+      "fully_qualified_classname": "org.eclipse.jetty.io.ArrayByteBufferPool",
+      "source_path": "jetty-core/jetty-io/src/main/java/org/eclipse/jetty/io/ArrayByteBufferPool.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.io",
+      "message": "Method 'remove' is never used.",
+      "description": "UnusedMethod: Method 'remove' is never used.",
+      "tool_specific": {
+        "column": "14",
+        "module": "jetty-core/jetty-io",
+        "filepath": "jetty.project/jetty-core/jetty-io/src/main/java/org/eclipse/jetty/io/ArrayByteBufferPool.java",
+        "bugpattern_url": "https://errorprone.info/bugpattern/UnusedMethod",
+        "suggestion": null
+      },
+      "original_finding_index": 165
+    },
+    {
+      "type": "UnnecessaryLambda",
+      "abbrev": "UNN",
+      "sourcefile": "ByteArrayEndPoint.java",
+      "start_line": "59",
+      "end_line": "59",
+      "classname": "ByteArrayEndPoint",
+      "fully_qualified_classname": "org.eclipse.jetty.io.ByteArrayEndPoint",
+      "source_path": "jetty-core/jetty-io/src/main/java/org/eclipse/jetty/io/ByteArrayEndPoint.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.io",
+      "message": "Returning a lambda from a helper method or saving it in a constant is unnecessary; prefer to implement the functional interface method directly and use a method reference instead.",
+      "description": "UnnecessaryLambda: Returning a lambda from a helper method or saving it in a constant is unnecessary; prefer to implement the functional interface method directly and use a method reference instead.",
+      "tool_specific": {
+        "column": "28",
+        "module": "jetty-core/jetty-io",
+        "filepath": "jetty.project/jetty-core/jetty-io/src/main/java/org/eclipse/jetty/io/ByteArrayEndPoint.java",
+        "bugpattern_url": "https://errorprone.info/bugpattern/UnnecessaryLambda",
+        "suggestion": "private  void _runFillable(){getFillInterest().fillable();}"
+      },
+      "original_finding_index": 171
+    },
+    {
+      "type": "BadInstanceof",
+      "abbrev": "BAD",
+      "sourcefile": "ByteArrayEndPoint.java",
+      "start_line": "475",
+      "end_line": "475",
+      "classname": "ByteArrayEndPoint",
+      "fully_qualified_classname": "org.eclipse.jetty.io.ByteArrayEndPoint",
+      "source_path": "jetty-core/jetty-io/src/main/java/org/eclipse/jetty/io/ByteArrayEndPoint.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.io",
+      "message": "`_buffer` is an instance of RetainableByteBuffer.DynamicCapacity which is a subtype of RetainableByteBuffer.DynamicCapacity, so this is equivalent to a null check.",
+      "description": "BadInstanceof: `_buffer` is an instance of RetainableByteBuffer.DynamicCapacity which is a subtype of RetainableByteBuffer.DynamicCapacity, so this is equivalent to a null check.",
+      "tool_specific": {
+        "column": "24",
+        "module": "jetty-core/jetty-io",
+        "filepath": "jetty.project/jetty-core/jetty-io/src/main/java/org/eclipse/jetty/io/ByteArrayEndPoint.java",
+        "bugpattern_url": "https://errorprone.info/bugpattern/BadInstanceof",
+        "suggestion": "return _buffer != null;"
+      },
+      "original_finding_index": 183
+    },
+    {
+      "type": "JavaTimeDefaultTimeZone",
+      "abbrev": "JAV",
+      "sourcefile": "ManagedSelector.java",
+      "start_line": "474",
+      "end_line": "474",
+      "classname": "ManagedSelector",
+      "fully_qualified_classname": "org.eclipse.jetty.io.ManagedSelector",
+      "source_path": "jetty-core/jetty-io/src/main/java/org/eclipse/jetty/io/ManagedSelector.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.io",
+      "message": "ZonedDateTime.now() is not allowed because it silently uses the system default time-zone. You must pass an explicit time-zone (e.g., ZoneId.of(\"America/Los_Angeles\")) to this method.",
+      "description": "JavaTimeDefaultTimeZone: ZonedDateTime.now() is not allowed because it silently uses the system default time-zone. You must pass an explicit time-zone (e.g., ZoneId.of(\"America/Los_Angeles\")) to this method.",
+      "tool_specific": {
+        "column": "92",
+        "module": "jetty-core/jetty-io",
+        "filepath": "jetty.project/jetty-core/jetty-io/src/main/java/org/eclipse/jetty/io/ManagedSelector.java",
+        "bugpattern_url": "https://errorprone.info/bugpattern/JavaTimeDefaultTimeZone",
+        "suggestion": "String keysAt = DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(ZonedDateTime.now(ZoneId.systemDefault()));"
+      },
+      "original_finding_index": 204
+    },
+    {
+      "type": "JavaLangClash",
+      "abbrev": "JAV",
+      "sourcefile": "HttpException.java",
+      "start_line": "83",
+      "end_line": "83",
+      "classname": "HttpException",
+      "fully_qualified_classname": "org.eclipse.jetty.http.HttpException",
+      "source_path": "jetty-core/jetty-http/src/main/java/org/eclipse/jetty/http/HttpException.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.http",
+      "message": "org.eclipse.jetty.http.HttpException.RuntimeException clashes with java.lang.RuntimeException",
+      "description": "JavaLangClash: org.eclipse.jetty.http.HttpException.RuntimeException clashes with java.lang.RuntimeException",
+      "tool_specific": {
+        "column": "5",
+        "module": "jetty-core/jetty-http",
+        "filepath": "jetty.project/jetty-core/jetty-http/src/main/java/org/eclipse/jetty/http/HttpException.java",
+        "bugpattern_url": "https://errorprone.info/bugpattern/JavaLangClash",
+        "suggestion": null
+      },
+      "original_finding_index": 207
+    },
+    {
+      "type": "EnumOrdinal",
+      "abbrev": "ENU",
+      "sourcefile": "Generator.java",
+      "start_line": "50",
+      "end_line": "50",
+      "classname": "Generator",
+      "fully_qualified_classname": "org.eclipse.jetty.http2.generator.Generator",
+      "source_path": "jetty-core/jetty-http2/jetty-http2-common/src/main/java/org/eclipse/jetty/http2/generator/Generator.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.http2.generator",
+      "message": "You should almost never invoke the Enum.ordinal() method.",
+      "description": "EnumOrdinal: You should almost never invoke the Enum.ordinal() method.",
+      "tool_specific": {
+        "column": "76",
+        "module": "jetty-core/jetty-http2/jetty-http2-common",
+        "filepath": "jetty.project/jetty-core/jetty-http2/jetty-http2-common/src/main/java/org/eclipse/jetty/http2/generator/Generator.java",
+        "bugpattern_url": "https://errorprone.info/bugpattern/EnumOrdinal",
+        "suggestion": null
+      },
+      "original_finding_index": 357
+    },
+    {
+      "type": "InconsistentCapitalization",
+      "abbrev": "INC",
+      "sourcefile": "HTTP2StreamEndPoint.java",
+      "start_line": "558",
+      "end_line": "558",
+      "classname": "HTTP2StreamEndPoint",
+      "fully_qualified_classname": "org.eclipse.jetty.http2.HTTP2StreamEndPoint",
+      "source_path": "jetty-core/jetty-http2/jetty-http2-common/src/main/java/org/eclipse/jetty/http2/HTTP2StreamEndPoint.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.http2",
+      "message": "Found the field 'endpoint' with the same name as the parameter 'endPoint' but with different capitalization.",
+      "description": "InconsistentCapitalization: Found the field 'endpoint' with the same name as the parameter 'endPoint' but with different capitalization.",
+      "tool_specific": {
+        "column": "62",
+        "module": "jetty-core/jetty-http2/jetty-http2-common",
+        "filepath": "jetty.project/jetty-core/jetty-http2/jetty-http2-common/src/main/java/org/eclipse/jetty/http2/HTTP2StreamEndPoint.java",
+        "bugpattern_url": "https://errorprone.info/bugpattern/InconsistentCapitalization",
+        "suggestion": "private Pending(State state, HTTP2StreamEndPoint endpoint, Callback callback)"
+      },
+      "original_finding_index": 363
+    },
+    {
+      "type": "MalformedInlineTag",
+      "abbrev": "MAL",
+      "sourcefile": "HeaderBlockParser.java",
+      "start_line": "53",
+      "end_line": "53",
+      "classname": "HeaderBlockParser",
+      "fully_qualified_classname": "org.eclipse.jetty.http2.parser.HeaderBlockParser",
+      "source_path": "jetty-core/jetty-http2/jetty-http2-common/src/main/java/org/eclipse/jetty/http2/parser/HeaderBlockParser.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.http2.parser",
+      "message": "The correct syntax to open this inline tag is {@code.",
+      "description": "MalformedInlineTag: The correct syntax to open this inline tag is {@code.",
+      "tool_specific": {
+        "column": "15",
+        "module": "jetty-core/jetty-http2/jetty-http2-common",
+        "filepath": "jetty.project/jetty-core/jetty-http2/jetty-http2-common/src/main/java/org/eclipse/jetty/http2/parser/HeaderBlockParser.java",
+        "bugpattern_url": "https://errorprone.info/bugpattern/MalformedInlineTag",
+        "suggestion": "* Parses {@code blockLength} HPACK bytes from the given {@code buffer}."
+      },
+      "original_finding_index": 365
+    },
+    {
+      "type": "InlineMeSuggester",
+      "abbrev": "INL",
+      "sourcefile": "Response.java",
+      "start_line": "566",
+      "end_line": "566",
+      "classname": "Response",
+      "fully_qualified_classname": "org.eclipse.jetty.server.Response",
+      "source_path": "jetty-core/jetty-server/src/main/java/org/eclipse/jetty/server/Response.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.server",
+      "message": "This deprecated API looks inlineable. If you'd like the body of the API to be automatically inlined to its callers, please annotate it with @InlineMe. NOTE: the suggested fix makes the method final if it was not already.",
+      "description": "InlineMeSuggester: This deprecated API looks inlineable. If you'd like the body of the API to be automatically inlined to its callers, please annotate it with @InlineMe. NOTE: the suggested fix makes the method final if it was not already.",
+      "tool_specific": {
+        "column": "17",
+        "module": "jetty-core/jetty-server",
+        "filepath": "jetty.project/jetty-core/jetty-server/src/main/java/org/eclipse/jetty/server/Response.java",
+        "bugpattern_url": "https://errorprone.info/bugpattern/InlineMeSuggester",
+        "suggestion": "@InlineMe(replacement = \"Response.putCookie(response, cookie)\", imports = \"org.eclipse.jetty.server.Response\")"
+      },
+      "original_finding_index": 429
+    },
+    {
+      "type": "NarrowCalculation",
+      "abbrev": "NAR",
+      "sourcefile": "AbstractSessionDataStore.java",
+      "start_line": "298",
+      "end_line": "298",
+      "classname": "AbstractSessionDataStore",
+      "fully_qualified_classname": "org.eclipse.jetty.session.AbstractSessionDataStore",
+      "source_path": "jetty-core/jetty-session/src/main/java/org/eclipse/jetty/session/AbstractSessionDataStore.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.session",
+      "message": "This product of integers could overflow before being implicitly cast to a long.",
+      "description": "NarrowCalculation: This product of integers could overflow before being implicitly cast to a long.",
+      "tool_specific": {
+        "column": "65",
+        "module": "jetty-core/jetty-session",
+        "filepath": "jetty.project/jetty-core/jetty-session/src/main/java/org/eclipse/jetty/session/AbstractSessionDataStore.java",
+        "bugpattern_url": "https://errorprone.info/bugpattern/NarrowCalculation",
+        "suggestion": "cleanOrphans(now - TimeUnit.SECONDS.toMillis(10L * _gracePeriodSec));"
+      },
+      "original_finding_index": 499
+    },
+    {
+      "type": "EqualsGetClass",
+      "abbrev": "EQU",
+      "sourcefile": "DeploymentScanner.java",
+      "start_line": "1389",
+      "end_line": "1389",
+      "classname": "DeploymentScanner",
+      "fully_qualified_classname": "org.eclipse.jetty.deploy.DeploymentScanner",
+      "source_path": "jetty-core/jetty-deploy/src/main/java/org/eclipse/jetty/deploy/DeploymentScanner.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.deploy",
+      "message": "Prefer instanceof to getClass when implementing Object#equals.",
+      "description": "EqualsGetClass: Prefer instanceof to getClass when implementing Object#equals.",
+      "tool_specific": {
+        "column": "24",
+        "module": "jetty-core/jetty-deploy",
+        "filepath": "jetty.project/jetty-core/jetty-deploy/src/main/java/org/eclipse/jetty/deploy/DeploymentScanner.java",
+        "bugpattern_url": "https://errorprone.info/bugpattern/EqualsGetClass",
+        "suggestion": "if (!(o instanceof PathsApp))"
+      },
+      "original_finding_index": 730
+    },
+    {
+      "type": "AnnotateFormatMethod",
+      "abbrev": "ANN",
+      "sourcefile": "MetaDataBuilder.java",
+      "start_line": "238",
+      "end_line": "238",
+      "classname": "MetaDataBuilder",
+      "fully_qualified_classname": "org.eclipse.jetty.http3.qpack.internal.metadata.MetaDataBuilder",
+      "source_path": "jetty-core/jetty-http3/jetty-http3-qpack/src/main/java/org/eclipse/jetty/http3/qpack/internal/metadata/MetaDataBuilder.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.http3.qpack.internal.metadata",
+      "message": "This method uses a pair of parameters as a format string and its arguments, but the enclosing method wasn't annotated @FormatMethod. Doing so gives compile-time rather than run-time protection against malformed format strings.",
+      "description": "AnnotateFormatMethod: This method uses a pair of parameters as a format string and its arguments, but the enclosing method wasn't annotated @FormatMethod. Doing so gives compile-time rather than run-time protection against malformed format strings.",
+      "tool_specific": {
+        "column": "20",
+        "module": "jetty-core/jetty-http3/jetty-http3-qpack",
+        "filepath": "jetty.project/jetty-core/jetty-http3/jetty-http3-qpack/src/main/java/org/eclipse/jetty/http3/qpack/internal/metadata/MetaDataBuilder.java",
+        "bugpattern_url": "https://errorprone.info/bugpattern/AnnotateFormatMethod",
+        "suggestion": null
+      },
+      "original_finding_index": 782
+    },
+    {
+      "type": "OverrideThrowableToString",
+      "abbrev": "OVE",
+      "sourcefile": "QuicException.java",
+      "start_line": "81",
+      "end_line": "81",
+      "classname": "QuicException",
+      "fully_qualified_classname": "org.eclipse.jetty.quic.util.QuicException",
+      "source_path": "jetty-core/jetty-quic/jetty-quic-util/src/main/java/org/eclipse/jetty/quic/util/QuicException.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.quic.util",
+      "message": "To return a custom message with a Throwable class, one should override getMessage() instead of toString().",
+      "description": "OverrideThrowableToString: To return a custom message with a Throwable class, one should override getMessage() instead of toString().",
+      "tool_specific": {
+        "column": "19",
+        "module": "jetty-core/jetty-quic/jetty-quic-util",
+        "filepath": "jetty.project/jetty-core/jetty-quic/jetty-quic-util/src/main/java/org/eclipse/jetty/quic/util/QuicException.java",
+        "bugpattern_url": "https://errorprone.info/bugpattern/OverrideThrowableToString",
+        "suggestion": "public String getMessage()"
+      },
+      "original_finding_index": 797
+    },
+    {
+      "type": "StringSplitter",
+      "abbrev": "STR",
+      "sourcefile": "AbstractForkedChild.java",
+      "start_line": "154",
+      "end_line": "154",
+      "classname": "AbstractForkedChild",
+      "fully_qualified_classname": "org.eclipse.jetty.maven.AbstractForkedChild",
+      "source_path": "jetty-core/jetty-maven/src/main/java/org/eclipse/jetty/maven/AbstractForkedChild.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.maven",
+      "message": "String.split(String) has surprising behavior",
+      "description": "StringSplitter: String.split(String) has surprising behavior",
+      "tool_specific": {
+        "column": "48",
+        "module": "jetty-core/jetty-maven",
+        "filepath": "jetty.project/jetty-core/jetty-maven/src/main/java/org/eclipse/jetty/maven/AbstractForkedChild.java",
+        "bugpattern_url": "https://errorprone.info/bugpattern/StringSplitter",
+        "suggestion": "List<String> tmp = Splitter.on("
+      },
+      "original_finding_index": 871
+    },
+    {
+      "type": "EmptyCatch",
+      "abbrev": "EMP",
+      "sourcefile": "NamingEntryUtil.java",
+      "start_line": "86",
+      "end_line": "86",
+      "classname": "NamingEntryUtil",
+      "fully_qualified_classname": "org.eclipse.jetty.plus.jndi.NamingEntryUtil",
+      "source_path": "jetty-core/jetty-plus/src/main/java/org/eclipse/jetty/plus/jndi/NamingEntryUtil.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.plus.jndi",
+      "message": "Caught exceptions should not be ignored",
+      "description": "EmptyCatch: Caught exceptions should not be ignored",
+      "tool_specific": {
+        "column": "9",
+        "module": "jetty-core/jetty-plus",
+        "filepath": "jetty.project/jetty-core/jetty-plus/src/main/java/org/eclipse/jetty/plus/jndi/NamingEntryUtil.java",
+        "bugpattern_url": null,
+        "suggestion": null
+      },
+      "original_finding_index": 919
+    },
+    {
+      "type": "SuperCallToObjectMethod",
+      "abbrev": "SUP",
+      "sourcefile": "Frame.java",
+      "start_line": "407",
+      "end_line": "407",
+      "classname": "Frame",
+      "fully_qualified_classname": "org.eclipse.jetty.websocket.core.Frame",
+      "source_path": "jetty-core/jetty-websocket/jetty-websocket-core-common/src/main/java/org/eclipse/jetty/websocket/core/Frame.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.websocket.core",
+      "message": "`super.hashCode()` is equivalent to `System.identityHashCode(this)` here",
+      "description": "SuperCallToObjectMethod: `super.hashCode()` is equivalent to `System.identityHashCode(this)` here",
+      "tool_specific": {
+        "column": "52",
+        "module": "jetty-core/jetty-websocket/jetty-websocket-core-common",
+        "filepath": "jetty.project/jetty-core/jetty-websocket/jetty-websocket-core-common/src/main/java/org/eclipse/jetty/websocket/core/Frame.java",
+        "bugpattern_url": "https://errorprone.info/bugpattern/SuperCallToObjectMethod",
+        "suggestion": "b.append(Integer.toHexString(System.identityHashCode(this)));"
+      },
+      "original_finding_index": 956
+    },
+    {
+      "type": "NonCanonicalType",
+      "abbrev": "NON",
+      "sourcefile": "PerMessageDeflateExtension.java",
+      "start_line": "60",
+      "end_line": "60",
+      "classname": "PerMessageDeflateExtension",
+      "fully_qualified_classname": "org.eclipse.jetty.websocket.core.internal.PerMessageDeflateExtension",
+      "source_path": "jetty-core/jetty-websocket/jetty-websocket-core-common/src/main/java/org/eclipse/jetty/websocket/core/internal/PerMessageDeflateExtension.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.websocket.core.internal",
+      "message": "The type `CompressionPool.Entry` was referred to by the non-canonical name `InflaterPool.Entry`. This may be misleading.",
+      "description": "NonCanonicalType: The type `CompressionPool.Entry` was referred to by the non-canonical name `InflaterPool.Entry`. This may be misleading.",
+      "tool_specific": {
+        "column": "25",
+        "module": "jetty-core/jetty-websocket/jetty-websocket-core-common",
+        "filepath": "jetty.project/jetty-core/jetty-websocket/jetty-websocket-core-common/src/main/java/org/eclipse/jetty/websocket/core/internal/PerMessageDeflateExtension.java",
+        "bugpattern_url": "https://errorprone.info/bugpattern/NonCanonicalType",
+        "suggestion": "private CompressionPool.Entry inflaterHolder;"
+      },
+      "original_finding_index": 977
+    }
+  ],
+  "sample": {
+    "source_file": "results/002_jetty-population/static_analysis/processed/error_prone.json",
+    "source_total_findings": 1023,
+    "sample_size": 20,
+    "method": "rule_extension_one_per_rule",
+    "exclude_test_sources": true,
+    "excluded_test_count": 0,
+    "excluded_module_count": 0,
+    "excluded_rule_count": 12,
+    "eligible_new_rules": 50,
+    "rules": {
+      "AnnotateFormatMethod": {
+        "pool_size": 3
+      },
+      "BadInstanceof": {
+        "pool_size": 1
+      },
+      "CatchAndPrintStackTrace": {
+        "pool_size": 3
+      },
+      "ClassCanBeStatic": {
+        "pool_size": 7
+      },
+      "EmptyCatch": {
+        "pool_size": 4
+      },
+      "EnumOrdinal": {
+        "pool_size": 7
+      },
+      "EqualsGetClass": {
+        "pool_size": 4
+      },
+      "InconsistentCapitalization": {
+        "pool_size": 1
+      },
+      "InlineMeSuggester": {
+        "pool_size": 14
+      },
+      "JavaLangClash": {
+        "pool_size": 4
+      },
+      "JavaTimeDefaultTimeZone": {
+        "pool_size": 4
+      },
+      "LockNotBeforeTry": {
+        "pool_size": 2
+      },
+      "MalformedInlineTag": {
+        "pool_size": 1
+      },
+      "NarrowCalculation": {
+        "pool_size": 3
+      },
+      "NonCanonicalType": {
+        "pool_size": 7
+      },
+      "OverrideThrowableToString": {
+        "pool_size": 1
+      },
+      "StringSplitter": {
+        "pool_size": 17
+      },
+      "SuperCallToObjectMethod": {
+        "pool_size": 1
+      },
+      "UnnecessaryLambda": {
+        "pool_size": 1
+      },
+      "UnusedMethod": {
+        "pool_size": 5
+      }
+    },
+    "original_indices": [
+      6,
+      34,
+      161,
+      165,
+      171,
+      183,
+      204,
+      207,
+      357,
+      363,
+      365,
+      429,
+      499,
+      730,
+      782,
+      797,
+      871,
+      919,
+      956,
+      977
+    ]
+  }
+}

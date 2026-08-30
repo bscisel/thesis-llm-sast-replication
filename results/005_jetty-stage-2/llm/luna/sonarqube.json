@@ -1,0 +1,1362 @@
+{
+  "model": "gpt-5.6-luna",
+  "tool": "sonarqube",
+  "num_runs": 3,
+  "runs_per_invocation": 3,
+  "source_root": "jetty.project",
+  "call_parameters": {
+    "temperature": null,
+    "concurrency": 30,
+    "response_format": "json_schema",
+    "max_completion_tokens": 8192,
+    "max_retries": 6,
+    "reasoning_effort": "default"
+  },
+  "system_prompt_variant": "jetty",
+  "system_prompt_sha256": "b5b634e0a9109c59",
+  "user_prompt_sha256": "233249fc03b8f699",
+  "timestamp": "2026-08-15T08:12:26.980312+00:00",
+  "updated_at": "2026-08-15T08:12:26.980312+00:00",
+  "findings": [
+    {
+      "finding_id": 0,
+      "type": "java:S131",
+      "sourcefile": "ServletPathSpec.java",
+      "start_line": "440",
+      "message": "Complete cases by adding the missing enum constants or add a default case to this switch.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.88,
+          "developer_explanation": "The switch on _group has no default branch and does not list every constant of PathSpecGroup, such as the additional group supported by the shared enum. Add an explicit case for the missing constant or a deliberate default branch so future or reachable values do not fall through implicitly and return null.",
+          "is_true_positive": true,
+          "issue_signature": "incomplete enum switch handling",
+          "reasoning": "The switch has no default branch and omits at least one PathSpecGroup enum constant handled by the shared type, unlike the adjacent matches switch. An omitted or newly added enum value falls through to the method's final null return without documenting whether that is intentional, so the warning identifies a real maintainability issue even if the omitted value is normally unreachable for this implementation.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 4113,
+            "output_tokens": 1731,
+            "reasoning_tokens": 1535,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 13.542
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.92,
+          "developer_explanation": "This switch handles the listed path-spec groups but has neither a case for every enum constant nor a default branch. Add handling for the missing enum value, if applicable, or add a deliberate default return so future enum additions cannot silently produce an unintended null result.",
+          "is_true_positive": true,
+          "issue_signature": "incomplete enum switch handling",
+          "reasoning": "The switch over `_group` has cases for EXACT, PREFIX_GLOB, SUFFIX_GLOB, ROOT, and DEFAULT, but it has no default case and omits any other enum constants such as a possible MIDDLE_GLOB value. A future or externally assigned enum value would leave the switch and return null, so the warning identifies a real completeness and maintainability issue even if this class normally assigns only the listed groups.",
+          "run": 2,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 4113,
+            "output_tokens": 1681,
+            "reasoning_tokens": 1481,
+            "cached_input_tokens": 4110
+          },
+          "stop_reason": "stop",
+          "latency_s": 12.94
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.94,
+          "developer_explanation": "This switch has no default branch, so any PathSpecGroup value not listed—including a value added later—falls through and returns null, potentially treating a valid path as unmatched. Add the missing enum case if it is supported, or add an explicit default that preserves the intended behavior and makes unsupported values deliberate.",
+          "is_true_positive": true,
+          "issue_signature": "incomplete enum switch handling",
+          "reasoning": "The shown switch over _group has cases for five values but no default branch, so an unlisted enum constant falls through to the unconditional null return. That can silently produce an incorrect unmatched result when PathSpecGroup contains another value or gains one later, and the nearby matches switch demonstrates that a default is feasible. Therefore the warning identifies a real completeness and correctness risk.",
+          "run": 3,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 4113,
+            "output_tokens": 1215,
+            "reasoning_tokens": 1024,
+            "cached_input_tokens": 4110
+          },
+          "stop_reason": "stop",
+          "latency_s": 10.723
+        }
+      ],
+      "original_finding_index": 346
+    },
+    {
+      "finding_id": 1,
+      "type": "java:S2447",
+      "sourcefile": "IncludeExcludeSet.java",
+      "start_line": "215",
+      "message": "Null is returned but a \"Boolean\" is expected.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.98,
+          "developer_explanation": "This method deliberately uses a nullable Boolean as a tri-state result: false for exclusion, true for inclusion, and null when neither set matches. The behavior is explicitly documented, so the warning can be safely dismissed unless the API is changed to use a non-null tri-state representation.",
+          "is_true_positive": false,
+          "issue_signature": "nullable Boolean return value",
+          "reasoning": "The method’s Javadoc explicitly defines null as the result when the item is neither included nor excluded, and the implementation returns null exactly in that case. Therefore, returning null is an intentional part of this method’s contract rather than an accidental null where a Boolean value is required; callers outside the snippet would need to honor that contract.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 4165,
+            "output_tokens": 401,
+            "reasoning_tokens": 230,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 4.146
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.98,
+          "developer_explanation": "This method is deliberately declared to return Boolean rather than boolean and its documentation explicitly defines null as the result for an item that is neither included nor excluded. The null return is therefore part of the intended three-state API, so this warning can be safely dismissed unless callers incorrectly unbox the result.",
+          "is_true_positive": false,
+          "issue_signature": "null returned from Boolean method",
+          "reasoning": "The shown method explicitly documents null as the result when the item is neither included nor excluded. Because Boolean is intentionally used to represent three states, returning null here is valid behavior rather than an unexpected null or an erroneous substitute for boolean. The separate test method returns primitive boolean for callers that need only a binary result.",
+          "run": 2,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 4165,
+            "output_tokens": 500,
+            "reasoning_tokens": 329,
+            "cached_input_tokens": 4162
+          },
+          "stop_reason": "stop",
+          "latency_s": 5.176
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.99,
+          "developer_explanation": "This alarm can be safely dismissed because the method deliberately uses Boolean as a three-state result: false for excluded, true for included, and null when neither applies. The Javadoc explicitly documents that contract, so changing the return type or replacing null would alter the intended behavior; callers should handle the nullable result appropriately.",
+          "is_true_positive": false,
+          "issue_signature": "null returned from Boolean method",
+          "reasoning": "The shown method explicitly returns null when the item is neither included nor excluded, and its Javadoc documents null as a valid third result. Therefore, although a nullable Boolean is present syntactically, null is expected by this method's stated contract rather than being an erroneous return or an unexpected unboxing hazard within the shown code. The warning is consequently a false positive in this context.",
+          "run": 3,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 4165,
+            "output_tokens": 478,
+            "reasoning_tokens": 289,
+            "cached_input_tokens": 4162
+          },
+          "stop_reason": "stop",
+          "latency_s": 4.393
+        }
+      ],
+      "original_finding_index": 811
+    },
+    {
+      "finding_id": 2,
+      "type": "java:S2157",
+      "sourcefile": "LazyList.java",
+      "start_line": "57",
+      "message": "Add a \"clone()\" method to this class.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.97,
+          "developer_explanation": "This alarm can be safely dismissed because the class has a private constructor and is used solely as a static utility holder, so callers cannot create instances that would need to be cloned. Adding a clone() method would provide no useful API behavior; the unused Cloneable marker could instead be removed if compatibility does not require it.",
+          "is_true_positive": false,
+          "issue_signature": "Cloneable class without clone method",
+          "reasoning": "The class has a private constructor and exposes static utility methods, so it is not an instantiable object whose cloning behavior needs to be defined. Although it implements Cloneable without declaring clone(), adding clone() would not address a realistic use of this class and would expose no meaningful cloning contract. The warning is therefore a false positive in this utility-class context.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 4244,
+            "output_tokens": 515,
+            "reasoning_tokens": 328,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 5.454
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.98,
+          "developer_explanation": "This class has a private constructor and is used entirely through static utility methods, so callers cannot normally create an instance that would need cloning. The Cloneable marker may itself be unnecessary, but adding a clone() method would not provide a meaningful API and this warning can be dismissed in this context.",
+          "is_true_positive": false,
+          "issue_signature": "missing clone method for Cloneable class",
+          "reasoning": "The shown class has a private constructor and exposes only static utility operations, so it is not an instantiable object that callers could meaningfully clone. Although it declares Cloneable, adding clone() would not address a reachable behavior or API need for this utility class. Therefore, the warning is a false positive for this code context.",
+          "run": 2,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 4244,
+            "output_tokens": 466,
+            "reasoning_tokens": 288,
+            "cached_input_tokens": 4241
+          },
+          "stop_reason": "stop",
+          "latency_s": 4.652
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.98,
+          "developer_explanation": "This class has a private constructor and exposes only static utility methods, so callers cannot normally create instances that would need cloning. The warning can be safely dismissed in this context; adding a clone method would provide no useful API, although the unused Cloneable interface could optionally be removed.",
+          "is_true_positive": false,
+          "issue_signature": "missing clone method in Cloneable class",
+          "reasoning": "The class implements Cloneable but has a private constructor and is structured entirely as a static utility holder, so no externally creatable instances require cloning. Consequently, requiring a clone() method does not identify a real defect or useful API omission here. The warning is therefore a false positive for this context.",
+          "run": 3,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 4244,
+            "output_tokens": 407,
+            "reasoning_tokens": 239,
+            "cached_input_tokens": 4241
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.956
+        }
+      ],
+      "original_finding_index": 817
+    },
+    {
+      "finding_id": 3,
+      "type": "java:S1452",
+      "sourcefile": "PathCollators.java",
+      "start_line": "54",
+      "message": "Remove usage of generic wildcard type.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.96,
+          "developer_explanation": "The public method exposes a wildcarded comparator type, forcing callers to work with Comparator<? super Path> rather than a concrete Comparator<Path> type. Return Comparator<Path> and use concrete comparator declarations where possible, unless the broader contravariant return type is an intentional API requirement.",
+          "is_true_positive": true,
+          "issue_signature": "generic wildcard in public return type",
+          "reasoning": "The flagged method publicly returns Comparator<? super Path>, so its return type contains a generic wildcard exactly as reported. Although the variance is valid Java and useful for comparator consumers, exposing it in a return type makes the API harder for callers to use and is the maintainability issue targeted by this rule.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 3132,
+            "output_tokens": 679,
+            "reasoning_tokens": 512,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 6.241
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.95,
+          "developer_explanation": "The public method returns a comparator with a wildcard type, which makes the API harder for callers to understand and use when the comparator is specifically intended for Path values. The fields and comparator factories shown here can be typed as Comparator<Path>, allowing this method to return Comparator<Path> instead.",
+          "is_true_positive": true,
+          "issue_signature": "generic wildcard in public return type",
+          "reasoning": "The shown method explicitly exposes Comparator<? super Path> as its public return type, which is the generic wildcard return pattern reported by the rule. Although the type is valid and supports comparator variance, the implementation is specifically for Path values and can be represented with Comparator<Path>, avoiding unnecessary wildcard complexity for callers. This is therefore a real maintainability/API design issue rather than an incorrect structural match.",
+          "run": 2,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 3132,
+            "output_tokens": 885,
+            "reasoning_tokens": 693,
+            "cached_input_tokens": 3129
+          },
+          "stop_reason": "stop",
+          "latency_s": 7.413
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.96,
+          "developer_explanation": "The public method exposes a wildcarded generic return type, which makes the API harder for callers to read and use consistently. Return a concrete Comparator<Path> type and use matching concrete types for the stored comparators.",
+          "is_true_positive": true,
+          "issue_signature": "wildcard generic return type",
+          "reasoning": "The flagged method publicly returns Comparator<? super Path>, so it directly exposes a generic wildcard in its API. The comparator implementations all operate on Path values, and a concrete Comparator<Path> return type would express that contract without forcing callers to deal with the wildcard. This is a maintainability and API clarity issue rather than a runtime correctness problem.",
+          "run": 3,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 3132,
+            "output_tokens": 662,
+            "reasoning_tokens": 501,
+            "cached_input_tokens": 3129
+          },
+          "stop_reason": "stop",
+          "latency_s": 5.586
+        }
+      ],
+      "original_finding_index": 875
+    },
+    {
+      "finding_id": 4,
+      "type": "java:S5843",
+      "sourcefile": "AuthenticationProtocolHandler.java",
+      "start_line": "44",
+      "message": "Simplify this regular expression to reduce its complexity from 35 to the 20 allowed.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.93,
+          "developer_explanation": "The authentication-header parser uses a single regular expression with multiple alternatives, optional branches, repeated token grammars, and several named captures. Although this may reflect the protocol grammar, it is harder to understand and safely modify than a factored expression or a small parsing routine; simplify it while preserving the capture-group behavior, or replace it with clearer parsing code.",
+          "is_true_positive": true,
+          "issue_signature": "overly complex regular expression",
+          "reasoning": "The flagged expression contains multiple top-level alternatives, nested optional branches, repeated character classes, and several mutually exclusive named captures, giving it substantial structural complexity. That complexity is real in this code and makes protocol parsing behavior harder to review and maintain, even if the grammar partially justifies it. The warning therefore identifies a maintainability issue rather than an incorrect functional result.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 4312,
+            "output_tokens": 667,
+            "reasoning_tokens": 473,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 6.57
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.96,
+          "developer_explanation": "The pattern duplicates a long token character class and combines alternatives with nested optional groups, making its matching behavior difficult to understand and safely modify. Refactor the parsing into simpler regular expressions or explicit parsing steps, while preserving the named groups and protocol grammar.",
+          "is_true_positive": true,
+          "issue_signature": "overly complex regular expression",
+          "reasoning": "The shown pattern contains two top-level alternatives, repeated long character classes, nested optional groups, and several competing captures, which gives it the reported high complexity. That complexity is a real readability and maintenance problem even if the expression is intended to implement authentication-header grammar. Splitting the parsing logic or factoring the grammar into simpler expressions would make behavior easier to verify and change safely.",
+          "run": 2,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 4312,
+            "output_tokens": 556,
+            "reasoning_tokens": 381,
+            "cached_input_tokens": 4309
+          },
+          "stop_reason": "stop",
+          "latency_s": 5.495
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.91,
+          "developer_explanation": "This expression combines duplicated token grammars, multiple alternatives, several named captures, optional whitespace, and a broad value capture in one pattern. Although those cases reflect the authentication-header syntax, the resulting expression is harder to review and safely modify; factor the common syntax or replace the regex with clearer parsing steps while preserving the captures.",
+          "is_true_positive": true,
+          "issue_signature": "overly complex regular expression",
+          "reasoning": "The shown pattern has duplicated scheme character classes, nested alternatives, multiple optional components, and several captures, which is why its measured complexity exceeds the configured limit. Those constructs are materially present and make the authentication-header parsing logic harder to understand and change, even though the protocol grammar provides a legitimate reason for much of the complexity. The warning therefore identifies a real maintainability issue rather than an incorrect description of the code.",
+          "run": 3,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 4312,
+            "output_tokens": 710,
+            "reasoning_tokens": 512,
+            "cached_input_tokens": 4309
+          },
+          "stop_reason": "stop",
+          "latency_s": 6.32
+        }
+      ],
+      "original_finding_index": 1003
+    },
+    {
+      "finding_id": 5,
+      "type": "java:S1871",
+      "sourcefile": "HttpDateTime.java",
+      "start_line": "178",
+      "message": "This branch's code block is the same as the block for the branch on line 174.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.99,
+          "developer_explanation": "The two year-format branches perform exactly the same assignment, differing only in their length conditions. Combine the conditions into one branch, such as `if (token.length() <= 2 || token.length() == 4)`, to remove the duplication while preserving behavior.",
+          "is_true_positive": true,
+          "issue_signature": "duplicated conditional branch code",
+          "reasoning": "Both the `token.length() <= 2` branch and the `token.length() == 4` branch execute the identical statement, `year = StringUtil.toInt(token, 0)`. The differing conditions justify separate eligibility checks but do not require duplicated bodies, so the warning correctly identifies a maintainability and readability issue. This can be simplified without changing the parser's behavior by combining the conditions or extracting the shared assignment.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 4982,
+            "output_tokens": 346,
+            "reasoning_tokens": 155,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.384
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.99,
+          "developer_explanation": "The two year-length branches perform exactly the same conversion, so the implementation duplicates behavior and requires parallel changes if that conversion is modified later. Combine the length checks into one condition or move the shared assignment outside the conditional while preserving the intended accepted lengths.",
+          "is_true_positive": true,
+          "issue_signature": "duplicated conditional branch code",
+          "reasoning": "The branches for tokens of length at most two and exactly four both execute the identical assignment, `year = StringUtil.toInt(token, 0)`. Although the length checks distinguish valid input formats, their duplicated bodies are a real maintainability issue because the same logic is unnecessarily repeated. The branches should be consolidated without changing the format validation.",
+          "run": 2,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 4982,
+            "output_tokens": 369,
+            "reasoning_tokens": 200,
+            "cached_input_tokens": 4979
+          },
+          "stop_reason": "stop",
+          "latency_s": 4.125
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.99,
+          "developer_explanation": "The branches for tokens of length at most two and exactly four both perform the identical year assignment, creating unnecessary duplication. Refactor the condition or extract the shared assignment while preserving the distinction that only those token lengths are accepted.",
+          "is_true_positive": true,
+          "issue_signature": "duplicated conditional branch bodies",
+          "reasoning": "The shown code assigns `year = StringUtil.toInt(token, 0)` in both the `token.length() <= 2` branch and the `token.length() == 4` branch. Although the length checks intentionally accept different formats, the branch bodies are identical, so the warning correctly identifies duplicated code that can make future changes inconsistent. This is a maintainability issue rather than a correctness issue.",
+          "run": 3,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 4982,
+            "output_tokens": 368,
+            "reasoning_tokens": 191,
+            "cached_input_tokens": 4979
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.536
+        }
+      ],
+      "original_finding_index": 1247
+    },
+    {
+      "finding_id": 6,
+      "type": "java:S1700",
+      "sourcefile": "MultiPartByteRanges.java",
+      "start_line": "261",
+      "message": "Rename field \"parser\"",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.98,
+          "developer_explanation": "The field `parser` has the same name as its enclosing `Parser` class when Java naming differences in capitalization are ignored, making declarations and references unnecessarily difficult to distinguish. Rename the field to a more descriptive name such as `multiPartParser` and update its uses.",
+          "is_true_positive": true,
+          "issue_signature": "field name conflicts with class name",
+          "reasoning": "The shown `Parser` class declares a field named `parser`, which differs from the enclosing class name only by capitalization. This creates avoidable ambiguity between the class and its instance field, particularly in expressions such as `parser.parse(chunk)` and `Parser.this.parts`, so the naming warning is materially correct.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 4783,
+            "output_tokens": 390,
+            "reasoning_tokens": 222,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.679
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.98,
+          "developer_explanation": "The nested class is named `Parser` and declares a field named `parser`, differing only by capitalization. This makes references harder to distinguish and can cause confusion when reading or changing the class; rename the field to a more descriptive name such as `multiPartParser`.",
+          "is_true_positive": true,
+          "issue_signature": "field duplicates enclosing class name",
+          "reasoning": "The shown `Parser` class declares a field named `parser`, which is the same name as its enclosing class apart from capitalization. That naming collision is a real readability and maintainability issue because expressions involving the type and field are easy to confuse, even though the code remains valid Java.",
+          "run": 2,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 4783,
+            "output_tokens": 932,
+            "reasoning_tokens": 763,
+            "cached_input_tokens": 4780
+          },
+          "stop_reason": "stop",
+          "latency_s": 7.178
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.98,
+          "developer_explanation": "The nested class is named `Parser` and declares a field named `parser`, differing only by capitalization. This makes references such as `parser.parse(...)` less immediately clear because they can be confused with the enclosing type; rename the field to a more descriptive name such as `multiPartParser`.",
+          "is_true_positive": true,
+          "issue_signature": "field name matches enclosing class name",
+          "reasoning": "The shown code declares a field named `parser` inside the enclosing class `Parser`, with the same name apart from capitalization. That naming overlap is a real readability and maintainability issue because uses such as `parser.parse(...)` can be confused with the type or enclosing object. The warning is therefore a true positive, although it does not indicate a runtime correctness defect.",
+          "run": 3,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 4783,
+            "output_tokens": 388,
+            "reasoning_tokens": 202,
+            "cached_input_tokens": 4780
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.446
+        }
+      ],
+      "original_finding_index": 1338
+    },
+    {
+      "finding_id": 7,
+      "type": "java:S5261",
+      "sourcefile": "ServletPathSpec.java",
+      "start_line": "182",
+      "message": "Add explicit curly braces to avoid dangling else.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.99,
+          "developer_explanation": "The outer condition and inner condition are both written without braces, so the `else` is visually easy to associate with the wrong `if`, even though Java binds it to the inner condition. Add braces around both conditional bodies to make the intended control flow explicit and safer to modify.",
+          "is_true_positive": true,
+          "issue_signature": "nested conditional without explicit braces",
+          "reasoning": "The shown code has an `if (base.endsWith(\"/\"))` containing an unbraced `if (info.startsWith(\"/\"))`, followed by an `else` that Java associates with the inner condition. This is the dangling-else pattern the warning describes and creates a real readability and maintenance risk, despite the language's deterministic parsing. Explicit braces would make the control flow unambiguous.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 5476,
+            "output_tokens": 358,
+            "reasoning_tokens": 167,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.721
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.99,
+          "developer_explanation": "The inner conditional lacks braces, so the `else` is associated with `info.startsWith(\"/\")`, not with the outer condition. Although the current indentation communicates the intended behavior, adding braces around both conditionals would remove the dangling-`else` ambiguity and make future changes safer.",
+          "is_true_positive": true,
+          "issue_signature": "ambiguous nested conditional without braces",
+          "reasoning": "The shown code has an outer `if (base.endsWith(\"/\"))` containing an unbraced inner `if (info.startsWith(\"/\"))`, followed by an `else` that Java associates with the inner condition. This is the dangling-`else` pattern the warning describes and creates a maintainability risk because the visual indentation can mislead readers about control flow. Explicit braces would make the association unambiguous without changing the intended behavior.",
+          "run": 2,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 5476,
+            "output_tokens": 398,
+            "reasoning_tokens": 194,
+            "cached_input_tokens": 5473
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.47
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.99,
+          "developer_explanation": "The `else` is attached to the nested `if (info.startsWith(\"/\"))`, which is legal Java but easy to misread as belonging to the outer condition. Add braces around both conditional blocks so the intended control flow is explicit and safer to modify.",
+          "is_true_positive": true,
+          "issue_signature": "ambiguous dangling else control flow",
+          "reasoning": "The shown code has an outer `if (base.endsWith(\"/\"))` containing an unbraced inner `if`, and the `else` on line 182 therefore binds to the inner condition. Although the current indentation reflects that binding, the construct is a dangling-else pattern that can be misunderstood or accidentally changed during maintenance. Explicit braces would make the control flow unambiguous, so the warning is valid as a maintainability issue.",
+          "run": 3,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 5476,
+            "output_tokens": 336,
+            "reasoning_tokens": 139,
+            "cached_input_tokens": 5473
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.102
+        }
+      ],
+      "original_finding_index": 1392
+    },
+    {
+      "finding_id": 8,
+      "type": "java:S6126",
+      "sourcefile": "PrefaceFrame.java",
+      "start_line": "33",
+      "message": "Replace this String concatenation with Text block.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.95,
+          "developer_explanation": "The constant is built by concatenating several string literals solely to represent a multiline protocol value. A text block can express the same layout more directly, provided its line endings and trailing newline are preserved exactly before converting to ASCII bytes.",
+          "is_true_positive": true,
+          "issue_signature": "multiline string built through literal concatenation",
+          "reasoning": "The flagged value consists of four adjacent string literals concatenated solely to form a multiline string constant. Java text blocks are intended to represent such multiline literals more directly, so the warning identifies a real readability and maintainability improvement. The exact CRLF bytes must be preserved when applying the rewrite, but that requirement does not invalidate the underlying warning.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 2509,
+            "output_tokens": 679,
+            "reasoning_tokens": 512,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 6.359
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.96,
+          "developer_explanation": "The HTTP/2 preface is currently spread across several concatenated string literals, which makes this multiline constant harder to read and update. Replace it with a text block while preserving the required CRLF bytes using explicit escapes or line continuations.",
+          "is_true_positive": true,
+          "issue_signature": "multiline string represented by concatenation",
+          "reasoning": "The shown code constructs one multiline string from four adjacent string literals joined with `+`, exactly the pattern that text blocks are intended to represent. A text block can express the same protocol preface more clearly, provided its line endings and initial or trailing newline are controlled so the byte sequence remains unchanged. This is therefore a maintainability issue rather than a correctness or security defect.",
+          "run": 2,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 2509,
+            "output_tokens": 688,
+            "reasoning_tokens": 512,
+            "cached_input_tokens": 2506
+          },
+          "stop_reason": "stop",
+          "latency_s": 5.957
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.98,
+          "developer_explanation": "The HTTP/2 preface is expressed as a multiline string assembled through several concatenated literals, which is exactly the kind of representation text blocks are intended to simplify. It can be converted to a text block while preserving the required CRLF bytes, provided the line-ending escapes and text-block boundaries are written carefully.",
+          "is_true_positive": true,
+          "issue_signature": "multiline string built with concatenation",
+          "reasoning": "The shown code constructs a multiline constant by concatenating four adjacent string literals, so the reported pattern is present and a text block can represent it more directly. This is a readability and maintainability issue rather than a behavioral defect, although the conversion must preserve the explicit CRLF bytes required by the protocol. Therefore, the warning is a true positive under the rule's claim.",
+          "run": 3,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 2509,
+            "output_tokens": 702,
+            "reasoning_tokens": 512,
+            "cached_input_tokens": 2506
+          },
+          "stop_reason": "stop",
+          "latency_s": 6.053
+        }
+      ],
+      "original_finding_index": 1477
+    },
+    {
+      "finding_id": 9,
+      "type": "java:S1172",
+      "sourcefile": "HeaderGenerator.java",
+      "start_line": "48",
+      "message": "Remove this unused method parameter \"capacity\".",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.99,
+          "developer_explanation": "The `capacity` parameter is declared but never read, so it adds noise and can mislead callers about what controls header generation. Remove it if the public API permits, or document and use it if it is intentionally reserved for an API contract.",
+          "is_true_positive": true,
+          "issue_signature": "unused method parameter",
+          "reasoning": "The shown method declares `capacity` but never references it; only `accumulator`, `frameType`, `length`, `flags`, and `streamId` affect the generated header. This is therefore a genuine unused-parameter maintainability issue, although removing it from this public method may require updating callers or preserving API compatibility.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 2727,
+            "output_tokens": 370,
+            "reasoning_tokens": 206,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.977
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.99,
+          "developer_explanation": "The capacity parameter is declared but never read, so it adds misleading noise to the method signature. Remove it if this method's public API does not need to preserve that signature; otherwise retain it deliberately for compatibility and document that reason.",
+          "is_true_positive": true,
+          "issue_signature": "unused method parameter",
+          "reasoning": "The shown method declares capacity but never references it in its body, while all other parameters used in the header generation are consumed. This is a real maintainability issue because the parameter suggests an input affects generation when it does not, although external API compatibility may justify retaining it. The warning's claim that the parameter is unused is therefore correct.",
+          "run": 2,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 2727,
+            "output_tokens": 396,
+            "reasoning_tokens": 233,
+            "cached_input_tokens": 2724
+          },
+          "stop_reason": "stop",
+          "latency_s": 4.49
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.99,
+          "developer_explanation": "The capacity parameter is declared but never read, so it provides no behavior in this implementation and makes the method signature harder to understand. Remove it if the public API and overrides allow that change; otherwise retain it deliberately for compatibility and document why it remains.",
+          "is_true_positive": true,
+          "issue_signature": "unused method parameter",
+          "reasoning": "The generate method declares capacity but never references it; only accumulator, frameType, length, flags, and streamId affect the generated header. Therefore the parameter is genuinely unused in this implementation, making the warning a valid maintainability issue, although callers or overrides outside the excerpt may constrain whether it can safely be removed.",
+          "run": 3,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 2727,
+            "output_tokens": 345,
+            "reasoning_tokens": 182,
+            "cached_input_tokens": 2724
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.359
+        }
+      ],
+      "original_finding_index": 1479
+    },
+    {
+      "finding_id": 10,
+      "type": "java:S1119",
+      "sourcefile": "WriteFlusher.java",
+      "start_line": "343",
+      "message": "Refactor the code to remove this label and the need for it.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.96,
+          "developer_explanation": "The labeled `while` loop is used only to escape the loop from two branches inside the state switch, so the behavior is valid but the nonlocal control flow makes the method harder to follow. Refactor the state handling to use ordinary loop control, a helper method, or an explicit termination condition instead of the label.",
+          "is_true_positive": true,
+          "issue_signature": "labeled loop control flow",
+          "reasoning": "The code declares a labeled `while (true)` and uses `break loop` from inside the switch to exit that enclosing loop, which is exactly the labeled-control-flow pattern reported by this rule. Although the label is functionally valid, it adds avoidable control-flow indirection in an already stateful method and is a real maintainability/readability issue.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 5153,
+            "output_tokens": 602,
+            "reasoning_tokens": 415,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 6.288
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.96,
+          "developer_explanation": "The label is used deliberately to break out of the enclosing loop from inside the switch at two distinct failure paths. It makes the control flow explicit here, so this warning can be safely dismissed unless the method is later refactored into a structure where the label is no longer needed.",
+          "is_true_positive": false,
+          "issue_signature": "labeled loop control",
+          "reasoning": "The shown code labels the enclosing while loop and uses that label to exit the loop from within a switch, where an ordinary break would only leave the switch. This is a purposeful and understandable use of a loop label to converge on common failure handling, so the claim that the label is confusing or unnecessary is not materially correct in this context.",
+          "run": 2,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 5153,
+            "output_tokens": 444,
+            "reasoning_tokens": 270,
+            "cached_input_tokens": 5150
+          },
+          "stop_reason": "stop",
+          "latency_s": 4.408
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.94,
+          "developer_explanation": "The labeled break is used to exit the enclosing loop from inside the switch, so the control flow is intentional but harder to follow and safely modify. Refactor the state handling to avoid the label, for example by extracting the switch logic into a helper or using an explicit loop-exit condition.",
+          "is_true_positive": true,
+          "issue_signature": "labeled control-flow exit",
+          "reasoning": "The code uses a labeled `break loop` inside a `switch` nested in a `while`, creating a non-local control-flow exit that the warning specifically identifies. Although the behavior is correct and the label is understandable, the same logic can be structured without a label, making this a legitimate maintainability and readability issue rather than an incorrect alarm.",
+          "run": 3,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 5153,
+            "output_tokens": 691,
+            "reasoning_tokens": 512,
+            "cached_input_tokens": 5150
+          },
+          "stop_reason": "stop",
+          "latency_s": 6.036
+        }
+      ],
+      "original_finding_index": 1738
+    },
+    {
+      "finding_id": 11,
+      "type": "java:S127",
+      "sourcefile": "WriteThroughWriter.java",
+      "start_line": "249",
+      "message": "Refactor the code in order to not assign to this loop counter from within the loop body.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.95,
+          "developer_explanation": "The decrement is intentional: when a pending high surrogate is followed by a non-low-surrogate character, the current character must be encoded as the surrogate and then processed again on the next iteration. The loop increment cancels this decrement, so the counter is not accidentally skipped or advanced incorrectly; this warning can be safely dismissed unless you choose to rewrite the loop for stylistic reasons.",
+          "is_true_positive": false,
+          "issue_signature": "loop counter modified within loop body",
+          "reasoning": "The shown `i--` deliberately causes the current character to be processed again after a pending surrogate is emitted, while the `for` loop increment restores the same index. This is a justified state-machine pattern and does not introduce the counter-control hazard the warning generally targets. Although a `while` loop could make the control flow more explicit, the existing code is functionally intentional and the alarm is therefore a false positive.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 5465,
+            "output_tokens": 558,
+            "reasoning_tokens": 346,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 5.426
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.98,
+          "developer_explanation": "The decrement is intentional: when a pending high surrogate is followed by a non-low-surrogate character, the current character must be processed again after emitting the pending surrogate. Removing or mechanically refactoring this assignment could skip that character, so the warning can be safely dismissed in this context.",
+          "is_true_positive": false,
+          "issue_signature": "loop counter modified within loop body",
+          "reasoning": "The loop deliberately executes `i--` so that a non-low-surrogate character is reprocessed after a pending high surrogate is handled. This prevents the character from being consumed while the surrogate is emitted, making the counter assignment necessary for the shown encoding algorithm rather than an accidental or unsafe loop-counter modification. Therefore, the generic maintainability warning is a false positive here.",
+          "run": 2,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 5465,
+            "output_tokens": 510,
+            "reasoning_tokens": 328,
+            "cached_input_tokens": 5462
+          },
+          "stop_reason": "stop",
+          "latency_s": 4.778
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.98,
+          "developer_explanation": "The decrement is deliberate: when a pending high surrogate is followed by a non-low-surrogate character, the code emits the pending surrogate and decrements the counter so the current character is processed again. Changing the loop structure could improve readability, but this assignment is justified by the surrogate-handling algorithm and can be safely left as is.",
+          "is_true_positive": false,
+          "issue_signature": "loop counter modified within loop body",
+          "reasoning": "The flagged loop decrements its counter specifically to reprocess the current character after emitting a pending high surrogate, so the assignment is intentional rather than an accidental counter modification. This preserves correct UTF-8 handling when a surrogate is not followed by a low surrogate, and the warning's generic readability concern does not represent a material issue in this context. Therefore, the warning is a false positive.",
+          "run": 3,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 5465,
+            "output_tokens": 417,
+            "reasoning_tokens": 221,
+            "cached_input_tokens": 5462
+          },
+          "stop_reason": "stop",
+          "latency_s": 4.346
+        }
+      ],
+      "original_finding_index": 1743
+    },
+    {
+      "finding_id": 12,
+      "type": "java:S3011",
+      "sourcefile": "DefaultFileLocatorHelper.java",
+      "start_line": "153",
+      "message": "This accessibility update should be removed.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.91,
+          "developer_explanation": "The code deliberately uses reflection to access private OSGi implementation fields because the supported frameworks do not expose the required bundle location through a public API. Removing this call would break the compatibility path for those frameworks, so the warning can be safely dismissed here; the associated version fragility is an intentional trade-off documented by the surrounding comments.",
+          "is_true_positive": false,
+          "issue_signature": "increased reflective accessibility",
+          "reasoning": "The flagged statement explicitly calls setAccessible(true) on a private field obtained through reflection. However, this is a deliberate compatibility hack for OSGi implementations whose internal bundle location is otherwise inaccessible, and removing it would prevent this path from functioning rather than correcting an unintended accessibility change. The warning therefore identifies a syntactic pattern that is justified in this context, making it a false positive under the stated criteria.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 5776,
+            "output_tokens": 709,
+            "reasoning_tokens": 512,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 7.031
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.91,
+          "developer_explanation": "This access change is intentional: the helper uses private implementation fields from supported OSGi frameworks to locate the bundle’s underlying file. Removing it would break the compatibility path shown here, so the warning can be safely dismissed unless those frameworks provide a supported public API that replaces this reflection.",
+          "is_true_positive": false,
+          "issue_signature": "reflective access to non-public members",
+          "reasoning": "The shown code deliberately calls setAccessible(true) on a private bundleFile field because it is implementing a documented compatibility hack for OSGi framework internals. Removing this accessibility update would prevent the subsequent reflective field access and break bundle-location resolution for that supported path. Therefore, although the pattern is generally undesirable, the warning is not materially correct in this context.",
+          "run": 2,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 5776,
+            "output_tokens": 557,
+            "reasoning_tokens": 376,
+            "cached_input_tokens": 5773
+          },
+          "stop_reason": "stop",
+          "latency_s": 5.276
+        },
+        {
+          "category": "SECURITY",
+          "confidence": 0.91,
+          "developer_explanation": "This reflective access is deliberate: the helper must read private fields from several OSGi implementation classes to locate bundle files, and removing it would break that compatibility behavior. The alarm can therefore be dismissed in this context, although the code remains dependent on implementation internals and may require maintenance when those implementations change.",
+          "is_true_positive": false,
+          "issue_signature": "reflection bypasses accessibility checks",
+          "reasoning": "The shown code deliberately calls setAccessible(true) on private fields of OSGi framework implementation objects in order to support bundle-location discovery across multiple implementations. Removing the accessibility update would prevent the required reflective field access and break the explicitly documented compatibility hack, so the reported instruction is not materially correct here. No attacker-controlled data or reachable security-sensitive operation is shown that would make this a practical access-control vulnerability in this context.",
+          "run": 3,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 5776,
+            "output_tokens": 706,
+            "reasoning_tokens": 512,
+            "cached_input_tokens": 5773
+          },
+          "stop_reason": "stop",
+          "latency_s": 6.576
+        }
+      ],
+      "original_finding_index": 1955
+    },
+    {
+      "finding_id": 13,
+      "type": "java:S5738",
+      "sourcefile": "Server.java",
+      "start_line": "904",
+      "message": "Remove this call to a deprecated class, it has been marked for removal.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.98,
+          "developer_explanation": "This code passes the deprecated, removal-marked FileSystemPool singleton to dumpObjects, so it depends on an API that may disappear in a future version. Replace it with the supported filesystem-pool or dump representation, or omit it if the information is no longer needed.",
+          "is_true_positive": true,
+          "issue_signature": "use of deprecated API marked for removal",
+          "reasoning": "The shown code directly references FileSystemPool.INSTANCE in the dumpObjects call, and the warning states that this class is deprecated and marked for removal. That creates a real maintainability and future-compatibility issue because the reference may stop compiling when the API is removed. The appropriate fix is to migrate to its replacement or remove this dump component.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 4537,
+            "output_tokens": 447,
+            "reasoning_tokens": 271,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 4.882
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.98,
+          "developer_explanation": "This code directly references `FileSystemPool.INSTANCE`, a class deprecated and marked for removal. Replace it with the supported replacement for dumping the file-system pool, or otherwise remove the dependency before a future library version removes the class and breaks compilation.",
+          "is_true_positive": true,
+          "issue_signature": "use of deprecated API marked for removal",
+          "reasoning": "The shown code passes `FileSystemPool.INSTANCE` to `dumpObjects`, directly using the class identified as deprecated and marked for removal. That creates a real compatibility and maintainability problem because a future library release may remove the class and prevent compilation. The warning is therefore a true positive, although the exact replacement is not visible in the snippet.",
+          "run": 2,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 4537,
+            "output_tokens": 631,
+            "reasoning_tokens": 461,
+            "cached_input_tokens": 4534
+          },
+          "stop_reason": "stop",
+          "latency_s": 5.477
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.98,
+          "developer_explanation": "The dump implementation directly references FileSystemPool.INSTANCE, and that class has been deprecated with removal planned. Replace it with the supported replacement or remove it from the dump contents so this code does not depend on an API that may disappear.",
+          "is_true_positive": true,
+          "issue_signature": "use of deprecated class marked for removal",
+          "reasoning": "The flagged expression directly uses FileSystemPool.INSTANCE, which the warning identifies as a deprecated class marked for removal. This creates a real maintenance and future-compatibility problem because the referenced API may be removed from a later dependency version. The deprecation declaration itself is outside the shown excerpt, but the reported claim is consistent with the direct class use at the flagged line.",
+          "run": 3,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 4537,
+            "output_tokens": 391,
+            "reasoning_tokens": 218,
+            "cached_input_tokens": 4534
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.587
+        }
+      ],
+      "original_finding_index": 2258
+    },
+    {
+      "finding_id": 14,
+      "type": "java:S112",
+      "sourcefile": "SessionDataMap.java",
+      "start_line": "58",
+      "message": "Replace generic exceptions with specific library exceptions or a custom exception.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.96,
+          "developer_explanation": "The public interface method declares the overly broad checked type `Exception`, which hides the kinds of failures callers should expect and forces them to handle unrelated exceptions generically. Replace it with an appropriate library exception or a domain-specific checked exception, while updating implementations and callers consistently.",
+          "is_true_positive": true,
+          "issue_signature": "generic checked exception in public API",
+          "reasoning": "The flagged method explicitly declares `throws Exception`, with no specific exception type or custom abstraction in the shown interface. This makes the API contract less precise and weakens callers' ability to handle failures appropriately, so the warning's maintainability claim is materially correct. The surrounding excerpt does not show whether broader exceptions are required by implementations, but a custom domain exception can preserve that flexibility without exposing the generic type.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 2681,
+            "output_tokens": 390,
+            "reasoning_tokens": 204,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 4.323
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.97,
+          "developer_explanation": "This public method declares the broad checked type `Exception`, so callers cannot understand or handle the specific failure modes through the API contract. Define a suitable custom exception or declare the specific library exceptions that implementations can legitimately raise, while preserving any required lifecycle contract separately.",
+          "is_true_positive": true,
+          "issue_signature": "generic exception in public method contract",
+          "reasoning": "The flagged method explicitly declares `throws Exception`, exposing a generic checked exception in a public interface contract. That makes failure handling less precise for callers and is the issue described by the warning; the broader API context might constrain the exact replacement, but it does not eliminate the maintainability problem.",
+          "run": 2,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 2681,
+            "output_tokens": 321,
+            "reasoning_tokens": 160,
+            "cached_input_tokens": 2678
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.481
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.97,
+          "developer_explanation": "This public interface exposes delete failures as the overly broad checked type Exception, which gives callers no meaningful contract about the kinds of failure they must handle. Define a domain-specific exception or an appropriate specific exception type, and update implementations and callers accordingly; if the API intentionally supports arbitrary provider failures, document and justify that design explicitly.",
+          "is_true_positive": true,
+          "issue_signature": "generic exception in public method signature",
+          "reasoning": "The shown method is a public interface method declared with throws Exception, so callers receive an unnecessarily broad and imprecise failure contract. Replacing it with a specific library exception or a custom domain exception would improve error handling and maintainability, making the warning materially correct. Although the other interface methods use the same pattern, that consistency does not eliminate the issue.",
+          "run": 3,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 2681,
+            "output_tokens": 383,
+            "reasoning_tokens": 195,
+            "cached_input_tokens": 2678
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.717
+        }
+      ],
+      "original_finding_index": 2457
+    },
+    {
+      "finding_id": 15,
+      "type": "java:S3824",
+      "sourcefile": "TopologicalSort.java",
+      "start_line": "57",
+      "message": "Replace this \"Map.get()\" and condition with a call to \"Map.computeIfAbsent()\".",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.98,
+          "developer_explanation": "The code manually performs the standard get-or-create-and-store pattern for a dependency set. Using computeIfAbsent would express that intent more directly and keep the map initialization logic together, although the current code is functionally correct.",
+          "is_true_positive": true,
+          "issue_signature": "manual map get-or-create pattern",
+          "reasoning": "The shown code retrieves a set, checks for null, creates a HashSet, and puts it into the map before using it, which is exactly the get-or-create pattern that computeIfAbsent represents. Replacing it would improve clarity and reduce the chance of inconsistencies if this initialization logic changes, while preserving behavior because the map is private and this method stores only non-null sets. This is a maintainability issue rather than a correctness or concurrency defect in the current code.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 4388,
+            "output_tokens": 308,
+            "reasoning_tokens": 117,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 4.132
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.98,
+          "developer_explanation": "The code manually performs the standard get-null-create-put pattern for initializing a map value. Replace it with computeIfAbsent, for example by computing a new HashSet for the dependent key, then add the dependencies to the returned set.",
+          "is_true_positive": true,
+          "issue_signature": "manual map initialization instead of computeIfAbsent",
+          "reasoning": "The shown code retrieves a map value, checks for null, creates a HashSet, and puts it into the map, which is exactly the pattern that computeIfAbsent is intended to replace. Using computeIfAbsent would preserve the behavior here while making the initialization shorter and clearer; the warning therefore identifies a real maintainability issue.",
+          "run": 2,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 4388,
+            "output_tokens": 383,
+            "reasoning_tokens": 217,
+            "cached_input_tokens": 4385
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.889
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.98,
+          "developer_explanation": "The code manually performs a lookup, creates a set when absent, and inserts it into the map before adding dependencies. Using computeIfAbsent would express this initialization directly, reduce boilerplate, and preserve the behavior here.",
+          "is_true_positive": true,
+          "issue_signature": "manual map initialization instead of computeIfAbsent",
+          "reasoning": "The shown code calls get(), checks for null, constructs a HashSet, and puts it into the map when the key is absent. Map.computeIfAbsent() directly represents this operation and has equivalent behavior for this private HashMap, while avoiding the duplicated lookup and initialization boilerplate. Therefore, the warning identifies a valid maintainability issue rather than an incorrect alarm.",
+          "run": 3,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 4388,
+            "output_tokens": 491,
+            "reasoning_tokens": 321,
+            "cached_input_tokens": 4385
+          },
+          "stop_reason": "stop",
+          "latency_s": 4.763
+        }
+      ],
+      "original_finding_index": 2693
+    },
+    {
+      "finding_id": 16,
+      "type": "java:S108",
+      "sourcefile": "TypeUtil.java",
+      "start_line": "622",
+      "message": "Remove this block of code, fill it in, or add a comment explaining why it is empty.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.98,
+          "developer_explanation": "The catch block deliberately ignores URISyntaxException, but it contains no comment documenting that this is intentional. Add a brief explanation, or otherwise handle or log the exception, so future maintainers understand why it is safely ignored.",
+          "is_true_positive": true,
+          "issue_signature": "empty exception handler",
+          "reasoning": "The shown catch block for URISyntaxException is completely empty and provides no explanation for intentionally ignoring the exception. Although returning null may be the intended fallback when a resource URL cannot be converted to a URI, the lack of documentation makes the behavior harder to understand and safely maintain. A comment or explicit handling would address the issue.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 5487,
+            "output_tokens": 374,
+            "reasoning_tokens": 216,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 4.126
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.98,
+          "developer_explanation": "The catch block silently ignores a URI syntax failure and provides no indication that this is intentional. Add a comment explaining that an invalid resource URI is treated as unavailable, or otherwise handle or log the exception if that is not the intended fallback.",
+          "is_true_positive": true,
+          "issue_signature": "empty catch block without explanation",
+          "reasoning": "The shown code contains an empty catch block for URISyntaxException, with no comment or other indication explaining why the exception is intentionally ignored. Although returning null may be a valid fallback, silently swallowing the exception makes the behavior harder to understand and maintain, so the warning is materially correct.",
+          "run": 2,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 5487,
+            "output_tokens": 286,
+            "reasoning_tokens": 131,
+            "cached_input_tokens": 0
+          },
+          "stop_reason": "stop",
+          "latency_s": 2.874
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.96,
+          "developer_explanation": "The catch block deliberately ignores a URI syntax failure, but its completely empty body gives no explanation for that decision. Add a brief comment documenting why the exception is safe to ignore, or log or otherwise handle it if the failure should be visible.",
+          "is_true_positive": true,
+          "issue_signature": "empty exception handler",
+          "reasoning": "The shown code catches URISyntaxException and contains an entirely empty block, while the method subsequently returns null. Although the parameter name suggests intentional ignoring, there is no comment explaining why suppressing this failure is appropriate, making the warning a valid maintainability concern.",
+          "run": 3,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 5487,
+            "output_tokens": 453,
+            "reasoning_tokens": 304,
+            "cached_input_tokens": 5484
+          },
+          "stop_reason": "stop",
+          "latency_s": 4.451
+        }
+      ],
+      "original_finding_index": 2703
+    },
+    {
+      "finding_id": 17,
+      "type": "java:S1144",
+      "sourcefile": "SecurityUtils.java",
+      "start_line": "233",
+      "message": "Remove this unused private \"callableToPrivilegedAction\" method.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.93,
+          "developer_explanation": "The private conversion method is not referenced anywhere in the shown code, so it adds dead code without contributing behavior. Remove it unless there is an intentional reflective or otherwise external use; if such use exists, document or reference it explicitly.",
+          "is_true_positive": true,
+          "issue_signature": "unused private method",
+          "reasoning": "The shown private method has no call site in the provided class excerpt, and the analyzer identifies it as unused. An unreferenced private helper is dead code that increases maintenance burden; although lines outside the excerpt could theoretically contain a call, there is no evidence of one here and the analyzer likely considered the complete class. This is a maintainability issue rather than a correctness or performance defect.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 3724,
+            "output_tokens": 387,
+            "reasoning_tokens": 214,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 4.17
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.9,
+          "developer_explanation": "The private adapter method is not referenced anywhere in the supplied code, so it appears to be dead code that adds maintenance overhead and can confuse future readers. Remove it unless it is intentionally invoked through reflection or referenced by code outside the analyzed file.",
+          "is_true_positive": true,
+          "issue_signature": "unused private method",
+          "reasoning": "The shown code contains a private conversion method with no visible invocation or other use. Because private methods are not part of the normal external API, an unreferenced method is dead code unless omitted code or reflective access depends on it; the analyzer's unused-method claim is therefore materially correct based on the available context. This is a maintainability issue rather than a correctness or performance defect.",
+          "run": 2,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 3724,
+            "output_tokens": 498,
+            "reasoning_tokens": 324,
+            "cached_input_tokens": 3721
+          },
+          "stop_reason": "stop",
+          "latency_s": 5.024
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.94,
+          "developer_explanation": "The private conversion method has no visible callers and is reported as unused, so it adds dead code that can confuse maintenance and increase the amount of code that must be reviewed. Remove it unless there is an intentional reflective or otherwise non-reference-based use outside the shown context.",
+          "is_true_positive": true,
+          "issue_signature": "unused private method",
+          "reasoning": "The shown code contains the private method declaration but no invocation of it, and the method has no side effects that would justify retaining it merely by being defined. Because it is private, ordinary callers outside this class cannot use it; although the excerpt omits earlier lines and reflective use is theoretically possible, the analyzer's unused-method claim is materially supported by the available code.",
+          "run": 3,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 3724,
+            "output_tokens": 372,
+            "reasoning_tokens": 196,
+            "cached_input_tokens": 3721
+          },
+          "stop_reason": "stop",
+          "latency_s": 4.145
+        }
+      ],
+      "original_finding_index": 2869
+    },
+    {
+      "finding_id": 18,
+      "type": "java:S6204",
+      "sourcefile": "JettyClientUpgradeRequest.java",
+      "start_line": "52",
+      "message": "Replace this usage of 'Stream.collect(Collectors.toList())' with 'Stream.toList()' and ensure that the list is unmodified.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.94,
+          "developer_explanation": "The stream result is only constructed and passed to the extension setter, and the shown code does not modify the resulting list. Replace the collector with Stream.toList() to use the modern, clearer API, provided the receiving code does not require a mutable list.",
+          "is_true_positive": true,
+          "issue_signature": "mutable stream collection where unmodifiable list suffices",
+          "reasoning": "The flagged code collects a mapped stream with Collectors.toList() and immediately passes the resulting list to setExtensions(), with no mutation shown afterward. Stream.toList() provides the same element sequence with a clearer modern API, and the warning is valid so long as the receiving code does not require mutability; no such requirement is evident in this complete file.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 3034,
+            "output_tokens": 690,
+            "reasoning_tokens": 512,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 6.23
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.88,
+          "developer_explanation": "The stream result is only constructed and passed to the extension setter in the shown code, with no subsequent mutation visible. If the receiving API does not require a mutable list, use Stream.toList() and remove the unnecessary Collectors import; otherwise retain the current collection because changing mutability would alter the contract.",
+          "is_true_positive": true,
+          "issue_signature": "mutable stream collection where unmodifiable list suffices",
+          "reasoning": "The shown code collects the mapped stream into a list and immediately passes it to setExtensions(), with no mutation of that list visible in this file. Stream.toList() expresses the intended read-only result and avoids the older collector, although the setter's behavior outside the snippet must be checked before changing mutability. This is therefore a valid maintainability recommendation rather than a correctness defect.",
+          "run": 2,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 3034,
+            "output_tokens": 704,
+            "reasoning_tokens": 512,
+            "cached_input_tokens": 3031
+          },
+          "stop_reason": "stop",
+          "latency_s": 6.364
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.91,
+          "developer_explanation": "The stream result is passed directly to the extension setter and is not modified in the shown code, so using Stream.toList() is an appropriate simplification. Replace collect(Collectors.toList()) with toList() and remove the now-unused Collectors import, provided the setter does not later mutate the supplied list.",
+          "is_true_positive": true,
+          "issue_signature": "mutable stream collection where unmodifiable list suffices",
+          "reasoning": "The mapped stream result is passed directly to setExtensions() and no mutation of that list appears anywhere in the shown file. Stream.toList() expresses the intended read-only result more directly and avoids the unnecessary collector, although code inside the setter would need checking if it mutates the supplied list. This is therefore a valid maintainability warning rather than a correctness or security defect.",
+          "run": 3,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 3034,
+            "output_tokens": 703,
+            "reasoning_tokens": 512,
+            "cached_input_tokens": 3031
+          },
+          "stop_reason": "stop",
+          "latency_s": 6.092
+        }
+      ],
+      "original_finding_index": 3055
+    },
+    {
+      "finding_id": 19,
+      "type": "xml:S1134",
+      "sourcefile": "pom.xml",
+      "start_line": "54",
+      "message": "Take the required action to fix the issue indicated by this \"FIXME\" comment.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.99,
+          "developer_explanation": "Line 54 contains only a normal organization URL and does not contain a FIXME comment or indicate an unfinished action. This alert can be safely dismissed for the shown code, although the actual analyzed file should be checked if the source differs from this excerpt.",
+          "is_true_positive": false,
+          "issue_signature": "unresolved FIXME comment",
+          "reasoning": "The flagged line contains only `<organizationUrl>https://webtide.com</organizationUrl>` and no FIXME comment. Therefore, the warning's claim that a FIXME comment requires action is not supported by the shown code; it likely reflects a line mapping or source-version mismatch.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 5069,
+            "output_tokens": 292,
+            "reasoning_tokens": 137,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.249
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.99,
+          "developer_explanation": "The reported line contains only a normal organization URL element and no FIXME comment or unresolved action. This alert can be safely dismissed for the shown code; the analyzer appears to have associated the warning with the wrong location or with content outside the excerpt.",
+          "is_true_positive": false,
+          "issue_signature": "unresolved FIXME comment",
+          "reasoning": "Line 54 contains only the XML element <organizationUrl>https://webtide.com</organizationUrl>; no FIXME comment is present at that location. Therefore, the warning's claim about a FIXME requiring action is not supported by the shown code, although a FIXME elsewhere in the full 3025-line file cannot be ruled out from this excerpt alone.",
+          "run": 2,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 5069,
+            "output_tokens": 260,
+            "reasoning_tokens": 90,
+            "cached_input_tokens": 5066
+          },
+          "stop_reason": "stop",
+          "latency_s": 2.564
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.99,
+          "developer_explanation": "The flagged line contains only a normal organization URL and no FIXME comment or pending action. This warning can be safely dismissed for the shown code, although the complete file should be checked separately if the analyzer reports a FIXME at a different location.",
+          "is_true_positive": false,
+          "issue_signature": "unresolved FIXME comment",
+          "reasoning": "Line 54 is an <organizationUrl> element containing https://webtide.com, and the shown code contains no FIXME comment at that location. Therefore, the warning's claim that this specific line contains a FIXME requiring action is not supported by the provided source. The issue category is maintainability because unresolved FIXME comments concern code upkeep and clarity.",
+          "run": 3,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 5069,
+            "output_tokens": 268,
+            "reasoning_tokens": 101,
+            "cached_input_tokens": 5066
+          },
+          "stop_reason": "stop",
+          "latency_s": 2.784
+        }
+      ],
+      "original_finding_index": 3102
+    }
+  ]
+}

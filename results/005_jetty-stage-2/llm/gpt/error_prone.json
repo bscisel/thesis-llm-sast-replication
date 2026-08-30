@@ -1,0 +1,1362 @@
+{
+  "model": "gpt-5.6-terra",
+  "tool": "error-prone",
+  "num_runs": 3,
+  "runs_per_invocation": 3,
+  "source_root": "jetty.project",
+  "call_parameters": {
+    "temperature": null,
+    "concurrency": 3,
+    "response_format": "json_schema",
+    "max_completion_tokens": 8192,
+    "max_retries": 6,
+    "reasoning_effort": "default"
+  },
+  "system_prompt_variant": "jetty",
+  "system_prompt_sha256": "b5b634e0a9109c59",
+  "user_prompt_sha256": "3963ac13371abed5",
+  "timestamp": "2026-08-15T07:52:46.515432+00:00",
+  "updated_at": "2026-08-15T07:52:46.515432+00:00",
+  "findings": [
+    {
+      "finding_id": 0,
+      "type": "CatchAndPrintStackTrace",
+      "sourcefile": "JettyLoggerFactory.java",
+      "start_line": "235",
+      "message": "Logging or rethrowing exceptions should usually be preferred to catching and calling printStackTrace",
+      "tool_specific": {
+        "column": "17"
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.91,
+          "developer_explanation": "This catch block writes failures directly to standard error rather than using the application's error-reporting mechanism or otherwise handling the failure in a defined way. Direct stack-trace output can be lost, interleaved with unrelated output, and bypass configured logging; use an appropriate fallback reporting mechanism, or deliberately ignore the per-attribute failure if that is the intended JMX behavior.",
+          "is_true_positive": true,
+          "issue_signature": "direct stack-trace printing in exception handler",
+          "reasoning": "The shown catch block catches every Exception from an attribute lookup and reports it solely by calling e.printStackTrace() to standard error. This bypasses configured logging and gives the caller no structured indication that an attribute was omitted, making operational diagnosis and output handling less reliable. The method's non-throwing signature may prevent rethrowing, but it does not make direct stack-trace printing an appropriate general error-reporting mechanism.",
+          "run": 1,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 4743,
+            "output_tokens": 501,
+            "reasoning_tokens": 288,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 6.996
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.88,
+          "developer_explanation": "This bulk JMX operation is required to continue processing attributes after an individual request fails, and its signature provides no way to report those per-attribute exceptions. Logging through this logger implementation could recurse during logger setup, so writing the diagnostic stack trace directly is a justified fallback here; the warning can be dismissed or locally suppressed.",
+          "is_true_positive": false,
+          "issue_signature": "direct exception stack trace printing",
+          "reasoning": "The shown catch is in a bulk JMX attribute operation that must return successfully retrieved attributes, cannot declare exceptions, and explicitly cannot safely use the logging system it implements. Printing the exception is therefore an intentional fallback diagnostic rather than an improperly handled exception that should simply be rethrown or logged. Although direct stack-trace output is generally less controllable than normal logging, the stated alternatives are not suitable in this context.",
+          "run": 2,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 4743,
+            "output_tokens": 440,
+            "reasoning_tokens": 241,
+            "cached_input_tokens": 4740
+          },
+          "stop_reason": "stop",
+          "latency_s": 6.133
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.84,
+          "developer_explanation": "This is the logging implementation itself, so routing this failure through the normal logging API can recurse or depend on the component that is failing. The bulk JMX attribute method has no declared exception channel and is expected to continue processing other attributes; printing the unexpected failure is a deliberate fallback diagnostic here.",
+          "is_true_positive": false,
+          "issue_signature": "exception stack trace printed directly",
+          "reasoning": "The caught exception occurs in a bulk JMX method with no exception channel, and this class implements the logging factory, so using the normal logging path could be unavailable or recursive. The shown comment explicitly identifies that constraint, making direct stderr stack-trace output a justified last-resort diagnostic rather than the unsupported exception handling pattern the warning describes. Although a different reporting mechanism could be considered if one is safely available, the warning's claim that logging or rethrowing should be preferred is not materially applicable in this context.",
+          "run": 3,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 4743,
+            "output_tokens": 492,
+            "reasoning_tokens": 280,
+            "cached_input_tokens": 4740
+          },
+          "stop_reason": "stop",
+          "latency_s": 7.112
+        }
+      ],
+      "original_finding_index": 6
+    },
+    {
+      "finding_id": 1,
+      "type": "LockNotBeforeTry",
+      "sourcefile": "Blocker.java",
+      "start_line": "422",
+      "message": "Prefer locking *immediately* before the try block which releases the lock to avoid the possibility of any intermediate statements throwing.",
+      "tool_specific": {
+        "column": "27"
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.98,
+          "developer_explanation": "This can be safely dismissed here. The only statement between acquiring the lock and entering the protected block is an uninitialized local-variable declaration, which cannot throw, so there is no path that leaves the lock held before the finally block is established.",
+          "is_true_positive": false,
+          "issue_signature": "lock acquired before protected try block",
+          "reasoning": "The only code between `_lock.lock()` and the `try` is the declaration `Throwable result;`, which performs no operation that can throw. Therefore, despite the lock call not being textually adjacent to `try`, no intermediate exception can bypass the `finally` and leave the lock held. The reported risk is absent in this context.",
+          "run": 1,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 4374,
+            "output_tokens": 271,
+            "reasoning_tokens": 102,
+            "cached_input_tokens": 0
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.651
+        },
+        {
+          "category": "CONCURRENCY",
+          "confidence": 0.99,
+          "developer_explanation": "This can be safely dismissed here. The only code between acquiring the lock and entering the try/finally is an uninitialized local-variable declaration, which cannot throw, so there is no path that leaves the lock held before the finally block is established.",
+          "is_true_positive": false,
+          "issue_signature": "lock acquired before exception-safe release block",
+          "reasoning": "The only statement between `_lock.lock()` and the `try` is `Throwable result;`, an uninitialized local declaration that cannot throw. Consequently, no intermediate exception can bypass the `finally` block and leave this lock held. The warning's general concern is valid for potentially throwing intervening statements, but that condition is absent in the shown code.",
+          "run": 2,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 4374,
+            "output_tokens": 334,
+            "reasoning_tokens": 161,
+            "cached_input_tokens": 4371
+          },
+          "stop_reason": "stop",
+          "latency_s": 4.236
+        },
+        {
+          "category": "CONCURRENCY",
+          "confidence": 0.99,
+          "developer_explanation": "This can be safely dismissed here. The only statement between acquiring the lock and entering the protected try/finally is an uninitialized local-variable declaration, which cannot throw, so there is no path that leaves the lock held before the finally block is established.",
+          "is_true_positive": false,
+          "issue_signature": "lock acquired before protected try block",
+          "reasoning": "The only statement between `_lock.lock()` and the `try` is `Throwable result;`, an uninitialized local declaration that cannot throw. Therefore no intermediate exceptional path can bypass the `finally` block and leave this lock held. The warning's general concern is valid for executable intervening statements, but that condition is absent in the shown code.",
+          "run": 3,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 4374,
+            "output_tokens": 329,
+            "reasoning_tokens": 157,
+            "cached_input_tokens": 4371
+          },
+          "stop_reason": "stop",
+          "latency_s": 4.33
+        }
+      ],
+      "original_finding_index": 34
+    },
+    {
+      "finding_id": 2,
+      "type": "ClassCanBeStatic",
+      "sourcefile": "WriteFlusher.java",
+      "start_line": "250",
+      "message": "Inner class is non-static but does not reference enclosing class",
+      "tool_specific": {
+        "column": "13"
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.98,
+          "developer_explanation": "This nested state class has no use of an instance of its enclosing class, so it needlessly carries an implicit enclosing-instance reference. Declare it static, as the other context-independent state classes are, to make that independence explicit and avoid retaining the outer instance unnecessarily.",
+          "is_true_positive": true,
+          "issue_signature": "non-static inner class without enclosing instance use",
+          "reasoning": "CancellingState only stores its callback and invokes its State superclass constructor; unlike a context-dependent inner class, it does not access any member of the enclosing instance. Its non-static declaration therefore creates an unnecessary implicit enclosing-instance reference, obscures that the state object is independent, and can retain the outer object while the state is reachable. Declaring it static preserves the shown behavior and matches the other independent State subclasses.",
+          "run": 1,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 5214,
+            "output_tokens": 183,
+            "reasoning_tokens": 0,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.375
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.99,
+          "developer_explanation": "This nested state class has no need for an implicit reference to its enclosing instance. Declaring it static makes that independence explicit and avoids retaining an unnecessary outer-instance reference for each state object.",
+          "is_true_positive": true,
+          "issue_signature": "inner class with unnecessary enclosing instance reference",
+          "reasoning": "CancellingState only stores its callback and invokes the State constructor; it does not access an enclosing WriteFlusher member or otherwise require an enclosing instance. As a non-static inner class, each instance nevertheless carries an implicit outer-instance reference, unlike the other stateless state subclasses shown. Making it static is therefore a real maintainability and object-structure improvement.",
+          "run": 2,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 5214,
+            "output_tokens": 156,
+            "reasoning_tokens": 0,
+            "cached_input_tokens": 5211
+          },
+          "stop_reason": "stop",
+          "latency_s": 2.705
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.99,
+          "developer_explanation": "This nested state class does not use any instance member or method of its enclosing object, so its implicit enclosing-instance reference is unnecessary. Declare it static to make the lack of coupling explicit and avoid retaining an enclosing instance unnecessarily.",
+          "is_true_positive": true,
+          "issue_signature": "non-static nested class without enclosing instance use",
+          "reasoning": "`CancellingState` only stores its callback and invokes its superclass constructor; it has no reference to an enclosing instance member, method, or type parameter. As a non-static nested class, each instance nevertheless carries an implicit reference to its enclosing object, despite not needing one. Making it static preserves its intended behavior while accurately expressing its independence and avoiding needless coupling.",
+          "run": 3,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 5214,
+            "output_tokens": 238,
+            "reasoning_tokens": 67,
+            "cached_input_tokens": 5211
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.796
+        }
+      ],
+      "original_finding_index": 161
+    },
+    {
+      "finding_id": 3,
+      "type": "UnusedMethod",
+      "sourcefile": "ArrayByteBufferPool.java",
+      "start_line": "811",
+      "message": "Method 'remove' is never used.",
+      "tool_specific": {
+        "column": "14"
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.98,
+          "developer_explanation": "The method that removes a pooled buffer is not invoked by any shown code, so its removal path is dead. Delete it if it is obsolete, or add the intended call site if pooled buffers must be explicitly removed; keeping unused lifecycle code makes the class harder to maintain.",
+          "is_true_positive": true,
+          "issue_signature": "unused private method",
+          "reasoning": "`PooledBuffer.remove()` has no call site in the shown code, and because `PooledBuffer` is a private inner class, outside code cannot invoke it directly. The reported method is therefore dead code unless it is reached reflectively, for which the snippet provides no evidence. Leaving an unused buffer-removal path makes lifecycle behavior harder to understand and safely change.",
+          "run": 1,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 5581,
+            "output_tokens": 306,
+            "reasoning_tokens": 128,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.977
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.93,
+          "developer_explanation": "This method is dead code: it only delegates to the enclosing pool's removal operation, but nothing invokes it. Remove it unless a caller is meant to explicitly discard pooled buffers; in that case, add the missing call through the appropriate buffer lifecycle path.",
+          "is_true_positive": true,
+          "issue_signature": "unused method",
+          "reasoning": "The private nested PooledBuffer class defines remove(), which only delegates to the enclosing pool, and no invocation of that method is present in the shown code; the reported whole-source analysis also found no use. Since the enclosing class is private, this method cannot be part of an external API, so retaining an uncalled lifecycle operation is dead code that can mislead future maintenance.",
+          "run": 2,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 5581,
+            "output_tokens": 512,
+            "reasoning_tokens": 338,
+            "cached_input_tokens": 5578
+          },
+          "stop_reason": "stop",
+          "latency_s": 6.831
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.96,
+          "developer_explanation": "The method that removes a pooled buffer is not called anywhere, so its removal logic is unreachable. Delete it unless it is intentionally retained for a forthcoming use; if it must be invoked indirectly, make that usage explicit so the code remains understandable and analyzable.",
+          "is_true_positive": true,
+          "issue_signature": "unused method",
+          "reasoning": "`PooledBuffer.remove()` has no call site, so its delegation to the enclosing pool's removal operation is unreachable. Since `PooledBuffer` is a private nested class, ordinary callers outside the enclosing implementation cannot use this method directly, and retaining it is dead code that can mislead future maintainers. This is therefore a real maintainability issue.",
+          "run": 3,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 5581,
+            "output_tokens": 379,
+            "reasoning_tokens": 207,
+            "cached_input_tokens": 5578
+          },
+          "stop_reason": "stop",
+          "latency_s": 5.484
+        }
+      ],
+      "original_finding_index": 165
+    },
+    {
+      "finding_id": 4,
+      "type": "UnnecessaryLambda",
+      "sourcefile": "ByteArrayEndPoint.java",
+      "start_line": "59",
+      "message": "Returning a lambda from a helper method or saving it in a constant is unnecessary; prefer to implement the functional interface method directly and use a method reference instead.",
+      "tool_specific": {
+        "column": "28"
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.9,
+          "developer_explanation": "The stored Runnable is deliberately reused when fill interest is needed, rather than creating a new bound method reference at every call site. It also clearly expresses the deferred action passed to execute, so this field can remain as written.",
+          "is_true_positive": false,
+          "issue_signature": "stored single-use lambda",
+          "reasoning": "The lambda is stored in a final instance field and reused by needsFillInterest() when it passes work to execute(), rather than being an otherwise disposable wrapper. Replacing it with a bound method reference at that call site would generally create a new Runnable for each invocation, while a helper method would not eliminate the need to adapt the action to Runnable. The retained lambda is therefore justified as a reusable deferred task, so the claimed unnecessary-lambda issue is not materially present here.",
+          "run": 1,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 4421,
+            "output_tokens": 547,
+            "reasoning_tokens": 358,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 7.177
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.88,
+          "developer_explanation": "The field is a reusable per-instance Runnable that is submitted whenever fill interest must be notified. Keeping this callback avoids recreating a capturing method-reference or lambda at each submission and clearly represents the scheduled action, so the alarm can be safely dismissed.",
+          "is_true_positive": false,
+          "issue_signature": "cached lambda callback",
+          "reasoning": "The shown code stores a single per-instance Runnable in `_runFillable` and reuses that same callback in `execute(_runFillable)`. This is a valid reason to retain the lambda as a field: it represents a reusable scheduled action and avoids creating a new capturing callback for each invocation. Replacing it with a method reference at the call site would not materially improve the code and can introduce repeated callback allocation.",
+          "run": 2,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 4421,
+            "output_tokens": 453,
+            "reasoning_tokens": 271,
+            "cached_input_tokens": 4418
+          },
+          "stop_reason": "stop",
+          "latency_s": 5.626
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.86,
+          "developer_explanation": "The field stores a lambda whose only action is to invoke another method, so it does not need to exist as a separate callback object. Move that action into a private void method and pass a method reference when scheduling it; this makes the scheduled operation explicit and avoids an unnecessary indirection.",
+          "is_true_positive": true,
+          "issue_signature": "stored forwarding lambda",
+          "reasoning": "The `_runFillable` field stores a lambda that only delegates to `getFillInterest().fillable()` and is used solely as the task passed to `execute`. A private method implementing that operation, referenced when it is scheduled, expresses the same intent more directly and removes an unnecessary callback field. This is a maintainability issue rather than a behavioral defect.",
+          "run": 3,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 4421,
+            "output_tokens": 690,
+            "reasoning_tokens": 512,
+            "cached_input_tokens": 4418
+          },
+          "stop_reason": "stop",
+          "latency_s": 8.94
+        }
+      ],
+      "original_finding_index": 171
+    },
+    {
+      "finding_id": 5,
+      "type": "BadInstanceof",
+      "sourcefile": "ByteArrayEndPoint.java",
+      "start_line": "475",
+      "message": "`_buffer` is an instance of RetainableByteBuffer.DynamicCapacity which is a subtype of RetainableByteBuffer.DynamicCapacity, so this is equivalent to a null check.",
+      "tool_specific": {
+        "column": "24"
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.98,
+          "developer_explanation": "The field's static type is already `RetainableByteBuffer.DynamicCapacity`, so this test cannot determine whether the output is configured to grow; it only tests whether the field is non-null. Replace it with an explicit growth-setting check if that distinction still exists, or return the appropriate constant if this endpoint always has growable output.",
+          "is_true_positive": true,
+          "issue_signature": "instanceof check against declared subtype",
+          "reasoning": "`_buffer` has the static type `RetainableByteBuffer.DynamicCapacity`, so testing it with `instanceof RetainableByteBuffer.DynamicCapacity` is equivalent to a null check. The method therefore does not meaningfully inspect a runtime capability or configuration, despite its name and documentation suggesting that it reports whether output growth is enabled. This is at least misleading and brittle even if the field is guaranteed non-null and the intended result is always true.",
+          "run": 1,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 3848,
+            "output_tokens": 723,
+            "reasoning_tokens": 512,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 9.069
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.98,
+          "developer_explanation": "The runtime type check cannot determine whether output growth is enabled: the field is already declared as the tested subtype, so this expression only tests whether it is null. Since the field is used without null checks elsewhere, this method will effectively always report that growth is enabled; replace it with the actual configuration state or make the field type broad enough for the subtype test to be meaningful.",
+          "is_true_positive": true,
+          "issue_signature": "instanceof test equivalent to null check",
+          "reasoning": "The reported field is statically typed as `RetainableByteBuffer.DynamicCapacity`, the same type tested by `instanceof`, so the expression can only be false when `_buffer` is null. The surrounding methods dereference `_buffer` without null checks, making it effectively non-null during normal operation and causing `isGrowOutput()` to always return true rather than meaningfully report a mode. This makes the type test misleading and prevents the method from distinguishing growable from non-growable output.",
+          "run": 2,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 3848,
+            "output_tokens": 414,
+            "reasoning_tokens": 187,
+            "cached_input_tokens": 3845
+          },
+          "stop_reason": "stop",
+          "latency_s": 5.54
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.97,
+          "developer_explanation": "The buffer is already declared as a dynamic-capacity buffer, so this type test cannot distinguish growable from non-growable implementations; it only returns false if the field is null. Make the method return the intended fixed value (normally true), or change the field abstraction if this method is meant to report a runtime-selectable capability.",
+          "is_true_positive": true,
+          "issue_signature": "redundant instanceof check against declared subtype",
+          "reasoning": "The reported static type of `_buffer` is already `RetainableByteBuffer.DynamicCapacity`, so testing it with `instanceof RetainableByteBuffer.DynamicCapacity` can only act as a null check. Consequently, `isGrowOutput()` does not actually inspect a variable runtime capability and is misleading or redundant. Since surrounding methods dereference `_buffer`, null does not appear to be a meaningful supported state either.",
+          "run": 3,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 3848,
+            "output_tokens": 468,
+            "reasoning_tokens": 264,
+            "cached_input_tokens": 3845
+          },
+          "stop_reason": "stop",
+          "latency_s": 6.231
+        }
+      ],
+      "original_finding_index": 183
+    },
+    {
+      "finding_id": 6,
+      "type": "JavaTimeDefaultTimeZone",
+      "sourcefile": "ManagedSelector.java",
+      "start_line": "474",
+      "message": "ZonedDateTime.now() is not allowed because it silently uses the system default time-zone. You must pass an explicit time-zone (e.g., ZoneId.of(\"America/Los_Angeles\")) to this method.",
+      "tool_specific": {
+        "column": "92"
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.97,
+          "developer_explanation": "The timestamp recorded for the key dump is derived from the process-wide default time zone without making that choice explicit. This makes diagnostic output depend on deployment configuration; choose and pass the intended zone, such as UTC or `ZoneId.systemDefault()` if local server time is deliberate. Apply the same change to the analogous timestamp created for the updates dump.",
+          "is_true_positive": true,
+          "issue_signature": "implicit use of system default time zone",
+          "reasoning": "The shown code calls `ZonedDateTime.now()` without a `ZoneId` when producing timestamps for diagnostic dump output. Consequently, the formatted values depend implicitly on the JVM's system default time zone, which can differ across hosts or change through configuration and leaves the intended time-zone policy unclear. Passing the chosen zone explicitly documents and stabilizes that policy; the same pattern also appears at line 463.",
+          "run": 1,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 5111,
+            "output_tokens": 346,
+            "reasoning_tokens": 142,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 5.257
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.84,
+          "developer_explanation": "The dump output obtains its timestamps from the JVM's default time zone, so the displayed offset can differ between hosts or change when the process configuration changes. Use an explicitly chosen zone, typically UTC for diagnostic output, or document and pass the intended configured zone for both timestamps.",
+          "is_true_positive": true,
+          "issue_signature": "implicit default time zone",
+          "reasoning": "Both timestamps in this dump method, including the flagged one, are created with `ZonedDateTime.now()` without a `ZoneId`, so their formatted offsets depend on the JVM default time zone. This makes diagnostic output environment-dependent and can make dumps from different machines or configurations harder to compare. The issue is a maintainability/observability concern rather than a functional or security failure.",
+          "run": 2,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 5111,
+            "output_tokens": 176,
+            "reasoning_tokens": 0,
+            "cached_input_tokens": 5108
+          },
+          "stop_reason": "stop",
+          "latency_s": 2.733
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.9,
+          "developer_explanation": "These timestamps are only labels in diagnostic dump output, and the ISO offset format includes the effective UTC offset, so the output remains interpretable even when hosts use different default zones. Using the host-local time zone is reasonable for an operational dump; no functional calculation or externally defined time-zone contract is affected.",
+          "is_true_positive": false,
+          "issue_signature": "implicit system default time zone",
+          "reasoning": "The shown calls are used only to label collections in diagnostic dump output, and ISO_OFFSET_DATE_TIME includes the resulting UTC offset in each label. Therefore, although ZonedDateTime.now() does consult the system default zone, that choice is justified for host-local diagnostics and does not create the ambiguous or incorrect time handling the warning is intended to prevent. The identical unflagged call used for the updates label also indicates that both timestamps deliberately follow the same diagnostic convention.",
+          "run": 3,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 5111,
+            "output_tokens": 402,
+            "reasoning_tokens": 199,
+            "cached_input_tokens": 5108
+          },
+          "stop_reason": "stop",
+          "latency_s": 5.262
+        }
+      ],
+      "original_finding_index": 204
+    },
+    {
+      "finding_id": 7,
+      "type": "JavaLangClash",
+      "sourcefile": "HttpException.java",
+      "start_line": "83",
+      "message": "org.eclipse.jetty.http.HttpException.RuntimeException clashes with java.lang.RuntimeException",
+      "tool_specific": {
+        "column": "5"
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.98,
+          "developer_explanation": "The nested exception is named RuntimeException even though it extends java.lang.RuntimeException, so unqualified references in this interface resolve to the nested type rather than the standard Java type. This forces fully qualified references for the standard type and makes exception handling and type checks unnecessarily easy to misread; rename the nested type to a domain-specific name.",
+          "is_true_positive": true,
+          "issue_signature": "type name shadowing a java.lang type",
+          "reasoning": "The shown code declares a nested class named RuntimeException while also extending and explicitly referring to java.lang.RuntimeException. Consequently, unqualified RuntimeException references in this scope denote the nested HTTP-specific exception, while standard runtime exceptions require qualification, which is materially confusing and error-prone to maintain. The analogous nested IllegalArgumentException and IllegalStateException declarations show the same naming pattern, but the reported clash itself is real.",
+          "run": 1,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 4127,
+            "output_tokens": 329,
+            "reasoning_tokens": 125,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.819
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.99,
+          "developer_explanation": "The nested public exception is deliberately named RuntimeException and explicitly extends java.lang.RuntimeException, making the distinction clear at its declaration. Although the name can require qualification in some contexts, this file already handles that explicitly and the name accurately communicates that this is the HTTP-aware runtime-exception variant; the warning can be dismissed for this API design.",
+          "is_true_positive": false,
+          "issue_signature": "type name shadowing a java.lang type",
+          "reasoning": "The shown code deliberately declares an HTTP-specific nested RuntimeException that extends java.lang.RuntimeException, and it consistently uses explicit java.lang qualification where the standard type is intended. The identical simple name can be confusing in general, but here it is an intentional API naming scheme mirrored by the nested IllegalArgumentException and IllegalStateException types, rather than an accidental clash causing incorrect behavior. The warning's implication that this particular declaration is an unjustified problematic clash is therefore not materially correct in this context.",
+          "run": 2,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 4127,
+            "output_tokens": 213,
+            "reasoning_tokens": 0,
+            "cached_input_tokens": 4124
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.092
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.93,
+          "developer_explanation": "This nested exception type is named exactly like java.lang.RuntimeException, even though it is a distinct HTTP-specific subtype. The collision forces qualified references and can confuse readers or users of the API about which exception type is meant; rename the nested type to an HTTP-specific name, such as HttpRuntimeException.",
+          "is_true_positive": true,
+          "issue_signature": "type name clashes with java.lang type",
+          "reasoning": "The shown code declares a nested type named RuntimeException while also extending and otherwise needing to distinguish java.lang.RuntimeException. This name collision is deliberate but still creates a real readability and API-maintenance problem: unqualified references within the enclosing interface denote the nested HTTP-specific type, while the JDK type must be fully qualified. Callers and maintainers can easily misread which exception class is intended, so the warning's maintainability claim is materially correct.",
+          "run": 3,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 4127,
+            "output_tokens": 557,
+            "reasoning_tokens": 353,
+            "cached_input_tokens": 4124
+          },
+          "stop_reason": "stop",
+          "latency_s": 6.847
+        }
+      ],
+      "original_finding_index": 207
+    },
+    {
+      "finding_id": 8,
+      "type": "EnumOrdinal",
+      "sourcefile": "Generator.java",
+      "start_line": "50",
+      "message": "You should almost never invoke the Enum.ordinal() method.",
+      "tool_specific": {
+        "column": "76"
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.93,
+          "developer_explanation": "The generator array is indexed using the protocol value returned by `getType()`, but its length is derived from the enum declaration position of `CONTINUATION`. This unnecessarily couples array sizing to enum ordering; use the highest relevant protocol type value, such as `FrameType.CONTINUATION.getType() + 1`, or an explicit size, so reordering enum constants cannot silently make the array too small or misleadingly sized.",
+          "is_true_positive": true,
+          "issue_signature": "enum ordinal used for array sizing",
+          "reasoning": "The array is indexed by `FrameType.getType()` values on lines 51–59 and 86–89, but its size is derived from `FrameType.CONTINUATION.ordinal()`. This couples the array bound to the enum's declaration order rather than to the values actually used as indexes. A future reordering or insertion of enum constants can therefore make the allocation incorrect even if protocol type values remain unchanged.",
+          "run": 1,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 3237,
+            "output_tokens": 564,
+            "reasoning_tokens": 342,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 6.674
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.94,
+          "developer_explanation": "The array is indexed using protocol type values from getType(), but its length is derived from the enum declaration order via ordinal(). This currently happens to provide sufficient capacity, but it creates a fragile dependency on the enum's ordering; size the array with FrameType.CONTINUATION.getType() + 1 or another explicit maximum type value instead.",
+          "is_true_positive": true,
+          "issue_signature": "enum ordinal used as an array bound",
+          "reasoning": "The array is indexed by FrameType.getType() values, while its length is based on CONTINUATION.ordinal(), which depends on declaration order rather than the protocol type values. The current enum ordering may make the allocation large enough, but a harmless enum reorder can make the array too small or otherwise obscure the intended bound. This is a real maintainability issue because the two numbering schemes are not explicitly coupled.",
+          "run": 2,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 3237,
+            "output_tokens": 580,
+            "reasoning_tokens": 377,
+            "cached_input_tokens": 3234
+          },
+          "stop_reason": "stop",
+          "latency_s": 6.777
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.98,
+          "developer_explanation": "The array is indexed using protocol type values from getType(), but its length is derived from the declaration position of CONTINUATION in the enum. It works only while enum declaration order remains aligned with the protocol numbers; use FrameType.CONTINUATION.getType() + 1 or a size derived from the maximum type value instead.",
+          "is_true_positive": true,
+          "issue_signature": "enum ordinal used as a protocol value",
+          "reasoning": "The generator array is indexed by FrameType.getType() values, while its size is based on FrameType.CONTINUATION.ordinal(), which is only correct while enum declaration order and protocol type numbers remain aligned. Adding, reordering, or inserting enum constants can make the array undersized or otherwise invalidate that implicit coupling. This is a maintainability problem even if the current enum ordering happens to produce the required size.",
+          "run": 3,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 3237,
+            "output_tokens": 504,
+            "reasoning_tokens": 302,
+            "cached_input_tokens": 3234
+          },
+          "stop_reason": "stop",
+          "latency_s": 5.176
+        }
+      ],
+      "original_finding_index": 357
+    },
+    {
+      "finding_id": 9,
+      "type": "InconsistentCapitalization",
+      "sourcefile": "HTTP2StreamEndPoint.java",
+      "start_line": "558",
+      "message": "Found the field 'endpoint' with the same name as the parameter 'endPoint' but with different capitalization.",
+      "tool_specific": {
+        "column": "62"
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.99,
+          "developer_explanation": "The constructor parameter is spelled `endPoint`, while the field it initializes is spelled `endpoint`. This does not change runtime behavior, but the inconsistent spelling makes the code less uniform and can cause confusion during maintenance; rename the parameter to `endpoint`.",
+          "is_true_positive": true,
+          "issue_signature": "inconsistent capitalization between field and parameter",
+          "reasoning": "The shown constructor declares `HTTP2StreamEndPoint endPoint` but immediately assigns it to a field named `endpoint`, differing only in capitalization. This is a real naming-consistency and readability issue even though the assignment is behaviorally correct. Renaming the parameter to match the field removes needless visual ambiguity.",
+          "run": 1,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 3725,
+            "output_tokens": 159,
+            "reasoning_tokens": 0,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 2.291
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.98,
+          "developer_explanation": "The constructor parameter differs from the field only by the capitalization of the second word, even though it is assigned directly to that field. Rename the parameter to `endpoint` for consistent Java naming and to make the assignment easier to scan safely.",
+          "is_true_positive": true,
+          "issue_signature": "inconsistent capitalization between field and parameter",
+          "reasoning": "The nested class declares a field named `endpoint` but its constructor accepts the corresponding value as `endPoint`, and the constructor immediately assigns `this.endpoint = endPoint`. This is a real naming inconsistency that makes the code less readable and can make reviews or later edits more error-prone, although it does not alter current runtime behavior.",
+          "run": 2,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 3725,
+            "output_tokens": 163,
+            "reasoning_tokens": 0,
+            "cached_input_tokens": 3722
+          },
+          "stop_reason": "stop",
+          "latency_s": 2.534
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.99,
+          "developer_explanation": "The constructor parameter differs from the field name only by capitalization, even though it is directly assigned to that field. Rename the parameter to `endpoint` to make the assignment and subsequent maintenance clearer.",
+          "is_true_positive": true,
+          "issue_signature": "inconsistent capitalization between field and parameter",
+          "reasoning": "The `Pending` class declares a field named `endpoint` but its constructor accepts the corresponding value as `endPoint`, and directly assigns `this.endpoint = endPoint`. This inconsistent camel-case spelling does not change runtime behavior, but it is a real readability and maintainability issue because the two names appear to denote the same concept. Renaming the parameter to match the field removes needless ambiguity.",
+          "run": 3,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 3725,
+            "output_tokens": 164,
+            "reasoning_tokens": 0,
+            "cached_input_tokens": 3722
+          },
+          "stop_reason": "stop",
+          "latency_s": 2.382
+        }
+      ],
+      "original_finding_index": 363
+    },
+    {
+      "finding_id": 10,
+      "type": "MalformedInlineTag",
+      "sourcefile": "HeaderBlockParser.java",
+      "start_line": "53",
+      "message": "The correct syntax to open this inline tag is {@code.",
+      "tool_specific": {
+        "column": "15"
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.99,
+          "developer_explanation": "The Javadoc uses `@{code blockLength}` rather than the valid inline-tag form `{@code blockLength}`. As written, documentation processors will not render `blockLength` as code and may interpret the text incorrectly. Replace `@{code` with `{@code`.",
+          "is_true_positive": true,
+          "issue_signature": "malformed Javadoc inline tag",
+          "reasoning": "The Javadoc on line 53 contains `@{code blockLength}`, whereas a Javadoc inline code tag must begin `{@code`. This is malformed documentation markup, so it will not be parsed or rendered as the intended inline code reference. The issue affects documentation correctness and maintainability, not the runtime parsing behavior.",
+          "run": 1,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 3683,
+            "output_tokens": 169,
+            "reasoning_tokens": 0,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 2.634
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.99,
+          "developer_explanation": "The Javadoc text uses `@{code blockLength}` rather than the valid inline-tag syntax `{@code blockLength}`. As written, the identifier will not be rendered as code and the malformed tag can confuse Javadoc tooling. Replace `@{code blockLength}` with `{@code blockLength}`.",
+          "is_true_positive": true,
+          "issue_signature": "malformed Javadoc inline tag",
+          "reasoning": "The Javadoc on line 53 contains `@{code blockLength}`, whereas a Java inline Javadoc tag must begin `{@code`. This is a malformed documentation tag, so it will not be interpreted or rendered as the intended code-formatted reference. The warning correctly identifies a documentation and maintainability defect.",
+          "run": 2,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 3683,
+            "output_tokens": 172,
+            "reasoning_tokens": 0,
+            "cached_input_tokens": 3680
+          },
+          "stop_reason": "stop",
+          "latency_s": 2.392
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.99,
+          "developer_explanation": "The Javadoc opening sequence is malformed: `@{code blockLength}` is not a valid inline tag. As a result, generated documentation will not reliably render `blockLength` as code. Change it to `{@code blockLength}`.",
+          "is_true_positive": true,
+          "issue_signature": "malformed Javadoc inline tag",
+          "reasoning": "Line 53 contains `@{code blockLength}`, whereas a Javadoc inline code tag must begin with `{@code`. This malformed syntax prevents the intended inline formatting from being recognized by Javadoc tools, so the warning identifies a real documentation-quality issue. The parsing implementation is unaffected, but the API documentation is incorrect or poorly rendered.",
+          "run": 3,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 3683,
+            "output_tokens": 163,
+            "reasoning_tokens": 0,
+            "cached_input_tokens": 3680
+          },
+          "stop_reason": "stop",
+          "latency_s": 2.131
+        }
+      ],
+      "original_finding_index": 365
+    },
+    {
+      "finding_id": 11,
+      "type": "InlineMeSuggester",
+      "sourcefile": "Response.java",
+      "start_line": "566",
+      "message": "This deprecated API looks inlineable. If you'd like the body of the API to be automatically inlined to its callers, please annotate it with @InlineMe. NOTE: the suggested fix makes the method final if it was not already.",
+      "tool_specific": {
+        "column": "17"
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.98,
+          "developer_explanation": "The deprecated forwarding method is an exact wrapper around its documented replacement, so callers can be safely migrated automatically. Add an inline-replacement annotation describing the call to the replacement method, allowing supported refactoring tools to update callers while preserving behavior.",
+          "is_true_positive": true,
+          "issue_signature": "deprecated forwarding method lacking inline replacement metadata",
+          "reasoning": "`replaceCookie` is deprecated and its entire body consists solely of a call to the documented replacement, `putCookie(response, cookie)`. It is therefore a genuine inlineable compatibility wrapper, and supplying replacement metadata would make migration of callers safer and more maintainable. The suggested change does not address a runtime defect, but it correctly identifies missing deprecation-migration information.",
+          "run": 1,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 5662,
+            "output_tokens": 253,
+            "reasoning_tokens": 78,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.479
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.98,
+          "developer_explanation": "This deprecated method has no behavior of its own: it only delegates to the documented replacement with the same arguments. Adding an inlining/migration annotation would let callers be mechanically updated to the replacement API and makes the deprecation easier to maintain and eventually remove.",
+          "is_true_positive": true,
+          "issue_signature": "deprecated forwarding method lacking migration annotation",
+          "reasoning": "The deprecated method consists solely of a call to its documented replacement, `putCookie(response, cookie)`, with identical arguments. It is therefore safely inlineable, and the lack of a migration annotation prevents automated callers from being rewritten to the replacement API. This is a maintainability issue rather than a behavioral defect.",
+          "run": 2,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 5662,
+            "output_tokens": 385,
+            "reasoning_tokens": 219,
+            "cached_input_tokens": 5659
+          },
+          "stop_reason": "stop",
+          "latency_s": 5.285
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.95,
+          "developer_explanation": "The deprecated method contains only an unconditional call to its documented replacement with the same arguments. Adding an inline-migration annotation would let callers be rewritten automatically to the replacement API before this compatibility method is removed; the method is static, so there is no overriding behavior to preserve.",
+          "is_true_positive": true,
+          "issue_signature": "deprecated forwarding method lacking inline migration metadata",
+          "reasoning": "`replaceCookie` is deprecated and its entire body is the direct equivalent call `putCookie(response, cookie)`, matching the documented replacement. This is an appropriate case for inline-migration metadata: it preserves the same call semantics while enabling automated updates of callers before the deprecated compatibility method is removed. The issue is maintainability rather than a runtime correctness defect.",
+          "run": 3,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 5662,
+            "output_tokens": 424,
+            "reasoning_tokens": 245,
+            "cached_input_tokens": 5659
+          },
+          "stop_reason": "stop",
+          "latency_s": 5.701
+        }
+      ],
+      "original_finding_index": 429
+    },
+    {
+      "finding_id": 12,
+      "type": "NarrowCalculation",
+      "sourcefile": "AbstractSessionDataStore.java",
+      "start_line": "298",
+      "message": "This product of integers could overflow before being implicitly cast to a long.",
+      "tool_specific": {
+        "column": "65"
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.99,
+          "developer_explanation": "The expression `10 * _gracePeriodSec` is evaluated as an `int` before it is passed to `toMillis`. Because the grace period is set through an unconstrained `int` setter, sufficiently large values can overflow and produce an incorrect orphan-cleanup cutoff. Use long arithmetic, for example `TimeUnit.SECONDS.toMillis(10L * _gracePeriodSec)`; the similar multiplication in the preceding sweep-condition expression should also be updated.",
+          "is_true_positive": true,
+          "issue_signature": "integer multiplication overflow before long conversion",
+          "reasoning": "`_gracePeriodSec` is an unconstrained `int`, so `10 * _gracePeriodSec` is an `int` multiplication that can overflow before `TimeUnit.SECONDS.toMillis` receives its long argument. An overflow can yield a negative or otherwise incorrect duration, causing `cleanOrphans` to use the wrong expiration cutoff. The fact that the same unsafe multiplication also appears in the enclosing condition does not eliminate the erroneous calculation at the flagged call.",
+          "run": 1,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 4546,
+            "output_tokens": 345,
+            "reasoning_tokens": 106,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 4.27
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.99,
+          "developer_explanation": "`10 * _gracePeriodSec` is evaluated as a 32-bit integer before it is passed to the millisecond conversion. Large configured grace periods can therefore overflow and produce an incorrect orphan-cleanup cutoff time. Use long arithmetic, for example `TimeUnit.SECONDS.toMillis(10L * _gracePeriodSec)`, and apply the same correction to the equivalent interval check above.",
+          "is_true_positive": true,
+          "issue_signature": "integer multiplication overflow before long conversion",
+          "reasoning": "The expression `10 * _gracePeriodSec` multiplies two `int` values before `TimeUnit.SECONDS.toMillis` receives the result as a `long`, and `_gracePeriodSec` can be assigned any `int` through its public setter. A sufficiently large value can overflow the intermediate product, causing an incorrect (potentially negative) duration and thus incorrect orphan-sweep timing. The same unsafe multiplication also appears in the preceding sweep-condition expression.",
+          "run": 2,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 4546,
+            "output_tokens": 321,
+            "reasoning_tokens": 97,
+            "cached_input_tokens": 4543
+          },
+          "stop_reason": "stop",
+          "latency_s": 4.265
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.99,
+          "developer_explanation": "`10 * _gracePeriodSec` is evaluated as an `int` before it is passed to `toMillis`. Since the grace period can be set to any `int`, sufficiently large values overflow and yield an incorrect orphan-sweep interval and cutoff time. Make the multiplication long-valued, for example `10L * _gracePeriodSec`, at both the sweep condition and the `cleanOrphans` call.",
+          "is_true_positive": true,
+          "issue_signature": "integer multiplication overflow before long conversion",
+          "reasoning": "The expression `10 * _gracePeriodSec` performs `int` multiplication because `_gracePeriodSec` is an `int`, and `setGracePeriodSec` permits values large enough for that product to overflow before `toMillis` receives it. This can calculate a nonsensical sweep threshold and orphan-expiry cutoff rather than the intended ten-times-grace-period duration. The same unsafe multiplication also appears in the preceding sweep-condition expression.",
+          "run": 3,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 4546,
+            "output_tokens": 303,
+            "reasoning_tokens": 75,
+            "cached_input_tokens": 4543
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.884
+        }
+      ],
+      "original_finding_index": 499
+    },
+    {
+      "finding_id": 13,
+      "type": "EqualsGetClass",
+      "sourcefile": "DeploymentScanner.java",
+      "start_line": "1389",
+      "message": "Prefer instanceof to getClass when implementing Object#equals.",
+      "tool_specific": {
+        "column": "24"
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.78,
+          "developer_explanation": "`PathsApp` is not final, but its equality method rejects every subclass instance even when it has the same equality-defining `name`. This makes equality behavior unexpectedly depend on the runtime class and requires any future subclass to deal carefully with equality. If subclasses are intended to represent the same kind of value, use an `instanceof PathsApp` check; otherwise, make the class final to document and enforce exact-class equality.",
+          "is_true_positive": true,
+          "issue_signature": "exact-class equality check",
+          "reasoning": "`PathsApp` is non-final, while its `equals` method uses `getClass()` and therefore rejects subclass instances with the same `name`. That exact-runtime-class restriction makes the equality contract less extensible and can be surprising if this type is later subclassed, so the preference is materially applicable here.",
+          "run": 1,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 5184,
+            "output_tokens": 1097,
+            "reasoning_tokens": 893,
+            "cached_input_tokens": 0
+          },
+          "stop_reason": "stop",
+          "latency_s": 14.036
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.86,
+          "developer_explanation": "This non-final class uses an exact runtime-class comparison in equality, so an instance of a subclass can never compare equal to an otherwise equivalent base instance. Decide whether subclasses should represent the same value: use an `instanceof`-based comparison with a compatible subclass equality design, or make the class `final` to explicitly preserve exact-class equality.",
+          "is_true_positive": true,
+          "issue_signature": "exact-class comparison in equals",
+          "reasoning": "`PathsApp` is not final, yet its `equals` method rejects every subclass instance through `getClass() != o.getClass()`. Consequently, a subclass that adds no equality-relevant state still cannot be equal to an equivalent `PathsApp`, which makes equality behavior depend on an unintended implementation detail unless exact-class semantics are explicitly enforced by making the class final. The suggested `instanceof` rewrite is not necessarily the only safe design if subclasses add state, but the non-final class with unqualified exact-class equality is a real equality-contract/design issue.",
+          "run": 2,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 5184,
+            "output_tokens": 728,
+            "reasoning_tokens": 496,
+            "cached_input_tokens": 5181
+          },
+          "stop_reason": "stop",
+          "latency_s": 9.657
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.8,
+          "developer_explanation": "Equality is currently restricted to objects with the exact same runtime class, so a subclass with the same name will never compare equal. If subclasses are intended to share this value-based equality, use an instanceof check; otherwise, declare the class final to document and enforce the exact-class equality design.",
+          "is_true_positive": true,
+          "issue_signature": "runtime class check in equals",
+          "reasoning": "The equals method compares getClass() values even though PathsApp is not final, so any subclass is rejected before its name can be compared. This makes equality unexpectedly depend on the precise implementation class and makes future subclassing harder to implement consistently. No subclass is shown, but the class definition permits one and does not document exact-class equality as an intentional restriction.",
+          "run": 3,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 5184,
+            "output_tokens": 1123,
+            "reasoning_tokens": 937,
+            "cached_input_tokens": 5181
+          },
+          "stop_reason": "stop",
+          "latency_s": 14.491
+        }
+      ],
+      "original_finding_index": 730
+    },
+    {
+      "finding_id": 14,
+      "type": "AnnotateFormatMethod",
+      "sourcefile": "MetaDataBuilder.java",
+      "start_line": "238",
+      "message": "This method uses a pair of parameters as a format string and its arguments, but the enclosing method wasn't annotated @FormatMethod. Doing so gives compile-time rather than run-time protection against malformed format strings.",
+      "tool_specific": {
+        "column": "20"
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.98,
+          "developer_explanation": "This helper treats its first parameter as a printf-style format string and the remaining parameters as its arguments, but its signature does not communicate that contract to compile-time format checking. Annotate the method with `@FormatMethod` so callers are checked for invalid format strings and mismatched argument types or counts before runtime.",
+          "is_true_positive": true,
+          "issue_signature": "unannotated format string wrapper",
+          "reasoning": "`streamException(String messageFormat, Object... args)` passes those parameters directly to `String.format(messageFormat, args)`, so it is a format-string wrapper with an unannotated format/argument pair. The shown callers use literals correctly, but the protected helper can be called elsewhere (including by subclasses), and without the annotation malformed formats or argument mismatches are only detected at runtime. This is a maintainability and early-validation issue rather than a demonstrated current runtime failure.",
+          "run": 1,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 4586,
+            "output_tokens": 309,
+            "reasoning_tokens": 99,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 4.08
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.98,
+          "developer_explanation": "This protected helper treats its first parameter as a printf-style format string and forwards the remaining arguments to String.format, but its signature does not declare that contract. Add @FormatMethod to the method so calls, including calls from subclasses, are checked for incompatible format specifiers and argument lists at compile time.",
+          "is_true_positive": true,
+          "issue_signature": "unannotated format-string wrapper method",
+          "reasoning": "The protected method accepts a format-string parameter and varargs, then directly invokes String.format(messageFormat, args), but its signature lacks a format-method annotation. This is a formatting wrapper whose caller contract can be expressed and statically checked; without the annotation, malformed format strings or mismatched arguments may only fail when this error path executes. The shown literal call sites happen to be valid, but the protected method can also be called by subclasses and changed later without that compile-time protection.",
+          "run": 2,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 4586,
+            "output_tokens": 320,
+            "reasoning_tokens": 110,
+            "cached_input_tokens": 4583
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.963
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.98,
+          "developer_explanation": "This protected helper accepts a format string and varargs and passes them directly to String.format, but callers are not told that the arguments must satisfy formatting rules. Annotate the method as a format method so incorrect format strings or argument types/counts at call sites can be detected during compilation rather than when processing headers.",
+          "is_true_positive": true,
+          "issue_signature": "missing format-method annotation",
+          "reasoning": "`streamException` accepts a `String` followed by `Object...` and directly invokes `String.format(messageFormat, args)`, yet it has no format-method annotation. This is a formatting wrapper whose callers, including possible subclasses because it is protected, would benefit from compile-time validation of format strings and arguments instead of potential runtime formatting failures. The shown literal call sites are valid, but the unannotated API still lacks that protection for future or external callers.",
+          "run": 3,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 4586,
+            "output_tokens": 304,
+            "reasoning_tokens": 98,
+            "cached_input_tokens": 4583
+          },
+          "stop_reason": "stop",
+          "latency_s": 4.026
+        }
+      ],
+      "original_finding_index": 782
+    },
+    {
+      "finding_id": 15,
+      "type": "OverrideThrowableToString",
+      "sourcefile": "QuicException.java",
+      "start_line": "81",
+      "message": "To return a custom message with a Throwable class, one should override getMessage() instead of toString().",
+      "tool_specific": {
+        "column": "19"
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.9,
+          "developer_explanation": "This exception deliberately keeps the supplied reason as its standard message and uses `toString()` to provide a richer diagnostic representation containing the error code and frame type. Replacing this method with `getMessage()` would change that distinction and would not preserve the current diagnostic output, so the override is appropriate here.",
+          "is_true_positive": false,
+          "issue_signature": "custom exception details exposed only through toString",
+          "reasoning": "The shown code passes `reason` to the `RuntimeException` constructor, so `getMessage()` already returns the exception's actual detail message, while `toString()` intentionally adds separate QUIC error-code and frame-type diagnostics. The warning's premise that this override is being used instead of providing a message is therefore not true in this context. Moving the formatted representation to `getMessage()` would materially change the established message and string representation semantics rather than correct a defect.",
+          "run": 1,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 2961,
+            "output_tokens": 631,
+            "reasoning_tokens": 423,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 8.21
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.86,
+          "developer_explanation": "The exception already exposes the supplied reason through getMessage(), while toString() intentionally produces a richer diagnostic representation that includes the QUIC error code and frame type. Moving this formatting into getMessage() would change the meaning of the message returned to callers that need only the protocol reason, so this override is appropriate.",
+          "is_true_positive": false,
+          "issue_signature": "custom Throwable string representation",
+          "reasoning": "The constructors preserve the supplied reason as the superclass message, and the overridden toString() deliberately adds separate diagnostic fields (the error code and frame type). Thus this is not using toString() as a replacement for the exception message; it provides a richer display form while leaving getMessage() with its expected reason value. Replacing it with getMessage() would alter that API behavior rather than address a defect.",
+          "run": 2,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 2961,
+            "output_tokens": 600,
+            "reasoning_tokens": 406,
+            "cached_input_tokens": 2958
+          },
+          "stop_reason": "stop",
+          "latency_s": 7.448
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.9,
+          "developer_explanation": "This exception already preserves the supplied reason as its message, while its string representation intentionally adds the QUIC error code and frame type for diagnostics. Replacing this with a message override would change the meaning returned by getMessage() and is not necessary; the custom rendering is appropriate here.",
+          "is_true_positive": false,
+          "issue_signature": "custom Throwable string representation",
+          "reasoning": "The constructors store the protocol reason in the inherited exception message, while the toString() override deliberately adds separate error-code and frame-type fields to the diagnostic representation. This is not merely an alternative way to supply a custom message: getMessage() retains the reason and toString() exposes additional exception state. Therefore the claim that this override should instead be a message override is not materially correct in this context.",
+          "run": 3,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 2961,
+            "output_tokens": 588,
+            "reasoning_tokens": 401,
+            "cached_input_tokens": 2958
+          },
+          "stop_reason": "stop",
+          "latency_s": 7.117
+        }
+      ],
+      "original_finding_index": 797
+    },
+    {
+      "finding_id": 16,
+      "type": "StringSplitter",
+      "sourcefile": "AbstractForkedChild.java",
+      "start_line": "154",
+      "message": "String.split(String) has surprising behavior",
+      "tool_specific": {
+        "column": "48"
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.91,
+          "developer_explanation": "The property argument is split on every equals sign and Java discards trailing empty fields. As a result, valid-looking assignments such as `name=` or values containing `=` are silently not added to the property map. Split only at the first delimiter, preserving an empty remainder, for example with `split(\"=\", 2)` and appropriate validation.",
+          "is_true_positive": true,
+          "issue_signature": "ambiguous string splitting with default split semantics",
+          "reasoning": "The code uses `split(\"=\")` followed by `tmp.length == 2`, so Java's regex splitting and removal of trailing empty results cause `key=` to be discarded and `key=a=b` to be rejected. This conflicts with the stated handling of remaining arguments as property assignments, since property values may validly be empty or contain equals signs. A bounded split that preserves the value portion is needed.",
+          "run": 1,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 4178,
+            "output_tokens": 437,
+            "reasoning_tokens": 230,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 5.032
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.91,
+          "developer_explanation": "This property parsing uses an unrestricted split on \"=\" and accepts the argument only when exactly two parts result. Java drops trailing empty parts, so `name=` is rejected rather than stored with an empty value, and values containing `=` are also rejected. Split only on the first delimiter, for example `split(\"=\", 2)`, if property values may be empty or contain equals signs.",
+          "is_true_positive": true,
+          "issue_signature": "property parsing with unrestricted string split",
+          "reasoning": "The code parses every unrecognized command-line argument as a property using `split(\"=\")` and requires exactly two results. Java's `String.split` discards trailing empty results and splits every occurrence, so valid-looking property forms such as `name=` or `name=a=b` are silently omitted rather than passed to Jetty. This is a correctness issue for the stated purpose of accepting arbitrary Jetty properties.",
+          "run": 2,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 4178,
+            "output_tokens": 448,
+            "reasoning_tokens": 234,
+            "cached_input_tokens": 4175
+          },
+          "stop_reason": "stop",
+          "latency_s": 6.739
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.91,
+          "developer_explanation": "A command-line property such as `name=` is split into a single element because Java's default `split` discards trailing empty fields, so it is silently omitted. Values containing `=` are also omitted because they produce more than two elements. Split only at the first delimiter while retaining an empty value, for example with `split(\"=\", 2)`, and validate the resulting key/value pair.",
+          "is_true_positive": true,
+          "issue_signature": "string splitting discards trailing empty fields",
+          "reasoning": "`args[i].trim().split(\"=\")` uses Java's regex split with its default behavior of discarding trailing empty fields, while the result is accepted only when it has exactly two elements. Thus a valid-looking property with an empty value, such as `key=`, is silently ignored; a value containing `=` is likewise ignored rather than treated as the remainder of the value. This makes the generic property parsing behave differently from the apparent key/value intent.",
+          "run": 3,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 4178,
+            "output_tokens": 428,
+            "reasoning_tokens": 201,
+            "cached_input_tokens": 4175
+          },
+          "stop_reason": "stop",
+          "latency_s": 5.596
+        }
+      ],
+      "original_finding_index": 871
+    },
+    {
+      "finding_id": 17,
+      "type": "EmptyCatch",
+      "sourcefile": "NamingEntryUtil.java",
+      "start_line": "86",
+      "message": "Caught exceptions should not be ignored",
+      "tool_specific": {
+        "column": "9"
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.98,
+          "developer_explanation": "The missing JNDI name is intentionally represented by a null result: the local variable starts as null, and the method returns it unchanged when the lookup throws NameNotFoundException. This behavior is documented by the caller, which treats a null entry as “not found,” so the empty catch can be safely dismissed in this context.",
+          "is_true_positive": false,
+          "issue_signature": "intentional ignored not-found exception",
+          "reasoning": "The caught NameNotFoundException is deliberately converted into the method's documented null result: `entry` is initialized to null and is returned unchanged after the catch. `bindToENC` immediately handles that null as an absent naming entry by returning false, so ignoring this specific expected exception does not lose an error or alter the intended result. The exception parameter is also explicitly named `ignored`, documenting the intent despite the empty body.",
+          "run": 1,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 4562,
+            "output_tokens": 198,
+            "reasoning_tokens": 0,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 2.888
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.98,
+          "developer_explanation": "The missing-name condition is deliberately converted into the documented null return: `entry` remains null and is returned to the caller. The exception variable is explicitly named `ignored`, which makes this intentional control flow clear, so this empty handler can be safely dismissed.",
+          "is_true_positive": false,
+          "issue_signature": "intentionally ignored expected exception",
+          "reasoning": "The only ignored exception is `NameNotFoundException`, and the method's normal result remains `null`, which callers use to represent that no naming entry exists. This is an expected lookup-miss condition rather than an unhandled failure, and the exception parameter is explicitly named `ignored` to document that choice. Therefore the claim that this catch improperly ignores an exception is not materially correct in this context.",
+          "run": 2,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 4562,
+            "output_tokens": 177,
+            "reasoning_tokens": 0,
+            "cached_input_tokens": 4559
+          },
+          "stop_reason": "stop",
+          "latency_s": 2.612
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.98,
+          "developer_explanation": "The missing JNDI entry is deliberately represented by a null return value: the local variable starts as null, and the method returns it after catching this specific exception. The exception is named `ignored`, and callers such as `bindToENC` explicitly handle a null result, so suppressing this expected lookup outcome is intentional and can be safely dismissed.",
+          "is_true_positive": false,
+          "issue_signature": "intentionally ignored expected lookup exception",
+          "reasoning": "The catch handles only `NameNotFoundException`, leaves `entry` as its initialized null value, and `lookupNamingEntry`'s caller explicitly treats a null result as “not found.” Thus the exception is being intentionally converted into the method's documented absence result rather than accidentally discarded. Although adding a comment could make that contract clearer, the claim that this catch improperly ignores an exception is not materially correct in this context.",
+          "run": 3,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 4562,
+            "output_tokens": 202,
+            "reasoning_tokens": 0,
+            "cached_input_tokens": 4559
+          },
+          "stop_reason": "stop",
+          "latency_s": 2.828
+        }
+      ],
+      "original_finding_index": 919
+    },
+    {
+      "finding_id": 18,
+      "type": "SuperCallToObjectMethod",
+      "sourcefile": "Frame.java",
+      "start_line": "407",
+      "message": "`super.hashCode()` is equivalent to `System.identityHashCode(this)` here",
+      "tool_specific": {
+        "column": "52"
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.98,
+          "developer_explanation": "This call explicitly invokes Object.hashCode(), so it produces the object's identity-based hash code and bypasses any hashCode override in a subclass. Use System.identityHashCode(this) instead to state that identity, rather than value-based hashing, is deliberately being used in the diagnostic string.",
+          "is_true_positive": true,
+          "issue_signature": "super call to Object hashCode",
+          "reasoning": "The shown toString() invokes super.hashCode(), and the reported resolution is Object.hashCode(), which is equivalent to System.identityHashCode(this). Although the resulting value is currently intentional-looking for an identity-style diagnostic, expressing it through super is misleading because it obscures that subclass hashCode() implementations are deliberately bypassed. An explicit identity-hash call preserves the behavior while making that choice clear.",
+          "run": 1,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 5016,
+            "output_tokens": 563,
+            "reasoning_tokens": 375,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 7.534
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.98,
+          "developer_explanation": "This call explicitly invokes the inherited Object implementation of hashCode(), so it is being used only to obtain this instance's identity-based hash value. Use System.identityHashCode(this) instead; it states that intent directly and avoids suggesting that a meaningful superclass hash implementation is involved.",
+          "is_true_positive": true,
+          "issue_signature": "indirect use of Object identity hash code",
+          "reasoning": "The immediate superclass implementation reached by super.hashCode() is Object.hashCode(), so this expression produces this object's identity-based hash value rather than a frame-specific value. Calling it through super is needlessly indirect and can mislead readers into thinking a superclass-defined hash calculation is significant. System.identityHashCode(this) preserves the behavior, including avoiding any subclass hashCode() override, while making the intent explicit.",
+          "run": 2,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 5016,
+            "output_tokens": 473,
+            "reasoning_tokens": 284,
+            "cached_input_tokens": 5013
+          },
+          "stop_reason": "stop",
+          "latency_s": 6.428
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.98,
+          "developer_explanation": "This string intentionally uses the object's identity hash, but spelling it as `super.hashCode()` obscures that purpose and can be mistaken for a meaningful superclass-provided hash implementation. Use `System.identityHashCode(this)` to state explicitly that the value is only an identity-style diagnostic identifier.",
+          "is_true_positive": true,
+          "issue_signature": "implicit identity hash code use",
+          "reasoning": "The shown `toString()` calls `super.hashCode()` from a class whose immediate superclass implementation is `Object.hashCode()`, so the call is exactly the object's identity hash code. Although the resulting output is likely intentional for diagnostics, `super.hashCode()` misleadingly suggests a superclass-specific hash implementation; an explicit identity-hash call communicates the actual intent. This is a readability and maintainability issue rather than a behavioral defect.",
+          "run": 3,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 5016,
+            "output_tokens": 461,
+            "reasoning_tokens": 266,
+            "cached_input_tokens": 5013
+          },
+          "stop_reason": "stop",
+          "latency_s": 6.046
+        }
+      ],
+      "original_finding_index": 956
+    },
+    {
+      "finding_id": 19,
+      "type": "NonCanonicalType",
+      "sourcefile": "PerMessageDeflateExtension.java",
+      "start_line": "60",
+      "message": "The type `CompressionPool.Entry` was referred to by the non-canonical name `InflaterPool.Entry`. This may be misleading.",
+      "tool_specific": {
+        "column": "25"
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.98,
+          "developer_explanation": "The field is declared using an inherited nested-type name even though the nested type is actually declared by the shared compression-pool base class. This obscures the type's true owner and can confuse readers; declare it using the base class's canonical nested type name instead.",
+          "is_true_positive": true,
+          "issue_signature": "non-canonical inherited nested type reference",
+          "reasoning": "`InflaterPool.Entry` resolves to a nested type declared as `CompressionPool.Entry`, rather than a type declared directly by `InflaterPool`. Referring to an inherited nested type through a subclass is valid Java but misleading about where the type is defined, so the warning identifies a real maintainability issue. The proposed canonical declaration makes the ownership of the entry type explicit.",
+          "run": 1,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 4455,
+            "output_tokens": 255,
+            "reasoning_tokens": 75,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.081
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.99,
+          "developer_explanation": "`InflaterPool.Entry` resolves to an inherited nested type whose declaring type is `CompressionPool`, rather than a type declared by `InflaterPool`. Use `CompressionPool.Entry` for this field (and import the declaring type if needed) so the type's ownership is clear and future readers are not misled about where it is defined.",
+          "is_true_positive": true,
+          "issue_signature": "non-canonical inherited nested type reference",
+          "reasoning": "The declared type of `inflaterHolder` is actually `CompressionPool.Entry`, but line 60 refers to it through `InflaterPool.Entry`, an inherited non-canonical name. This does not change runtime behavior, but it obscures the type's declaring class and can mislead readers about the API and ownership of the entry type. The warning therefore identifies a real maintainability issue.",
+          "run": 2,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 4455,
+            "output_tokens": 388,
+            "reasoning_tokens": 190,
+            "cached_input_tokens": 4452
+          },
+          "stop_reason": "stop",
+          "latency_s": 4.479
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.99,
+          "developer_explanation": "The field refers to an inherited nested type through `InflaterPool`, although the nested type is actually declared by `CompressionPool`. This compiles and behaves the same, but it obscures the type's defining API; declare the field as `CompressionPool.Entry` to make its origin clear.",
+          "is_true_positive": true,
+          "issue_signature": "non-canonical inherited nested type reference",
+          "reasoning": "`inflaterHolder` is declared as `InflaterPool.Entry`, but the reported type is actually declared as `CompressionPool.Entry` and merely inherited through `InflaterPool`. The declaration is legal and does not change runtime behavior, but it misleadingly suggests that `InflaterPool` defines its own `Entry` type, reducing clarity for maintainers. Using the declaring class's canonical type name addresses that code-quality issue.",
+          "run": 3,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 4455,
+            "output_tokens": 330,
+            "reasoning_tokens": 135,
+            "cached_input_tokens": 4452
+          },
+          "stop_reason": "stop",
+          "latency_s": 4.001
+        }
+      ],
+      "original_finding_index": 977
+    }
+  ]
+}

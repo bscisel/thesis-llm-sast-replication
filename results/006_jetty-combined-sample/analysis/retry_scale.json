@@ -1,0 +1,137 @@
+{
+  "runs": [
+    {
+      "run": "004_error-benchmark",
+      "przebiegi": 903,
+      "powtorzone": 8,
+      "udzial": 0.008859357696566999,
+      "powody_pierwotnego_niepowodzenia": {
+        "max_tokens": 3,
+        "stop": 1,
+        "length": 4
+      },
+      "per_model": {
+        "claude": {
+          "przebiegi": 129,
+          "powtorzone": 1
+        },
+        "gpt": {
+          "przebiegi": 129,
+          "powtorzone": 0
+        },
+        "luna": {
+          "przebiegi": 129,
+          "powtorzone": 0
+        },
+        "oss": {
+          "przebiegi": 129,
+          "powtorzone": 0
+        },
+        "oss20": {
+          "przebiegi": 129,
+          "powtorzone": 0
+        },
+        "qwen": {
+          "przebiegi": 129,
+          "powtorzone": 5
+        },
+        "sonnet": {
+          "przebiegi": 129,
+          "powtorzone": 2
+        }
+      }
+    },
+    {
+      "run": "006_jetty-combined-sample",
+      "przebiegi": 7560,
+      "powtorzone": 39,
+      "udzial": 0.005158730158730159,
+      "powody_pierwotnego_niepowodzenia": {
+        "max_tokens": 15,
+        "length": 14,
+        "nieznany": 10
+      },
+      "per_model": {
+        "claude": {
+          "przebiegi": 1080,
+          "powtorzone": 4
+        },
+        "gpt": {
+          "przebiegi": 1080,
+          "powtorzone": 0
+        },
+        "luna": {
+          "przebiegi": 1080,
+          "powtorzone": 1
+        },
+        "oss": {
+          "przebiegi": 1080,
+          "powtorzone": 0
+        },
+        "oss20": {
+          "przebiegi": 1080,
+          "powtorzone": 8
+        },
+        "qwen": {
+          "przebiegi": 1080,
+          "powtorzone": 15
+        },
+        "sonnet": {
+          "przebiegi": 1080,
+          "powtorzone": 11
+        }
+      }
+    },
+    {
+      "run": "007_jetty-no-code",
+      "przebiegi": 2520,
+      "powtorzone": 15,
+      "udzial": 0.005952380952380952,
+      "powody_pierwotnego_niepowodzenia": {
+        "max_tokens": 14,
+        "stop": 1
+      },
+      "per_model": {
+        "claude": {
+          "przebiegi": 360,
+          "powtorzone": 2
+        },
+        "gpt": {
+          "przebiegi": 360,
+          "powtorzone": 0
+        },
+        "luna": {
+          "przebiegi": 360,
+          "powtorzone": 0
+        },
+        "oss": {
+          "przebiegi": 360,
+          "powtorzone": 0
+        },
+        "oss20": {
+          "przebiegi": 360,
+          "powtorzone": 0
+        },
+        "qwen": {
+          "przebiegi": 360,
+          "powtorzone": 1
+        },
+        "sonnet": {
+          "przebiegi": 360,
+          "powtorzone": 12
+        }
+      }
+    }
+  ],
+  "lacznie": {
+    "przebiegi": 10983,
+    "powtorzone": 62,
+    "udzial": 0.005645087863061095,
+    "powody_pierwotnego_niepowodzenia": {
+      "max_tokens": 32,
+      "stop": 2,
+      "length": 18,
+      "nieznany": 10
+    }
+  }
+}

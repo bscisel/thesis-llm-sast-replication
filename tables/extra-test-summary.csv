@@ -1,0 +1,9 @@
+quantity;value
+Cochran Q statistic;16,914
+Cochran Q degrees of freedom;6
+Cochran Q p, no clustering correction;0,0096
+Cochran Q p, rule-level permutation;0,5855
+lowest pairwise p;0,066
+median minimum detectable difference;0,110
+largest observed accuracy difference;0,081
+Holm family size;22

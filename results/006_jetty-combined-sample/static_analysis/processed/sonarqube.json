@@ -1,0 +1,3475 @@
+{
+  "tool": "sonarqube",
+  "version": "26.3.0.120487",
+  "total_findings": 100,
+  "filtered_out": {
+    "total": 0,
+    "reasons": {}
+  },
+  "sample": {
+    "source_file": "results/002_jetty-population/static_analysis/processed/sonarqube.json",
+    "source_total_findings": 7734,
+    "sample_size": 100,
+    "method": "stratified",
+    "exclude_test_sources": true,
+    "excluded_test_count": 8626,
+    "excluded_module_count": 6,
+    "original_indices": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      15,
+      17,
+      24,
+      25,
+      34,
+      40,
+      45,
+      49,
+      51,
+      61,
+      69,
+      71,
+      75,
+      76,
+      84,
+      99,
+      100,
+      101,
+      107,
+      114,
+      119,
+      121,
+      123,
+      124,
+      128,
+      133,
+      139,
+      143,
+      144,
+      145,
+      146,
+      147,
+      148,
+      149,
+      150,
+      151,
+      154,
+      156,
+      158,
+      160,
+      163,
+      167,
+      173,
+      175,
+      179,
+      182,
+      185,
+      191,
+      195,
+      206,
+      207,
+      220,
+      221,
+      222,
+      223,
+      224,
+      226,
+      231,
+      234,
+      236,
+      239,
+      241,
+      243,
+      245,
+      247,
+      248,
+      252,
+      253,
+      255,
+      257,
+      259,
+      260,
+      261,
+      262,
+      268,
+      272,
+      274,
+      400,
+      485,
+      616,
+      785,
+      791,
+      829,
+      841,
+      844,
+      934,
+      946,
+      976,
+      1004,
+      1028,
+      1299,
+      1910,
+      2631,
+      2766,
+      3085
+    ],
+    "strata": [
+      {
+        "issue_type": "VULNERABILITY",
+        "severity": "BLOCKER",
+        "cap": 2,
+        "available": 2,
+        "sampled": 2
+      },
+      {
+        "issue_type": "BUG",
+        "severity": "BLOCKER",
+        "cap": 21,
+        "available": 21,
+        "sampled": 21
+      },
+      {
+        "issue_type": "BUG",
+        "severity": "CRITICAL",
+        "cap": 2,
+        "available": 2,
+        "sampled": 2
+      },
+      {
+        "issue_type": "BUG",
+        "severity": "MAJOR",
+        "cap": 35,
+        "available": 123,
+        "sampled": 35
+      },
+      {
+        "issue_type": "CODE_SMELL",
+        "severity": "BLOCKER",
+        "cap": 22,
+        "available": 51,
+        "sampled": 22
+      },
+      {
+        "issue_type": "CODE_SMELL",
+        "severity": "CRITICAL",
+        "cap": 13,
+        "available": 771,
+        "sampled": 13
+      },
+      {
+        "issue_type": "CODE_SMELL",
+        "severity": "MAJOR",
+        "cap": 5,
+        "available": 2133,
+        "sampled": 5
+      }
+    ]
+  },
+  "findings": [
+    {
+      "type": "java:S2095",
+      "abbrev": "S2095",
+      "sourcefile": "HttpProxy.java",
+      "start_line": "270",
+      "end_line": "270",
+      "classname": "HttpProxy",
+      "fully_qualified_classname": "org.eclipse.jetty.client.HttpProxy",
+      "source_path": "jetty-client/src/main/java/org/eclipse/jetty/client/HttpProxy.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.client",
+      "message": "Use try-with-resources or close this \"Connection\" in a \"finally\" clause.",
+      "description": "Use try-with-resources or close this \"Connection\" in a \"finally\" clause.",
+      "tool_specific": {
+        "severity": "BLOCKER",
+        "issue_type": "BUG",
+        "effort": "5min",
+        "status": "OPEN",
+        "tags": [
+          "cwe",
+          "symbolic-execution",
+          "leak",
+          "denial-of-service",
+          "cert"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-client/src/main/java/org/eclipse/jetty/client/HttpProxy.java",
+        "module": "jetty-client"
+      },
+      "original_finding_index": 0
+    },
+    {
+      "type": "java:S2142",
+      "abbrev": "S2142",
+      "sourcefile": "InputStreamResponseListener.java",
+      "start_line": "354",
+      "end_line": "354",
+      "classname": "InputStreamResponseListener",
+      "fully_qualified_classname": "org.eclipse.jetty.client.InputStreamResponseListener",
+      "source_path": "jetty-client/src/main/java/org/eclipse/jetty/client/InputStreamResponseListener.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.client",
+      "message": "Either re-interrupt this method or rethrow the \"InterruptedException\" that can be caught here.",
+      "description": "Either re-interrupt this method or rethrow the \"InterruptedException\" that can be caught here.",
+      "tool_specific": {
+        "severity": "MAJOR",
+        "issue_type": "BUG",
+        "effort": "15min",
+        "status": "OPEN",
+        "tags": [
+          "cwe",
+          "error-handling",
+          "multi-threading"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-client/src/main/java/org/eclipse/jetty/client/InputStreamResponseListener.java",
+        "module": "jetty-client"
+      },
+      "original_finding_index": 1
+    },
+    {
+      "type": "java:S2095",
+      "abbrev": "S2095",
+      "sourcefile": "ProxyProtocolClientConnectionFactory.java",
+      "start_line": "543",
+      "end_line": "543",
+      "classname": "ProxyProtocolClientConnectionFactory",
+      "fully_qualified_classname": "org.eclipse.jetty.client.ProxyProtocolClientConnectionFactory",
+      "source_path": "jetty-client/src/main/java/org/eclipse/jetty/client/ProxyProtocolClientConnectionFactory.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.client",
+      "message": "Use try-with-resources or close this \"Connection\" in a \"finally\" clause.",
+      "description": "Use try-with-resources or close this \"Connection\" in a \"finally\" clause.",
+      "tool_specific": {
+        "severity": "BLOCKER",
+        "issue_type": "BUG",
+        "effort": "5min",
+        "status": "OPEN",
+        "tags": [
+          "cwe",
+          "symbolic-execution",
+          "leak",
+          "denial-of-service",
+          "cert"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-client/src/main/java/org/eclipse/jetty/client/ProxyProtocolClientConnectionFactory.java",
+        "module": "jetty-client"
+      },
+      "original_finding_index": 2
+    },
+    {
+      "type": "java:S2095",
+      "abbrev": "S2095",
+      "sourcefile": "Socks4Proxy.java",
+      "start_line": "232",
+      "end_line": "232",
+      "classname": "Socks4Proxy",
+      "fully_qualified_classname": "org.eclipse.jetty.client.Socks4Proxy",
+      "source_path": "jetty-client/src/main/java/org/eclipse/jetty/client/Socks4Proxy.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.client",
+      "message": "Use try-with-resources or close this \"Connection\" in a \"finally\" clause.",
+      "description": "Use try-with-resources or close this \"Connection\" in a \"finally\" clause.",
+      "tool_specific": {
+        "severity": "BLOCKER",
+        "issue_type": "BUG",
+        "effort": "5min",
+        "status": "OPEN",
+        "tags": [
+          "cwe",
+          "symbolic-execution",
+          "leak",
+          "denial-of-service",
+          "cert"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-client/src/main/java/org/eclipse/jetty/client/Socks4Proxy.java",
+        "module": "jetty-client"
+      },
+      "original_finding_index": 3
+    },
+    {
+      "type": "java:S2095",
+      "abbrev": "S2095",
+      "sourcefile": "Socks5Proxy.java",
+      "start_line": "400",
+      "end_line": "400",
+      "classname": "Socks5Proxy",
+      "fully_qualified_classname": "org.eclipse.jetty.client.Socks5Proxy",
+      "source_path": "jetty-client/src/main/java/org/eclipse/jetty/client/Socks5Proxy.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.client",
+      "message": "Use try-with-resources or close this \"Connection\" in a \"finally\" clause.",
+      "description": "Use try-with-resources or close this \"Connection\" in a \"finally\" clause.",
+      "tool_specific": {
+        "severity": "BLOCKER",
+        "issue_type": "BUG",
+        "effort": "5min",
+        "status": "OPEN",
+        "tags": [
+          "cwe",
+          "symbolic-execution",
+          "leak",
+          "denial-of-service",
+          "cert"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-client/src/main/java/org/eclipse/jetty/client/Socks5Proxy.java",
+        "module": "jetty-client"
+      },
+      "original_finding_index": 4
+    },
+    {
+      "type": "java:S2142",
+      "abbrev": "S2142",
+      "sourcefile": "StandardDeployer.java",
+      "start_line": "153",
+      "end_line": "153",
+      "classname": "StandardDeployer",
+      "fully_qualified_classname": "org.eclipse.jetty.deploy.StandardDeployer",
+      "source_path": "jetty-deploy/src/main/java/org/eclipse/jetty/deploy/StandardDeployer.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.deploy",
+      "message": "Either re-interrupt this method or rethrow the \"InterruptedException\" that can be caught here.",
+      "description": "Either re-interrupt this method or rethrow the \"InterruptedException\" that can be caught here.",
+      "tool_specific": {
+        "severity": "MAJOR",
+        "issue_type": "BUG",
+        "effort": "15min",
+        "status": "OPEN",
+        "tags": [
+          "cwe",
+          "error-handling",
+          "multi-threading"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-deploy/src/main/java/org/eclipse/jetty/deploy/StandardDeployer.java",
+        "module": "jetty-deploy"
+      },
+      "original_finding_index": 15
+    },
+    {
+      "type": "java:S6218",
+      "abbrev": "S6218",
+      "sourcefile": "ClientParser.java",
+      "start_line": "52",
+      "end_line": "52",
+      "classname": "ClientParser",
+      "fully_qualified_classname": "org.eclipse.jetty.fcgi.parser.ClientParser",
+      "source_path": "jetty-fcgi/jetty-fcgi-client/src/main/java/org/eclipse/jetty/fcgi/parser/ClientParser.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.fcgi.parser",
+      "message": "Override equals, hashCode and toString to consider array's content in the method",
+      "description": "Override equals, hashCode and toString to consider array's content in the method",
+      "tool_specific": {
+        "severity": "MAJOR",
+        "issue_type": "BUG",
+        "effort": "5min",
+        "status": "OPEN",
+        "tags": [
+          "java16"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-fcgi/jetty-fcgi-client/src/main/java/org/eclipse/jetty/fcgi/parser/ClientParser.java",
+        "module": "jetty-fcgi/jetty-fcgi-client"
+      },
+      "original_finding_index": 17
+    },
+    {
+      "type": "java:S1201",
+      "abbrev": "S1201",
+      "sourcefile": "HttpStatus.java",
+      "start_line": "196",
+      "end_line": "196",
+      "classname": "HttpStatus",
+      "fully_qualified_classname": "org.eclipse.jetty.http.HttpStatus",
+      "source_path": "jetty-http/src/main/java/org/eclipse/jetty/http/HttpStatus.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.http",
+      "message": "Either override Object.equals(Object), or rename the method to prevent any confusion.",
+      "description": "Either override Object.equals(Object), or rename the method to prevent any confusion.",
+      "tool_specific": {
+        "severity": "MAJOR",
+        "issue_type": "BUG",
+        "effort": "10min",
+        "status": "OPEN",
+        "tags": [
+          "suspicious"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-http/src/main/java/org/eclipse/jetty/http/HttpStatus.java",
+        "module": "jetty-http"
+      },
+      "original_finding_index": 24
+    },
+    {
+      "type": "java:S2259",
+      "abbrev": "S2259",
+      "sourcefile": "HttpTester.java",
+      "start_line": "493",
+      "end_line": "493",
+      "classname": "HttpTester",
+      "fully_qualified_classname": "org.eclipse.jetty.http.HttpTester",
+      "source_path": "jetty-http/src/main/java/org/eclipse/jetty/http/HttpTester.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.http",
+      "message": "A \"NullPointerException\" could be thrown; \"header\" is nullable here.",
+      "description": "A \"NullPointerException\" could be thrown; \"header\" is nullable here.",
+      "tool_specific": {
+        "severity": "MAJOR",
+        "issue_type": "BUG",
+        "effort": "10min",
+        "status": "OPEN",
+        "tags": [
+          "cwe",
+          "symbolic-execution",
+          "cert"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-http/src/main/java/org/eclipse/jetty/http/HttpTester.java",
+        "module": "jetty-http"
+      },
+      "original_finding_index": 25
+    },
+    {
+      "type": "java:S2259",
+      "abbrev": "S2259",
+      "sourcefile": "RFC6265CookieParser.java",
+      "start_line": "377",
+      "end_line": "377",
+      "classname": "RFC6265CookieParser",
+      "fully_qualified_classname": "org.eclipse.jetty.http.RFC6265CookieParser",
+      "source_path": "jetty-http/src/main/java/org/eclipse/jetty/http/RFC6265CookieParser.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.http",
+      "message": "A \"NullPointerException\" could be thrown; \"attributeName\" is nullable here.",
+      "description": "A \"NullPointerException\" could be thrown; \"attributeName\" is nullable here.",
+      "tool_specific": {
+        "severity": "MAJOR",
+        "issue_type": "BUG",
+        "effort": "10min",
+        "status": "OPEN",
+        "tags": [
+          "cwe",
+          "symbolic-execution",
+          "cert"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-http/src/main/java/org/eclipse/jetty/http/RFC6265CookieParser.java",
+        "module": "jetty-http"
+      },
+      "original_finding_index": 34
+    },
+    {
+      "type": "java:S2259",
+      "abbrev": "S2259",
+      "sourcefile": "RFC6265SetCookieParser.java",
+      "start_line": "185",
+      "end_line": "185",
+      "classname": "RFC6265SetCookieParser",
+      "fully_qualified_classname": "org.eclipse.jetty.http.RFC6265SetCookieParser",
+      "source_path": "jetty-http/src/main/java/org/eclipse/jetty/http/RFC6265SetCookieParser.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.http",
+      "message": "\"NullPointerException\" will be thrown when invoking method \"setAttribute()\".",
+      "description": "\"NullPointerException\" will be thrown when invoking method \"setAttribute()\".",
+      "tool_specific": {
+        "severity": "MAJOR",
+        "issue_type": "BUG",
+        "effort": "10min",
+        "status": "OPEN",
+        "tags": [
+          "cwe",
+          "symbolic-execution",
+          "cert"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-http/src/main/java/org/eclipse/jetty/http/RFC6265SetCookieParser.java",
+        "module": "jetty-http"
+      },
+      "original_finding_index": 40
+    },
+    {
+      "type": "java:S2095",
+      "abbrev": "S2095",
+      "sourcefile": "HTTP2Session.java",
+      "start_line": "2564",
+      "end_line": "2564",
+      "classname": "HTTP2Session",
+      "fully_qualified_classname": "org.eclipse.jetty.http2.HTTP2Session",
+      "source_path": "jetty-http2/jetty-http2-common/src/main/java/org/eclipse/jetty/http2/HTTP2Session.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.http2",
+      "message": "Use try-with-resources or close this \"HTTP2Stream\" in a \"finally\" clause.",
+      "description": "Use try-with-resources or close this \"HTTP2Stream\" in a \"finally\" clause.",
+      "tool_specific": {
+        "severity": "BLOCKER",
+        "issue_type": "BUG",
+        "effort": "5min",
+        "status": "OPEN",
+        "tags": [
+          "cwe",
+          "symbolic-execution",
+          "leak",
+          "denial-of-service",
+          "cert"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-http2/jetty-http2-common/src/main/java/org/eclipse/jetty/http2/HTTP2Session.java",
+        "module": "jetty-http2/jetty-http2-common"
+      },
+      "original_finding_index": 45
+    },
+    {
+      "type": "java:S2095",
+      "abbrev": "S2095",
+      "sourcefile": "HTTP2CServerConnectionFactory.java",
+      "start_line": "78",
+      "end_line": "78",
+      "classname": "HTTP2CServerConnectionFactory",
+      "fully_qualified_classname": "org.eclipse.jetty.http2.server.HTTP2CServerConnectionFactory",
+      "source_path": "jetty-http2/jetty-http2-server/src/main/java/org/eclipse/jetty/http2/server/HTTP2CServerConnectionFactory.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.http2.server",
+      "message": "Use try-with-resources or close this \"Connection\" in a \"finally\" clause.",
+      "description": "Use try-with-resources or close this \"Connection\" in a \"finally\" clause.",
+      "tool_specific": {
+        "severity": "BLOCKER",
+        "issue_type": "BUG",
+        "effort": "5min",
+        "status": "OPEN",
+        "tags": [
+          "cwe",
+          "symbolic-execution",
+          "leak",
+          "denial-of-service",
+          "cert"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-http2/jetty-http2-server/src/main/java/org/eclipse/jetty/http2/server/HTTP2CServerConnectionFactory.java",
+        "module": "jetty-http2/jetty-http2-server"
+      },
+      "original_finding_index": 49
+    },
+    {
+      "type": "java:S2583",
+      "abbrev": "S2583",
+      "sourcefile": "EncodableEntry.java",
+      "start_line": "145",
+      "end_line": "145",
+      "classname": "EncodableEntry",
+      "fully_qualified_classname": "org.eclipse.jetty.http3.qpack.internal.EncodableEntry",
+      "source_path": "jetty-http3/jetty-http3-qpack/src/main/java/org/eclipse/jetty/http3/qpack/internal/EncodableEntry.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.http3.qpack.internal",
+      "message": "Change this condition so that it does not always evaluate to \"false\"",
+      "description": "Change this condition so that it does not always evaluate to \"false\"",
+      "tool_specific": {
+        "severity": "MAJOR",
+        "issue_type": "BUG",
+        "effort": "15min",
+        "status": "OPEN",
+        "tags": [
+          "cwe",
+          "symbolic-execution",
+          "cert",
+          "unused",
+          "suspicious",
+          "pitfall"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-http3/jetty-http3-qpack/src/main/java/org/eclipse/jetty/http3/qpack/internal/EncodableEntry.java",
+        "module": "jetty-http3/jetty-http3-qpack"
+      },
+      "original_finding_index": 51
+    },
+    {
+      "type": "java:S2142",
+      "abbrev": "S2142",
+      "sourcefile": "ManagedSelector.java",
+      "start_line": "783",
+      "end_line": "783",
+      "classname": "ManagedSelector",
+      "fully_qualified_classname": "org.eclipse.jetty.io.ManagedSelector",
+      "source_path": "jetty-io/src/main/java/org/eclipse/jetty/io/ManagedSelector.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.io",
+      "message": "Either re-interrupt this method or rethrow the \"InterruptedException\" that can be caught here.",
+      "description": "Either re-interrupt this method or rethrow the \"InterruptedException\" that can be caught here.",
+      "tool_specific": {
+        "severity": "MAJOR",
+        "issue_type": "BUG",
+        "effort": "15min",
+        "status": "OPEN",
+        "tags": [
+          "cwe",
+          "error-handling",
+          "multi-threading"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-io/src/main/java/org/eclipse/jetty/io/ManagedSelector.java",
+        "module": "jetty-io"
+      },
+      "original_finding_index": 61
+    },
+    {
+      "type": "java:S2095",
+      "abbrev": "S2095",
+      "sourcefile": "ConnectorServer.java",
+      "start_line": "309",
+      "end_line": "309",
+      "classname": "ConnectorServer",
+      "fully_qualified_classname": "org.eclipse.jetty.jmx.ConnectorServer",
+      "source_path": "jetty-jmx/src/main/java/org/eclipse/jetty/jmx/ConnectorServer.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.jmx",
+      "message": "Use try-with-resources or close this \"ServerSocket\" in a \"finally\" clause.",
+      "description": "Use try-with-resources or close this \"ServerSocket\" in a \"finally\" clause.",
+      "tool_specific": {
+        "severity": "BLOCKER",
+        "issue_type": "BUG",
+        "effort": "5min",
+        "status": "OPEN",
+        "tags": [
+          "cwe",
+          "symbolic-execution",
+          "leak",
+          "denial-of-service",
+          "cert"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-jmx/src/main/java/org/eclipse/jetty/jmx/ConnectorServer.java",
+        "module": "jetty-jmx"
+      },
+      "original_finding_index": 69
+    },
+    {
+      "type": "java:S5164",
+      "abbrev": "S5164",
+      "sourcefile": "ContextFactory.java",
+      "start_line": "67",
+      "end_line": "67",
+      "classname": "ContextFactory",
+      "fully_qualified_classname": "org.eclipse.jetty.jndi.ContextFactory",
+      "source_path": "jetty-jndi/src/main/java/org/eclipse/jetty/jndi/ContextFactory.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.jndi",
+      "message": "Call \"remove()\" on \"__threadClassLoader\".",
+      "description": "Call \"remove()\" on \"__threadClassLoader\".",
+      "tool_specific": {
+        "severity": "MAJOR",
+        "issue_type": "BUG",
+        "effort": "10min",
+        "status": "OPEN",
+        "tags": [
+          "leak",
+          "performance"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-jndi/src/main/java/org/eclipse/jetty/jndi/ContextFactory.java",
+        "module": "jetty-jndi"
+      },
+      "original_finding_index": 71
+    },
+    {
+      "type": "java:S2119",
+      "abbrev": "S2119",
+      "sourcefile": "KeystoreGenerator.java",
+      "start_line": "59",
+      "end_line": "59",
+      "classname": "KeystoreGenerator",
+      "fully_qualified_classname": "org.eclipse.jetty.keystore.KeystoreGenerator",
+      "source_path": "jetty-keystore/src/main/java/org/eclipse/jetty/keystore/KeystoreGenerator.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.keystore",
+      "message": "Save and re-use this \"Random\".",
+      "description": "Save and re-use this \"Random\".",
+      "tool_specific": {
+        "severity": "CRITICAL",
+        "issue_type": "BUG",
+        "effort": "5min",
+        "status": "OPEN",
+        "tags": [],
+        "component": "jetty-core-minus-coreapp-start:jetty-keystore/src/main/java/org/eclipse/jetty/keystore/KeystoreGenerator.java",
+        "module": "jetty-keystore"
+      },
+      "original_finding_index": 75
+    },
+    {
+      "type": "java:S2095",
+      "abbrev": "S2095",
+      "sourcefile": "AbstractForkedChild.java",
+      "start_line": "177",
+      "end_line": "177",
+      "classname": "AbstractForkedChild",
+      "fully_qualified_classname": "org.eclipse.jetty.maven.AbstractForkedChild",
+      "source_path": "jetty-maven/src/main/java/org/eclipse/jetty/maven/AbstractForkedChild.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.maven",
+      "message": "Use try-with-resources or close this \"FileInputStream\" in a \"finally\" clause.",
+      "description": "Use try-with-resources or close this \"FileInputStream\" in a \"finally\" clause.",
+      "tool_specific": {
+        "severity": "BLOCKER",
+        "issue_type": "BUG",
+        "effort": "5min",
+        "status": "OPEN",
+        "tags": [
+          "cwe",
+          "symbolic-execution",
+          "leak",
+          "denial-of-service",
+          "cert"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-maven/src/main/java/org/eclipse/jetty/maven/AbstractForkedChild.java",
+        "module": "jetty-maven"
+      },
+      "original_finding_index": 76
+    },
+    {
+      "type": "java:S2259",
+      "abbrev": "S2259",
+      "sourcefile": "NamingEntryUtil.java",
+      "start_line": "98",
+      "end_line": "98",
+      "classname": "NamingEntryUtil",
+      "fully_qualified_classname": "org.eclipse.jetty.plus.jndi.NamingEntryUtil",
+      "source_path": "jetty-plus/src/main/java/org/eclipse/jetty/plus/jndi/NamingEntryUtil.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.plus.jndi",
+      "message": "A \"NullPointerException\" could be thrown; \"scopeName\" is nullable here.",
+      "description": "A \"NullPointerException\" could be thrown; \"scopeName\" is nullable here.",
+      "tool_specific": {
+        "severity": "MAJOR",
+        "issue_type": "BUG",
+        "effort": "10min",
+        "status": "OPEN",
+        "tags": [
+          "cwe",
+          "symbolic-execution",
+          "cert"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-plus/src/main/java/org/eclipse/jetty/plus/jndi/NamingEntryUtil.java",
+        "module": "jetty-plus"
+      },
+      "original_finding_index": 84
+    },
+    {
+      "type": "java:S5164",
+      "abbrev": "S5164",
+      "sourcefile": "DefaultIdentityService.java",
+      "start_line": "56",
+      "end_line": "56",
+      "classname": "DefaultIdentityService",
+      "fully_qualified_classname": "org.eclipse.jetty.security.DefaultIdentityService",
+      "source_path": "jetty-security/src/main/java/org/eclipse/jetty/security/DefaultIdentityService.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.security",
+      "message": "Use \"remove()\" instead of \"set(null)\".",
+      "description": "Use \"remove()\" instead of \"set(null)\".",
+      "tool_specific": {
+        "severity": "MAJOR",
+        "issue_type": "BUG",
+        "effort": "10min",
+        "status": "OPEN",
+        "tags": [
+          "leak",
+          "performance"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-security/src/main/java/org/eclipse/jetty/security/DefaultIdentityService.java",
+        "module": "jetty-security"
+      },
+      "original_finding_index": 99
+    },
+    {
+      "type": "java:S2259",
+      "abbrev": "S2259",
+      "sourcefile": "MultiAuthenticator.java",
+      "start_line": "160",
+      "end_line": "160",
+      "classname": "MultiAuthenticator",
+      "fully_qualified_classname": "org.eclipse.jetty.security.MultiAuthenticator",
+      "source_path": "jetty-security/src/main/java/org/eclipse/jetty/security/MultiAuthenticator.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.security",
+      "message": "A \"NullPointerException\" could be thrown; \"authenticator\" is nullable here.",
+      "description": "A \"NullPointerException\" could be thrown; \"authenticator\" is nullable here.",
+      "tool_specific": {
+        "severity": "MAJOR",
+        "issue_type": "BUG",
+        "effort": "10min",
+        "status": "OPEN",
+        "tags": [
+          "cwe",
+          "symbolic-execution",
+          "cert"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-security/src/main/java/org/eclipse/jetty/security/MultiAuthenticator.java",
+        "module": "jetty-security"
+      },
+      "original_finding_index": 100
+    },
+    {
+      "type": "java:S2445",
+      "abbrev": "S2445",
+      "sourcefile": "MultiAuthenticator.java",
+      "start_line": "372",
+      "end_line": "376",
+      "classname": "MultiAuthenticator",
+      "fully_qualified_classname": "org.eclipse.jetty.security.MultiAuthenticator",
+      "source_path": "jetty-security/src/main/java/org/eclipse/jetty/security/MultiAuthenticator.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.security",
+      "message": "\"session\" is a method parameter, and should not be used for synchronization.",
+      "description": "\"session\" is a method parameter, and should not be used for synchronization.",
+      "tool_specific": {
+        "severity": "MAJOR",
+        "issue_type": "BUG",
+        "effort": "15min",
+        "status": "OPEN",
+        "tags": [
+          "cwe",
+          "multi-threading",
+          "cert"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-security/src/main/java/org/eclipse/jetty/security/MultiAuthenticator.java",
+        "module": "jetty-security"
+      },
+      "original_finding_index": 101
+    },
+    {
+      "type": "java:S2142",
+      "abbrev": "S2142",
+      "sourcefile": "AbstractConnector.java",
+      "start_line": "706",
+      "end_line": "706",
+      "classname": "AbstractConnector",
+      "fully_qualified_classname": "org.eclipse.jetty.server.AbstractConnector",
+      "source_path": "jetty-server/src/main/java/org/eclipse/jetty/server/AbstractConnector.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.server",
+      "message": "Either re-interrupt this method or rethrow the \"InterruptedException\" that can be caught here.",
+      "description": "Either re-interrupt this method or rethrow the \"InterruptedException\" that can be caught here.",
+      "tool_specific": {
+        "severity": "MAJOR",
+        "issue_type": "BUG",
+        "effort": "15min",
+        "status": "OPEN",
+        "tags": [
+          "cwe",
+          "error-handling",
+          "multi-threading"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-server/src/main/java/org/eclipse/jetty/server/AbstractConnector.java",
+        "module": "jetty-server"
+      },
+      "original_finding_index": 107
+    },
+    {
+      "type": "java:S2142",
+      "abbrev": "S2142",
+      "sourcefile": "LocalConnector.java",
+      "start_line": "286",
+      "end_line": "286",
+      "classname": "LocalConnector",
+      "fully_qualified_classname": "org.eclipse.jetty.server.LocalConnector",
+      "source_path": "jetty-server/src/main/java/org/eclipse/jetty/server/LocalConnector.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.server",
+      "message": "Either re-interrupt this method or rethrow the \"InterruptedException\" that can be caught here.",
+      "description": "Either re-interrupt this method or rethrow the \"InterruptedException\" that can be caught here.",
+      "tool_specific": {
+        "severity": "MAJOR",
+        "issue_type": "BUG",
+        "effort": "15min",
+        "status": "OPEN",
+        "tags": [
+          "cwe",
+          "error-handling",
+          "multi-threading"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-server/src/main/java/org/eclipse/jetty/server/LocalConnector.java",
+        "module": "jetty-server"
+      },
+      "original_finding_index": 114
+    },
+    {
+      "type": "java:S2142",
+      "abbrev": "S2142",
+      "sourcefile": "Server.java",
+      "start_line": "713",
+      "end_line": "713",
+      "classname": "Server",
+      "fully_qualified_classname": "org.eclipse.jetty.server.Server",
+      "source_path": "jetty-server/src/main/java/org/eclipse/jetty/server/Server.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.server",
+      "message": "Either re-interrupt this method or rethrow the \"InterruptedException\" that can be caught here.",
+      "description": "Either re-interrupt this method or rethrow the \"InterruptedException\" that can be caught here.",
+      "tool_specific": {
+        "severity": "MAJOR",
+        "issue_type": "BUG",
+        "effort": "15min",
+        "status": "OPEN",
+        "tags": [
+          "cwe",
+          "error-handling",
+          "multi-threading"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-server/src/main/java/org/eclipse/jetty/server/Server.java",
+        "module": "jetty-server"
+      },
+      "original_finding_index": 119
+    },
+    {
+      "type": "java:S5164",
+      "abbrev": "S5164",
+      "sourcefile": "ContextHandler.java",
+      "start_line": "82",
+      "end_line": "82",
+      "classname": "ContextHandler",
+      "fully_qualified_classname": "org.eclipse.jetty.server.handler.ContextHandler",
+      "source_path": "jetty-server/src/main/java/org/eclipse/jetty/server/handler/ContextHandler.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.server.handler",
+      "message": "Call \"remove()\" on \"CURRENT_CONTEXT\".",
+      "description": "Call \"remove()\" on \"CURRENT_CONTEXT\".",
+      "tool_specific": {
+        "severity": "MAJOR",
+        "issue_type": "BUG",
+        "effort": "10min",
+        "status": "OPEN",
+        "tags": [
+          "leak",
+          "performance"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-server/src/main/java/org/eclipse/jetty/server/handler/ContextHandler.java",
+        "module": "jetty-server"
+      },
+      "original_finding_index": 121
+    },
+    {
+      "type": "java:S2095",
+      "abbrev": "S2095",
+      "sourcefile": "ErrorHandler.java",
+      "start_line": "255",
+      "end_line": "255",
+      "classname": "ErrorHandler",
+      "fully_qualified_classname": "org.eclipse.jetty.server.handler.ErrorHandler",
+      "source_path": "jetty-server/src/main/java/org/eclipse/jetty/server/handler/ErrorHandler.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.server.handler",
+      "message": "Use try-with-resources or close this \"ByteBufferOutputStream\" in a \"finally\" clause.",
+      "description": "Use try-with-resources or close this \"ByteBufferOutputStream\" in a \"finally\" clause.",
+      "tool_specific": {
+        "severity": "BLOCKER",
+        "issue_type": "BUG",
+        "effort": "5min",
+        "status": "OPEN",
+        "tags": [
+          "cwe",
+          "symbolic-execution",
+          "leak",
+          "denial-of-service",
+          "cert"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-server/src/main/java/org/eclipse/jetty/server/handler/ErrorHandler.java",
+        "module": "jetty-server"
+      },
+      "original_finding_index": 123
+    },
+    {
+      "type": "java:S2095",
+      "abbrev": "S2095",
+      "sourcefile": "ErrorHandler.java",
+      "start_line": "256",
+      "end_line": "256",
+      "classname": "ErrorHandler",
+      "fully_qualified_classname": "org.eclipse.jetty.server.handler.ErrorHandler",
+      "source_path": "jetty-server/src/main/java/org/eclipse/jetty/server/handler/ErrorHandler.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.server.handler",
+      "message": "Use try-with-resources or close this \"PrintWriter\" in a \"finally\" clause.",
+      "description": "Use try-with-resources or close this \"PrintWriter\" in a \"finally\" clause.",
+      "tool_specific": {
+        "severity": "BLOCKER",
+        "issue_type": "BUG",
+        "effort": "5min",
+        "status": "OPEN",
+        "tags": [
+          "cwe",
+          "symbolic-execution",
+          "leak",
+          "denial-of-service",
+          "cert"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-server/src/main/java/org/eclipse/jetty/server/handler/ErrorHandler.java",
+        "module": "jetty-server"
+      },
+      "original_finding_index": 124
+    },
+    {
+      "type": "java:S2177",
+      "abbrev": "S2177",
+      "sourcefile": "StateTrackingHandler.java",
+      "start_line": "626",
+      "end_line": "626",
+      "classname": "StateTrackingHandler",
+      "fully_qualified_classname": "org.eclipse.jetty.server.handler.StateTrackingHandler",
+      "source_path": "jetty-server/src/main/java/org/eclipse/jetty/server/handler/StateTrackingHandler.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.server.handler",
+      "message": "Rename this method; there is a \"private\" method in the parent class with the same name.",
+      "description": "Rename this method; there is a \"private\" method in the parent class with the same name.",
+      "tool_specific": {
+        "severity": "MAJOR",
+        "issue_type": "BUG",
+        "effort": "30min",
+        "status": "OPEN",
+        "tags": [
+          "pitfall"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-server/src/main/java/org/eclipse/jetty/server/handler/StateTrackingHandler.java",
+        "module": "jetty-server"
+      },
+      "original_finding_index": 128
+    },
+    {
+      "type": "java:S2583",
+      "abbrev": "S2583",
+      "sourcefile": "HttpChannelState.java",
+      "start_line": "596",
+      "end_line": "596",
+      "classname": "HttpChannelState",
+      "fully_qualified_classname": "org.eclipse.jetty.server.internal.HttpChannelState",
+      "source_path": "jetty-server/src/main/java/org/eclipse/jetty/server/internal/HttpChannelState.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.server.internal",
+      "message": "Change this condition so that it does not always evaluate to \"false\"",
+      "description": "Change this condition so that it does not always evaluate to \"false\"",
+      "tool_specific": {
+        "severity": "MAJOR",
+        "issue_type": "BUG",
+        "effort": "15min",
+        "status": "OPEN",
+        "tags": [
+          "cwe",
+          "symbolic-execution",
+          "cert",
+          "unused",
+          "suspicious",
+          "pitfall"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-server/src/main/java/org/eclipse/jetty/server/internal/HttpChannelState.java",
+        "module": "jetty-server"
+      },
+      "original_finding_index": 133
+    },
+    {
+      "type": "java:S2142",
+      "abbrev": "S2142",
+      "sourcefile": "HttpConnection.java",
+      "start_line": "1068",
+      "end_line": "1068",
+      "classname": "HttpConnection",
+      "fully_qualified_classname": "org.eclipse.jetty.server.internal.HttpConnection",
+      "source_path": "jetty-server/src/main/java/org/eclipse/jetty/server/internal/HttpConnection.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.server.internal",
+      "message": "Either re-interrupt this method or rethrow the \"InterruptedException\" that can be caught here.",
+      "description": "Either re-interrupt this method or rethrow the \"InterruptedException\" that can be caught here.",
+      "tool_specific": {
+        "severity": "MAJOR",
+        "issue_type": "BUG",
+        "effort": "15min",
+        "status": "OPEN",
+        "tags": [
+          "cwe",
+          "error-handling",
+          "multi-threading"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-server/src/main/java/org/eclipse/jetty/server/internal/HttpConnection.java",
+        "module": "jetty-server"
+      },
+      "original_finding_index": 139
+    },
+    {
+      "type": "java:S2095",
+      "abbrev": "S2095",
+      "sourcefile": "JDBCSessionDataStore.java",
+      "start_line": "328",
+      "end_line": "328",
+      "classname": "JDBCSessionDataStore",
+      "fully_qualified_classname": "org.eclipse.jetty.session.JDBCSessionDataStore",
+      "source_path": "jetty-session/src/main/java/org/eclipse/jetty/session/JDBCSessionDataStore.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.session",
+      "message": "Use try-with-resources or close this \"PreparedStatement\" in a \"finally\" clause.",
+      "description": "Use try-with-resources or close this \"PreparedStatement\" in a \"finally\" clause.",
+      "tool_specific": {
+        "severity": "BLOCKER",
+        "issue_type": "BUG",
+        "effort": "5min",
+        "status": "OPEN",
+        "tags": [
+          "cwe",
+          "symbolic-execution",
+          "leak",
+          "denial-of-service",
+          "cert"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-session/src/main/java/org/eclipse/jetty/session/JDBCSessionDataStore.java",
+        "module": "jetty-session"
+      },
+      "original_finding_index": 143
+    },
+    {
+      "type": "java:S2095",
+      "abbrev": "S2095",
+      "sourcefile": "JDBCSessionDataStore.java",
+      "start_line": "347",
+      "end_line": "350",
+      "classname": "JDBCSessionDataStore",
+      "fully_qualified_classname": "org.eclipse.jetty.session.JDBCSessionDataStore",
+      "source_path": "jetty-session/src/main/java/org/eclipse/jetty/session/JDBCSessionDataStore.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.session",
+      "message": "Use try-with-resources or close this \"PreparedStatement\" in a \"finally\" clause.",
+      "description": "Use try-with-resources or close this \"PreparedStatement\" in a \"finally\" clause.",
+      "tool_specific": {
+        "severity": "BLOCKER",
+        "issue_type": "BUG",
+        "effort": "5min",
+        "status": "OPEN",
+        "tags": [
+          "cwe",
+          "symbolic-execution",
+          "leak",
+          "denial-of-service",
+          "cert"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-session/src/main/java/org/eclipse/jetty/session/JDBCSessionDataStore.java",
+        "module": "jetty-session"
+      },
+      "original_finding_index": 144
+    },
+    {
+      "type": "java:S2095",
+      "abbrev": "S2095",
+      "sourcefile": "JDBCSessionDataStore.java",
+      "start_line": "370",
+      "end_line": "375",
+      "classname": "JDBCSessionDataStore",
+      "fully_qualified_classname": "org.eclipse.jetty.session.JDBCSessionDataStore",
+      "source_path": "jetty-session/src/main/java/org/eclipse/jetty/session/JDBCSessionDataStore.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.session",
+      "message": "Use try-with-resources or close this \"PreparedStatement\" in a \"finally\" clause.",
+      "description": "Use try-with-resources or close this \"PreparedStatement\" in a \"finally\" clause.",
+      "tool_specific": {
+        "severity": "BLOCKER",
+        "issue_type": "BUG",
+        "effort": "5min",
+        "status": "OPEN",
+        "tags": [
+          "cwe",
+          "symbolic-execution",
+          "leak",
+          "denial-of-service",
+          "cert"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-session/src/main/java/org/eclipse/jetty/session/JDBCSessionDataStore.java",
+        "module": "jetty-session"
+      },
+      "original_finding_index": 145
+    },
+    {
+      "type": "java:S2095",
+      "abbrev": "S2095",
+      "sourcefile": "JDBCSessionDataStore.java",
+      "start_line": "394",
+      "end_line": "398",
+      "classname": "JDBCSessionDataStore",
+      "fully_qualified_classname": "org.eclipse.jetty.session.JDBCSessionDataStore",
+      "source_path": "jetty-session/src/main/java/org/eclipse/jetty/session/JDBCSessionDataStore.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.session",
+      "message": "Use try-with-resources or close this \"PreparedStatement\" in a \"finally\" clause.",
+      "description": "Use try-with-resources or close this \"PreparedStatement\" in a \"finally\" clause.",
+      "tool_specific": {
+        "severity": "BLOCKER",
+        "issue_type": "BUG",
+        "effort": "5min",
+        "status": "OPEN",
+        "tags": [
+          "cwe",
+          "symbolic-execution",
+          "leak",
+          "denial-of-service",
+          "cert"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-session/src/main/java/org/eclipse/jetty/session/JDBCSessionDataStore.java",
+        "module": "jetty-session"
+      },
+      "original_finding_index": 146
+    },
+    {
+      "type": "java:S2095",
+      "abbrev": "S2095",
+      "sourcefile": "JDBCSessionDataStore.java",
+      "start_line": "414",
+      "end_line": "416",
+      "classname": "JDBCSessionDataStore",
+      "fully_qualified_classname": "org.eclipse.jetty.session.JDBCSessionDataStore",
+      "source_path": "jetty-session/src/main/java/org/eclipse/jetty/session/JDBCSessionDataStore.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.session",
+      "message": "Use try-with-resources or close this \"PreparedStatement\" in a \"finally\" clause.",
+      "description": "Use try-with-resources or close this \"PreparedStatement\" in a \"finally\" clause.",
+      "tool_specific": {
+        "severity": "BLOCKER",
+        "issue_type": "BUG",
+        "effort": "5min",
+        "status": "OPEN",
+        "tags": [
+          "cwe",
+          "symbolic-execution",
+          "leak",
+          "denial-of-service",
+          "cert"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-session/src/main/java/org/eclipse/jetty/session/JDBCSessionDataStore.java",
+        "module": "jetty-session"
+      },
+      "original_finding_index": 147
+    },
+    {
+      "type": "java:S2095",
+      "abbrev": "S2095",
+      "sourcefile": "JDBCSessionDataStore.java",
+      "start_line": "440",
+      "end_line": "440",
+      "classname": "JDBCSessionDataStore",
+      "fully_qualified_classname": "org.eclipse.jetty.session.JDBCSessionDataStore",
+      "source_path": "jetty-session/src/main/java/org/eclipse/jetty/session/JDBCSessionDataStore.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.session",
+      "message": "Use try-with-resources or close this \"PreparedStatement\" in a \"finally\" clause.",
+      "description": "Use try-with-resources or close this \"PreparedStatement\" in a \"finally\" clause.",
+      "tool_specific": {
+        "severity": "BLOCKER",
+        "issue_type": "BUG",
+        "effort": "5min",
+        "status": "OPEN",
+        "tags": [
+          "cwe",
+          "symbolic-execution",
+          "leak",
+          "denial-of-service",
+          "cert"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-session/src/main/java/org/eclipse/jetty/session/JDBCSessionDataStore.java",
+        "module": "jetty-session"
+      },
+      "original_finding_index": 148
+    },
+    {
+      "type": "java:S2095",
+      "abbrev": "S2095",
+      "sourcefile": "JDBCSessionDataStore.java",
+      "start_line": "459",
+      "end_line": "461",
+      "classname": "JDBCSessionDataStore",
+      "fully_qualified_classname": "org.eclipse.jetty.session.JDBCSessionDataStore",
+      "source_path": "jetty-session/src/main/java/org/eclipse/jetty/session/JDBCSessionDataStore.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.session",
+      "message": "Use try-with-resources or close this \"PreparedStatement\" in a \"finally\" clause.",
+      "description": "Use try-with-resources or close this \"PreparedStatement\" in a \"finally\" clause.",
+      "tool_specific": {
+        "severity": "BLOCKER",
+        "issue_type": "BUG",
+        "effort": "5min",
+        "status": "OPEN",
+        "tags": [
+          "cwe",
+          "symbolic-execution",
+          "leak",
+          "denial-of-service",
+          "cert"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-session/src/main/java/org/eclipse/jetty/session/JDBCSessionDataStore.java",
+        "module": "jetty-session"
+      },
+      "original_finding_index": 149
+    },
+    {
+      "type": "java:S2095",
+      "abbrev": "S2095",
+      "sourcefile": "JDBCSessionDataStore.java",
+      "start_line": "475",
+      "end_line": "477",
+      "classname": "JDBCSessionDataStore",
+      "fully_qualified_classname": "org.eclipse.jetty.session.JDBCSessionDataStore",
+      "source_path": "jetty-session/src/main/java/org/eclipse/jetty/session/JDBCSessionDataStore.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.session",
+      "message": "Use try-with-resources or close this \"PreparedStatement\" in a \"finally\" clause.",
+      "description": "Use try-with-resources or close this \"PreparedStatement\" in a \"finally\" clause.",
+      "tool_specific": {
+        "severity": "BLOCKER",
+        "issue_type": "BUG",
+        "effort": "5min",
+        "status": "OPEN",
+        "tags": [
+          "cwe",
+          "symbolic-execution",
+          "leak",
+          "denial-of-service",
+          "cert"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-session/src/main/java/org/eclipse/jetty/session/JDBCSessionDataStore.java",
+        "module": "jetty-session"
+      },
+      "original_finding_index": 150
+    },
+    {
+      "type": "java:S2142",
+      "abbrev": "S2142",
+      "sourcefile": "ManagedSession.java",
+      "start_line": "564",
+      "end_line": "564",
+      "classname": "ManagedSession",
+      "fully_qualified_classname": "org.eclipse.jetty.session.ManagedSession",
+      "source_path": "jetty-session/src/main/java/org/eclipse/jetty/session/ManagedSession.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.session",
+      "message": "Either re-interrupt this method or rethrow the \"InterruptedException\" that can be caught here.",
+      "description": "Either re-interrupt this method or rethrow the \"InterruptedException\" that can be caught here.",
+      "tool_specific": {
+        "severity": "MAJOR",
+        "issue_type": "BUG",
+        "effort": "15min",
+        "status": "OPEN",
+        "tags": [
+          "cwe",
+          "error-handling",
+          "multi-threading"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-session/src/main/java/org/eclipse/jetty/session/ManagedSession.java",
+        "module": "jetty-session"
+      },
+      "original_finding_index": 151
+    },
+    {
+      "type": "java:S2095",
+      "abbrev": "S2095",
+      "sourcefile": "UnixDomainServerConnector.java",
+      "start_line": "250",
+      "end_line": "250",
+      "classname": "UnixDomainServerConnector",
+      "fully_qualified_classname": "org.eclipse.jetty.unixdomain.server.UnixDomainServerConnector",
+      "source_path": "jetty-unixdomain-server/src/main/java/org/eclipse/jetty/unixdomain/server/UnixDomainServerConnector.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.unixdomain.server",
+      "message": "Use try-with-resources or close this \"ServerSocketChannel\" in a \"finally\" clause.",
+      "description": "Use try-with-resources or close this \"ServerSocketChannel\" in a \"finally\" clause.",
+      "tool_specific": {
+        "severity": "BLOCKER",
+        "issue_type": "BUG",
+        "effort": "5min",
+        "status": "OPEN",
+        "tags": [
+          "cwe",
+          "symbolic-execution",
+          "leak",
+          "denial-of-service",
+          "cert"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-unixdomain-server/src/main/java/org/eclipse/jetty/unixdomain/server/UnixDomainServerConnector.java",
+        "module": "jetty-unixdomain-server"
+      },
+      "original_finding_index": 154
+    },
+    {
+      "type": "java:S2142",
+      "abbrev": "S2142",
+      "sourcefile": "Blocker.java",
+      "start_line": "134",
+      "end_line": "134",
+      "classname": "Blocker",
+      "fully_qualified_classname": "org.eclipse.jetty.util.Blocker",
+      "source_path": "jetty-util/src/main/java/org/eclipse/jetty/util/Blocker.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.util",
+      "message": "Either re-interrupt this method or rethrow the \"InterruptedException\" that can be caught here.",
+      "description": "Either re-interrupt this method or rethrow the \"InterruptedException\" that can be caught here.",
+      "tool_specific": {
+        "severity": "MAJOR",
+        "issue_type": "BUG",
+        "effort": "15min",
+        "status": "OPEN",
+        "tags": [
+          "cwe",
+          "error-handling",
+          "multi-threading"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-util/src/main/java/org/eclipse/jetty/util/Blocker.java",
+        "module": "jetty-util"
+      },
+      "original_finding_index": 156
+    },
+    {
+      "type": "java:S2142",
+      "abbrev": "S2142",
+      "sourcefile": "Blocker.java",
+      "start_line": "216",
+      "end_line": "216",
+      "classname": "Blocker",
+      "fully_qualified_classname": "org.eclipse.jetty.util.Blocker",
+      "source_path": "jetty-util/src/main/java/org/eclipse/jetty/util/Blocker.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.util",
+      "message": "Either re-interrupt this method or rethrow the \"InterruptedException\" that can be caught here.",
+      "description": "Either re-interrupt this method or rethrow the \"InterruptedException\" that can be caught here.",
+      "tool_specific": {
+        "severity": "MAJOR",
+        "issue_type": "BUG",
+        "effort": "15min",
+        "status": "OPEN",
+        "tags": [
+          "cwe",
+          "error-handling",
+          "multi-threading"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-util/src/main/java/org/eclipse/jetty/util/Blocker.java",
+        "module": "jetty-util"
+      },
+      "original_finding_index": 158
+    },
+    {
+      "type": "java:S2142",
+      "abbrev": "S2142",
+      "sourcefile": "Blocker.java",
+      "start_line": "289",
+      "end_line": "289",
+      "classname": "Blocker",
+      "fully_qualified_classname": "org.eclipse.jetty.util.Blocker",
+      "source_path": "jetty-util/src/main/java/org/eclipse/jetty/util/Blocker.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.util",
+      "message": "Either re-interrupt this method or rethrow the \"InterruptedException\" that can be caught here.",
+      "description": "Either re-interrupt this method or rethrow the \"InterruptedException\" that can be caught here.",
+      "tool_specific": {
+        "severity": "MAJOR",
+        "issue_type": "BUG",
+        "effort": "15min",
+        "status": "OPEN",
+        "tags": [
+          "cwe",
+          "error-handling",
+          "multi-threading"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-util/src/main/java/org/eclipse/jetty/util/Blocker.java",
+        "module": "jetty-util"
+      },
+      "original_finding_index": 160
+    },
+    {
+      "type": "java:S2142",
+      "abbrev": "S2142",
+      "sourcefile": "Blocker.java",
+      "start_line": "513",
+      "end_line": "513",
+      "classname": "Blocker",
+      "fully_qualified_classname": "org.eclipse.jetty.util.Blocker",
+      "source_path": "jetty-util/src/main/java/org/eclipse/jetty/util/Blocker.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.util",
+      "message": "Either re-interrupt this method or rethrow the \"InterruptedException\" that can be caught here.",
+      "description": "Either re-interrupt this method or rethrow the \"InterruptedException\" that can be caught here.",
+      "tool_specific": {
+        "severity": "MAJOR",
+        "issue_type": "BUG",
+        "effort": "15min",
+        "status": "OPEN",
+        "tags": [
+          "cwe",
+          "error-handling",
+          "multi-threading"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-util/src/main/java/org/eclipse/jetty/util/Blocker.java",
+        "module": "jetty-util"
+      },
+      "original_finding_index": 163
+    },
+    {
+      "type": "java:S3551",
+      "abbrev": "S3551",
+      "sourcefile": "ByteArrayOutputStream2.java",
+      "start_line": "63",
+      "end_line": "63",
+      "classname": "ByteArrayOutputStream2",
+      "fully_qualified_classname": "org.eclipse.jetty.util.ByteArrayOutputStream2",
+      "source_path": "jetty-util/src/main/java/org/eclipse/jetty/util/ByteArrayOutputStream2.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.util",
+      "message": "Make this method \"synchronized\" to match the parent class implementation.",
+      "description": "Make this method \"synchronized\" to match the parent class implementation.",
+      "tool_specific": {
+        "severity": "MAJOR",
+        "issue_type": "BUG",
+        "effort": "20min",
+        "status": "OPEN",
+        "tags": [
+          "multi-threading",
+          "cert"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-util/src/main/java/org/eclipse/jetty/util/ByteArrayOutputStream2.java",
+        "module": "jetty-util"
+      },
+      "original_finding_index": 167
+    },
+    {
+      "type": "java:S2142",
+      "abbrev": "S2142",
+      "sourcefile": "ExceptionUtil.java",
+      "start_line": "520",
+      "end_line": "520",
+      "classname": "ExceptionUtil",
+      "fully_qualified_classname": "org.eclipse.jetty.util.ExceptionUtil",
+      "source_path": "jetty-util/src/main/java/org/eclipse/jetty/util/ExceptionUtil.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.util",
+      "message": "Either re-interrupt this method or rethrow the \"InterruptedException\" that can be caught here.",
+      "description": "Either re-interrupt this method or rethrow the \"InterruptedException\" that can be caught here.",
+      "tool_specific": {
+        "severity": "MAJOR",
+        "issue_type": "BUG",
+        "effort": "15min",
+        "status": "OPEN",
+        "tags": [
+          "cwe",
+          "error-handling",
+          "multi-threading"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-util/src/main/java/org/eclipse/jetty/util/ExceptionUtil.java",
+        "module": "jetty-util"
+      },
+      "original_finding_index": 173
+    },
+    {
+      "type": "java:S2142",
+      "abbrev": "S2142",
+      "sourcefile": "FutureCallback.java",
+      "start_line": "156",
+      "end_line": "156",
+      "classname": "FutureCallback",
+      "fully_qualified_classname": "org.eclipse.jetty.util.FutureCallback",
+      "source_path": "jetty-util/src/main/java/org/eclipse/jetty/util/FutureCallback.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.util",
+      "message": "Either re-interrupt this method or rethrow the \"InterruptedException\" that can be caught here.",
+      "description": "Either re-interrupt this method or rethrow the \"InterruptedException\" that can be caught here.",
+      "tool_specific": {
+        "severity": "MAJOR",
+        "issue_type": "BUG",
+        "effort": "15min",
+        "status": "OPEN",
+        "tags": [
+          "cwe",
+          "error-handling",
+          "multi-threading"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-util/src/main/java/org/eclipse/jetty/util/FutureCallback.java",
+        "module": "jetty-util"
+      },
+      "original_finding_index": 175
+    },
+    {
+      "type": "java:S2142",
+      "abbrev": "S2142",
+      "sourcefile": "SharedBlockingCallback.java",
+      "start_line": "231",
+      "end_line": "231",
+      "classname": "SharedBlockingCallback",
+      "fully_qualified_classname": "org.eclipse.jetty.util.SharedBlockingCallback",
+      "source_path": "jetty-util/src/main/java/org/eclipse/jetty/util/SharedBlockingCallback.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.util",
+      "message": "Either re-interrupt this method or rethrow the \"InterruptedException\" that can be caught here.",
+      "description": "Either re-interrupt this method or rethrow the \"InterruptedException\" that can be caught here.",
+      "tool_specific": {
+        "severity": "MAJOR",
+        "issue_type": "BUG",
+        "effort": "15min",
+        "status": "OPEN",
+        "tags": [
+          "cwe",
+          "error-handling",
+          "multi-threading"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-util/src/main/java/org/eclipse/jetty/util/SharedBlockingCallback.java",
+        "module": "jetty-util"
+      },
+      "original_finding_index": 179
+    },
+    {
+      "type": "java:S2095",
+      "abbrev": "S2095",
+      "sourcefile": "FileSystemPool.java",
+      "start_line": "118",
+      "end_line": "118",
+      "classname": "FileSystemPool",
+      "fully_qualified_classname": "org.eclipse.jetty.util.resource.FileSystemPool",
+      "source_path": "jetty-util/src/main/java/org/eclipse/jetty/util/resource/FileSystemPool.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.util.resource",
+      "message": "Use try-with-resources or close this \"FileSystem\" in a \"finally\" clause.",
+      "description": "Use try-with-resources or close this \"FileSystem\" in a \"finally\" clause.",
+      "tool_specific": {
+        "severity": "BLOCKER",
+        "issue_type": "BUG",
+        "effort": "5min",
+        "status": "OPEN",
+        "tags": [
+          "cwe",
+          "symbolic-execution",
+          "leak",
+          "denial-of-service",
+          "cert"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-util/src/main/java/org/eclipse/jetty/util/resource/FileSystemPool.java",
+        "module": "jetty-util"
+      },
+      "original_finding_index": 182
+    },
+    {
+      "type": "java:S4973",
+      "abbrev": "S4973",
+      "sourcefile": "Credential.java",
+      "start_line": "107",
+      "end_line": "107",
+      "classname": "Credential",
+      "fully_qualified_classname": "org.eclipse.jetty.util.security.Credential",
+      "source_path": "jetty-util/src/main/java/org/eclipse/jetty/util/security/Credential.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.util.security",
+      "message": "Strings and Boxed types should be compared using \"equals()\".",
+      "description": "Strings and Boxed types should be compared using \"equals()\".",
+      "tool_specific": {
+        "severity": "MAJOR",
+        "issue_type": "BUG",
+        "effort": "5min",
+        "status": "OPEN",
+        "tags": [
+          "cwe",
+          "cert"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-util/src/main/java/org/eclipse/jetty/util/security/Credential.java",
+        "module": "jetty-util"
+      },
+      "original_finding_index": 185
+    },
+    {
+      "type": "java:S4973",
+      "abbrev": "S4973",
+      "sourcefile": "SniX509ExtendedKeyManager.java",
+      "start_line": "162",
+      "end_line": "162",
+      "classname": "SniX509ExtendedKeyManager",
+      "fully_qualified_classname": "org.eclipse.jetty.util.ssl.SniX509ExtendedKeyManager",
+      "source_path": "jetty-util/src/main/java/org/eclipse/jetty/util/ssl/SniX509ExtendedKeyManager.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.util.ssl",
+      "message": "Strings and Boxed types should be compared using \"equals()\".",
+      "description": "Strings and Boxed types should be compared using \"equals()\".",
+      "tool_specific": {
+        "severity": "MAJOR",
+        "issue_type": "BUG",
+        "effort": "5min",
+        "status": "OPEN",
+        "tags": [
+          "cwe",
+          "cert"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-util/src/main/java/org/eclipse/jetty/util/ssl/SniX509ExtendedKeyManager.java",
+        "module": "jetty-util"
+      },
+      "original_finding_index": 191
+    },
+    {
+      "type": "java:S2142",
+      "abbrev": "S2142",
+      "sourcefile": "QueuedThreadPool.java",
+      "start_line": "354",
+      "end_line": "354",
+      "classname": "QueuedThreadPool",
+      "fully_qualified_classname": "org.eclipse.jetty.util.thread.QueuedThreadPool",
+      "source_path": "jetty-util/src/main/java/org/eclipse/jetty/util/thread/QueuedThreadPool.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.util.thread",
+      "message": "Either re-interrupt this method or rethrow the \"InterruptedException\" that can be caught here.",
+      "description": "Either re-interrupt this method or rethrow the \"InterruptedException\" that can be caught here.",
+      "tool_specific": {
+        "severity": "MAJOR",
+        "issue_type": "BUG",
+        "effort": "15min",
+        "status": "OPEN",
+        "tags": [
+          "cwe",
+          "error-handling",
+          "multi-threading"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-util/src/main/java/org/eclipse/jetty/util/thread/QueuedThreadPool.java",
+        "module": "jetty-util"
+      },
+      "original_finding_index": 195
+    },
+    {
+      "type": "java:S2095",
+      "abbrev": "S2095",
+      "sourcefile": "ExtensionStack.java",
+      "start_line": "139",
+      "end_line": "139",
+      "classname": "ExtensionStack",
+      "fully_qualified_classname": "org.eclipse.jetty.websocket.core.ExtensionStack",
+      "source_path": "jetty-websocket/jetty-websocket-core-common/src/main/java/org/eclipse/jetty/websocket/core/ExtensionStack.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.websocket.core",
+      "message": "Use try-with-resources or close this \"Extension\" in a \"finally\" clause.",
+      "description": "Use try-with-resources or close this \"Extension\" in a \"finally\" clause.",
+      "tool_specific": {
+        "severity": "BLOCKER",
+        "issue_type": "BUG",
+        "effort": "5min",
+        "status": "OPEN",
+        "tags": [
+          "cwe",
+          "symbolic-execution",
+          "leak",
+          "denial-of-service",
+          "cert"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-websocket/jetty-websocket-core-common/src/main/java/org/eclipse/jetty/websocket/core/ExtensionStack.java",
+        "module": "jetty-websocket/jetty-websocket-core-common"
+      },
+      "original_finding_index": 206
+    },
+    {
+      "type": "java:S1143",
+      "abbrev": "S1143",
+      "sourcefile": "WebSocketConnection.java",
+      "start_line": "583",
+      "end_line": "583",
+      "classname": "WebSocketConnection",
+      "fully_qualified_classname": "org.eclipse.jetty.websocket.core.WebSocketConnection",
+      "source_path": "jetty-websocket/jetty-websocket-core-common/src/main/java/org/eclipse/jetty/websocket/core/WebSocketConnection.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.websocket.core",
+      "message": "Remove this throw statement from this finally block.",
+      "description": "Remove this throw statement from this finally block.",
+      "tool_specific": {
+        "severity": "CRITICAL",
+        "issue_type": "BUG",
+        "effort": "30min",
+        "status": "OPEN",
+        "tags": [
+          "cwe",
+          "error-handling",
+          "cert"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-websocket/jetty-websocket-core-common/src/main/java/org/eclipse/jetty/websocket/core/WebSocketConnection.java",
+        "module": "jetty-websocket/jetty-websocket-core-common"
+      },
+      "original_finding_index": 207
+    },
+    {
+      "type": "java:S2259",
+      "abbrev": "S2259",
+      "sourcefile": "XmlConfiguration.java",
+      "start_line": "2036",
+      "end_line": "2036",
+      "classname": "XmlConfiguration",
+      "fully_qualified_classname": "org.eclipse.jetty.xml.XmlConfiguration",
+      "source_path": "jetty-xml/src/main/java/org/eclipse/jetty/xml/XmlConfiguration.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.xml",
+      "message": "A \"NullPointerException\" could be thrown; \"envBuilder\" is nullable here.",
+      "description": "A \"NullPointerException\" could be thrown; \"envBuilder\" is nullable here.",
+      "tool_specific": {
+        "severity": "MAJOR",
+        "issue_type": "BUG",
+        "effort": "10min",
+        "status": "OPEN",
+        "tags": [
+          "cwe",
+          "symbolic-execution",
+          "cert"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-xml/src/main/java/org/eclipse/jetty/xml/XmlConfiguration.java",
+        "module": "jetty-xml"
+      },
+      "original_finding_index": 220
+    },
+    {
+      "type": "java:S2583",
+      "abbrev": "S2583",
+      "sourcefile": "XmlParser.java",
+      "start_line": "165",
+      "end_line": "165",
+      "classname": "XmlParser",
+      "fully_qualified_classname": "org.eclipse.jetty.xml.XmlParser",
+      "source_path": "jetty-xml/src/main/java/org/eclipse/jetty/xml/XmlParser.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.xml",
+      "message": "Change this condition so that it does not always evaluate to \"true\"",
+      "description": "Change this condition so that it does not always evaluate to \"true\"",
+      "tool_specific": {
+        "severity": "MAJOR",
+        "issue_type": "BUG",
+        "effort": "15min",
+        "status": "OPEN",
+        "tags": [
+          "cwe",
+          "symbolic-execution",
+          "cert",
+          "unused",
+          "suspicious",
+          "pitfall"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-xml/src/main/java/org/eclipse/jetty/xml/XmlParser.java",
+        "module": "jetty-xml"
+      },
+      "original_finding_index": 221
+    },
+    {
+      "type": "java:S2068",
+      "abbrev": "S2068",
+      "sourcefile": "JDBCLoginModule.java",
+      "start_line": "55",
+      "end_line": "55",
+      "classname": "JDBCLoginModule",
+      "fully_qualified_classname": "org.eclipse.jetty.security.jaas.spi.JDBCLoginModule",
+      "source_path": "jetty-security/src/main/java/org/eclipse/jetty/security/jaas/spi/JDBCLoginModule.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.security.jaas.spi",
+      "message": "'Password' detected in this expression, review this potentially hard-coded password.",
+      "description": "'Password' detected in this expression, review this potentially hard-coded password.",
+      "tool_specific": {
+        "severity": "BLOCKER",
+        "issue_type": "VULNERABILITY",
+        "effort": "30min",
+        "status": "OPEN",
+        "tags": [
+          "cwe",
+          "cert"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-security/src/main/java/org/eclipse/jetty/security/jaas/spi/JDBCLoginModule.java",
+        "module": "jetty-security"
+      },
+      "original_finding_index": 222
+    },
+    {
+      "type": "java:S2755",
+      "abbrev": "S2755",
+      "sourcefile": "XmlParser.java",
+      "start_line": "113",
+      "end_line": "113",
+      "classname": "XmlParser",
+      "fully_qualified_classname": "org.eclipse.jetty.xml.XmlParser",
+      "source_path": "jetty-xml/src/main/java/org/eclipse/jetty/xml/XmlParser.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.xml",
+      "message": "Disable access to external entities in XML parsing.",
+      "description": "Disable access to external entities in XML parsing.",
+      "tool_specific": {
+        "severity": "BLOCKER",
+        "issue_type": "VULNERABILITY",
+        "effort": "15min",
+        "status": "OPEN",
+        "tags": [
+          "cwe",
+          "symbolic-execution"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-xml/src/main/java/org/eclipse/jetty/xml/XmlParser.java",
+        "module": "jetty-xml"
+      },
+      "original_finding_index": 223
+    },
+    {
+      "type": "java:S2178",
+      "abbrev": "S2178",
+      "sourcefile": "RequestListeners.java",
+      "start_line": "43",
+      "end_line": "43",
+      "classname": "RequestListeners",
+      "fully_qualified_classname": "org.eclipse.jetty.client.RequestListeners",
+      "source_path": "jetty-client/src/main/java/org/eclipse/jetty/client/RequestListeners.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.client",
+      "message": "Correct this \"|\" to \"||\" and extract the right operand to a variable if it should always be evaluated.",
+      "description": "Correct this \"|\" to \"||\" and extract the right operand to a variable if it should always be evaluated.",
+      "tool_specific": {
+        "severity": "BLOCKER",
+        "issue_type": "CODE_SMELL",
+        "effort": "5min",
+        "status": "OPEN",
+        "tags": [
+          "cert"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-client/src/main/java/org/eclipse/jetty/client/RequestListeners.java",
+        "module": "jetty-client"
+      },
+      "original_finding_index": 224
+    },
+    {
+      "type": "java:S2178",
+      "abbrev": "S2178",
+      "sourcefile": "RequestListeners.java",
+      "start_line": "45",
+      "end_line": "45",
+      "classname": "RequestListeners",
+      "fully_qualified_classname": "org.eclipse.jetty.client.RequestListeners",
+      "source_path": "jetty-client/src/main/java/org/eclipse/jetty/client/RequestListeners.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.client",
+      "message": "Correct this \"|\" to \"||\" and extract the right operand to a variable if it should always be evaluated.",
+      "description": "Correct this \"|\" to \"||\" and extract the right operand to a variable if it should always be evaluated.",
+      "tool_specific": {
+        "severity": "BLOCKER",
+        "issue_type": "CODE_SMELL",
+        "effort": "5min",
+        "status": "OPEN",
+        "tags": [
+          "cert"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-client/src/main/java/org/eclipse/jetty/client/RequestListeners.java",
+        "module": "jetty-client"
+      },
+      "original_finding_index": 226
+    },
+    {
+      "type": "java:S2178",
+      "abbrev": "S2178",
+      "sourcefile": "RequestListeners.java",
+      "start_line": "56",
+      "end_line": "56",
+      "classname": "RequestListeners",
+      "fully_qualified_classname": "org.eclipse.jetty.client.RequestListeners",
+      "source_path": "jetty-client/src/main/java/org/eclipse/jetty/client/RequestListeners.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.client",
+      "message": "Correct this \"|\" to \"||\" and extract the right operand to a variable if it should always be evaluated.",
+      "description": "Correct this \"|\" to \"||\" and extract the right operand to a variable if it should always be evaluated.",
+      "tool_specific": {
+        "severity": "BLOCKER",
+        "issue_type": "CODE_SMELL",
+        "effort": "5min",
+        "status": "OPEN",
+        "tags": [
+          "cert"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-client/src/main/java/org/eclipse/jetty/client/RequestListeners.java",
+        "module": "jetty-client"
+      },
+      "original_finding_index": 231
+    },
+    {
+      "type": "java:S2178",
+      "abbrev": "S2178",
+      "sourcefile": "RequestListeners.java",
+      "start_line": "59",
+      "end_line": "59",
+      "classname": "RequestListeners",
+      "fully_qualified_classname": "org.eclipse.jetty.client.RequestListeners",
+      "source_path": "jetty-client/src/main/java/org/eclipse/jetty/client/RequestListeners.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.client",
+      "message": "Correct this \"|\" to \"||\" and extract the right operand to a variable if it should always be evaluated.",
+      "description": "Correct this \"|\" to \"||\" and extract the right operand to a variable if it should always be evaluated.",
+      "tool_specific": {
+        "severity": "BLOCKER",
+        "issue_type": "CODE_SMELL",
+        "effort": "5min",
+        "status": "OPEN",
+        "tags": [
+          "cert"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-client/src/main/java/org/eclipse/jetty/client/RequestListeners.java",
+        "module": "jetty-client"
+      },
+      "original_finding_index": 234
+    },
+    {
+      "type": "java:S3516",
+      "abbrev": "S3516",
+      "sourcefile": "HttpConnection.java",
+      "start_line": "345",
+      "end_line": "345",
+      "classname": "HttpConnection",
+      "fully_qualified_classname": "org.eclipse.jetty.client.transport.HttpConnection",
+      "source_path": "jetty-client/src/main/java/org/eclipse/jetty/client/transport/HttpConnection.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.client.transport",
+      "message": "Refactor this method to not always return the same value.",
+      "description": "Refactor this method to not always return the same value.",
+      "tool_specific": {
+        "severity": "BLOCKER",
+        "issue_type": "CODE_SMELL",
+        "effort": "4min",
+        "status": "OPEN",
+        "tags": [
+          "symbolic-execution"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-client/src/main/java/org/eclipse/jetty/client/transport/HttpConnection.java",
+        "module": "jetty-client"
+      },
+      "original_finding_index": 236
+    },
+    {
+      "type": "java:S2178",
+      "abbrev": "S2178",
+      "sourcefile": "ResponseListeners.java",
+      "start_line": "367",
+      "end_line": "367",
+      "classname": "ResponseListeners",
+      "fully_qualified_classname": "org.eclipse.jetty.client.transport.ResponseListeners",
+      "source_path": "jetty-client/src/main/java/org/eclipse/jetty/client/transport/ResponseListeners.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.client.transport",
+      "message": "Correct this \"|\" to \"||\" and extract the right operand to a variable if it should always be evaluated.",
+      "description": "Correct this \"|\" to \"||\" and extract the right operand to a variable if it should always be evaluated.",
+      "tool_specific": {
+        "severity": "BLOCKER",
+        "issue_type": "CODE_SMELL",
+        "effort": "5min",
+        "status": "OPEN",
+        "tags": [
+          "cert"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-client/src/main/java/org/eclipse/jetty/client/transport/ResponseListeners.java",
+        "module": "jetty-client"
+      },
+      "original_finding_index": 239
+    },
+    {
+      "type": "java:S2178",
+      "abbrev": "S2178",
+      "sourcefile": "ResponseListeners.java",
+      "start_line": "369",
+      "end_line": "369",
+      "classname": "ResponseListeners",
+      "fully_qualified_classname": "org.eclipse.jetty.client.transport.ResponseListeners",
+      "source_path": "jetty-client/src/main/java/org/eclipse/jetty/client/transport/ResponseListeners.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.client.transport",
+      "message": "Correct this \"|\" to \"||\" and extract the right operand to a variable if it should always be evaluated.",
+      "description": "Correct this \"|\" to \"||\" and extract the right operand to a variable if it should always be evaluated.",
+      "tool_specific": {
+        "severity": "BLOCKER",
+        "issue_type": "CODE_SMELL",
+        "effort": "5min",
+        "status": "OPEN",
+        "tags": [
+          "cert"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-client/src/main/java/org/eclipse/jetty/client/transport/ResponseListeners.java",
+        "module": "jetty-client"
+      },
+      "original_finding_index": 241
+    },
+    {
+      "type": "java:S2178",
+      "abbrev": "S2178",
+      "sourcefile": "ResponseListeners.java",
+      "start_line": "377",
+      "end_line": "377",
+      "classname": "ResponseListeners",
+      "fully_qualified_classname": "org.eclipse.jetty.client.transport.ResponseListeners",
+      "source_path": "jetty-client/src/main/java/org/eclipse/jetty/client/transport/ResponseListeners.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.client.transport",
+      "message": "Correct this \"|\" to \"||\" and extract the right operand to a variable if it should always be evaluated.",
+      "description": "Correct this \"|\" to \"||\" and extract the right operand to a variable if it should always be evaluated.",
+      "tool_specific": {
+        "severity": "BLOCKER",
+        "issue_type": "CODE_SMELL",
+        "effort": "5min",
+        "status": "OPEN",
+        "tags": [
+          "cert"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-client/src/main/java/org/eclipse/jetty/client/transport/ResponseListeners.java",
+        "module": "jetty-client"
+      },
+      "original_finding_index": 243
+    },
+    {
+      "type": "java:S2178",
+      "abbrev": "S2178",
+      "sourcefile": "ResponseListeners.java",
+      "start_line": "379",
+      "end_line": "379",
+      "classname": "ResponseListeners",
+      "fully_qualified_classname": "org.eclipse.jetty.client.transport.ResponseListeners",
+      "source_path": "jetty-client/src/main/java/org/eclipse/jetty/client/transport/ResponseListeners.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.client.transport",
+      "message": "Correct this \"|\" to \"||\" and extract the right operand to a variable if it should always be evaluated.",
+      "description": "Correct this \"|\" to \"||\" and extract the right operand to a variable if it should always be evaluated.",
+      "tool_specific": {
+        "severity": "BLOCKER",
+        "issue_type": "CODE_SMELL",
+        "effort": "5min",
+        "status": "OPEN",
+        "tags": [
+          "cert"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-client/src/main/java/org/eclipse/jetty/client/transport/ResponseListeners.java",
+        "module": "jetty-client"
+      },
+      "original_finding_index": 245
+    },
+    {
+      "type": "java:S2178",
+      "abbrev": "S2178",
+      "sourcefile": "ResponseListeners.java",
+      "start_line": "381",
+      "end_line": "381",
+      "classname": "ResponseListeners",
+      "fully_qualified_classname": "org.eclipse.jetty.client.transport.ResponseListeners",
+      "source_path": "jetty-client/src/main/java/org/eclipse/jetty/client/transport/ResponseListeners.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.client.transport",
+      "message": "Correct this \"|\" to \"||\" and extract the right operand to a variable if it should always be evaluated.",
+      "description": "Correct this \"|\" to \"||\" and extract the right operand to a variable if it should always be evaluated.",
+      "tool_specific": {
+        "severity": "BLOCKER",
+        "issue_type": "CODE_SMELL",
+        "effort": "5min",
+        "status": "OPEN",
+        "tags": [
+          "cert"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-client/src/main/java/org/eclipse/jetty/client/transport/ResponseListeners.java",
+        "module": "jetty-client"
+      },
+      "original_finding_index": 247
+    },
+    {
+      "type": "java:S2178",
+      "abbrev": "S2178",
+      "sourcefile": "ResponseListeners.java",
+      "start_line": "382",
+      "end_line": "382",
+      "classname": "ResponseListeners",
+      "fully_qualified_classname": "org.eclipse.jetty.client.transport.ResponseListeners",
+      "source_path": "jetty-client/src/main/java/org/eclipse/jetty/client/transport/ResponseListeners.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.client.transport",
+      "message": "Correct this \"|\" to \"||\" and extract the right operand to a variable if it should always be evaluated.",
+      "description": "Correct this \"|\" to \"||\" and extract the right operand to a variable if it should always be evaluated.",
+      "tool_specific": {
+        "severity": "BLOCKER",
+        "issue_type": "CODE_SMELL",
+        "effort": "5min",
+        "status": "OPEN",
+        "tags": [
+          "cert"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-client/src/main/java/org/eclipse/jetty/client/transport/ResponseListeners.java",
+        "module": "jetty-client"
+      },
+      "original_finding_index": 248
+    },
+    {
+      "type": "java:S3516",
+      "abbrev": "S3516",
+      "sourcefile": "HTTP2Session.java",
+      "start_line": "2217",
+      "end_line": "2217",
+      "classname": "HTTP2Session",
+      "fully_qualified_classname": "org.eclipse.jetty.http2.HTTP2Session",
+      "source_path": "jetty-http2/jetty-http2-common/src/main/java/org/eclipse/jetty/http2/HTTP2Session.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.http2",
+      "message": "Refactor this method to not always return the same value.",
+      "description": "Refactor this method to not always return the same value.",
+      "tool_specific": {
+        "severity": "BLOCKER",
+        "issue_type": "CODE_SMELL",
+        "effort": "8min",
+        "status": "OPEN",
+        "tags": [
+          "symbolic-execution"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-http2/jetty-http2-common/src/main/java/org/eclipse/jetty/http2/HTTP2Session.java",
+        "module": "jetty-http2/jetty-http2-common"
+      },
+      "original_finding_index": 252
+    },
+    {
+      "type": "java:S3516",
+      "abbrev": "S3516",
+      "sourcefile": "HTTP2Stream.java",
+      "start_line": "746",
+      "end_line": "746",
+      "classname": "HTTP2Stream",
+      "fully_qualified_classname": "org.eclipse.jetty.http2.HTTP2Stream",
+      "source_path": "jetty-http2/jetty-http2-common/src/main/java/org/eclipse/jetty/http2/HTTP2Stream.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.http2",
+      "message": "Refactor this method to not always return the same value.",
+      "description": "Refactor this method to not always return the same value.",
+      "tool_specific": {
+        "severity": "BLOCKER",
+        "issue_type": "CODE_SMELL",
+        "effort": "6min",
+        "status": "OPEN",
+        "tags": [
+          "symbolic-execution"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-http2/jetty-http2-common/src/main/java/org/eclipse/jetty/http2/HTTP2Stream.java",
+        "module": "jetty-http2/jetty-http2-common"
+      },
+      "original_finding_index": 253
+    },
+    {
+      "type": "java:S3516",
+      "abbrev": "S3516",
+      "sourcefile": "HTTP3Session.java",
+      "start_line": "516",
+      "end_line": "516",
+      "classname": "HTTP3Session",
+      "fully_qualified_classname": "org.eclipse.jetty.http3.HTTP3Session",
+      "source_path": "jetty-http3/jetty-http3-common/src/main/java/org/eclipse/jetty/http3/HTTP3Session.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.http3",
+      "message": "Refactor this method to not always return the same value.",
+      "description": "Refactor this method to not always return the same value.",
+      "tool_specific": {
+        "severity": "BLOCKER",
+        "issue_type": "CODE_SMELL",
+        "effort": "6min",
+        "status": "OPEN",
+        "tags": [
+          "symbolic-execution"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-http3/jetty-http3-common/src/main/java/org/eclipse/jetty/http3/HTTP3Session.java",
+        "module": "jetty-http3/jetty-http3-common"
+      },
+      "original_finding_index": 255
+    },
+    {
+      "type": "java:S1845",
+      "abbrev": "S1845",
+      "sourcefile": "BundleMetadata.java",
+      "start_line": "32",
+      "end_line": "32",
+      "classname": "BundleMetadata",
+      "fully_qualified_classname": "org.eclipse.jetty.osgi.BundleMetadata",
+      "source_path": "jetty-osgi/src/main/java/org/eclipse/jetty/osgi/BundleMetadata.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.osgi",
+      "message": "Rename field \"bundle\" to prevent any misunderstanding/clash with field \"BUNDLE\".",
+      "description": "Rename field \"bundle\" to prevent any misunderstanding/clash with field \"BUNDLE\".",
+      "tool_specific": {
+        "severity": "BLOCKER",
+        "issue_type": "CODE_SMELL",
+        "effort": "10min",
+        "status": "OPEN",
+        "tags": [
+          "confusing"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-osgi/src/main/java/org/eclipse/jetty/osgi/BundleMetadata.java",
+        "module": "jetty-osgi"
+      },
+      "original_finding_index": 257
+    },
+    {
+      "type": "java:S1845",
+      "abbrev": "S1845",
+      "sourcefile": "FutureCallback.java",
+      "start_line": "29",
+      "end_line": "29",
+      "classname": "FutureCallback",
+      "fully_qualified_classname": "org.eclipse.jetty.util.FutureCallback",
+      "source_path": "jetty-util/src/main/java/org/eclipse/jetty/util/FutureCallback.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.util",
+      "message": "Rename field \"SUCCEEDED\" to prevent any misunderstanding/clash with method \"succeeded\".",
+      "description": "Rename field \"SUCCEEDED\" to prevent any misunderstanding/clash with method \"succeeded\".",
+      "tool_specific": {
+        "severity": "BLOCKER",
+        "issue_type": "CODE_SMELL",
+        "effort": "10min",
+        "status": "OPEN",
+        "tags": [
+          "confusing"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-util/src/main/java/org/eclipse/jetty/util/FutureCallback.java",
+        "module": "jetty-util"
+      },
+      "original_finding_index": 259
+    },
+    {
+      "type": "java:S1845",
+      "abbrev": "S1845",
+      "sourcefile": "JavaVersion.java",
+      "start_line": "59",
+      "end_line": "59",
+      "classname": "JavaVersion",
+      "fully_qualified_classname": "org.eclipse.jetty.util.JavaVersion",
+      "source_path": "jetty-util/src/main/java/org/eclipse/jetty/util/JavaVersion.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.util",
+      "message": "Rename field \"version\" to prevent any misunderstanding/clash with field \"VERSION\".",
+      "description": "Rename field \"version\" to prevent any misunderstanding/clash with field \"VERSION\".",
+      "tool_specific": {
+        "severity": "BLOCKER",
+        "issue_type": "CODE_SMELL",
+        "effort": "10min",
+        "status": "OPEN",
+        "tags": [
+          "confusing"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-util/src/main/java/org/eclipse/jetty/util/JavaVersion.java",
+        "module": "jetty-util"
+      },
+      "original_finding_index": 260
+    },
+    {
+      "type": "java:S1845",
+      "abbrev": "S1845",
+      "sourcefile": "Promise.java",
+      "start_line": "233",
+      "end_line": "233",
+      "classname": "Promise",
+      "fully_qualified_classname": "org.eclipse.jetty.util.Promise",
+      "source_path": "jetty-util/src/main/java/org/eclipse/jetty/util/Promise.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.util",
+      "message": "Rename method \"noop\" to prevent any misunderstanding/clash with field \"NOOP\" defined in interface \"org.eclipse.jetty.util.thread.Invocable\".",
+      "description": "Rename method \"noop\" to prevent any misunderstanding/clash with field \"NOOP\" defined in interface \"org.eclipse.jetty.util.thread.Invocable\".",
+      "tool_specific": {
+        "severity": "BLOCKER",
+        "issue_type": "CODE_SMELL",
+        "effort": "10min",
+        "status": "OPEN",
+        "tags": [
+          "confusing"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-util/src/main/java/org/eclipse/jetty/util/Promise.java",
+        "module": "jetty-util"
+      },
+      "original_finding_index": 261
+    },
+    {
+      "type": "java:S1845",
+      "abbrev": "S1845",
+      "sourcefile": "RolloverFileOutputStream.java",
+      "start_line": "398",
+      "end_line": "398",
+      "classname": "RolloverFileOutputStream",
+      "fully_qualified_classname": "org.eclipse.jetty.util.RolloverFileOutputStream",
+      "source_path": "jetty-util/src/main/java/org/eclipse/jetty/util/RolloverFileOutputStream.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.util",
+      "message": "Rename method \"rollOver\" to prevent any misunderstanding/clash with method \"rollover\".",
+      "description": "Rename method \"rollOver\" to prevent any misunderstanding/clash with method \"rollover\".",
+      "tool_specific": {
+        "severity": "BLOCKER",
+        "issue_type": "CODE_SMELL",
+        "effort": "10min",
+        "status": "OPEN",
+        "tags": [
+          "confusing"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-util/src/main/java/org/eclipse/jetty/util/RolloverFileOutputStream.java",
+        "module": "jetty-util"
+      },
+      "original_finding_index": 262
+    },
+    {
+      "type": "java:S3014",
+      "abbrev": "S3014",
+      "sourcefile": "QueuedThreadPool.java",
+      "start_line": "162",
+      "end_line": "162",
+      "classname": "QueuedThreadPool",
+      "fully_qualified_classname": "org.eclipse.jetty.util.thread.QueuedThreadPool",
+      "source_path": "jetty-util/src/main/java/org/eclipse/jetty/util/thread/QueuedThreadPool.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.util.thread",
+      "message": "Remove this use of \"ThreadGroup\". Prefer the use of \"ThreadPoolExecutor\".",
+      "description": "Remove this use of \"ThreadGroup\". Prefer the use of \"ThreadPoolExecutor\".",
+      "tool_specific": {
+        "severity": "BLOCKER",
+        "issue_type": "CODE_SMELL",
+        "effort": "45min",
+        "status": "OPEN",
+        "tags": [
+          "design",
+          "cert",
+          "suspicious"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-util/src/main/java/org/eclipse/jetty/util/thread/QueuedThreadPool.java",
+        "module": "jetty-util"
+      },
+      "original_finding_index": 268
+    },
+    {
+      "type": "java:S3014",
+      "abbrev": "S3014",
+      "sourcefile": "ScheduledExecutorScheduler.java",
+      "start_line": "83",
+      "end_line": "83",
+      "classname": "ScheduledExecutorScheduler",
+      "fully_qualified_classname": "org.eclipse.jetty.util.thread.ScheduledExecutorScheduler",
+      "source_path": "jetty-util/src/main/java/org/eclipse/jetty/util/thread/ScheduledExecutorScheduler.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.util.thread",
+      "message": "Remove this use of \"ThreadGroup\". Prefer the use of \"ThreadPoolExecutor\".",
+      "description": "Remove this use of \"ThreadGroup\". Prefer the use of \"ThreadPoolExecutor\".",
+      "tool_specific": {
+        "severity": "BLOCKER",
+        "issue_type": "CODE_SMELL",
+        "effort": "45min",
+        "status": "OPEN",
+        "tags": [
+          "design",
+          "cert",
+          "suspicious"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-util/src/main/java/org/eclipse/jetty/util/thread/ScheduledExecutorScheduler.java",
+        "module": "jetty-util"
+      },
+      "original_finding_index": 272
+    },
+    {
+      "type": "java:S1845",
+      "abbrev": "S1845",
+      "sourcefile": "MessageInputStream.java",
+      "start_line": "51",
+      "end_line": "51",
+      "classname": "MessageInputStream",
+      "fully_qualified_classname": "org.eclipse.jetty.websocket.core.messages.MessageInputStream",
+      "source_path": "jetty-websocket/jetty-websocket-core-common/src/main/java/org/eclipse/jetty/websocket/core/messages/MessageInputStream.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.websocket.core.messages",
+      "message": "Rename field \"closed\" to prevent any misunderstanding/clash with field \"CLOSED\".",
+      "description": "Rename field \"closed\" to prevent any misunderstanding/clash with field \"CLOSED\".",
+      "tool_specific": {
+        "severity": "BLOCKER",
+        "issue_type": "CODE_SMELL",
+        "effort": "10min",
+        "status": "OPEN",
+        "tags": [
+          "confusing"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-websocket/jetty-websocket-core-common/src/main/java/org/eclipse/jetty/websocket/core/messages/MessageInputStream.java",
+        "module": "jetty-websocket/jetty-websocket-core-common"
+      },
+      "original_finding_index": 274
+    },
+    {
+      "type": "java:S3776",
+      "abbrev": "S3776",
+      "sourcefile": "MutableHttpFields.java",
+      "start_line": "431",
+      "end_line": "431",
+      "classname": "MutableHttpFields",
+      "fully_qualified_classname": "org.eclipse.jetty.http.MutableHttpFields",
+      "source_path": "jetty-http/src/main/java/org/eclipse/jetty/http/MutableHttpFields.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.http",
+      "message": "Refactor this method to reduce its Cognitive Complexity from 16 to the 15 allowed.",
+      "description": "Refactor this method to reduce its Cognitive Complexity from 16 to the 15 allowed.",
+      "tool_specific": {
+        "severity": "CRITICAL",
+        "issue_type": "CODE_SMELL",
+        "effort": "6min",
+        "status": "OPEN",
+        "tags": [
+          "brain-overload"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-http/src/main/java/org/eclipse/jetty/http/MutableHttpFields.java",
+        "module": "jetty-http"
+      },
+      "original_finding_index": 400
+    },
+    {
+      "type": "java:S3776",
+      "abbrev": "S3776",
+      "sourcefile": "HttpSenderOverHTTP3.java",
+      "start_line": "57",
+      "end_line": "57",
+      "classname": "HttpSenderOverHTTP3",
+      "fully_qualified_classname": "org.eclipse.jetty.http3.client.transport.internal.HttpSenderOverHTTP3",
+      "source_path": "jetty-http3/jetty-http3-client-transport/src/main/java/org/eclipse/jetty/http3/client/transport/internal/HttpSenderOverHTTP3.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.http3.client.transport.internal",
+      "message": "Refactor this method to reduce its Cognitive Complexity from 39 to the 15 allowed.",
+      "description": "Refactor this method to reduce its Cognitive Complexity from 39 to the 15 allowed.",
+      "tool_specific": {
+        "severity": "CRITICAL",
+        "issue_type": "CODE_SMELL",
+        "effort": "29min",
+        "status": "OPEN",
+        "tags": [
+          "brain-overload"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-http3/jetty-http3-client-transport/src/main/java/org/eclipse/jetty/http3/client/transport/internal/HttpSenderOverHTTP3.java",
+        "module": "jetty-http3/jetty-http3-client-transport"
+      },
+      "original_finding_index": 485
+    },
+    {
+      "type": "java:S2696",
+      "abbrev": "S2696",
+      "sourcefile": "DefaultFileLocatorHelper.java",
+      "start_line": "152",
+      "end_line": "152",
+      "classname": "DefaultFileLocatorHelper",
+      "fully_qualified_classname": "org.eclipse.jetty.osgi.util.DefaultFileLocatorHelper",
+      "source_path": "jetty-osgi/src/main/java/org/eclipse/jetty/osgi/util/DefaultFileLocatorHelper.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.osgi.util",
+      "message": "Make the enclosing method \"static\" or remove this set.",
+      "description": "Make the enclosing method \"static\" or remove this set.",
+      "tool_specific": {
+        "severity": "CRITICAL",
+        "issue_type": "CODE_SMELL",
+        "effort": "20min",
+        "status": "OPEN",
+        "tags": [
+          "multi-threading"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-osgi/src/main/java/org/eclipse/jetty/osgi/util/DefaultFileLocatorHelper.java",
+        "module": "jetty-osgi"
+      },
+      "original_finding_index": 616
+    },
+    {
+      "type": "java:S3776",
+      "abbrev": "S3776",
+      "sourcefile": "HttpChannelState.java",
+      "start_line": "1338",
+      "end_line": "1338",
+      "classname": "HttpChannelState",
+      "fully_qualified_classname": "org.eclipse.jetty.server.internal.HttpChannelState",
+      "source_path": "jetty-server/src/main/java/org/eclipse/jetty/server/internal/HttpChannelState.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.server.internal",
+      "message": "Refactor this method to reduce its Cognitive Complexity from 37 to the 15 allowed.",
+      "description": "Refactor this method to reduce its Cognitive Complexity from 37 to the 15 allowed.",
+      "tool_specific": {
+        "severity": "CRITICAL",
+        "issue_type": "CODE_SMELL",
+        "effort": "27min",
+        "status": "OPEN",
+        "tags": [
+          "brain-overload"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-server/src/main/java/org/eclipse/jetty/server/internal/HttpChannelState.java",
+        "module": "jetty-server"
+      },
+      "original_finding_index": 785
+    },
+    {
+      "type": "java:S1948",
+      "abbrev": "S1948",
+      "sourcefile": "HttpConnection.java",
+      "start_line": "1049",
+      "end_line": "1049",
+      "classname": "HttpConnection",
+      "fully_qualified_classname": "org.eclipse.jetty.server.internal.HttpConnection",
+      "source_path": "jetty-server/src/main/java/org/eclipse/jetty/server/internal/HttpConnection.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.server.internal",
+      "message": "Make non-static \"_complete\" transient or serializable.",
+      "description": "Make non-static \"_complete\" transient or serializable.",
+      "tool_specific": {
+        "severity": "CRITICAL",
+        "issue_type": "CODE_SMELL",
+        "effort": "30min",
+        "status": "OPEN",
+        "tags": [
+          "cwe",
+          "serialization"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-server/src/main/java/org/eclipse/jetty/server/internal/HttpConnection.java",
+        "module": "jetty-server"
+      },
+      "original_finding_index": 791
+    },
+    {
+      "type": "java:S1948",
+      "abbrev": "S1948",
+      "sourcefile": "UnreadableSessionDataException.java",
+      "start_line": "26",
+      "end_line": "26",
+      "classname": "UnreadableSessionDataException",
+      "fully_qualified_classname": "org.eclipse.jetty.session.UnreadableSessionDataException",
+      "source_path": "jetty-session/src/main/java/org/eclipse/jetty/session/UnreadableSessionDataException.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.session",
+      "message": "Make non-static \"_sessionContext\" transient or serializable.",
+      "description": "Make non-static \"_sessionContext\" transient or serializable.",
+      "tool_specific": {
+        "severity": "CRITICAL",
+        "issue_type": "CODE_SMELL",
+        "effort": "30min",
+        "status": "OPEN",
+        "tags": [
+          "cwe",
+          "serialization"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-session/src/main/java/org/eclipse/jetty/session/UnreadableSessionDataException.java",
+        "module": "jetty-session"
+      },
+      "original_finding_index": 829
+    },
+    {
+      "type": "java:S1192",
+      "abbrev": "S1192",
+      "sourcefile": "AsyncJSON.java",
+      "start_line": "673",
+      "end_line": "673",
+      "classname": "AsyncJSON",
+      "fully_qualified_classname": "org.eclipse.jetty.util.ajax.AsyncJSON",
+      "source_path": "jetty-util-ajax/src/main/java/org/eclipse/jetty/util/ajax/AsyncJSON.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.util.ajax",
+      "message": "Define a constant instead of duplicating this literal \"invalid 'false' literal\" 3 times.",
+      "description": "Define a constant instead of duplicating this literal \"invalid 'false' literal\" 3 times.",
+      "tool_specific": {
+        "severity": "CRITICAL",
+        "issue_type": "CODE_SMELL",
+        "effort": "8min",
+        "status": "OPEN",
+        "tags": [
+          "design"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-util-ajax/src/main/java/org/eclipse/jetty/util/ajax/AsyncJSON.java",
+        "module": "jetty-util-ajax"
+      },
+      "original_finding_index": 841
+    },
+    {
+      "type": "java:S3776",
+      "abbrev": "S3776",
+      "sourcefile": "AsyncJSON.java",
+      "start_line": "1298",
+      "end_line": "1298",
+      "classname": "AsyncJSON",
+      "fully_qualified_classname": "org.eclipse.jetty.util.ajax.AsyncJSON",
+      "source_path": "jetty-util-ajax/src/main/java/org/eclipse/jetty/util/ajax/AsyncJSON.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.util.ajax",
+      "message": "Refactor this method to reduce its Cognitive Complexity from 19 to the 15 allowed.",
+      "description": "Refactor this method to reduce its Cognitive Complexity from 19 to the 15 allowed.",
+      "tool_specific": {
+        "severity": "CRITICAL",
+        "issue_type": "CODE_SMELL",
+        "effort": "9min",
+        "status": "OPEN",
+        "tags": [
+          "brain-overload"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-util-ajax/src/main/java/org/eclipse/jetty/util/ajax/AsyncJSON.java",
+        "module": "jetty-util-ajax"
+      },
+      "original_finding_index": 844
+    },
+    {
+      "type": "java:S3776",
+      "abbrev": "S3776",
+      "sourcefile": "Utf8StringBuilder.java",
+      "start_line": "351",
+      "end_line": "351",
+      "classname": "Utf8StringBuilder",
+      "fully_qualified_classname": "org.eclipse.jetty.util.Utf8StringBuilder",
+      "source_path": "jetty-util/src/main/java/org/eclipse/jetty/util/Utf8StringBuilder.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.util",
+      "message": "Refactor this method to reduce its Cognitive Complexity from 27 to the 15 allowed.",
+      "description": "Refactor this method to reduce its Cognitive Complexity from 27 to the 15 allowed.",
+      "tool_specific": {
+        "severity": "CRITICAL",
+        "issue_type": "CODE_SMELL",
+        "effort": "17min",
+        "status": "OPEN",
+        "tags": [
+          "brain-overload"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-util/src/main/java/org/eclipse/jetty/util/Utf8StringBuilder.java",
+        "module": "jetty-util"
+      },
+      "original_finding_index": 934
+    },
+    {
+      "type": "java:S1192",
+      "abbrev": "S1192",
+      "sourcefile": "AttributeNormalizer.java",
+      "start_line": "328",
+      "end_line": "328",
+      "classname": "AttributeNormalizer",
+      "fully_qualified_classname": "org.eclipse.jetty.util.resource.AttributeNormalizer",
+      "source_path": "jetty-util/src/main/java/org/eclipse/jetty/util/resource/AttributeNormalizer.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.util.resource",
+      "message": "Define a constant instead of duplicating this literal \"${%s}\" 3 times.",
+      "description": "Define a constant instead of duplicating this literal \"${%s}\" 3 times.",
+      "tool_specific": {
+        "severity": "CRITICAL",
+        "issue_type": "CODE_SMELL",
+        "effort": "8min",
+        "status": "OPEN",
+        "tags": [
+          "design"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-util/src/main/java/org/eclipse/jetty/util/resource/AttributeNormalizer.java",
+        "module": "jetty-util"
+      },
+      "original_finding_index": 946
+    },
+    {
+      "type": "java:S115",
+      "abbrev": "S115",
+      "sourcefile": "X509.java",
+      "start_line": "44",
+      "end_line": "44",
+      "classname": "X509",
+      "fully_qualified_classname": "org.eclipse.jetty.util.ssl.X509",
+      "source_path": "jetty-util/src/main/java/org/eclipse/jetty/util/ssl/X509.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.util.ssl",
+      "message": "Rename this constant name to match the regular expression '^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$'.",
+      "description": "Rename this constant name to match the regular expression '^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$'.",
+      "tool_specific": {
+        "severity": "CRITICAL",
+        "issue_type": "CODE_SMELL",
+        "effort": "2min",
+        "status": "OPEN",
+        "tags": [
+          "convention"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-util/src/main/java/org/eclipse/jetty/util/ssl/X509.java",
+        "module": "jetty-util"
+      },
+      "original_finding_index": 976
+    },
+    {
+      "type": "java:S3776",
+      "abbrev": "S3776",
+      "sourcefile": "WebSocketCoreSession.java",
+      "start_line": "653",
+      "end_line": "653",
+      "classname": "WebSocketCoreSession",
+      "fully_qualified_classname": "org.eclipse.jetty.websocket.core.WebSocketCoreSession",
+      "source_path": "jetty-websocket/jetty-websocket-core-common/src/main/java/org/eclipse/jetty/websocket/core/WebSocketCoreSession.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.websocket.core",
+      "message": "Refactor this method to reduce its Cognitive Complexity from 20 to the 15 allowed.",
+      "description": "Refactor this method to reduce its Cognitive Complexity from 20 to the 15 allowed.",
+      "tool_specific": {
+        "severity": "CRITICAL",
+        "issue_type": "CODE_SMELL",
+        "effort": "10min",
+        "status": "OPEN",
+        "tags": [
+          "brain-overload"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-websocket/jetty-websocket-core-common/src/main/java/org/eclipse/jetty/websocket/core/WebSocketCoreSession.java",
+        "module": "jetty-websocket/jetty-websocket-core-common"
+      },
+      "original_finding_index": 1004
+    },
+    {
+      "type": "java:S1186",
+      "abbrev": "S1186",
+      "sourcefile": "XmlConfiguration.java",
+      "start_line": "425",
+      "end_line": "425",
+      "classname": "XmlConfiguration",
+      "fully_qualified_classname": "org.eclipse.jetty.xml.XmlConfiguration",
+      "source_path": "jetty-xml/src/main/java/org/eclipse/jetty/xml/XmlConfiguration.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.xml",
+      "message": "Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.",
+      "description": "Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.",
+      "tool_specific": {
+        "severity": "CRITICAL",
+        "issue_type": "CODE_SMELL",
+        "effort": "5min",
+        "status": "OPEN",
+        "tags": [
+          "suspicious"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-xml/src/main/java/org/eclipse/jetty/xml/XmlConfiguration.java",
+        "module": "jetty-xml"
+      },
+      "original_finding_index": 1028
+    },
+    {
+      "type": "java:S1181",
+      "abbrev": "S1181",
+      "sourcefile": "ByteRange.java",
+      "start_line": "155",
+      "end_line": "155",
+      "classname": "ByteRange",
+      "fully_qualified_classname": "org.eclipse.jetty.http.ByteRange",
+      "source_path": "jetty-http/src/main/java/org/eclipse/jetty/http/ByteRange.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.http",
+      "message": "Catch Exception instead of Throwable.",
+      "description": "Catch Exception instead of Throwable.",
+      "tool_specific": {
+        "severity": "MAJOR",
+        "issue_type": "CODE_SMELL",
+        "effort": "20min",
+        "status": "OPEN",
+        "tags": [
+          "cwe",
+          "error-handling",
+          "bad-practice",
+          "cert"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-http/src/main/java/org/eclipse/jetty/http/ByteRange.java",
+        "module": "jetty-http"
+      },
+      "original_finding_index": 1299
+    },
+    {
+      "type": "java:S1181",
+      "abbrev": "S1181",
+      "sourcefile": "SslConnection.java",
+      "start_line": "1523",
+      "end_line": "1523",
+      "classname": "SslConnection",
+      "fully_qualified_classname": "org.eclipse.jetty.io.ssl.SslConnection",
+      "source_path": "jetty-io/src/main/java/org/eclipse/jetty/io/ssl/SslConnection.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.io.ssl",
+      "message": "Catch Exception instead of Throwable.",
+      "description": "Catch Exception instead of Throwable.",
+      "tool_specific": {
+        "severity": "MAJOR",
+        "issue_type": "CODE_SMELL",
+        "effort": "20min",
+        "status": "OPEN",
+        "tags": [
+          "cwe",
+          "error-handling",
+          "bad-practice",
+          "cert"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-io/src/main/java/org/eclipse/jetty/io/ssl/SslConnection.java",
+        "module": "jetty-io"
+      },
+      "original_finding_index": 1910
+    },
+    {
+      "type": "java:S3358",
+      "abbrev": "S3358",
+      "sourcefile": "Attributes.java",
+      "start_line": "673",
+      "end_line": "673",
+      "classname": "Attributes",
+      "fully_qualified_classname": "org.eclipse.jetty.util.Attributes",
+      "source_path": "jetty-util/src/main/java/org/eclipse/jetty/util/Attributes.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.util",
+      "message": "Extract this nested ternary operation into an independent statement.",
+      "description": "Extract this nested ternary operation into an independent statement.",
+      "tool_specific": {
+        "severity": "MAJOR",
+        "issue_type": "CODE_SMELL",
+        "effort": "5min",
+        "status": "OPEN",
+        "tags": [
+          "confusing"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-util/src/main/java/org/eclipse/jetty/util/Attributes.java",
+        "module": "jetty-util"
+      },
+      "original_finding_index": 2631
+    },
+    {
+      "type": "java:S1168",
+      "abbrev": "S1168",
+      "sourcefile": "StringUtil.java",
+      "start_line": "916",
+      "end_line": "916",
+      "classname": "StringUtil",
+      "fully_qualified_classname": "org.eclipse.jetty.util.StringUtil",
+      "source_path": "jetty-util/src/main/java/org/eclipse/jetty/util/StringUtil.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.util",
+      "message": "Return an empty array instead of null.",
+      "description": "Return an empty array instead of null.",
+      "tool_specific": {
+        "severity": "MAJOR",
+        "issue_type": "CODE_SMELL",
+        "effort": "30min",
+        "status": "OPEN",
+        "tags": [
+          "cert"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-util/src/main/java/org/eclipse/jetty/util/StringUtil.java",
+        "module": "jetty-util"
+      },
+      "original_finding_index": 2766
+    },
+    {
+      "type": "java:S1121",
+      "abbrev": "S1121",
+      "sourcefile": "MessageInputStream.java",
+      "start_line": "272",
+      "end_line": "272",
+      "classname": "MessageInputStream",
+      "fully_qualified_classname": "org.eclipse.jetty.websocket.core.messages.MessageInputStream",
+      "source_path": "jetty-websocket/jetty-websocket-core-common/src/main/java/org/eclipse/jetty/websocket/core/messages/MessageInputStream.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.websocket.core.messages",
+      "message": "Extract the assignment out of this expression.",
+      "description": "Extract the assignment out of this expression.",
+      "tool_specific": {
+        "severity": "MAJOR",
+        "issue_type": "CODE_SMELL",
+        "effort": "5min",
+        "status": "OPEN",
+        "tags": [
+          "cwe",
+          "cert",
+          "suspicious"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-websocket/jetty-websocket-core-common/src/main/java/org/eclipse/jetty/websocket/core/messages/MessageInputStream.java",
+        "module": "jetty-websocket/jetty-websocket-core-common"
+      },
+      "original_finding_index": 3085
+    },
+    {
+      "type": "java:S131",
+      "abbrev": "S131",
+      "sourcefile": "ServletPathSpec.java",
+      "start_line": "440",
+      "end_line": "440",
+      "classname": "ServletPathSpec",
+      "fully_qualified_classname": "org.eclipse.jetty.http.pathmap.ServletPathSpec",
+      "source_path": "jetty-http/src/main/java/org/eclipse/jetty/http/pathmap/ServletPathSpec.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.http.pathmap",
+      "message": "Complete cases by adding the missing enum constants or add a default case to this switch.",
+      "description": "Complete cases by adding the missing enum constants or add a default case to this switch.",
+      "tool_specific": {
+        "severity": "CRITICAL",
+        "issue_type": "CODE_SMELL",
+        "effort": "5min",
+        "status": "OPEN",
+        "tags": [
+          "cwe",
+          "cert"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-http/src/main/java/org/eclipse/jetty/http/pathmap/ServletPathSpec.java",
+        "module": "jetty-http"
+      },
+      "original_finding_index": 346
+    },
+    {
+      "type": "java:S2447",
+      "abbrev": "S2447",
+      "sourcefile": "IncludeExcludeSet.java",
+      "start_line": "215",
+      "end_line": "215",
+      "classname": "IncludeExcludeSet",
+      "fully_qualified_classname": "org.eclipse.jetty.util.IncludeExcludeSet",
+      "source_path": "jetty-util/src/main/java/org/eclipse/jetty/util/IncludeExcludeSet.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.util",
+      "message": "Null is returned but a \"Boolean\" is expected.",
+      "description": "Null is returned but a \"Boolean\" is expected.",
+      "tool_specific": {
+        "severity": "CRITICAL",
+        "issue_type": "CODE_SMELL",
+        "effort": "20min",
+        "status": "OPEN",
+        "tags": [
+          "cwe",
+          "cert",
+          "pitfall"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-util/src/main/java/org/eclipse/jetty/util/IncludeExcludeSet.java",
+        "module": "jetty-util"
+      },
+      "original_finding_index": 811
+    },
+    {
+      "type": "java:S2157",
+      "abbrev": "S2157",
+      "sourcefile": "LazyList.java",
+      "start_line": "57",
+      "end_line": "57",
+      "classname": "LazyList",
+      "fully_qualified_classname": "org.eclipse.jetty.util.LazyList",
+      "source_path": "jetty-util/src/main/java/org/eclipse/jetty/util/LazyList.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.util",
+      "message": "Add a \"clone()\" method to this class.",
+      "description": "Add a \"clone()\" method to this class.",
+      "tool_specific": {
+        "severity": "CRITICAL",
+        "issue_type": "CODE_SMELL",
+        "effort": "30min",
+        "status": "OPEN",
+        "tags": [
+          "convention",
+          "api-design"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-util/src/main/java/org/eclipse/jetty/util/LazyList.java",
+        "module": "jetty-util"
+      },
+      "original_finding_index": 817
+    },
+    {
+      "type": "java:S1452",
+      "abbrev": "S1452",
+      "sourcefile": "PathCollators.java",
+      "start_line": "54",
+      "end_line": "54",
+      "classname": "PathCollators",
+      "fully_qualified_classname": "org.eclipse.jetty.util.resource.PathCollators",
+      "source_path": "jetty-util/src/main/java/org/eclipse/jetty/util/resource/PathCollators.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.util.resource",
+      "message": "Remove usage of generic wildcard type.",
+      "description": "Remove usage of generic wildcard type.",
+      "tool_specific": {
+        "severity": "CRITICAL",
+        "issue_type": "CODE_SMELL",
+        "effort": "20min",
+        "status": "OPEN",
+        "tags": [
+          "pitfall"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-util/src/main/java/org/eclipse/jetty/util/resource/PathCollators.java",
+        "module": "jetty-util"
+      },
+      "original_finding_index": 875
+    },
+    {
+      "type": "java:S5843",
+      "abbrev": "S5843",
+      "sourcefile": "AuthenticationProtocolHandler.java",
+      "start_line": "44",
+      "end_line": "44",
+      "classname": "AuthenticationProtocolHandler",
+      "fully_qualified_classname": "org.eclipse.jetty.client.AuthenticationProtocolHandler",
+      "source_path": "jetty-client/src/main/java/org/eclipse/jetty/client/AuthenticationProtocolHandler.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.client",
+      "message": "Simplify this regular expression to reduce its complexity from 35 to the 20 allowed.",
+      "description": "Simplify this regular expression to reduce its complexity from 35 to the 20 allowed.",
+      "tool_specific": {
+        "severity": "MAJOR",
+        "issue_type": "CODE_SMELL",
+        "effort": "38min",
+        "status": "OPEN",
+        "tags": [
+          "regex"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-client/src/main/java/org/eclipse/jetty/client/AuthenticationProtocolHandler.java",
+        "module": "jetty-client"
+      },
+      "original_finding_index": 1003
+    },
+    {
+      "type": "java:S1871",
+      "abbrev": "S1871",
+      "sourcefile": "HttpDateTime.java",
+      "start_line": "178",
+      "end_line": "180",
+      "classname": "HttpDateTime",
+      "fully_qualified_classname": "org.eclipse.jetty.http.HttpDateTime",
+      "source_path": "jetty-http/src/main/java/org/eclipse/jetty/http/HttpDateTime.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.http",
+      "message": "This branch's code block is the same as the block for the branch on line 174.",
+      "description": "This branch's code block is the same as the block for the branch on line 174.",
+      "tool_specific": {
+        "severity": "MAJOR",
+        "issue_type": "CODE_SMELL",
+        "effort": "10min",
+        "status": "OPEN",
+        "tags": [
+          "design",
+          "suspicious"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-http/src/main/java/org/eclipse/jetty/http/HttpDateTime.java",
+        "module": "jetty-http"
+      },
+      "original_finding_index": 1247
+    },
+    {
+      "type": "java:S1700",
+      "abbrev": "S1700",
+      "sourcefile": "MultiPartByteRanges.java",
+      "start_line": "261",
+      "end_line": "261",
+      "classname": "MultiPartByteRanges",
+      "fully_qualified_classname": "org.eclipse.jetty.http.MultiPartByteRanges",
+      "source_path": "jetty-http/src/main/java/org/eclipse/jetty/http/MultiPartByteRanges.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.http",
+      "message": "Rename field \"parser\"",
+      "description": "Rename field \"parser\"",
+      "tool_specific": {
+        "severity": "MAJOR",
+        "issue_type": "CODE_SMELL",
+        "effort": "10min",
+        "status": "OPEN",
+        "tags": [
+          "brain-overload"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-http/src/main/java/org/eclipse/jetty/http/MultiPartByteRanges.java",
+        "module": "jetty-http"
+      },
+      "original_finding_index": 1338
+    },
+    {
+      "type": "java:S5261",
+      "abbrev": "S5261",
+      "sourcefile": "ServletPathSpec.java",
+      "start_line": "182",
+      "end_line": "182",
+      "classname": "ServletPathSpec",
+      "fully_qualified_classname": "org.eclipse.jetty.http.pathmap.ServletPathSpec",
+      "source_path": "jetty-http/src/main/java/org/eclipse/jetty/http/pathmap/ServletPathSpec.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.http.pathmap",
+      "message": "Add explicit curly braces to avoid dangling else.",
+      "description": "Add explicit curly braces to avoid dangling else.",
+      "tool_specific": {
+        "severity": "MAJOR",
+        "issue_type": "CODE_SMELL",
+        "effort": "1min",
+        "status": "OPEN",
+        "tags": [
+          "confusing"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-http/src/main/java/org/eclipse/jetty/http/pathmap/ServletPathSpec.java",
+        "module": "jetty-http"
+      },
+      "original_finding_index": 1392
+    },
+    {
+      "type": "java:S6126",
+      "abbrev": "S6126",
+      "sourcefile": "PrefaceFrame.java",
+      "start_line": "33",
+      "end_line": "36",
+      "classname": "PrefaceFrame",
+      "fully_qualified_classname": "org.eclipse.jetty.http2.frames.PrefaceFrame",
+      "source_path": "jetty-http2/jetty-http2-common/src/main/java/org/eclipse/jetty/http2/frames/PrefaceFrame.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.http2.frames",
+      "message": "Replace this String concatenation with Text block.",
+      "description": "Replace this String concatenation with Text block.",
+      "tool_specific": {
+        "severity": "MAJOR",
+        "issue_type": "CODE_SMELL",
+        "effort": "2min",
+        "status": "OPEN",
+        "tags": [
+          "java15"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-http2/jetty-http2-common/src/main/java/org/eclipse/jetty/http2/frames/PrefaceFrame.java",
+        "module": "jetty-http2/jetty-http2-common"
+      },
+      "original_finding_index": 1477
+    },
+    {
+      "type": "java:S1172",
+      "abbrev": "S1172",
+      "sourcefile": "HeaderGenerator.java",
+      "start_line": "48",
+      "end_line": "48",
+      "classname": "HeaderGenerator",
+      "fully_qualified_classname": "org.eclipse.jetty.http2.generator.HeaderGenerator",
+      "source_path": "jetty-http2/jetty-http2-common/src/main/java/org/eclipse/jetty/http2/generator/HeaderGenerator.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.http2.generator",
+      "message": "Remove this unused method parameter \"capacity\".",
+      "description": "Remove this unused method parameter \"capacity\".",
+      "tool_specific": {
+        "severity": "MAJOR",
+        "issue_type": "CODE_SMELL",
+        "effort": "5min",
+        "status": "OPEN",
+        "tags": [
+          "cert",
+          "unused"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-http2/jetty-http2-common/src/main/java/org/eclipse/jetty/http2/generator/HeaderGenerator.java",
+        "module": "jetty-http2/jetty-http2-common"
+      },
+      "original_finding_index": 1479
+    },
+    {
+      "type": "java:S1119",
+      "abbrev": "S1119",
+      "sourcefile": "WriteFlusher.java",
+      "start_line": "343",
+      "end_line": "343",
+      "classname": "WriteFlusher",
+      "fully_qualified_classname": "org.eclipse.jetty.io.WriteFlusher",
+      "source_path": "jetty-io/src/main/java/org/eclipse/jetty/io/WriteFlusher.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.io",
+      "message": "Refactor the code to remove this label and the need for it.",
+      "description": "Refactor the code to remove this label and the need for it.",
+      "tool_specific": {
+        "severity": "MAJOR",
+        "issue_type": "CODE_SMELL",
+        "effort": "30min",
+        "status": "OPEN",
+        "tags": [
+          "confusing"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-io/src/main/java/org/eclipse/jetty/io/WriteFlusher.java",
+        "module": "jetty-io"
+      },
+      "original_finding_index": 1738
+    },
+    {
+      "type": "java:S127",
+      "abbrev": "S127",
+      "sourcefile": "WriteThroughWriter.java",
+      "start_line": "249",
+      "end_line": "249",
+      "classname": "WriteThroughWriter",
+      "fully_qualified_classname": "org.eclipse.jetty.io.WriteThroughWriter",
+      "source_path": "jetty-io/src/main/java/org/eclipse/jetty/io/WriteThroughWriter.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.io",
+      "message": "Refactor the code in order to not assign to this loop counter from within the loop body.",
+      "description": "Refactor the code in order to not assign to this loop counter from within the loop body.",
+      "tool_specific": {
+        "severity": "MAJOR",
+        "issue_type": "CODE_SMELL",
+        "effort": "10min",
+        "status": "OPEN",
+        "tags": [
+          "pitfall"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-io/src/main/java/org/eclipse/jetty/io/WriteThroughWriter.java",
+        "module": "jetty-io"
+      },
+      "original_finding_index": 1743
+    },
+    {
+      "type": "java:S3011",
+      "abbrev": "S3011",
+      "sourcefile": "DefaultFileLocatorHelper.java",
+      "start_line": "153",
+      "end_line": "153",
+      "classname": "DefaultFileLocatorHelper",
+      "fully_qualified_classname": "org.eclipse.jetty.osgi.util.DefaultFileLocatorHelper",
+      "source_path": "jetty-osgi/src/main/java/org/eclipse/jetty/osgi/util/DefaultFileLocatorHelper.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.osgi.util",
+      "message": "This accessibility update should be removed.",
+      "description": "This accessibility update should be removed.",
+      "tool_specific": {
+        "severity": "MAJOR",
+        "issue_type": "CODE_SMELL",
+        "effort": "30min",
+        "status": "OPEN",
+        "tags": [
+          "cert"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-osgi/src/main/java/org/eclipse/jetty/osgi/util/DefaultFileLocatorHelper.java",
+        "module": "jetty-osgi"
+      },
+      "original_finding_index": 1955
+    },
+    {
+      "type": "java:S5738",
+      "abbrev": "S5738",
+      "sourcefile": "Server.java",
+      "start_line": "904",
+      "end_line": "904",
+      "classname": "Server",
+      "fully_qualified_classname": "org.eclipse.jetty.server.Server",
+      "source_path": "jetty-server/src/main/java/org/eclipse/jetty/server/Server.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.server",
+      "message": "Remove this call to a deprecated class, it has been marked for removal.",
+      "description": "Remove this call to a deprecated class, it has been marked for removal.",
+      "tool_specific": {
+        "severity": "MAJOR",
+        "issue_type": "CODE_SMELL",
+        "effort": "15min",
+        "status": "OPEN",
+        "tags": [
+          "cwe",
+          "obsolete",
+          "cert"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-server/src/main/java/org/eclipse/jetty/server/Server.java",
+        "module": "jetty-server"
+      },
+      "original_finding_index": 2258
+    },
+    {
+      "type": "java:S112",
+      "abbrev": "S112",
+      "sourcefile": "SessionDataMap.java",
+      "start_line": "58",
+      "end_line": "58",
+      "classname": "SessionDataMap",
+      "fully_qualified_classname": "org.eclipse.jetty.session.SessionDataMap",
+      "source_path": "jetty-session/src/main/java/org/eclipse/jetty/session/SessionDataMap.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.session",
+      "message": "Replace generic exceptions with specific library exceptions or a custom exception.",
+      "description": "Replace generic exceptions with specific library exceptions or a custom exception.",
+      "tool_specific": {
+        "severity": "MAJOR",
+        "issue_type": "CODE_SMELL",
+        "effort": "20min",
+        "status": "OPEN",
+        "tags": [
+          "cwe",
+          "error-handling",
+          "cert"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-session/src/main/java/org/eclipse/jetty/session/SessionDataMap.java",
+        "module": "jetty-session"
+      },
+      "original_finding_index": 2457
+    },
+    {
+      "type": "java:S3824",
+      "abbrev": "S3824",
+      "sourcefile": "TopologicalSort.java",
+      "start_line": "57",
+      "end_line": "57",
+      "classname": "TopologicalSort",
+      "fully_qualified_classname": "org.eclipse.jetty.util.TopologicalSort",
+      "source_path": "jetty-util/src/main/java/org/eclipse/jetty/util/TopologicalSort.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.util",
+      "message": "Replace this \"Map.get()\" and condition with a call to \"Map.computeIfAbsent()\".",
+      "description": "Replace this \"Map.get()\" and condition with a call to \"Map.computeIfAbsent()\".",
+      "tool_specific": {
+        "severity": "MAJOR",
+        "issue_type": "CODE_SMELL",
+        "effort": "10min",
+        "status": "OPEN",
+        "tags": [
+          "symbolic-execution",
+          "java8"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-util/src/main/java/org/eclipse/jetty/util/TopologicalSort.java",
+        "module": "jetty-util"
+      },
+      "original_finding_index": 2693
+    },
+    {
+      "type": "java:S108",
+      "abbrev": "S108",
+      "sourcefile": "TypeUtil.java",
+      "start_line": "622",
+      "end_line": "622",
+      "classname": "TypeUtil",
+      "fully_qualified_classname": "org.eclipse.jetty.util.TypeUtil",
+      "source_path": "jetty-util/src/main/java/org/eclipse/jetty/util/TypeUtil.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.util",
+      "message": "Remove this block of code, fill it in, or add a comment explaining why it is empty.",
+      "description": "Remove this block of code, fill it in, or add a comment explaining why it is empty.",
+      "tool_specific": {
+        "severity": "MAJOR",
+        "issue_type": "CODE_SMELL",
+        "effort": "5min",
+        "status": "OPEN",
+        "tags": [
+          "suspicious"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-util/src/main/java/org/eclipse/jetty/util/TypeUtil.java",
+        "module": "jetty-util"
+      },
+      "original_finding_index": 2703
+    },
+    {
+      "type": "java:S1144",
+      "abbrev": "S1144",
+      "sourcefile": "SecurityUtils.java",
+      "start_line": "233",
+      "end_line": "233",
+      "classname": "SecurityUtils",
+      "fully_qualified_classname": "org.eclipse.jetty.util.security.SecurityUtils",
+      "source_path": "jetty-util/src/main/java/org/eclipse/jetty/util/security/SecurityUtils.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.util.security",
+      "message": "Remove this unused private \"callableToPrivilegedAction\" method.",
+      "description": "Remove this unused private \"callableToPrivilegedAction\" method.",
+      "tool_specific": {
+        "severity": "MAJOR",
+        "issue_type": "CODE_SMELL",
+        "effort": "2min",
+        "status": "OPEN",
+        "tags": [
+          "unused"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-util/src/main/java/org/eclipse/jetty/util/security/SecurityUtils.java",
+        "module": "jetty-util"
+      },
+      "original_finding_index": 2869
+    },
+    {
+      "type": "java:S6204",
+      "abbrev": "S6204",
+      "sourcefile": "JettyClientUpgradeRequest.java",
+      "start_line": "52",
+      "end_line": "52",
+      "classname": "JettyClientUpgradeRequest",
+      "fully_qualified_classname": "org.eclipse.jetty.websocket.client.internal.JettyClientUpgradeRequest",
+      "source_path": "jetty-websocket/jetty-websocket-jetty-client/src/main/java/org/eclipse/jetty/websocket/client/internal/JettyClientUpgradeRequest.java",
+      "source_set": "main",
+      "package": "org.eclipse.jetty.websocket.client.internal",
+      "message": "Replace this usage of 'Stream.collect(Collectors.toList())' with 'Stream.toList()' and ensure that the list is unmodified.",
+      "description": "Replace this usage of 'Stream.collect(Collectors.toList())' with 'Stream.toList()' and ensure that the list is unmodified.",
+      "tool_specific": {
+        "severity": "MAJOR",
+        "issue_type": "CODE_SMELL",
+        "effort": "5min",
+        "status": "OPEN",
+        "tags": [
+          "java16"
+        ],
+        "component": "jetty-core-minus-coreapp-start:jetty-websocket/jetty-websocket-jetty-client/src/main/java/org/eclipse/jetty/websocket/client/internal/JettyClientUpgradeRequest.java",
+        "module": "jetty-websocket/jetty-websocket-jetty-client"
+      },
+      "original_finding_index": 3055
+    },
+    {
+      "type": "xml:S1134",
+      "abbrev": "S1134",
+      "sourcefile": "pom.xml",
+      "start_line": "54",
+      "end_line": "54",
+      "classname": "pom.xml",
+      "fully_qualified_classname": "pom.xml",
+      "source_path": "pom.xml",
+      "source_set": null,
+      "package": null,
+      "message": "Take the required action to fix the issue indicated by this \"FIXME\" comment.",
+      "description": "Take the required action to fix the issue indicated by this \"FIXME\" comment.",
+      "tool_specific": {
+        "severity": "MAJOR",
+        "issue_type": "CODE_SMELL",
+        "effort": "0min",
+        "status": "OPEN",
+        "tags": [
+          "cwe"
+        ],
+        "component": "jetty-core-minus-coreapp-start:pom.xml",
+        "module": null
+      },
+      "original_finding_index": 3102
+    }
+  ],
+  "merged_from": [
+    "003_jetty-stage-1",
+    "005_jetty-stage-2"
+  ]
+}

@@ -1,0 +1,168 @@
+{
+  "source_run": "002_2026-05-21_14-21-06",
+  "sample_run": "003_2026-05-22_20-07-11",
+  "tools": {
+    "spotbugs": {
+      "name": "SpotBugs",
+      "population": 1821,
+      "distinct_rules": 95,
+      "sampled": 100,
+      "top_rules": [
+        {
+          "rule": "EI_EXPOSE_REP2",
+          "population": 354,
+          "population_share": 0.19439868204283361,
+          "proportional_draw": 19.43986820428336,
+          "in_sample": 6,
+          "example_message": "May expose internal representation by incorporating reference to mutable object"
+        },
+        {
+          "rule": "EI_EXPOSE_REP",
+          "population": 324,
+          "population_share": 0.17792421746293247,
+          "proportional_draw": 17.792421746293247,
+          "in_sample": 4,
+          "example_message": "May expose internal representation by returning reference to mutable object"
+        },
+        {
+          "rule": "CT_CONSTRUCTOR_THROW",
+          "population": 148,
+          "population_share": 0.08127402526084569,
+          "proportional_draw": 8.12740252608457,
+          "in_sample": 25,
+          "example_message": "Be wary of letting constructors throw exceptions."
+        },
+        {
+          "rule": "THROWS_METHOD_THROWS_RUNTIMEEXCEPTION",
+          "population": 124,
+          "population_share": 0.06809445359692477,
+          "proportional_draw": 6.809445359692477,
+          "in_sample": 0,
+          "example_message": "Method intentionally throws RuntimeException."
+        },
+        {
+          "rule": "AT_STALE_THREAD_WRITE_OF_PRIMITIVE",
+          "population": 115,
+          "population_share": 0.06315211422295441,
+          "proportional_draw": 6.315211422295441,
+          "in_sample": 25,
+          "example_message": "This write of this shared primitive variable may not be visible to other threads"
+        }
+      ]
+    },
+    "error_prone": {
+      "name": "Error Prone",
+      "population": 1023,
+      "distinct_rules": 62,
+      "sampled": 100,
+      "top_rules": [
+        {
+          "rule": "MissingSummary",
+          "population": 562,
+          "population_share": 0.5493646138807429,
+          "proportional_draw": 54.936461388074285,
+          "in_sample": 12,
+          "example_message": "A summary fragment is required; consider using the value of the @return block as a summary fragment instead."
+        },
+        {
+          "rule": "MissingOverride",
+          "population": 66,
+          "population_share": 0.06451612903225806,
+          "proportional_draw": 6.451612903225806,
+          "in_sample": 8,
+          "example_message": "put implements method in Mutable; expected @Override"
+        },
+        {
+          "rule": "BanJNDI",
+          "population": 48,
+          "population_share": 0.0469208211143695,
+          "proportional_draw": 4.69208211143695,
+          "in_sample": 3,
+          "example_message": "Using JNDI may deserialize user input via the `Serializable` API which is extremely dangerous"
+        },
+        {
+          "rule": "UnnecessaryParentheses",
+          "population": 42,
+          "population_share": 0.04105571847507331,
+          "proportional_draw": 4.105571847507331,
+          "in_sample": 4,
+          "example_message": "These grouping parentheses are unnecessary; it is unlikely the code will be misinterpreted without them"
+        },
+        {
+          "rule": "FutureReturnValueIgnored",
+          "population": 29,
+          "population_share": 0.028347996089931573,
+          "proportional_draw": 2.834799608993157,
+          "in_sample": 17,
+          "example_message": "Return value of methods returning Future must be checked. Ignoring returned Futures suppresses exceptions thrown from the code that completes the Future."
+        }
+      ]
+    },
+    "sonarqube": {
+      "name": "SonarQube",
+      "population": 7734,
+      "distinct_rules": 168,
+      "sampled": 100,
+      "top_rules": [
+        {
+          "rule": "java:S116",
+          "population": 2621,
+          "population_share": 0.33889319886216707,
+          "proportional_draw": 33.889319886216704,
+          "in_sample": 0,
+          "example_message": "Rename this field \"_parsedClassNames\" to match the regular expression '^[a-z][a-zA-Z0-9]*$'."
+        },
+        {
+          "rule": "java:S1181",
+          "population": 562,
+          "population_share": 0.07266614946987329,
+          "proportional_draw": 7.266614946987329,
+          "in_sample": 2,
+          "example_message": "Catch Exception instead of Throwable."
+        },
+        {
+          "rule": "java:S3776",
+          "population": 459,
+          "population_share": 0.05934833204034135,
+          "proportional_draw": 5.934833204034136,
+          "in_sample": 6,
+          "example_message": "Refactor this method to reduce its Cognitive Complexity from 20 to the 15 allowed."
+        },
+        {
+          "rule": "java:S6201",
+          "population": 225,
+          "population_share": 0.02909231962761831,
+          "proportional_draw": 2.909231962761831,
+          "in_sample": 0,
+          "example_message": "Replace this instanceof check and cast with 'instanceof CipherDiscriminator cipherdiscriminator'"
+        },
+        {
+          "rule": "java:S1117",
+          "population": 222,
+          "population_share": 0.028704422032583398,
+          "proportional_draw": 2.8704422032583397,
+          "in_sample": 0,
+          "example_message": "Rename \"pool\" which hides the field declared at line 52."
+        }
+      ]
+    }
+  },
+  "dominant": {
+    "rules": [
+      "EI_EXPOSE_REP2",
+      "EI_EXPOSE_REP",
+      "MissingSummary",
+      "java:S116"
+    ],
+    "proportional_count": 126.0580712248676,
+    "proportional_share": 0.42019357074955865,
+    "actual_count": 22,
+    "actual_share": 0.07333333333333333,
+    "sample_size": 300
+  },
+  "s116_underscore": {
+    "total": 2621,
+    "leading_underscore": 2540,
+    "share": 0.9690957649752003
+  }
+}

@@ -1,0 +1,1066 @@
+{
+  "model": "claude-sonnet-5",
+  "tool": "error-prone",
+  "num_runs": 3,
+  "runs_per_invocation": 3,
+  "source_root": "java-errors-benchmark",
+  "call_parameters": {
+    "temperature": null,
+    "concurrency": 3,
+    "response_format": "json_schema",
+    "max_tokens": 8192,
+    "max_retries": 6,
+    "base_url": "https://api.anthropic.com"
+  },
+  "system_prompt_variant": "benchmark",
+  "system_prompt_sha256": "b5b634e0a9109c59",
+  "user_prompt_sha256": "3963ac13371abed5",
+  "timestamp": "2026-08-09T18:26:59.585365+00:00",
+  "updated_at": "2026-08-10T20:12:32.551566+00:00",
+  "findings": [
+    {
+      "finding_id": 0,
+      "type": "EqualsGetClass",
+      "sourcefile": "PersonMatcher.java",
+      "start_line": "28",
+      "message": "Prefer instanceof to getClass when implementing Object#equals.",
+      "tool_specific": {
+        "column": "24"
+      },
+      "runs": [
+        {
+          "reasoning": "The equals method at line 28 does compare getClass() != obj.getClass() (line 32), which is exactly the pattern the rule targets; Person is not declared final, so subclassing is possible and the getClass check would break the Liskov substitution principle for equals. The rule's general recommendation to prefer instanceof for equals implementations applies correctly here.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "getclass comparison instead of instanceof in equals",
+          "developer_explanation": "Your equals() method uses getClass() != obj.getClass() to check type equality, which means a subclass instance can never be considered equal to a superclass instance even if all relevant fields match. Using 'obj instanceof Person' instead is generally preferred because it keeps equals() working correctly with subclasses (assuming they don't add significant new state), following the common Java equals contract guidance. Consider switching to an instanceof check unless you specifically intend to forbid subclass equality.",
+          "run": 1,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 1110,
+            "output_tokens": 558,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 7.393
+        },
+        {
+          "reasoning": "The code at line 28 defines equals() using `getClass() != obj.getClass()` as its type-check, which is exactly the pattern this rule targets. The Person class is non-final, so if it were ever subclassed, no subclass instance could ever equal a Person instance even conceptually equivalent, and getClass() usage can also break correctness under proxying/mocking frameworks. The tool's claim that instanceof is generally preferable to getClass() in equals() is materially accurate for this code.",
+          "is_true_positive": true,
+          "confidence": 0.75,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "equals implemented with getClass comparison instead of instanceof",
+          "developer_explanation": "Your equals() method compares getClass() rather than using instanceof to check the type of the passed object. This makes equals() overly strict for any future subclasses and can behave unexpectedly with proxies or dynamic subclasses; using `obj instanceof Person` is the more conventional and flexible approach recommended for implementing equals().",
+          "run": 2,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 1110,
+            "output_tokens": 728,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 11.732
+        },
+        {
+          "reasoning": "The equals method at line 32 does use `getClass() != obj.getClass()` instead of `instanceof`, which is exactly the pattern this rule targets; the class is non-final so this pattern could reject valid subclass instances in an asymmetric or Liskov-violating way. The flagged line (28) is the method signature, but the actual problematic comparison is inside the shown method body, so the warning still points to a real occurrence of the pattern in this code.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "getClass comparison instead of instanceof in equals",
+          "developer_explanation": "Your equals() method uses `getClass() != obj.getClass()` to check type compatibility. This is generally discouraged in favor of `instanceof`, because it makes equals brittle across subclassing and can break the general contract expectations when subtypes are involved. Consider using `!(obj instanceof Person)` instead, especially since Person is not declared final.",
+          "run": 3,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 1110,
+            "output_tokens": 588,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 7.047
+        }
+      ]
+    },
+    {
+      "finding_id": 1,
+      "type": "StringBuilderInitWithChar",
+      "sourcefile": "TextAssembler.java",
+      "start_line": "5",
+      "message": "StringBuilder does not have a char constructor; this invokes the int constructor.",
+      "tool_specific": {
+        "column": "28"
+      },
+      "runs": [
+        {
+          "reasoning": "The code calls new StringBuilder('a'), and since StringBuilder has no char constructor, 'a' is implicitly widened to int 97, invoking the capacity constructor; this creates an empty StringBuilder with initial capacity 97 rather than one containing the character 'a', which is almost certainly not the intended behavior given the surrounding append(\"bc\") call.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "char argument silently widened to int in StringBuilder constructor",
+          "developer_explanation": "Because StringBuilder lacks a char constructor, new StringBuilder('a') doesn't create a builder containing 'a' — it converts 'a' to its numeric value 97 and uses that as the initial capacity, producing an empty StringBuilder. If you meant to seed the builder with the character 'a', use new StringBuilder(\"a\") or new StringBuilder().append('a') instead.",
+          "run": 1,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 747,
+            "output_tokens": 441,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 6.691
+        },
+        {
+          "reasoning": "The code calls new StringBuilder('a'), and since StringBuilder has no char constructor, the char 'a' is implicitly widened to int 97, invoking StringBuilder(int capacity) rather than creating a builder containing the string \"a\". This produces an empty StringBuilder with capacity 97 instead of one seeded with the character, which is a genuine correctness pitfall matching exactly what the rule describes.",
+          "is_true_positive": true,
+          "confidence": 0.97,
+          "category": "CORRECTNESS",
+          "issue_signature": "char literal silently widened to int in stringbuilder capacity constructor",
+          "developer_explanation": "Calling new StringBuilder('a') does not create a StringBuilder containing \"a\"; since there is no char constructor, the char is converted to its int code point (97) and used as the initial capacity, producing an empty builder. If you intended to seed the builder with the character, use new StringBuilder(\"a\") or new StringBuilder().append('a') instead.",
+          "run": 2,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 747,
+            "output_tokens": 470,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 6.22
+        },
+        {
+          "reasoning": "The code calls `new StringBuilder('a')`, and since StringBuilder has no char constructor, the char is widened to int (97) and resolves to the capacity constructor, producing an empty StringBuilder with initial capacity 97 rather than one containing 'a'. This means the final output will be \"bc\" instead of the likely intended \"abc\", which is a real correctness bug caused by unexpected overload resolution.",
+          "is_true_positive": true,
+          "confidence": 0.97,
+          "category": "CORRECTNESS",
+          "issue_signature": "char argument silently widened to int constructor overload",
+          "developer_explanation": "Passing a char literal like 'a' to `new StringBuilder('a')` does not create a StringBuilder containing the character 'a'; because StringBuilder has no char constructor, the char is implicitly converted to int and invokes the capacity constructor instead, giving you an empty StringBuilder with initial capacity 97. This silently changes program behavior — here the output becomes \"bc\" instead of the probably intended \"abc\". Use `new StringBuilder(\"a\")` or `new StringBuilder().append('a')` to get the intended behavior.",
+          "run": 3,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 747,
+            "output_tokens": 555,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 6.83
+        }
+      ]
+    },
+    {
+      "finding_id": 2,
+      "type": "DeadException",
+      "sourcefile": "ValueProcessor.java",
+      "start_line": "11",
+      "message": "Exception created but not thrown",
+      "tool_specific": {
+        "column": "13"
+      },
+      "runs": [
+        {
+          "reasoning": "The code constructs an IllegalArgumentException but never throws it or otherwise uses it, so the exception object is created and immediately discarded, meaning the intended error signaling never happens and execution falls through to print the positive message. This is exactly the pattern DeadException targets: exception created but not thrown, which is a real correctness bug here.",
+          "is_true_positive": true,
+          "confidence": 0.97,
+          "category": "CORRECTNESS",
+          "issue_signature": "exception object constructed but never thrown",
+          "developer_explanation": "You create the IllegalArgumentException but never actually throw it, so the error condition is silently ignored and the method continues on to print 'Value is positive or 0' even for negative input. Add a throw statement before the exception, e.g. `throw new IllegalArgumentException(...)`, so the error is actually raised.",
+          "run": 1,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 756,
+            "output_tokens": 275,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 4.579
+        },
+        {
+          "reasoning": "The code constructs an IllegalArgumentException object but never throws it or otherwise uses it, so the exception has no effect and the intended validation logic (rejecting negative values) silently does nothing—execution falls through to print 'Value is positive or 0' even for negative input. This is exactly the pattern DeadException detects: an exception created but not thrown, which is a real bug here since it produces incorrect program behavior.",
+          "is_true_positive": true,
+          "confidence": 0.97,
+          "category": "CORRECTNESS",
+          "issue_signature": "exception object constructed but never thrown",
+          "developer_explanation": "You create an IllegalArgumentException but never throw it, so the negative-value check has no effect and the method proceeds to print the 'positive or 0' message even for negative input. Add a throw statement before the exception expression so the validation actually stops execution.",
+          "run": 2,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 756,
+            "output_tokens": 280,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 6.284
+        },
+        {
+          "reasoning": "The code constructs an IllegalArgumentException but never throws it or uses it in any way, so the object is created and immediately discarded, meaning the intended validation check silently does nothing. This is exactly the dead exception pattern the rule targets, and it is materially present in the shown code.",
+          "is_true_positive": true,
+          "confidence": 0.97,
+          "category": "CORRECTNESS",
+          "issue_signature": "exception object instantiated but never thrown",
+          "developer_explanation": "You create the IllegalArgumentException but never throw it, so the negative-value check has no effect and execution just falls through to the positive-value message. Add a throw statement (throw new IllegalArgumentException(...)) so the validation actually triggers when the value is negative.",
+          "run": 3,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 756,
+            "output_tokens": 243,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 4.277
+        }
+      ]
+    },
+    {
+      "finding_id": 3,
+      "type": "NarrowingCompoundAssignment",
+      "sourcefile": "DiscountCalculator.java",
+      "start_line": "6",
+      "message": "Compound assignments from double to int hide lossy casts",
+      "tool_specific": {
+        "column": "11"
+      },
+      "runs": [
+        {
+          "reasoning": "The variable c is declared as int and the compound assignment c *= 0.33 implicitly performs c = (int)(c * 0.33), silently truncating the double result back to int without any visible cast. This is exactly the pattern the rule targets: a compound assignment operator masking a narrowing conversion that would require an explicit cast if written as a simple assignment. The code compiles and runs, but the truncation is easy to overlook, which is a legitimate readability/correctness concern.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "compound assignment hides implicit narrowing cast",
+          "developer_explanation": "Writing c *= 0.33 on an int variable silently truncates the floating-point result back to an integer, just like an explicit (int) cast would, but without making that truncation visible in the code. This can hide unintended loss of precision; consider making the cast explicit, e.g. c = (int)(c * 0.33), so readers see the truncation is intentional.",
+          "run": 1,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 721,
+            "output_tokens": 452,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 6.278
+        },
+        {
+          "reasoning": "The code performs `c *= 0.33` where c is an int, which under Java's compound assignment semantics computes 10*0.33=3.3 as a double and then implicitly narrows it back to int (3) without any visible cast in the source. This silent truncation is exactly the pattern the rule targets, and it is a genuine loss of precision that a reader could easily overlook.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "compound assignment silently narrows floating point result",
+          "developer_explanation": "Writing `c *= 0.33` on an int variable computes a double result and then quietly truncates it back to int, which is easy to miss when reading the code. Here 10*0.33=3.3 gets silently truncated to 3. Make the cast explicit, e.g. `c = (int) (c * 0.33);`, so the lossy conversion is visible and intentional.",
+          "run": 2,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 721,
+            "output_tokens": 422,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 7.261
+        },
+        {
+          "reasoning": "The code performs c *= 0.33 where c is an int; compound assignment operators implicitly insert a cast back to the original type, so the result of the double multiplication (10*0.33=3.3) is silently truncated to 3 without any visible cast, exactly the lossy-cast-hiding pattern the rule targets. This is a real instance of the pattern: a reader could easily overlook that a double computation is silently narrowed back to int.",
+          "is_true_positive": true,
+          "confidence": 0.9,
+          "category": "CORRECTNESS",
+          "issue_signature": "compound assignment implicitly truncates double result to int",
+          "developer_explanation": "When you write c *= 0.33 on an int variable, Java implicitly casts the double result back to int, silently discarding the fractional part without any visible cast in the code. This can hide unintended precision loss; make the truncation explicit with c = (int)(c * 0.33) so readers see that data is being discarded.",
+          "run": 3,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 721,
+            "output_tokens": 460,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 5.843
+        }
+      ]
+    },
+    {
+      "finding_id": 4,
+      "type": "BoxedPrimitiveEquality",
+      "sourcefile": "NumberComparison.java",
+      "start_line": "7",
+      "message": "Comparison using reference equality instead of value equality. Reference equality of boxed primitive types is usually not useful, as they are value objects, and it is bug-prone, as instances are cached for some values but not others.",
+      "tool_specific": {
+        "column": "33"
+      },
+      "runs": [
+        {
+          "reasoning": "The code compares two boxed Integer objects with == at line 7; since 1024 is outside the Integer cache range (-128 to 127), num1 and num2 will be distinct objects, so num1 == num2 evaluates to false even though both hold the same numeric value 1024. This is exactly the bug-prone pattern the rule describes: reference equality on boxed types gives unexpected results depending on autoboxing cache behavior. The fix (using .equals()) would correctly print true.",
+          "is_true_positive": true,
+          "confidence": 0.97,
+          "category": "CORRECTNESS",
+          "issue_signature": "reference equality used on boxed primitive wrapper objects",
+          "developer_explanation": "You're comparing two Integer objects with == instead of .equals(). Because 1024 falls outside the range Java caches for autoboxed Integers (-128 to 127), num1 and num2 are different objects, so this comparison unexpectedly evaluates to false even though both hold the value 1024. Use num1.equals(num2) to compare their actual values.",
+          "run": 1,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 826,
+            "output_tokens": 422,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 5.962
+        },
+        {
+          "reasoning": "The code compares two boxed Integer objects with == where the values 1024 fall outside the Integer cache range (-128 to 127), so num1 and num2 are guaranteed to be distinct objects, making num1 == num2 evaluate to false even though the values are equal. This is exactly the bug-prone pattern the rule warns about, and here it is not just theoretically possible but deterministically triggered by the shown values. Using .equals() would correctly return true.",
+          "is_true_positive": true,
+          "confidence": 0.97,
+          "category": "CORRECTNESS",
+          "issue_signature": "reference equality used for boxed primitive comparison",
+          "developer_explanation": "You're comparing two Integer objects with == instead of .equals(). Since 1024 is outside the range Java caches (-128 to 127), num1 and num2 are different objects, so num1 == num2 will print false even though the values are equal. Replace it with num1.equals(num2) to compare values correctly.",
+          "run": 2,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 826,
+            "output_tokens": 399,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 5.341
+        },
+        {
+          "reasoning": "The code compares two Integer objects with == where both are autoboxed from the literal 1024, which lies outside the JVM's Integer cache range (-128 to 127), so num1 and num2 will typically be distinct objects and the comparison will print false even though the values are equal. This is exactly the bug pattern the rule targets: reference equality on boxed primitives that is caching-dependent and misleading. The fix (using .equals()) correctly reflects value equality intent.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "reference equality used on boxed primitive wrapper objects",
+          "developer_explanation": "You're comparing two Integer objects with == instead of using .equals(). Since 1024 falls outside the range the JVM caches for autoboxed Integers, num1 and num2 will likely be different objects, so this prints false even though the numeric values are equal. Use num1.equals(num2) to compare values reliably.",
+          "run": 3,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 826,
+            "output_tokens": 433,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 6.196
+        }
+      ]
+    },
+    {
+      "finding_id": 5,
+      "type": "ReferenceEquality",
+      "sourcefile": "NumberComparison.java",
+      "start_line": "7",
+      "message": "Comparison using reference equality instead of value equality",
+      "tool_specific": {
+        "column": "33"
+      },
+      "runs": [
+        {
+          "reasoning": "The code compares two boxed Integer objects with == where both are assigned the literal 1024, which lies outside the Integer cache range (-128 to 127), so autoboxing creates two distinct Integer instances and num1 == num2 evaluates to false even though the underlying values are equal. This is a classic case where reference equality gives a result that contradicts the evident intent of comparing numeric values. The suggested fix using .equals() would correctly compare values instead.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "reference equality used to compare boxed numeric wrapper values",
+          "developer_explanation": "You are comparing two Integer objects with == instead of .equals(). Since 1024 falls outside Java's Integer cache (-128 to 127), autoboxing creates separate objects, so this comparison will print false even though the values are equal. Use num1.equals(num2) to correctly compare the numeric values.",
+          "run": 1,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 710,
+            "output_tokens": 420,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 6.898
+        },
+        {
+          "reasoning": "Integer num1 and num2 are boxed from the int literal 1024, which is outside the Integer cache range (-128 to 127), so autoboxing produces two distinct Integer objects; comparing them with == compares object references, not their numeric value, so the printed result will be false even though the values are equal. This is exactly the reference-vs-value equality bug the rule targets, and the fix (using .equals()) would correctly print true.",
+          "is_true_positive": true,
+          "confidence": 0.97,
+          "category": "CORRECTNESS",
+          "issue_signature": "boxed numeric wrapper compared with reference equality",
+          "developer_explanation": "You are comparing two Integer objects with ==, which checks whether they are the same object in memory, not whether they hold the same numeric value. Since 1024 is outside the range Java caches for autoboxed Integers, num1 and num2 are different objects even though both equal 1024, so this comparison will print false unexpectedly. Use num1.equals(num2) instead to compare their actual values.",
+          "run": 2,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 710,
+            "output_tokens": 437,
+            "cache_creation_input_tokens": 2741,
+            "cache_read_input_tokens": 0
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 7.126,
+          "retry_of_truncated": true,
+          "retry_attempts": 1,
+          "superseded": {
+            "reasoning": "The code compares two boxed Integer objects with 1024 (outside the -128..127 Integer cache range) using ==, which compares object references rather than numeric value; since these values are not guaranteed to be cached, num1 == num2 can be false even though both hold the value 1024, which is almost certainly not the intended behavior. This is precisely the pattern the ReferenceEquality check targets, and it is a real correctness issue in the shown code.",
+            "is_true_positive": true,
+            "confidence": 0.95,
+            "category": "CORRECTNESS",
+            "issue_signature": "boxed number compared with reference equality instead of value equality",
+            "developer_explanation": "You're comparing two Integer objects with ==, which checks whether they are the same object in memory, not whether they hold the same numeric value. Since 1024 falls outside the range Java caches for autoboxed Integers, num1 and num2 will likely be different objects, so this print statement will output false even though both variables logically equal 1024. Use num1.equals(num2) to compare their values correctly.”}}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]",
+            "run": 2,
+            "served_model": "claude-sonnet-5",
+            "usage": {
+              "input_tokens": 710,
+              "output_tokens": 8192,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 2741
+            },
+            "stop_reason": "max_tokens",
+            "latency_s": 115.098
+          }
+        },
+        {
+          "reasoning": "num1 and num2 are boxed Integer objects with value 1024, which lies outside the Integer cache range (-128 to 127), so autoboxing creates two distinct Integer instances and == compares object references rather than numeric value, printing false despite equal values. This is exactly the reference-equality bug the rule targets, since Integer is not a value type and == is not guaranteed to reflect numeric equality. Using .equals() would correctly print true.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "reference equality used to compare boxed numeric wrapper objects",
+          "developer_explanation": "You are comparing two Integer objects with == instead of .equals(). Because 1024 falls outside Java's cached Integer range (-128 to 127), autoboxing creates separate objects, so num1 == num2 evaluates to false even though both hold the same value 1024. Replace the comparison with num1.equals(num2) to correctly compare values.",
+          "run": 3,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 710,
+            "output_tokens": 420,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 5.639
+        }
+      ]
+    },
+    {
+      "finding_id": 6,
+      "type": "StringCaseLocaleUsage",
+      "sourcefile": "TypeNameFormatter.java",
+      "start_line": "10",
+      "message": "Specify a `Locale` when calling `String#to{Lower,Upper}Case`. (Note: there are multiple suggested fixes; the third may be most appropriate if you're dealing with ASCII Strings.)",
+      "tool_specific": {
+        "column": "49"
+      },
+      "runs": [
+        {
+          "reasoning": "The code at line 10 calls `types[0].toUpperCase()` without specifying a Locale, which is exactly the pattern the rule targets — such calls can produce locale-dependent results (e.g. Turkish 'i' problem) depending on the default locale of the JVM running the code. Even though the sample strings here are ASCII English words, the API misuse is real and would affect any string data processed by this method in a different default locale, matching the tool's claim precisely.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "CORRECTNESS",
+          "issue_signature": "locale-dependent case conversion without explicit locale",
+          "developer_explanation": "Calling toUpperCase() without specifying a Locale can produce unexpected results in certain locales (for example, Turkish rules change how 'i' is capitalized), which can lead to subtle bugs on machines with different default locales. Use toUpperCase(Locale.ROOT) (or an appropriate explicit locale) to make the behavior consistent regardless of environment.",
+          "run": 1,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 963,
+            "output_tokens": 607,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 8.069
+        },
+        {
+          "reasoning": "The flagged line calls String#toUpperCase() without specifying a Locale, which is exactly the pattern the rule targets; case conversion is locale-sensitive (e.g., Turkish dotless-i rules) and can silently produce different results depending on the default locale. Although the specific literals here are plain ASCII words unaffected by locale quirks, the code as written still relies on the platform default locale rather than an explicit one, so the claim is materially accurate for this call site. There's also a separate correctness bug (index 0 hardcoded in the loop) but that doesn't affect the validity of this specific warning.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "CORRECTNESS",
+          "issue_signature": "locale-sensitive string case conversion without explicit locale",
+          "developer_explanation": "The call to toUpperCase() doesn't specify a Locale, so it relies on the JVM's default locale, which can produce unexpected results for certain characters in certain locales (e.g., Turkish 'i'). Even though the current input strings are plain ASCII and unaffected, it's best practice to pass Locale.ROOT (or another explicit locale) to make the behavior deterministic and independent of the runtime environment.",
+          "run": 2,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 963,
+            "output_tokens": 783,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 10.278
+        },
+        {
+          "reasoning": "The flagged code at line 10 does call String#toUpperCase() with no Locale argument, which is exactly the pattern the rule targets: case conversion without a Locale can produce different results in different locales (e.g., Turkish dotless/dotted I issue), leading to inconsistent behavior across environments. The claim in the warning is materially correct for this code regardless of the separate off-by-index bug (types[0] instead of types[i]) elsewhere in the same line.",
+          "is_true_positive": true,
+          "confidence": 0.9,
+          "category": "CORRECTNESS",
+          "issue_signature": "locale-sensitive string case conversion without explicit locale",
+          "developer_explanation": "You're calling toUpperCase() without specifying a Locale, which means the result can vary depending on the default locale of the machine running the code (for example, in Turkish locale 'i'.toUpperCase() becomes 'İ' instead of 'I'). To get predictable, locale-independent behavior, use toUpperCase(Locale.ROOT) or a specific locale as needed.",
+          "run": 3,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 963,
+            "output_tokens": 601,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 7.419
+        }
+      ]
+    },
+    {
+      "finding_id": 7,
+      "type": "EqualsHashCode",
+      "sourcefile": "PersonRegistry.java",
+      "start_line": "21",
+      "message": "Classes that override equals should also override hashCode.",
+      "tool_specific": {
+        "column": "24"
+      },
+      "runs": [
+        {
+          "reasoning": "The Person class overrides equals() (lines 21-30) but defines no hashCode() method anywhere in the file, which breaks the equals/hashCode contract required for correct behavior in hash-based collections like HashMap or HashSet. This is exactly the pattern the rule detects, and it is genuinely present here.",
+          "is_true_positive": true,
+          "confidence": 0.97,
+          "category": "CORRECTNESS",
+          "issue_signature": "equals overridden without hashcode override",
+          "developer_explanation": "Person overrides equals() but does not override hashCode(), which violates the contract that equal objects must have equal hash codes. If Person instances are ever put into a HashSet or used as HashMap keys, lookups and duplicate detection will behave inconsistently. Add a hashCode() implementation consistent with the fields used in equals() (name and age).",
+          "run": 1,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 969,
+            "output_tokens": 379,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 5.533
+        },
+        {
+          "reasoning": "The Person class overrides equals() but does not define a hashCode() method anywhere in the shown file, which breaks the equals/hashCode contract required by Java (equal objects must have equal hash codes). This is a real violation that can cause Person instances to behave incorrectly in hash-based collections like HashMap or HashSet.",
+          "is_true_positive": true,
+          "confidence": 0.97,
+          "category": "CORRECTNESS",
+          "issue_signature": "equals overridden without corresponding hashcode override",
+          "developer_explanation": "Your Person class overrides equals() but has no hashCode() method. Java requires that objects considered equal via equals() must produce the same hashCode(); without this, Person instances will behave inconsistently in hash-based collections such as HashMap or HashSet. Add a hashCode() implementation that is consistent with your equals() logic (e.g., based on name and age).",
+          "run": 2,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 969,
+            "output_tokens": 415,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 5.596
+        },
+        {
+          "reasoning": "The Person class overrides equals() (lines 21-30) but does not define a hashCode() method anywhere in the class, which violates the equals/hashCode contract required by Java's Object model. This can cause Person instances to behave incorrectly when used in hash-based collections like HashMap or HashSet. The warning correctly identifies this missing override.",
+          "is_true_positive": true,
+          "confidence": 0.97,
+          "category": "CORRECTNESS",
+          "issue_signature": "equals overridden without hashCode override",
+          "developer_explanation": "Your Person class overrides equals() but doesn't override hashCode(), breaking the contract that equal objects must have equal hash codes. This will cause bugs if Person instances are ever stored in a HashMap, HashSet, or similar hash-based collection, since lookups may fail even for objects that are equal(). Add a hashCode() implementation consistent with your equals() logic (based on name and age).",
+          "run": 3,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 969,
+            "output_tokens": 348,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 5.862
+        }
+      ]
+    },
+    {
+      "finding_id": 8,
+      "type": "EqualsGetClass",
+      "sourcefile": "PersonRegistry.java",
+      "start_line": "21",
+      "message": "Prefer instanceof to getClass when implementing Object#equals.",
+      "tool_specific": {
+        "column": "24"
+      },
+      "runs": [
+        {
+          "reasoning": "The equals method compares getClass() != obj.getClass(), the exact pattern the rule targets, and Person is a non-final class that could be subclassed, so this getClass check can break substitutability in ways instanceof would avoid. The suggested rewrite is a legitimate stylistic/correctness improvement per Error Prone's guidance for implementing equals with inheritance in mind.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "getClass comparison instead of instanceof in equals",
+          "developer_explanation": "Your equals method uses getClass() != obj.getClass() to check the type of the compared object. Since Person is not declared final, this pattern prevents subclasses from ever being considered equal to their superclass instances, which can violate expectations about equals semantics. Prefer using 'obj instanceof Person' instead for more flexible and standard behavior.",
+          "run": 1,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 997,
+            "output_tokens": 539,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 8.033
+        },
+        {
+          "reasoning": "The code at line 25 does use `getClass() != obj.getClass()` inside `equals`, which is exactly the pattern the EqualsGetClass check targets: since Person is a non-final nested class, this comparison would reject any subclass instance even if all fields matched, unnecessarily coupling equality to the exact runtime class. The tool's claim about the code (it uses getClass comparison rather than instanceof) is accurate, and the suggested instanceof-based rewrite is the standard fix for this class of issue.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "equals implementation compares getClass instead of using instanceof",
+          "developer_explanation": "Your equals method compares `getClass()` results instead of using an `instanceof` check, which means any subclass of Person will never be considered equal to a Person even if it has identical field values. Prefer `instanceof` (combined with a final class or careful symmetry handling) so equality behaves correctly if this class is ever subclassed.",
+          "run": 2,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 997,
+            "output_tokens": 981,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 13.245
+        },
+        {
+          "reasoning": "The code literally uses getClass() != obj.getClass() in the equals method, which is exactly the pattern this rule targets. Using instanceof instead would allow proper subclass equality semantics and is the recommended pattern for extensible equals implementations; the current getClass() check restricts equality to exact same class match. Since Person is a non-final static class, the getClass() approach could unexpectedly break equality for future subclasses.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "getclass comparison instead of instanceof in equals",
+          "developer_explanation": "Your equals() method compares getClass() results instead of using an instanceof check. This means equals() will only match exact same-class instances, which can silently break equality checks if this class is ever subclassed; using instanceof provides more flexible and idiomatic equality semantics unless you specifically want to forbid subclass equality.",
+          "run": 3,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 997,
+            "output_tokens": 647,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 8.642
+        }
+      ]
+    },
+    {
+      "finding_id": 9,
+      "type": "SelfEquals",
+      "sourcefile": "PersonRegistry.java",
+      "start_line": "29",
+      "message": "Testing an object for equality with itself will always be true.",
+      "tool_specific": {
+        "column": "52"
+      },
+      "runs": [
+        {
+          "reasoning": "The code at line 29 calls name.equals(name), comparing the field to itself instead of to person.name, which makes the equals() method always return true for the name comparison regardless of the other object's actual name value. This is exactly the self-equality bug the rule targets: it will make equals() incorrectly report equality when only ages match and names differ. The suggested fix (name.equals(person.name)) confirms the intended comparison was misspelled as a self-comparison.",
+          "is_true_positive": true,
+          "confidence": 0.97,
+          "category": "CORRECTNESS",
+          "issue_signature": "comparing a field to itself instead of the other object's field in equals",
+          "developer_explanation": "In your equals() method, you wrote name.equals(name) instead of name.equals(person.name), so you're comparing the name field to itself rather than to the other Person's name. This bug makes equals() ignore the name entirely and only effectively compare ages, so two people with the same age but different names will incorrectly be considered equal. Fix the comparison to name.equals(person.name).",
+          "run": 1,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 980,
+            "output_tokens": 439,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 6.924
+        },
+        {
+          "reasoning": "Line 29 calls name.equals(name) instead of name.equals(person.name), so the equality check compares the field to itself and always returns true regardless of the other Person's name, making the equals method incorrect (e.g., persons with different names but same age would be considered equal). This is exactly the self-equality bug the rule is designed to catch, and it is materially present in the shown code.",
+          "is_true_positive": true,
+          "confidence": 0.97,
+          "category": "CORRECTNESS",
+          "issue_signature": "comparing a field to itself instead of to the other object's field",
+          "developer_explanation": "In your equals() method, name.equals(name) compares the field to itself rather than to person.name, so the name comparison always returns true. This breaks equality semantics — two Person objects with the same age but different names will incorrectly be considered equal. Change it to name.equals(person.name).",
+          "run": 2,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 980,
+            "output_tokens": 366,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 5.301
+        },
+        {
+          "reasoning": "The code at line 29 calls name.equals(name) instead of name.equals(person.name), which is exactly a self-comparison that always returns true regardless of the other Person's actual name field, breaking the equals contract. This is a genuine correctness bug: two Person objects with different names but the same age would incorrectly be considered equal.",
+          "is_true_positive": true,
+          "confidence": 0.97,
+          "category": "CORRECTNESS",
+          "issue_signature": "equals comparing field to itself instead of other object's field",
+          "developer_explanation": "In your equals() method you wrote name.equals(name), which compares the field to itself and will always be true, instead of name.equals(person.name), which compares against the other object's name. This breaks equality checks: two Person instances with the same age but different names will incorrectly report as equal. Fix it to name.equals(person.name).",
+          "run": 3,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 980,
+            "output_tokens": 366,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 5.586
+        }
+      ]
+    },
+    {
+      "finding_id": 10,
+      "type": "UnusedVariable",
+      "sourcefile": "ValueReporter.java",
+      "start_line": "10",
+      "message": "This assignment to the local variable 'x' is never read.",
+      "tool_specific": {
+        "column": "13"
+      },
+      "runs": [
+        {
+          "reasoning": "At line 10, x is initialized to 1, but line 11's `x =+ 2` (unary plus, likely a typo for `x += 2`) overwrites x with 2 without ever reading the value 1, so the assignment on line 10 is indeed dead and never read as the tool claims. This is accurate and also signals a likely bug: the programmer probably intended `x += 2` but wrote `x =+ 2`, silently discarding the initial value.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "CORRECTNESS",
+          "issue_signature": "dead store overwritten before being read",
+          "developer_explanation": "The variable x is set to 1 on one line, but the next line `x =+ 2` (unary plus applied to 2, not `+=`) immediately overwrites it without ever using the value 1. This is almost certainly a typo for `x += 2`; as written, the initial assignment is pointless and the arithmetic doesn't do what you likely intended. Fix the operator or remove the unused initial assignment.",
+          "run": 1,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 810,
+            "output_tokens": 789,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 9.252
+        },
+        {
+          "reasoning": "The variable x is assigned 1 on line 10, but line 11's `x =+ 2;` (parsed as x = +2, not x += 2) immediately overwrites x without ever reading the value 1, making the initial assignment dead. This is a real, if subtle, bug-adjacent issue since the code intends `x += 2` but actually discards the initial value.",
+          "is_true_positive": true,
+          "confidence": 0.9,
+          "category": "CORRECTNESS",
+          "issue_signature": "assigned value overwritten before being read",
+          "developer_explanation": "The line `x =+ 2;` is parsed as `x = +2` (unary plus), not as `x += 2`, so the initial value assigned to x on the previous line is discarded and never used. This is likely a typo for `x += 2;` and should be fixed to get the intended behavior.",
+          "run": 2,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 810,
+            "output_tokens": 510,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 7.147
+        },
+        {
+          "reasoning": "On line 10, x is assigned the value 1, but on line 11 x is immediately reassigned via the unary expression x =+ 2 (equivalent to x = +2), which overwrites the previous value before it is ever read; only the value from line 11 is later printed. So the assignment on line 10 is indeed dead and never read, matching the tool's claim exactly.",
+          "is_true_positive": true,
+          "confidence": 0.9,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "dead local variable assignment overwritten before use",
+          "developer_explanation": "The initial value assigned to the local variable on line 10 is never used because the very next line overwrites it before it is read anywhere. This is dead code and, combined with the likely typo of '=+' instead of '+=', suggests a logic bug worth double-checking; consider removing the redundant assignment or fixing the intended increment operator.",
+          "run": 3,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 810,
+            "output_tokens": 861,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 11.268,
+          "retry_of_truncated": true,
+          "retry_attempts": 2,
+          "superseded": {
+            "reasoning": "At line 10, x is initialized to 1, but line 11 immediately overwrites it via 'x =+ 2' (which parses as x = +2, not x += 2, a classic Java gotcha), discarding the value from line 10 entirely before it is ever read. Only the value assigned at line 11 is read by the println at line 12, so the assignment at line 10 is indeed a dead store as claimed. This is a genuine dead-store diagnostic, coincidentally sitting next to a related operator-typo bug, but the warning's specific claim about line 10 is accurate.",
+            "is_true_positive": true,
+            "confidence": 0.9,
+            "category": "MAINTAINABILITY",
+            "issue_signature": "dead store overwritten before being read",
+            "developer_explanation": "The initial value assigned to x on this line is discarded before it's ever used, because the very next line reassigns x (note that 'x =+ 2' is parsed as x = +2, not x += 2, so it doesn't add to the previous value). Since the original assignment has no effect on the final output, it's dead code and can be removed or the intended '+=' operator should be used if accumulation was intended.”}, 저장}}]}                    ,  ,  ,  ,  ,        ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,",
+            "run": 3,
+            "served_model": "claude-sonnet-5",
+            "usage": {
+              "input_tokens": 810,
+              "output_tokens": 8192,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 2741
+            },
+            "stop_reason": "max_tokens",
+            "latency_s": 108.415
+          }
+        }
+      ]
+    },
+    {
+      "finding_id": 11,
+      "type": "ReturnValueIgnored",
+      "sourcefile": "TextTrimmer.java",
+      "start_line": "6",
+      "message": "Return value of 'substring' must be used",
+      "tool_specific": {
+        "column": "20"
+      },
+      "runs": [
+        {
+          "reasoning": "The code calls s.substring(3) but never assigns the result back to s or any variable, so the call has no effect since String is immutable; the subsequent println(s) prints the original unmodified string 'abcdef', which is almost certainly not the intended behavior.",
+          "is_true_positive": true,
+          "confidence": 0.97,
+          "category": "CORRECTNESS",
+          "issue_signature": "discarded result of immutable string operation",
+          "developer_explanation": "Calling substring() on a String does not modify it in place; it returns a new String that must be captured. Since the result is discarded here, the trimming has no effect and the original string is printed. Assign the result back, e.g. s = s.substring(3);",
+          "run": 1,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 702,
+            "output_tokens": 284,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 4.811
+        },
+        {
+          "reasoning": "The code calls s.substring(3) and discards the result; since String is immutable, this call has no effect on s, so the subsequent println(s) prints the original unmodified string \"abcdef\" instead of the intended \"def\". This is a genuine correctness bug where the programmer likely intended to reassign s to the substring result.",
+          "is_true_positive": true,
+          "confidence": 0.97,
+          "category": "CORRECTNESS",
+          "issue_signature": "discarded return value of immutable string method call",
+          "developer_explanation": "Calling substring() does not modify the original string in place; it returns a new string that must be captured. Since the result is never assigned, this line has no effect and the printed value will be the original unmodified string, not the trimmed one. Fix by writing s = s.substring(3);",
+          "run": 2,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 702,
+            "output_tokens": 342,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 5.053
+        },
+        {
+          "reasoning": "The code calls s.substring(3) without assigning or using the result, so the call has no effect and s remains \"abcdef\" when printed, which is clearly not the intended behavior. String.substring is a pure function that does not mutate the original string, so ignoring its return value discards the only effect of the call. This matches the rule's claim precisely.",
+          "is_true_positive": true,
+          "confidence": 0.97,
+          "category": "CORRECTNESS",
+          "issue_signature": "ignored return value of immutable string method",
+          "developer_explanation": "Calling substring on a String does not modify the original string; it returns a new string that must be captured. Since the result of s.substring(3) is discarded, the call has no effect and 's' still holds \"abcdef\" when printed. Assign the result back, e.g. s = s.substring(3), to get the intended trimmed value.",
+          "run": 3,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 702,
+            "output_tokens": 326,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 5.658
+        }
+      ]
+    },
+    {
+      "finding_id": 12,
+      "type": "MissingOverride",
+      "sourcefile": "PersonRanking.java",
+      "start_line": "18",
+      "message": "compareTo implements method in Comparable; expected @Override",
+      "tool_specific": {
+        "column": "20"
+      },
+      "runs": [
+        {
+          "reasoning": "The compareTo(Person) method implements the interface method from Comparable<Person> but lacks an @Override annotation, which is exactly what the rule detects. Adding @Override is a valid best practice that helps the compiler catch signature mismatches. There is no contextual reason this flag is incorrect here.",
+          "is_true_positive": true,
+          "confidence": 0.97,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "missing override annotation on interface method implementation",
+          "developer_explanation": "The compareTo method implements Comparable's method but doesn't have the @Override annotation. Adding it lets the compiler verify the method signature matches the interface, catching accidental mismatches early, and makes the code's intent clearer to readers.",
+          "run": 1,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 871,
+            "output_tokens": 300,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 5.04
+        },
+        {
+          "reasoning": "The method compareTo(Person) has the same signature as Comparable<Person>.compareTo and is not annotated with @Override, which matches exactly what the rule detects. Adding @Override would let the compiler verify the signature matches the interface method, catching accidental signature mismatches. The code as shown genuinely lacks the annotation, so the claim is accurate.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "interface method implementation missing override annotation",
+          "developer_explanation": "The compareTo method implements Comparable<Person> but isn't marked with @Override. Adding the annotation lets the compiler catch mistakes if the signature ever stops matching the interface method, and makes the intent clearer to readers.  This is a minor style/safety improvement, not a functional bug.",
+          "run": 2,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 871,
+            "output_tokens": 379,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 6.357
+        },
+        {
+          "reasoning": "The compareTo(Person) method in Person implements Comparable<Person>'s compareTo method but lacks the @Override annotation, which is exactly what the rule detects. Adding @Override would let the compiler verify the signature matches the interface method, catching accidental signature mismatches. This is a legitimate maintainability suggestion, not a false alarm.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "missing @override annotation on interface method implementation",
+          "developer_explanation": "The compareTo method implements Comparable's method but is missing the @Override annotation. Adding it lets the compiler catch mistakes if the method signature ever stops matching the interface, and it makes the code's intent clearer to readers.",
+          "run": 3,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 871,
+            "output_tokens": 349,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 5.533
+        }
+      ]
+    },
+    {
+      "finding_id": 13,
+      "type": "ModifyCollectionInEnhancedForLoop",
+      "sourcefile": "ItemAppender.java",
+      "start_line": "12",
+      "message": "Modifying a collection while iterating over it in a loop may cause a ConcurrentModificationException to be thrown or lead to undefined behavior.",
+      "tool_specific": {
+        "column": "25"
+      },
+      "runs": [
+        {
+          "reasoning": "The code calls list.add(\"x\") inside an enhanced for-loop iterating over the same ArrayList, which will cause the iterator's next() call on the following iteration to throw ConcurrentModificationException since ArrayList's iterator performs fail-fast modCount checks. This is a genuine correctness bug that will crash at runtime when 's' equals \"b\".",
+          "is_true_positive": true,
+          "confidence": 0.97,
+          "category": "CORRECTNESS",
+          "issue_signature": "collection modified during enhanced for-loop iteration",
+          "developer_explanation": "You are adding an element to the list while iterating over it with a for-each loop; ArrayList's iterator detects this structural modification and will throw a ConcurrentModificationException on the next iteration step. Use an explicit Iterator with iterator.remove() semantics, iterate over a copy of the list, or collect additions separately and apply them after the loop finishes.",
+          "run": 1,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 880,
+            "output_tokens": 357,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 6.897
+        },
+        {
+          "reasoning": "The code calls list.add(\"x\") inside an enhanced for-loop that iterates directly over the same ArrayList, which will cause the iterator's next() call to throw a ConcurrentModificationException on the following iteration since ArrayList's iterator performs fail-fast modCount checks. This is exactly the pattern the rule targets, and running this code will indeed throw at runtime after processing \"b\".",
+          "is_true_positive": true,
+          "confidence": 0.97,
+          "category": "CORRECTNESS",
+          "issue_signature": "collection modified during enhanced for-loop iteration",
+          "developer_explanation": "You are adding an element to the same ArrayList you're iterating over with a for-each loop; this will throw a ConcurrentModificationException as soon as the loop tries to advance past the modification. Use an explicit Iterator with iterator.remove()/careful handling, iterate over a copy of the list, or collect additions separately and merge them after the loop finishes.",
+          "run": 2,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 880,
+            "output_tokens": 382,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 5.434
+        },
+        {
+          "reasoning": "The code calls list.add(\"x\") on the same ArrayList instance being iterated via an enhanced for loop, which is exactly the pattern the rule targets. ArrayList's iterator tracks modCount and will throw ConcurrentModificationException on the next call to next() after the list is structurally modified during iteration. Since the loop continues after adding \"c\" remains to be processed, this will actually throw at runtime, confirming the claim.",
+          "is_true_positive": true,
+          "confidence": 0.97,
+          "category": "CORRECTNESS",
+          "issue_signature": "structural modification of collection during enhanced for loop iteration",
+          "developer_explanation": "You're adding to the list while iterating over it with a for-each loop, which will throw a ConcurrentModificationException as soon as the loop tries to advance after the modification. Use an explicit Iterator with remove/add-safe handling, iterate over a copy of the list, or collect additions into a separate list and add them after the loop finishes.",
+          "run": 3,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 880,
+            "output_tokens": 416,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 5.898
+        }
+      ]
+    },
+    {
+      "finding_id": 14,
+      "type": "FallThrough",
+      "sourcefile": "MenuHandler.java",
+      "start_line": "13",
+      "message": "Execution may fall through from the previous case; add a `// fall through` comment before this line if it was deliberate",
+      "tool_specific": {
+        "column": "13"
+      },
+      "runs": [
+        {
+          "reasoning": "Case 1 (line 11-12) lacks a break statement before the default case at line 13, so execution genuinely falls through from case 1 into default, causing both \"User 1\" and \"Invalid option\" to be printed when userChoice is 1. This is unlikely to be intentional given the default case's error-message semantics, and no fall-through comment is present. The warning correctly identifies a missing break causing unintended control flow.",
+          "is_true_positive": true,
+          "confidence": 0.9,
+          "category": "CORRECTNESS",
+          "issue_signature": "missing break causes switch case fall-through",
+          "developer_explanation": "The case for userChoice == 1 does not end with a break statement, so control flow falls through into the default case and prints both \"User 1\" and \"Invalid option\". Add a break after the case 1 print statement (or a `// fall through` comment if this is intentional) to avoid the unintended extra output.",
+          "run": 1,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 812,
+            "output_tokens": 364,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 5.547
+        },
+        {
+          "reasoning": "Case 1 (lines 11-12) ends with a println but no break statement before the default case, so execution genuinely falls through into the default block, which will additionally print \"Invalid option\" even though userChoice=1 was a valid, handled case. There is no `// fall through` comment indicating this was intentional, and the fall-through appears unintended given the default case's error message.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "missing break causes switch fall-through into default case",
+          "developer_explanation": "The 'case 1' branch is missing a break statement, so after printing \"User 1\" execution continues into the default branch and also prints \"Invalid option\", which is likely not intended. Add a break after the case 1 println, or if the fall-through is deliberate, add a comment explaining why.",
+          "run": 2,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 812,
+            "output_tokens": 382,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 4.609
+        },
+        {
+          "reasoning": "Case 1 ends with a System.out.println call but has no break statement before the default label, so execution genuinely falls through from case 1 into default, meaning with userChoice=1 both \"User 1\" and \"Invalid option\" get printed. There is no fall-through comment present, and nothing in the snippet indicates this was intentional. This is exactly the pattern the FallThrough check is designed to catch.",
+          "is_true_positive": true,
+          "confidence": 0.9,
+          "category": "CORRECTNESS",
+          "issue_signature": "missing break causes switch case fall-through",
+          "developer_explanation": "The case for userChoice == 1 lacks a break statement, so control falls through into the default case and prints both \"User 1\" and \"Invalid option\". Add a break after the case 1 println (or a `// fall through` comment if this was intentional) to avoid the unintended extra output.",
+          "run": 3,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 812,
+            "output_tokens": 411,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 6.253
+        }
+      ]
+    }
+  ],
+  "retry_history": [
+    {
+      "at": "2026-08-10T20:12:32.551566+00:00",
+      "reason": "failed_runs",
+      "kinds": [
+        "ucięty"
+      ],
+      "attempted": 2,
+      "repaired": 2,
+      "still_missing": 0,
+      "max_attempts": 3,
+      "configuration_changed": false
+    }
+  ]
+}

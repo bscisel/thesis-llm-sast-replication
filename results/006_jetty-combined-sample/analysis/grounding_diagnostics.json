@@ -1,0 +1,49 @@
+{
+  "run": "006_jetty-combined-sample",
+  "n_uzytecznych": 360,
+  "czy_miara_porzadkuje_modele": {
+    "claude": {
+      "nazw_na_tekst": 1.8777777777777778,
+      "nazw_na_100_znakow": 0.2676591700981945,
+      "nazw_w_wyjasnieniu_dla_programisty": 0.3888888888888889,
+      "srednia_dlugosc_znakow": 701.5555555555555
+    },
+    "gpt": {
+      "nazw_na_tekst": 0.975,
+      "nazw_na_100_znakow": 0.21560593868437378,
+      "nazw_w_wyjasnieniu_dla_programisty": 0.275,
+      "srednia_dlugosc_znakow": 452.2138888888889
+    },
+    "qwen": {
+      "nazw_na_tekst": 1.0888888888888888,
+      "nazw_na_100_znakow": 0.26561144839549,
+      "nazw_w_wyjasnieniu_dla_programisty": 0.44722222222222224,
+      "srednia_dlugosc_znakow": 409.9555555555556
+    },
+    "oss": {
+      "nazw_na_tekst": 0.8638888888888889,
+      "nazw_na_100_znakow": 0.3915791594268591,
+      "nazw_w_wyjasnieniu_dla_programisty": 0.4777777777777778,
+      "srednia_dlugosc_znakow": 220.61666666666667
+    },
+    "luna": {
+      "nazw_na_tekst": 0.7555555555555555,
+      "nazw_na_100_znakow": 0.17841564285386316,
+      "nazw_w_wyjasnieniu_dla_programisty": 0.3638888888888889,
+      "srednia_dlugosc_znakow": 423.48055555555555
+    },
+    "oss20": {
+      "nazw_na_tekst": 0.8472222222222222,
+      "nazw_na_100_znakow": 0.32580944954226443,
+      "nazw_w_wyjasnieniu_dla_programisty": 0.5805555555555556,
+      "srednia_dlugosc_znakow": 260.0361111111111
+    },
+    "sonnet": {
+      "nazw_na_tekst": 1.788888888888889,
+      "nazw_na_100_znakow": 0.2855078182148668,
+      "nazw_w_wyjasnieniu_dla_programisty": 0.7888888888888889,
+      "srednia_dlugosc_znakow": 626.5638888888889
+    }
+  },
+  "korelacja_rang_przyjeta_wobec_na100": 0.10714285714285714
+}

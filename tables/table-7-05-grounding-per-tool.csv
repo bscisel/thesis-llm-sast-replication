@@ -1,0 +1,4 @@
+tool;tool_text;models_min;models_max;beyond_tool_text_min;beyond_tool_text_max
+SpotBugs;0,925;0,633;0,925;0,383;0,767
+Error Prone;0,250;0,692;0,850;0,533;0,817
+SonarQube;0,367;0,658;0,817;0,483;0,742

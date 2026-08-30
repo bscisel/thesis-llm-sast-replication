@@ -1,0 +1,814 @@
+{
+  "model": "claude-opus-5",
+  "tool": "spotbugs",
+  "num_runs": 3,
+  "runs_per_invocation": 3,
+  "source_root": "java-errors-benchmark",
+  "call_parameters": {
+    "temperature": null,
+    "concurrency": 3,
+    "response_format": "json_schema",
+    "max_tokens": 8192,
+    "max_retries": 6,
+    "base_url": "https://api.anthropic.com"
+  },
+  "system_prompt_variant": "benchmark",
+  "system_prompt_sha256": "b5b634e0a9109c59",
+  "user_prompt_sha256": "14894866e018872e",
+  "timestamp": "2026-08-09T18:24:19.117616+00:00",
+  "updated_at": "2026-08-09T18:24:19.117616+00:00",
+  "findings": [
+    {
+      "finding_id": 0,
+      "type": "UC_USELESS_CONDITION",
+      "sourcefile": "AgeClassifier.java",
+      "start_line": "13",
+      "message": "Condition has no effect",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "Line 13 is reached only when the preceding `age > 10` test failed, so age <= 10 and therefore `age >= 18` can never be true. The \"Mature\" branch is unreachable dead code, and the ordering of the conditions is clearly wrong for the evident intent (18+ should be classified before the >10 teenager case). The tool's claim that the condition has no effect is materially correct for this code.",
+          "is_true_positive": true,
+          "confidence": 0.98,
+          "category": "CORRECTNESS",
+          "issue_signature": "condition always false due to preceding narrowing branch",
+          "developer_explanation": "Because the first branch already handles every age greater than 10, the second test for age >= 18 can never be true, so \"Mature\" is never returned and anyone 18 or older is reported as \"Teenager\". Reorder the checks so the highest threshold is tested first (age >= 18, then age > 10, then the default), or restructure the ranges explicitly.",
+          "run": 1,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 893,
+            "output_tokens": 430,
+            "cache_creation_input_tokens": 2741,
+            "cache_read_input_tokens": 0
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 14.192
+        },
+        {
+          "reasoning": "The else-if at line 13 is reached only when age <= 10, which makes age >= 18 always false, so the \"Mature\" branch is unreachable. This is not merely a redundant test: the ordering of the conditions is wrong, so classify(20) returns \"Teenager\" rather than \"Mature\", as the main method's third call would demonstrate. The tool's statement that age < 18 is known at that point is materially correct for the shown code.",
+          "is_true_positive": true,
+          "confidence": 0.97,
+          "category": "CORRECTNESS",
+          "issue_signature": "unreachable branch due to condition already excluded by earlier test",
+          "developer_explanation": "Because the first branch already catches every age above 10, the following check for age >= 18 can never be true and the \"Mature\" result is unreachable \\\"Teenager\\\" instead. Reorder the tests so the largest threshold is checked first (age >= 18 -> \"Mature\", then age > 10 -> \"Teenager\", else \"Child\"), or bound the first condition to a range.",
+          "run": 2,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 893,
+            "output_tokens": 502,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 12.098
+        },
+        {
+          "reasoning": "The else-if at line 13 is reached only when the first condition age > 10 is false, i.e. age <= 10, so age >= 18 can never be true and the \"Mature\" branch is unreachable dead code. The tool's statement that age < 18 is known at that point follows directly from the enclosing condition, so the claim is materially correct. This is not merely stylistic: the ordering makes classify(20) return \"Teenager\", which is evidently not intended.",
+          "is_true_positive": true,
+          "confidence": 0.97,
+          "category": "CORRECTNESS",
+          "issue_signature": "always-false condition making a branch unreachable",
+          "developer_explanation": "Because the first branch already catches every value greater than 10, the following check for age >= 18 can never be true and the \"Mature\" result is unreachable \\u2014 an input of 20 returns \"Teenager\". Reorder the checks so the highest threshold is tested first (age >= 18, then age > 10, then the default), or otherwise adjust the boundaries so each range is reachable.",
+          "run": 3,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 893,
+            "output_tokens": 510,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 13.257
+        }
+      ]
+    },
+    {
+      "finding_id": 1,
+      "type": "RANGE_ARRAY_INDEX",
+      "sourcefile": "ArrayReader.java",
+      "start_line": "6",
+      "message": "Array index is out of bounds",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The array is initialized with exactly three elements {1, 2, 3}, giving valid indices 0 through 2, yet line 6 accesses arr[3]. This unconditionally throws ArrayIndexOutOfBoundsException whenever main runs. The array is a local variable never reassigned between declaration and use, so no code outside the snippet can change this.",
+          "is_true_positive": true,
+          "confidence": 0.99,
+          "category": "CORRECTNESS",
+          "issue_signature": "array access with index beyond array length",
+          "developer_explanation": "The array holds three elements, so the only valid indices are 0, 1 and 2, but the code reads index 3. Running this will always throw an ArrayIndexOutOfBoundsException. Use arr[2] to get the last element, or add a bounds check before indexing.",
+          "run": 1,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 735,
+            "output_tokens": 271,
+            "cache_creation_input_tokens": 2741,
+            "cache_read_input_tokens": 0
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 7.932
+        },
+        {
+          "reasoning": "The array is initialized literally as {1, 2, 3}, giving length 3 with valid indices 0..2, and line 6 reads arr[3]. Since the array is a local with a constant initializer and no intervening reassignment, index 3 is definitively out of bounds and will throw ArrayIndexOutOfBoundsException whenever main runs. The tool's claim is exactly correct for this code.",
+          "is_true_positive": true,
+          "confidence": 0.99,
+          "category": "CORRECTNESS",
+          "issue_signature": "array access with constant index beyond array length",
+          "developer_explanation": "The array has three elements, so its valid indices are 0, 1 and 2, but the code reads element 3. Running this method will immediately throw an ArrayIndexOutOfBoundsException. Change the index to 2 (or otherwise ensure it is within bounds) to read the last element.",
+          "run": 2,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 735,
+            "output_tokens": 293,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 6.938
+        },
+        {
+          "reasoning": "The array literal `{1, 2, 3}` creates an array of length 3 with valid indices 0..2, and line 6 accesses index 3. This access is unconditional in main and will throw ArrayIndexOutOfBoundsException on every execution. The warning's claim is exactly correct for the shown code.",
+          "is_true_positive": true,
+          "confidence": 0.99,
+          "category": "CORRECTNESS",
+          "issue_signature": "array access with index beyond array length",
+          "developer_explanation": "The array holds three elements, so the only valid positions are 0, 1 and 2; reading position 3 will throw an ArrayIndexOutOfBoundsException as soon as this code runs. Change the access to a valid index (for example arr[2] for the last element) or grow the array if you really need a fourth element.",
+          "run": 3,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 735,
+            "output_tokens": 264,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 8.994
+        }
+      ]
+    },
+    {
+      "finding_id": 2,
+      "type": "RC_REF_COMPARISON",
+      "sourcefile": "NumberComparison.java",
+      "start_line": "7",
+      "message": "Suspicious reference comparison",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The code boxes two Integer values of 1024, which is outside the Integer cache range (-128..127), so autoboxing creates two distinct objects and `num1 == num2` evaluates to false even though the numeric values are equal. This is exactly the reference-comparison-instead-of-value-comparison problem the rule describes, and the outcome is JVM/cache-configuration dependent. The correct comparison would be `num1.equals(num2)` or comparing unboxed int values.",
+          "is_true_positive": true,
+          "confidence": 0.98,
+          "category": "CORRECTNESS",
+          "issue_signature": "boxed primitive wrapper compared with reference equality operator",
+          "developer_explanation": "Comparing two Integer objects with `==` compares object identity, not numeric value. Because 1024 lies outside the small-integer cache, the two boxed values are separate objects and this prints false despite both holding 1024. Use `num1.equals(num2)`, or compare primitive `int` values, to test numeric equality.",
+          "run": 1,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 922,
+            "output_tokens": 333,
+            "cache_creation_input_tokens": 2741,
+            "cache_read_input_tokens": 0
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 12.108
+        },
+        {
+          "reasoning": "Line 7 compares two Integer wrapper objects with ==, and both are autoboxed from the literal 1024, which lies outside the Integer cache range (-128..127), so distinct objects are created and the comparison yields false even though the values are equal. This is exactly the reference-vs-value comparison the rule describes, and the consequence (equal values not comparing equal) is realized in this very code. The fix is to use equals() or compare primitive int values.",
+          "is_true_positive": true,
+          "confidence": 0.98,
+          "category": "CORRECTNESS",
+          "issue_signature": "boxed primitive wrapper objects compared with reference equality",
+          "developer_explanation": "The two Integer variables hold the value 1024, which is outside the range the JVM caches for boxed integers, so they are two separate objects and == compares object identity rather than numeric value \nthe program will print false. Compare with num1.equals(num2), or use int/intValue() so a primitive comparison is performed.",
+          "run": 2,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 922,
+            "output_tokens": 359,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 7.493
+        },
+        {
+          "reasoning": "Lines 5-6 autobox the literal 1024 into two separate Integer objects; since 1024 is outside the Integer cache range (-128..127), the two references are distinct and `num1 == num2` on line 7 evaluates to false rather than comparing the numeric values. The tool's claim — that reference comparison of Integer wrappers here is wrong and equals() should be used — is materially correct for this code and the wrong result is directly observable in the printed output. This is exactly the pattern the rule targets.",
+          "is_true_positive": true,
+          "confidence": 0.98,
+          "category": "CORRECTNESS",
+          "issue_signature": "boxed primitive wrapper compared with reference equality operator",
+          "developer_explanation": "The two Integer variables hold the value 1024, which is above the range of values the JVM caches for autoboxing, so each assignment creates a separate object and `num1 == num2` compares object identity, printing false. To compare the numeric values use `num1.equals(num2)`, `num1.intValue() == num2.intValue()`, or declare the variables as primitive `int`.",
+          "run": 3,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 922,
+            "output_tokens": 411,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 9.25
+        }
+      ]
+    },
+    {
+      "finding_id": 3,
+      "type": "BC_IMPOSSIBLE_CAST",
+      "sourcefile": "NumberReader.java",
+      "start_line": "6",
+      "message": "Impossible cast",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The local variable obj is assigned the String literal \"10\" and never reassigned before line 6, so its runtime type is definitively String, which is not assignable to Integer. Casting it to Integer therefore always throws ClassCastException at runtime. The tool's type tracking is exactly right for this code.",
+          "is_true_positive": true,
+          "confidence": 0.99,
+          "category": "CORRECTNESS",
+          "issue_signature": "cast between unrelated types that always throws at runtime",
+          "developer_explanation": "The variable holds a String literal, so casting it to Integer can never succeed and will throw a ClassCastException every time this code runs. If the intent is to obtain the numeric value, parse it instead (for example Integer.parseInt((String) obj) or Integer.valueOf(obj.toString())) rather than casting.",
+          "run": 1,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 823,
+            "output_tokens": 309,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 6.199
+        },
+        {
+          "reasoning": "The variable obj is assigned the String literal \"10\" and never reassigned before line 6, so its runtime type is definitively String; casting a String to Integer will always throw ClassCastException. The declared type Object permits the cast to compile, but the tracked value makes the failure certain at runtime. The warning's claim matches the shown code exactly.",
+          "is_true_positive": true,
+          "confidence": 0.99,
+          "category": "CORRECTNESS",
+          "issue_signature": "cast that always throws class cast exception at runtime",
+          "developer_explanation": "The variable holds a String (\"10\"), so casting it to Integer will always fail at runtime with a ClassCastException — the code compiles only because the variable is declared as Object. If you intended to convert the text to a number, parse it (e.g., Integer.parseInt on the string value) instead of casting.",
+          "run": 2,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 823,
+            "output_tokens": 279,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 7.161
+        },
+        {
+          "reasoning": "The variable obj is assigned the String literal \"10\" and is never reassigned before line 6, so its runtime type is definitively String, which cannot be cast to Integer. The cast at line 6 will therefore always throw ClassCastException at runtime. SpotBugs' type tracking is exactly right here; the whole file is visible and there is no path where obj holds anything else.",
+          "is_true_positive": true,
+          "confidence": 0.99,
+          "category": "CORRECTNESS",
+          "issue_signature": "cast that always throws a class cast exception",
+          "developer_explanation": "The object here is a String literal, and a String can never be cast to Integer, so this line will always fail with a ClassCastException as soon as it runs. If the intent is to print the numeric value, parse it instead (for example Integer.parseInt((String) obj)) or declare the variable with the type you actually need.",
+          "run": 3,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 823,
+            "output_tokens": 290,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 7.757
+        }
+      ]
+    },
+    {
+      "finding_id": 4,
+      "type": "ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD",
+      "sourcefile": "PersonProfile.java",
+      "start_line": "8",
+      "message": "Write to static field from instance method",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The field `name` is declared `static` yet is assigned by the instance method `setName`, so all instances share one value; the `main` method in the same file demonstrates the consequence, printing \"Kate\" twice instead of \"John\" and \"Kate\". The tool's claim — an instance method writing a static field, which breaks when multiple instances exist — is literally and materially true here. There is no context suggesting the sharing is intentional (no counter, cache, or configuration semantics); the getter/setter pair models per-person state.",
+          "is_true_positive": true,
+          "confidence": 0.97,
+          "category": "CORRECTNESS",
+          "issue_signature": "instance method writes to shared static field",
+          "developer_explanation": "The `name` field is declared static, so every PersonProfile object shares the same value; setting the name on one object overwrites it for all others, which is why the sample code prints \"Kate\" for both people. Unless the value is genuinely meant to be global, drop the `static` modifier so each instance keeps its own name. As a shared field it would also be unsafe if several threads set names concurrently.",
+          "run": 1,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 955,
+            "output_tokens": 455,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 8.812
+        },
+        {
+          "reasoning": "The field `name` is declared static while `setName` is an instance method that assigns to it, exactly the pattern the rule describes. The `main` method in the same file demonstrates the consequence concretely: `person1.setName(\"John\")` followed by `person2.setName(\"Kate\")` makes both `getName()` calls return \"Kate\", so per-instance state is not preserved. The tool's claim is materially correct for the shown code and points at a real defect.",
+          "is_true_positive": true,
+          "confidence": 0.97,
+          "category": "CORRECTNESS",
+          "issue_signature": "instance method writes to a static field",
+          "developer_explanation": "The `name` field is declared `static`, so every instance of the class shares one value; when an instance setter assigns to it, the value set through one object silently overwrites the value for all others. The `main` method here shows the effect: after setting names on two different objects, both print \"Kate\". Remove the `static` modifier so each object keeps its own name.",
+          "run": 2,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 955,
+            "output_tokens": 484,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 9.48
+        },
+        {
+          "reasoning": "The field `name` is declared static yet `setName` assigns to it from an instance method, exactly the pattern the rule describes. The shown `main` demonstrates the consequence: after `person1.setName(\"John\")` and `person2.setName(\"Kate\")`, both `getName()` calls return \"Kate\" because the two instances share one field. There is no indication the shared state is intentional (the accessors are instance methods modelling per-person data), so the claim is materially correct here.",
+          "is_true_positive": true,
+          "confidence": 0.97,
+          "category": "CORRECTNESS",
+          "issue_signature": "instance method writes to static field shared across instances",
+          "developer_explanation": "The `name` field is declared `static`, so every instance of this class shares one value; setting the name on one object silently overwrites it for all others. As the `main` method shows, both objects print \"Kate\". Remove the `static` modifier so each instance keeps its own name, unless class-wide shared state is genuinely intended.",
+          "run": 3,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 955,
+            "output_tokens": 522,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 9.307
+        }
+      ]
+    },
+    {
+      "finding_id": 5,
+      "type": "EQ_COMPARETO_USE_OBJECT_EQUALS",
+      "sourcefile": "PersonRanking.java",
+      "start_line": "19",
+      "message": "Class defines compareTo(...) and uses Object.equals()",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The nested Person class implements Comparable<Person> and defines compareTo, but the shown complete file contains no equals() override, so it inherits identity-based equals from Object. The natural ordering is therefore genuinely inconsistent with equals: two distinct Person objects with the same age are unequal, and the compareTo implementation is even worse than merely inconsistent /= it never returns 0 at all (equal ages yield -1), breaking antisymmetry and making sorted collections and PriorityQueue behave unpredictably. The tool's factual claim \\u2014 compareTo defined, equals inherited from Object \\u2014 is exactly what the code shows.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "class defines compareTo but inherits identity-based equals",
+          "developer_explanation": "This class provides an ordering via compareTo but never overrides equals, so equality is still object identity while ordering is based on age. Worse, compareTo returns -1 for two objects with the same age instead of 0, which breaks the comparison contract and will produce erratic results in sorted sets, TreeMap, Collections.sort and PriorityQueue. Fix compareTo to use Integer.compare(age, obj.age) and add matching equals/hashCode implementations based on age.",
+          "run": 1,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 1174,
+            "output_tokens": 758,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 12.378
+        },
+        {
+          "reasoning": "Person implements Comparable<Person> and defines compareTo but declares no equals method, so it inherits identity-based equals from Object — exactly the condition the rule reports. Moreover, compareTo here can never return 0 (it returns 1 or -1), so even x.compareTo(x) is -1 while x.equals(x) is true, making the natural ordering definitively inconsistent with equals and non-antisymmetric. This would cause misbehaviour in sorted collections, TreeSet/TreeMap, and PriorityQueue.remove, and Arrays.sort may even throw \"Comparison method violates its general contract\". The claim is materially correct for the shown code.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "class defines compareTo but inherits equals from Object",
+          "developer_explanation": "This class provides an ordering via compareTo but never overrides equals, so equality is still identity-based; worse, compareTo can only return 1 or -1 and never 0, so even comparing an object with itself reports \"less than\". Sorted collections, TreeSet/TreeMap keys and PriorityQueue operations rely on compareTo returning 0 for equal elements and on antisymmetry, so they will behave unpredictably or throw contract-violation errors. Return Integer.compare(age, obj.age) (or equivalent) and override equals/hashCode consistently with that ordering.",
+          "run": 2,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 1174,
+            "output_tokens": 1346,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 19.748
+        },
+        {
+          "reasoning": "Person implements Comparable and defines compareTo(Person) but does not override equals(), so it inherits reference equality from java.lang.Object — exactly the condition the rule reports. The inconsistency is not merely theoretical here: compareTo returns -1 whenever ages are equal, including when comparing an object with itself, so x.equals(x) is true while x.compareTo(x) != 0, and the ordering is not even antisymmetric. Any use in a sorted collection, TreeSet/TreeMap, PriorityQueue, or Arrays.sort would behave unpredictably or throw \"Comparison method violates its general contract\".",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "class defines compareTo but inherits equals from Object",
+          "developer_explanation": "This class defines a natural ordering but never overrides equals(), so two people with the same age are never considered equal while the comparison result is also never zero \\u2014 in fact comparing an object to itself returns -1. That breaks the contract expected by sorted collections, TreeSet/TreeMap, PriorityQueue and sorting utilities, which can produce wrong lookups or runtime exceptions. Return Integer.compare(age, obj.age) so equal ages compare as zero, and override equals() (and hashCode()) consistently with that ordering.",
+          "run": 3,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 1174,
+            "output_tokens": 1105,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 17.368
+        }
+      ]
+    },
+    {
+      "finding_id": 6,
+      "type": "HE_EQUALS_USE_HASHCODE",
+      "sourcefile": "PersonRegistry.java",
+      "start_line": "22",
+      "message": "Class defines equals() and uses Object.hashCode()",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The complete file is shown, and the nested Person class overrides equals(Object) at lines 20\therit it inherits Object's identity hashCode. Two Person objects with equal name and age would therefore compare equal but produce different hash codes, breaking the equals/hashCode contract for any hash-based collection. The tool's claim is factually correct for this code.",
+          "is_true_positive": true,
+          "confidence": 0.97,
+          "category": "CORRECTNESS",
+          "issue_signature": "equals overridden without corresponding hashCode override",
+          "developer_explanation": "Person defines its own equals but keeps the default hashCode inherited from Object, which is based on object identity. As a result two Person instances that are considered equal can produce different hash codes, so lookups in a HashMap or HashSet will silently fail to find them. Add a hashCode implementation derived from the same fields used in equals (name and age), e.g. via Objects.hash(name, age). (Separately, the comparison `name.equals(name)` on line 29 compares the field with itself and should be `name.equals(person.name)`.)",
+          "run": 1,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 1247,
+            "output_tokens": 540,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 10.808
+        },
+        {
+          "reasoning": "The complete file is shown and the nested Person class overrides equals(Object) at lines 20–30 with no hashCode() override anywhere, so it inherits Object's identity hash code. Two Person instances with the same name and age would compare equal but produce different hash codes, breaking the equals/hashCode contract and misbehaving in HashMap/HashSet. The tool's claim is factually correct for this code; the separate self-comparison bug at line 29 (name.equals(name)) is a different defect and does not affect this verdict.",
+          "is_true_positive": true,
+          "confidence": 0.97,
+          "category": "CORRECTNESS",
+          "issue_signature": "equals overridden without corresponding hashCode override",
+          "developer_explanation": "Person overrides equals but not hashCode, so it still uses the JVM's identity hash. Two Person objects you consider equal will land in different buckets of a HashMap or HashSet, causing lookups and duplicate detection to fail. Add a hashCode() implementation based on the same fields used in equals (name and age). While you are there, note that line 29 compares name.equals(name) instead of name.equals(person.name).",
+          "run": 2,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 1247,
+            "output_tokens": 600,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 11.981
+        },
+        {
+          "reasoning": "The complete 32-line file shows Person overriding equals(Object) with no hashCode() override, so it inherits Object's identity hash code. Two Person instances that compare equal (same age and — given the buggy self-comparison on line 29 — effectively any same-age pair) would produce different hash codes, breaking the equals/hashCode contract for HashMap/HashSet use. The tool's claim is literally verifiable in the shown code.",
+          "is_true_positive": true,
+          "confidence": 0.98,
+          "category": "CORRECTNESS",
+          "issue_signature": "class overrides equals without overriding hashCode",
+          "developer_explanation": "This class defines its own equals() but keeps the default hashCode() inherited from Object, which returns an identity-based value. That means two objects considered equal can have different hash codes, so lookups in HashMap, HashSet or similar collections will silently fail to find entries. Add a hashCode() implementation built from the same fields used in equals (name and age). Separately, note that line 29 compares name.equals(name), which always returns true — it should be name.equals(person.name).",
+          "run": 3,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 1247,
+            "output_tokens": 625,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 12.763
+        }
+      ]
+    },
+    {
+      "finding_id": 7,
+      "type": "SA_FIELD_SELF_COMPARISON",
+      "sourcefile": "PersonRegistry.java",
+      "start_line": "29",
+      "message": "Self comparison of field with itself",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "Line 29 calls name.equals(name), comparing the instance's own name field to itself, which always returns true instead of comparing against person.name. This makes equals report any two Person objects with the same age as equal, contradicting the evident intent of comparing both fields; the example in main returns true for \"John\" vs \"Kate\". The tool's claim is literally and materially correct for the shown code.",
+          "is_true_positive": true,
+          "confidence": 0.99,
+          "category": "CORRECTNESS",
+          "issue_signature": "field compared with itself in equals implementation",
+          "developer_explanation": "In the equality check, the name field is compared with itself (name.equals(name)), which is always true, so two people with the same age are treated as equal regardless of their names. This breaks lookups in collections such as HashSet or HashMap and any logic relying on equality. Change it to compare against the other object's field, e.g. name.equals(person.name) (or Objects.equals(name, person.name) to be null-safe).",
+          "run": 1,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 1048,
+            "output_tokens": 327,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 8.865
+        },
+        {
+          "reasoning": "Line 29 evaluates `name.equals(name)`, comparing this instance's own field to itself, which always returns true (or throws NPE if name is null); it clearly should be `name.equals(person.name)`. As a result, equals() only compares ages, so two Persons with different names but the same age are wrongly reported as equal — visible in main where p1(\"John\",25) and p2(\"Kate\",25) would compare as equal. The tool's claim is exactly correct for the flagged line.",
+          "is_true_positive": true,
+          "confidence": 0.99,
+          "category": "CORRECTNESS",
+          "issue_signature": "field compared with itself in equality check",
+          "developer_explanation": "In equals(), the name check compares the field to itself (`name.equals(name)`), which is always true, so only the age is actually compared and two people with the same age but different names are treated as equal. It should compare against the other object's field: `name.equals(person.name)`. Also consider null-safe comparison via Objects.equals in case name can be null.",
+          "run": 2,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 1048,
+            "output_tokens": 331,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 7.365
+        },
+        {
+          "reasoning": "Line 29 contains `name.equals(name)`, which compares this object's `name` field with itself and always returns true (unless name is null), instead of `name.equals(person.name)`. This makes equals() return true for any two Persons with the same age regardless of name, which is clearly not the intent given the surrounding correct field comparison `age == person.age`. The main method even demonstrates the bug: \"John\" and \"Kate\" both aged 25 will compare as equal.",
+          "is_true_positive": true,
+          "confidence": 0.99,
+          "category": "CORRECTNESS",
+          "issue_signature": "field compared with itself in equals implementation",
+          "developer_explanation": "In equals(), the name check is written as name.equals(name), which compares the field to itself and is always true, so any two Person objects with the same age are reported as equal regardless of their names. This breaks equality semantics and anything relying on it, such as collections and lookups. Change it to name.equals(person.name) (and consider Objects.equals to handle a null name safely).",
+          "run": 3,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 1048,
+            "output_tokens": 338,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 6.846
+        }
+      ]
+    },
+    {
+      "finding_id": 8,
+      "type": "UWF_UNWRITTEN_FIELD",
+      "sourcefile": "ProfileReader.java",
+      "start_line": "12",
+      "message": "Unwritten field",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The constructor `Person(String name)` accepts a parameter but has an empty body, so the field `name` is never assigned anywhere in the class; the whole file is shown, confirming no other write exists. Consequently `getName()` always returns null, and `main` dereferences it with `.length()`, producing a NullPointerException. The warning's claim is exactly correct for this code.",
+          "is_true_positive": true,
+          "confidence": 0.98,
+          "category": "CORRECTNESS",
+          "issue_signature": "field never assigned, reads always return default value",
+          "developer_explanation": "The constructor takes a name argument but never stores it, so the field stays null and the getter always returns null \\u2014 the call to `.length()` on the result will throw a NullPointerException. Add the missing assignment (`this.name = name;`) in the constructor, or drop the field if it is not needed.",
+          "run": 1,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 857,
+            "output_tokens": 325,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 6.721
+        },
+        {
+          "reasoning": "The constructor takes a `name` parameter but never assigns it to the field, so `Person.name` is never written anywhere in the complete file shown. Every read of `getName()` therefore returns null, and `main` immediately dereferences it with `.length()`, causing a NullPointerException. The warning's claim is exactly correct for this code.",
+          "is_true_positive": true,
+          "confidence": 0.99,
+          "category": "CORRECTNESS",
+          "issue_signature": "field never assigned, reads always return default value",
+          "developer_explanation": "The constructor accepts a name argument but never stores it in the field, so the field stays null forever and getName() always returns null. In main, calling .length() on that result will throw a NullPointerException. Add `this.name = name;` in the constructor.",
+          "run": 2,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 857,
+            "output_tokens": 257,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 6.83
+        },
+        {
+          "reasoning": "The constructor takes a `name` parameter but never assigns it to the field, so `Person.name` is never written anywhere in the complete file shown. Consequently `getName()` always returns null, and `main` dereferences it with `.length()`, causing a NullPointerException. The warning's claim is exactly correct for this code.",
+          "is_true_positive": true,
+          "confidence": 0.98,
+          "category": "CORRECTNESS",
+          "issue_signature": "field never assigned, always read as default value",
+          "developer_explanation": "The constructor accepts a name argument but never stores it in the field, so the field stays null for every instance. Any call to the getter returns null, and the code that calls `.length()` on it will throw a NullPointerException. Add the assignment (`this.name = name;`) in the constructor.",
+          "run": 3,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 857,
+            "output_tokens": 263,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 8.956
+        }
+      ]
+    },
+    {
+      "finding_id": 9,
+      "type": "UC_USELESS_CONDITION",
+      "sourcefile": "RangeValidator.java",
+      "start_line": "11",
+      "message": "Condition has no effect",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The guard is `value < 0 && value > 255`, which can never be true because no int is simultaneously negative and greater than 255; once `value < 0` holds, `value > 255` is known false, exactly as the tool states. The evident intent, confirmed by the main method calling validate(-1) and validate(256) as out-of-range examples, was `||`, so the range check never throws and the method silently accepts invalid input. The tool's claim about the flagged expression is materially correct and points to a real defect.",
+          "is_true_positive": true,
+          "confidence": 0.97,
+          "category": "CORRECTNESS",
+          "issue_signature": "always-false conjunction in range check due to wrong boolean operator",
+          "developer_explanation": "The check `value < 0 && value > 255` can never be true, since a number cannot be both below 0 and above 255 at the same time, so the exception is never thrown and out-of-range values such as -1 and 256 pass validation. You almost certainly meant `value < 0 || value > 255`. Change the operator so the bounds check actually rejects values outside 0..255.",
+          "run": 1,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 879,
+            "output_tokens": 505,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 9.313
+        },
+        {
+          "reasoning": "The flagged condition `value < 0 && value > 255` is unsatisfiable: if `value < 0` is true, then `value > 255` is necessarily false, so the second comparison can never change the outcome and the exception is never thrown. The tool's claim that the condition has no effect because `value <= 255` is already known at that point is exactly right for this code. The author evidently intended `||` for a range check, as shown by the main method calling validate(-1) and validate(256) expecting rejection.",
+          "is_true_positive": true,
+          "confidence": 0.98,
+          "category": "CORRECTNESS",
+          "issue_signature": "unsatisfiable conjunction of mutually exclusive range comparisons",
+          "developer_explanation": "The range check `value < 0 && value > 255` can never be true, since no number is both negative and greater than 255, so the IllegalArgumentException is never thrown and out-of-range values pass validation silently. This makes the validation method a no-op. Change the `&&` to `||` so that either a negative value or a value above 255 is rejected.",
+          "run": 2,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 879,
+            "output_tokens": 502,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 8.08
+        },
+        {
+          "reasoning": "The condition `value < 0 && value > 255` can never be true: once `value < 0` holds, `value > 255` is necessarily false, so the second conjunct is redundant and the whole guard is dead. The tool's claim that the value is already known to be <= 255 at that point is exactly right, and the consequence is that the range check never throws — `validate(-1)` and `validate(256)` both return normally. The author evidently meant `||`, so this is a genuine logic defect, not a stylistic nit.",
+          "is_true_positive": true,
+          "confidence": 0.97,
+          "category": "CORRECTNESS",
+          "issue_signature": "always-false conjunction of mutually exclusive range checks",
+          "developer_explanation": "The guard `value < 0 && value > 255` can never be satisfied, since no single number is both negative and greater than 255, so the IllegalArgumentException is never thrown and out-of-range values pass validation unchanged. Change the operator to `||` so the check rejects values below 0 or above 255.",
+          "run": 3,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 879,
+            "output_tokens": 489,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 9.824
+        }
+      ]
+    },
+    {
+      "finding_id": 10,
+      "type": "RV_RETURN_VALUE_IGNORED",
+      "sourcefile": "TextTrimmer.java",
+      "start_line": "6",
+      "message": "Method ignores return value",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "Line 6 calls s.substring(3) as a statement and discards the returned String; since String is immutable, s still holds \"abcdef\" and the printed output is unchanged. This is the textbook case the rule describes — the call has no effect whatsoever, so it is either dead code or a missing assignment. The claim is materially correct for the shown code.",
+          "is_true_positive": true,
+          "confidence": 0.98,
+          "category": "CORRECTNESS",
+          "issue_signature": "return value of immutable string operation discarded",
+          "developer_explanation": "The call to substring on line 6 produces a new string but nothing is done with it, and the original string is unchanged because strings cannot be modified in place. As written, the line has no effect and the program prints the full original text. If you intended to trim the first three characters, assign the result back (s = s.substring(3)); otherwise remove the line.",
+          "run": 1,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 909,
+            "output_tokens": 283,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 7.462
+        },
+        {
+          "reasoning": "Line 6 calls s.substring(3) as a standalone statement and discards the result; String is immutable, so s still holds \"abcdef\" when printed on line 7. The call has no side effect whatsoever, so it is either dead code or, more likely, an intended reassignment that was forgotten. This exactly matches the pattern the rule describes.",
+          "is_true_positive": true,
+          "confidence": 0.98,
+          "category": "CORRECTNESS",
+          "issue_signature": "ignored return value of immutable string operation",
+          "developer_explanation": "Calling substring on a String does not modify it \\\remains unchanged and the printed output will still be \"abcdef\". If you meant to shorten the string, assign the result back, e.g. s = s.substring(3); otherwise remove the statement since it does nothing.",
+          "run": 2,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 909,
+            "output_tokens": 269,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 6.661
+        },
+        {
+          "reasoning": "Line 6 calls s.substring(3) as a statement and discards the returned String; since String is immutable, s still holds \"abcdef\" and the subsequent println prints the unmodified value. This is exactly the pattern the rule describes, and the call has no side effect, so the statement is either dead code or a bug where the author intended s = s.substring(3). The warning's claim is materially correct for the shown code.",
+          "is_true_positive": true,
+          "confidence": 0.97,
+          "category": "CORRECTNESS",
+          "issue_signature": "ignored return value of immutable string operation",
+          "developer_explanation": "Calling substring on a String does not change the String; it returns a new one, and here that result is thrown away, so the printed value is still the original \"abcdef\". If you meant to trim the first three characters, assign the result back (s = s.substring(3)); otherwise the statement does nothing and should be removed.",
+          "run": 3,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 909,
+            "output_tokens": 298,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 7.974
+        }
+      ]
+    },
+    {
+      "finding_id": 11,
+      "type": "RV_EXCEPTION_NOT_THROWN",
+      "sourcefile": "ValueProcessor.java",
+      "start_line": "11",
+      "message": "Exception created and dropped rather than thrown",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "Line 11 constructs an IllegalArgumentException inside the negative-value guard but never throws it or assigns it anywhere, so the object is immediately discarded. As a result, process(-1) falls through and prints \"Value is positive or 0\", which contradicts the evident intent of the guard. The claim of the warning matches the shown code exactly: the exception is created and dropped rather than thrown.",
+          "is_true_positive": true,
+          "confidence": 0.99,
+          "category": "CORRECTNESS",
+          "issue_signature": "exception instantiated but never thrown",
+          "developer_explanation": "In the negative-value check you build an IllegalArgumentException but never throw it, so the object is simply discarded and execution continues to the print statement — a negative value is reported as \"positive or 0\". Add the throw keyword (throw new IllegalArgumentException(\"Value is negative\");) so the guard actually rejects invalid input.",
+          "run": 1,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 854,
+            "output_tokens": 306,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 9.098
+        },
+        {
+          "reasoning": "Line 11 constructs an IllegalArgumentException inside the negative-value guard but never throws it or assigns it anywhere, so the object is immediately discarded. The method then falls through and prints \"Value is positive or 0\" even for value = -1, which is clearly not the intent of the guard. This is exactly the pattern the rule describes, and the missing `throw` keyword is a genuine correctness bug.",
+          "is_true_positive": true,
+          "confidence": 0.99,
+          "category": "CORRECTNESS",
+          "issue_signature": "exception object created but never thrown",
+          "developer_explanation": "Inside the negative-value check you build an IllegalArgumentException but never throw it, so the object is created and discarded and execution continues as if the value were valid \\\"Value is positive or 0\\\" is printed even for -1. Add the missing `throw` keyword so the invalid input actually aborts the method.",
+          "run": 2,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 854,
+            "output_tokens": 302,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 8.378
+        },
+        {
+          "reasoning": "Line 11 constructs `new IllegalArgumentException(\"Value is negative\")` as a bare statement inside the negative-value guard, with no `throw` keyword and no assignment or other use of the object. As a result the method falls through and prints \"Value is positive or 0\" even for value = -1, which is clearly not the intent of the guard. This is exactly the pattern the rule describes, and the claim is materially correct for this code.",
+          "is_true_positive": true,
+          "confidence": 0.99,
+          "category": "CORRECTNESS",
+          "issue_signature": "exception object created but never thrown",
+          "developer_explanation": "In the negative-value check the exception object is created but never thrown, so nothing happens and execution continues to print \"Value is positive or 0\" even for negative input. Add the `throw` keyword so the guard actually rejects invalid values.",
+          "run": 3,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 854,
+            "output_tokens": 285,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 6.584
+        }
+      ]
+    }
+  ]
+}

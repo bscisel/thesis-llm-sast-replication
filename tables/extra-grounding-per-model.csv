@@ -1,0 +1,8 @@
+model;reasoning_grounded;tool_text_grounded;developer_explanation_grounded;beyond_tool_text;near_flagged_line;p_signflip
+Claude Sonnet 5;0,858;0,514;0,653;0,753;0,631;0,00005
+Claude Opus 5;0,833;0,514;0,369;0,767;0,650;0,00005
+gpt-oss-120b;0,761;0,514;0,586;0,539;0,489;0,00005
+gpt-oss-20b;0,756;0,514;0,636;0,550;0,486;0,00005
+Qwen3.5 9B;0,756;0,514;0,486;0,597;0,492;0,00005
+GPT-5.6 Terra;0,719;0,514;0,283;0,561;0,483;0,00385
+GPT-5.6 Luna;0,661;0,514;0,381;0,467;0,406;0,06135

@@ -1,0 +1,17 @@
+{
+  "run": "006_jetty-combined-sample",
+  "kind": "merged",
+  "merged_from": [
+    "003_jetty-stage-1",
+    "005_jetty-stage-2"
+  ],
+  "created": "2026-08-15T12:49:51",
+  "target_project": {
+    "name": "Eclipse Jetty",
+    "repository": "https://github.com/jetty/jetty.project",
+    "branch": "jetty-12.1.x",
+    "commit": "6ca6c9ab3ab531461355602a455516b976456b97",
+    "version": "12.1.9-SNAPSHOT",
+    "key": "jetty-core-minus-coreapp-start"
+  }
+}

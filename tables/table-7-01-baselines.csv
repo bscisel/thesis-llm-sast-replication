@@ -1,0 +1,13 @@
+baseline;tool;precision;recall;f1;accuracy
+B0;SpotBugs;0,308;1,000;0,471;0,308
+B0;Error Prone;0,567;1,000;0,723;0,567
+B0;SonarQube;0,325;1,000;0,491;0,325
+B0;all;0,400;1,000;0,571;0,400
+B1;SpotBugs;;0,000;;0,692
+B1;Error Prone;;0,000;;0,433
+B1;SonarQube;;0,000;;0,675
+B1;all;;0,000;;0,600
+B2;SpotBugs;0,314;1,000;0,477;0,325
+B2;Error Prone;0,634;0,868;0,733;0,642
+B2;SonarQube;0,325;1,000;0,491;0,325
+B2;all;0,408;0,938;0,568;0,431

@@ -1,0 +1,1302 @@
+{
+  "model": "qwen3.5:9b",
+  "tool": "spotbugs",
+  "num_runs": 3,
+  "runs_per_invocation": 3,
+  "source_root": "jetty.project",
+  "call_parameters": {
+    "temperature": null,
+    "concurrency": 1,
+    "response_format": "json_schema",
+    "num_ctx": 32768,
+    "request_timeout_s": 900,
+    "base_url": "http://localhost:11434"
+  },
+  "system_prompt_variant": "jetty",
+  "system_prompt_sha256": "b5b634e0a9109c59",
+  "user_prompt_sha256": "14894866e018872e",
+  "timestamp": "2026-08-15T08:23:08.138272+00:00",
+  "updated_at": "2026-08-15T08:23:08.138272+00:00",
+  "findings": [
+    {
+      "finding_id": 0,
+      "type": "PERM_SUPER_NOT_CALLED_IN_GETPERMISSIONS",
+      "sourcefile": "WebAppClassLoader.java",
+      "start_line": "333",
+      "message": "Custom class loader does not call its superclass's getPermissions()",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The code conditionally returns either `_context.getPermissions()` (when non-null) or `super.getPermissions(cs)` (fallback when null). This pattern is a legitimate Jetty architectural approach where webapp contexts manage their own permission collections for deployment isolation rather than bypassing security controls. The SpotBugs rule's claim that omitting super means 'permissions are completely independent of those specified in the systemwide policy file' doesn't apply here because this container context-based permission management serves an intentional purpose and isn't exploitable by attackers.",
+          "is_true_positive": false,
+          "confidence": 0.85,
+          "category": "SECURITY",
+          "issue_signature": "custom class loader not calling parent getpermissions",
+          "developer_explanation": "This warning is a known limitation of SpotBugs when analyzing containerized environments like Jetty. The code intentionally uses per-webapp permission contexts rather than inheriting system policy for deployment isolation in the server runtime. Your custom context already properly handles permissions through its own mechanism, and only falls back to parent delegation when no application-specific collection exists. This pattern is safe and aligns with how modern Java EE containers manage security boundaries.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 7937,
+            "output_tokens": 255
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 10182,
+          "latency_s": 27.4
+        },
+        {
+          "reasoning": "The code explicitly checks if _context.getPermissions() is non-null and returns it directly without calling super.getPermissions(cs), only falling back to super when null. This bypasses superclass permission inheritance, which SEI CERT rule SEC07-J claims always happens in custom class loaders.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "SECURITY",
+          "issue_signature": "custom loader omits parent getPermissions call",
+          "developer_explanation": "This warning can be safely dismissed because Jetty's WebAppClassLoader intentionally returns cached or context-based permissions rather than always delegating to the superclass. The classloader design relies on web application container security models (security managers with sandboxing) where permission checks happen through AccessController, not via system Policy inheritance per CodeSource. This pattern is deliberate and aligns with how Java EE/Jakarta servers manage isolation between deployed applications.",
+          "run": 2,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 7177,
+            "output_tokens": 204
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 5956,
+          "latency_s": 12.552
+        },
+        {
+          "reasoning": "The flagged line conditionally delegates to super.getPermissions() when _context permissions are null, but returns context's permission collection directly otherwise without invoking the superclass method. This pattern appears intentional for Jetty's container model where WebAppContext manages its own security view rather than system-wide policies; the rule assumes universal application of parent delegation which doesn't match this isolation architecture.",
+          "is_true_positive": false,
+          "confidence": 0.85,
+          "category": "SECURITY",
+          "issue_signature": "custom class loader get permissions does not always delegate to superclass",
+          "developer_explanation": "This warning flags that your custom ClassLoader.getPermissions() doesn't call super in one code branch when context has cached permissions. In Jetty's containerized environment, the Context object is intentionally used to provide application-specific security view rather than system-wide Java policies. Since this design means parent aggregations aren't needed or relevant here, and typical modern JVMs without SecurityManager don't enforce those checks anyway, you can safely dismiss this alarm as reflecting intended behavior rather than a vulnerability.",
+          "run": 3,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 13350,
+            "output_tokens": 236
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 38410,
+          "latency_s": 71.077
+        }
+      ],
+      "original_finding_index": 103
+    },
+    {
+      "finding_id": 1,
+      "type": "EQ_CHECK_FOR_OPERAND_NOT_COMPATIBLE_WITH_THIS",
+      "sourcefile": "JettyHttpExchange.java",
+      "start_line": "96",
+      "message": "Equals checks for incompatible operand",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The code delegates equality to _delegate.equals(obj) without any type checking in this method itself, but SpotBugs warns that forwarding to another object's equals implementation while extending HttpExchange can violate Java contract properties like symmetry (e.g., if an attacker or framework creates mixed usage). The delegation pattern here means the comparison behavior depends entirely on what delegate returns for various argument types. Since JettyHttpExchange extends a JDK class and delegates its entire equals logic, there is potential asymmetry when comparing with non-Jetty objects.",
+          "is_true_positive": true,
+          "confidence": 0.9,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "delegated equals may violate contract symmetry",
+          "developer_explanation": "This warning highlights a potential issue with your equality implementation: delegating entirely to another object can create asymmetric results when the underlying delegate doesn't handle comparison types consistently. While this is a common delegation pattern, it risks violating Java's equals() contract where A.equals(B) should always return the same as B.equals(A). You may want to ensure the delegated logic maintains symmetry across all argument types, or add type guards if necessary.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 4770,
+            "output_tokens": 254
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3764,
+          "latency_s": 10.025
+        },
+        {
+          "reasoning": "The warning claims that equals checks for an incompatible operand type, but examining lines 96-97 shows pure delegation to _delegate.equals(obj) with no instanceof checks or special-case handling visible in JettyHttpExchange's own method body.",
+          "is_true_positive": false,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "equals method handles incompatible operand types",
+          "developer_explanation": "This warning appears to flag a problem in the delegate class rather than your code here. Since JettyHttpExchange.equals simply delegates without any type-checking logic visible, we cannot verify the claim about incompatible operand handling from this snippet alone.",
+          "run": 2,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 6189,
+            "output_tokens": 160
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 10449,
+          "latency_s": 21.34
+        },
+        {
+          "reasoning": "The warning claims that this equals method performs type checking on potentially incompatible operands (via instanceof or similar logic), which SpotBugs warns against due to symmetry/transitivity risks. The provided code simply delegates equality entirely to `_delegate.equals(obj)` without any explicit type checks visible in the source snippet, making the specific claim of 'checking for incompatible operand' materially incorrect.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "equals method checking for incompatible operands without proper handling",
+          "developer_explanation": "SpotBugs flags this because delegation of equals methods is sometimes assumed to be unsafe in wrappers if internal logic isn't inspected directly; however, your code delegates responsibility entirely to a private delegate object (`_delegate`), which should implement the contract correctly on its own. Dismissing this warning is safe as no explicit type checks are performed here that would violate symmetry or transitivity.",
+          "run": 3,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 9508,
+            "output_tokens": 213
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 26506,
+          "latency_s": 53.006
+        }
+      ],
+      "original_finding_index": 124
+    },
+    {
+      "finding_id": 2,
+      "type": "EI_EXPOSE_STATIC_REP2",
+      "sourcefile": "JettyHttpServerProvider.java",
+      "start_line": "36",
+      "message": "May expose internal static state by storing a mutable object into a static field",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The code at line 36 stores an externally provided mutable `Server` object into a private static field `_server`. While this pattern matches the warning's description of exposing internal state, SpotBugs' alarm (MALICIOUS_CODE) is generally incorrect for SPI provider implementations like JettyHttpServerProvider within application server lifecycles. This singleton configuration usage (`setServer`) at initialization time followed by shared access during runtime is standard design practice in Java 7+ HTTP Server providers where the underlying static field acts as a global holder managed per classloader/lifecycle, and no concurrent modification or security exploit occurs under normal framework control.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "exposing internal static state through mutable reference storage in static field",
+          "developer_explanation": "This warning flags storing an external object into a private static field as potentially exposing internal state or weakening security properties (CWE-493). However, for SPI provider implementations used within application servers like JettyHttpServerProvider, this pattern is intentional: the `setServer` method initializes shared configuration once during container startup when no threads are actively using it. The single-threaded initialization phase followed by read-only usage makes concurrent modification risks or security exposures not applicable in normal operation.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 18631,
+            "output_tokens": 293
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 74242,
+          "latency_s": 158.777
+        },
+        {
+          "reasoning": "The code stores a passed-in mutable Server instance directly into a private static field (`_server`) via a public setter method. This creates global state that any external caller can modify at runtime, which aligns with the warning's claim about exposing internal static state and matches CWE-493 (Use of Global Variable). In this context, such modification could lead to unauthorized configuration injection affecting all HTTP requests in the JVM session.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "SECURITY",
+          "issue_signature": "exposed mutable static field via public setter",
+          "developer_explanation": "This code allows external callers to change a shared Server instance stored statically in the JVM's classloader context for this Jetty provider implementation. If this method is called during runtime with unauthorized or malicious server objects, it can alter how all incoming HTTP requests are handled by every client using that service loader configuration. Consider limiting mutability of static state unless initialization guarantees prevent dynamic changes.",
+          "run": 2,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 8858,
+            "output_tokens": 223
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 29191,
+          "latency_s": 63.966
+        },
+        {
+          "reasoning": "The warning flags storing an external mutable Server object into a static private field _server, but this is standard SPI provider initialization pattern where setServer() is called once during registration before createHttpServer() retrieves it later. The field remains strictly private and only accessed through controlled public API methods in the lifecycle-appropriate manner, so no actual security exposure or incorrect state modification occurs.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "SECURITY",
+          "issue_signature": "mutable object stored in static field exposing internal state",
+          "developer_explanation": "This warning is a false positive for this code pattern. The JettyHttpServerProvider implements the HTTP Server SPI where setServer() configures an instance once during application initialization before any requests are handled, and createHttpServer() retrieves it afterward to wrap in request-specific handlers. Since _server remains private static with no direct external access beyond these controlled lifecycle methods, there's no actual security exposure or state corruption risk—the intended design allows this pattern for efficient provider reuse.",
+          "run": 3,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 4072,
+            "output_tokens": 232
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 5669,
+          "latency_s": 14.462
+        }
+      ],
+      "original_finding_index": 132
+    },
+    {
+      "finding_id": 3,
+      "type": "ES_COMPARING_PARAMETER_STRING_WITH_EQ",
+      "sourcefile": "HttpCookie.java",
+      "start_line": "869",
+      "message": "Comparison of String parameter using == or !=",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The code at line 869 uses 'obj1 == obj2' for early-exit optimization before calling .equalsIgnoreCase() on different objects. This is a valid pattern in utility methods because if two String references are the same object, they necessarily have equal content - no correctness issue exists here since subsequent null checks and equalsIgnoreCase call handle all other cases properly.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "comparison of string parameter using reference equality operator instead of contents method",
+          "developer_explanation": "This warning can be safely dismissed because your code handles all cases correctly. The == check is an optimization that returns early when both references point to the same object (which means equal content), while null checks and equalsIgnoreCase() handle everything else.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 6504,
+            "output_tokens": 191
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 4601,
+          "latency_s": 13.351
+        },
+        {
+          "reasoning": "The code uses `==` on line 869 to check if two String parameters reference the same object instance before calling `.equalsIgnoreCase()`. Since this private static helper method receives its arguments from trusted internal callers within Jetty's cookie framework—not external attacker-controlled input—checking identity first is a valid performance optimization rather than an exploitable weakness.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "PERFORMANCE",
+          "issue_signature": "reference equality comparison on string parameters",
+          "developer_explanation": "This warning is a standard SpotBugs alert for comparing strings with `==`, which generally applies to public APIs accepting external input where callers might pass uninterned objects. However, your code uses this pattern in private internal methods receiving only trusted data from within the same framework. The identity-check optimization here provides measurable performance benefits without compromising correctness or security.",
+          "run": 2,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 7041,
+            "output_tokens": 201
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 8166,
+          "latency_s": 17.907
+        },
+        {
+          "reasoning": "The method performs an identity check (`obj1 == obj2`) but immediately falls back to a semantic comparison using `equalsIgnoreCase()` for any non-identity match or null checks.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "comparison of object references instead of content",
+          "developer_explanation": "This alarm is based on a general best practice recommendation regarding String comparisons in Java to avoid relying on reference identity for semantics (CWE-595). In your specific case, using `==` as an early exit optimization when both arguments are guaranteed equal via identity implies they must be content-equal; the fallback semantic check ensures correctness regardless of interned status. Therefore no correctness or security issue exists here and the warning can be safely dismissed.",
+          "run": 3,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 13419,
+            "output_tokens": 189
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 36699,
+          "latency_s": 85.463
+        }
+      ],
+      "original_finding_index": 144
+    },
+    {
+      "finding_id": 4,
+      "type": "AT_NONATOMIC_OPERATIONS_ON_SHARED_VARIABLE",
+      "sourcefile": "HttpParser.java",
+      "start_line": "1366",
+      "message": "Operation on shared variable is not atomic",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The code shows `_length` being incremented in a loop that processes HTTP headers from an incoming buffer, which is part of sequential parsing logic where each parse operation runs to completion on a single request lifecycle before the next begins. Without evidence showing HttpParser instances are shared across threads during active parsing (typical for Netty-style parsers), there's no realistic concurrent access path that would make atomicity failures exploitable.",
+          "is_true_positive": false,
+          "confidence": 0.85,
+          "category": "CONCURRENCY",
+          "issue_signature": "increment operation on shared counter without synchronization",
+          "developer_explanation": "This warning flags a non-atomic increment to _length as if it could cause data races under concurrent access. In standard HTTP parsing patterns using this codebase, HttpParser instances process requests sequentially in thread-local contexts and don't share parser state across threads during active parse operations. The concern assumes worst-case sharing that doesn't match typical usage where each request gets its own parser lifecycle.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 7197,
+            "output_tokens": 222
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3231,
+          "latency_s": 10.529
+        },
+        {
+          "reasoning": "The warning flags line 1366 (_length++) as a non-atomic operation on a shared variable. However, without evidence from the shown code or context showing that HttpParser is instantiated once and accessed by multiple threads (which would be highly unusual for an HTTP parser), this appears to be single-threaded request parsing where such synchronization isn't needed.",
+          "is_true_positive": false,
+          "confidence": 0.85,
+          "category": "CONCURRENCY",
+          "issue_signature": "non atomic write on shared variable",
+          "developer_explanation": "This warning assumes a multi-threaded context where this parser instance is accessed concurrently from multiple threads. In typical HTTP server architectures, each request/connection uses its own parser instance or the parser has proper thread-local state isolation. If your code follows standard patterns (one parser per connection/thread), then no actual race condition exists here and you can safely ignore this warning.",
+          "run": 2,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 7293,
+            "output_tokens": 206
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3429,
+          "latency_s": 9.765
+        },
+        {
+          "reasoning": "The code increments `_length` at line 1366 using a compound operation `++`, which is not atomic in Java without synchronization or Atomic types; this pattern risks lost updates if the parser instance can be accessed by multiple threads, making the warning materially correct for concurrent contexts.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CONCURRENCY",
+          "issue_signature": "unsynchronized increment on shared counter field",
+          "developer_explanation": "This variable `_length` might be modified by multiple threads simultaneously if the parser instance is reused across a thread pool (common in NIO servers). To prevent lost updates or corrupted header parsing, use `AtomicInteger`, wrap access in synchronized blocks, or ensure lifecycle controls guarantee single-threaded access.",
+          "run": 3,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 11826,
+            "output_tokens": 180
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 25939,
+          "latency_s": 57.966
+        }
+      ],
+      "original_finding_index": 172
+    },
+    {
+      "finding_id": 5,
+      "type": "VA_FORMAT_STRING_USES_NEWLINE",
+      "sourcefile": "HttpTester.java",
+      "start_line": "636",
+      "message": "Format string should use %n rather than \\n",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The code uses \\n directly in String.format() instead of %n for newlines, which SpotBugs flags as a style best practice issue since %n produces platform-specific line separators while \\n always outputs LF.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "format string using literal newline instead of percent n escape sequence for portable cross-platform output",
+          "developer_explanation": "This warning indicates a code style issue where \\n is used in format strings instead of %n. While this works functionally, the recommended approach uses %n to produce platform-appropriate line separators across different operating systems. This improves consistency with Java conventions and prevents potential portability issues when the output behavior might matter.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 4511,
+            "output_tokens": 181
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2714,
+          "latency_s": 9.307
+        },
+        {
+          "reasoning": "The warning flags use of \\n instead of %n as bad practice because literal newline doesn't adapt to platform line separator conventions. However, the toString() method returns string representations intended only for internal logging/debugging where all platforms accept LF terminators in logs/streams without issue.",
+          "is_true_positive": false,
+          "confidence": 0.92,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "format string uses fixed newline instead of system separator",
+          "developer_explanation": "This alert suggests replacing \\n with %n to match your OS line ending convention when printing format strings in printf/format calls. Since this code only produces debug information that will be displayed in logs or consoles, both styles render identically and pose no risk; you can safely ignore it here.",
+          "run": 2,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 12590,
+            "output_tokens": 181
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 40699,
+          "latency_s": 93.336
+        },
+        {
+          "reasoning": "The flagged code uses literal \\n escape sequences within String.format(), which are processed by Java compiler to produce newline characters before format string parsing occurs—this is fundamentally different from format specifiers like %s that interpret user arguments. The warning claims this constitutes BAD_PRACTICE for security reasons (CWE-134 style), but there's no untrusted input reaching any argument positions here and literal \\n in Java strings cannot create format string vulnerabilities because they're treated as static escape sequences, not placeholder specifiers.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "format string uses literal newlines instead of platform specifier",
+          "developer_explanation": "This warning is a false positive because Java handles escape sequences differently than other languages like C/C++. The \\n characters here are just standard newline escapes in your string literals, not format placeholders that could be exploited. While using %n would give you cross-platform line endings (LF vs CRLF), changing this won't fix any vulnerability or correctness issue since user-controlled data never reaches these argument positions.",
+          "run": 3,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 5915,
+            "output_tokens": 251
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 10034,
+          "latency_s": 23.769
+        }
+      ],
+      "original_finding_index": 201
+    },
+    {
+      "finding_id": 6,
+      "type": "RV_NEGATING_RESULT_OF_COMPARETO",
+      "sourcefile": "QuotedQualityCSV.java",
+      "start_line": "335",
+      "message": "Negating the result of compareTo()/compare()",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The flagged line uses -Integer.compare() which returns only {-1, 0, 1} and negating these values cannot overflow or produce incorrect sign flips (unlike raw compareTo results that could be Integer.MIN_VALUE). The tool's generic concern about MIN_VALUE overflow applies to arbitrary compareTo implementations but not when the specific method being wrapped is guaranteed bounded.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "negating comparison result of integer compare call",
+          "developer_explanation": "This warning can be safely dismissed because Integer.compare() only returns -1, 0, or +1 as its possible results. Negating these values never causes overflow since none are near MIN_VALUE/MAX_VALUE bounds. The code correctly reverses sort order by negating the comparison and does not need to change.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 5724,
+            "output_tokens": 200
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3915,
+          "latency_s": 12.428
+        },
+        {
+          "reasoning": "The code uses -Integer.compare() to reverse sort order on line 335 for tie-breaking by index. This pattern can overflow if comparing Integer.MIN_VALUE, potentially causing incorrect sort ordering for those edge cases.",
+          "is_true_positive": true,
+          "confidence": 0.8,
+          "category": "CORRECTNESS",
+          "issue_signature": "negating integer comparison result in compareTo implementation",
+          "developer_explanation": "Using -Integer.compare() to reverse sort direction is fragile because it can overflow when comparing Integer.MIN_VALUE values. For normal index ranges this won't occur, but static analysis flags it as a correctness risk since the behavior depends on extreme edge cases you never expected. Consider swapping argument order (e.g., compareTo(o._index, _index) instead of -Integer.compare(_index, o._index)) to express your intent more clearly and safely.",
+          "run": 2,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 6044,
+            "output_tokens": 196
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 5978,
+          "latency_s": 14.837
+        },
+        {
+          "reasoning": "The flagged code uses -Integer.compare(o._index, _index), which is a negation pattern that SpotBugs flags as potentially problematic when Integer.MIN_VALUE could be returned. However, Integer.compare() only returns {-1, 0, or 1} and can never return MIN_VALUE, so the overflow scenario described in this warning cannot occur with Java's standard compare methods.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "negating compareTo result without understanding bounds",
+          "developer_explanation": "This warning can be safely ignored because Integer.compare() is bounded to return only -1, 0, or 1—values that never overflow when negated. The code correctly sorts by index in ascending order as intended; the comparison logic works properly and there's no security, correctness, or performance issue here.",
+          "run": 3,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 5724,
+            "output_tokens": 205
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3902,
+          "latency_s": 12.037
+        }
+      ],
+      "original_finding_index": 223
+    },
+    {
+      "finding_id": 7,
+      "type": "MS_PKGPROTECT",
+      "sourcefile": "Http3Fields.java",
+      "start_line": "37",
+      "message": "Field should be package protected",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The flagged field STATUSES is a public static final array, which exposes mutable internal state to external packages through its API surface. CWE-607 accurately describes that while the reference itself can't change (final), individual elements of an exposed array CAN be modified by any code referencing this class from other packages.",
+          "is_true_positive": true,
+          "confidence": 1.0,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "public static final field exposes mutable internal state to external callers",
+          "developer_explanation": "This public array can have its elements modified by any code in other packages that references this class. While the array reference itself cannot be reassigned, individual status codes stored inside could theoretically be changed at runtime if another package accesses STATUSES directly and modifies entries.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 5447,
+            "output_tokens": 181
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3094,
+          "latency_s": 9.956
+        },
+        {
+          "reasoning": "The STATUSES field at line 37 is declared final and initialized to an array of size 599. Although Java's 'final' prevents reassignment of the reference itself, arrays remain mutable objects whose contents can be changed after class initialization even when referenced as final.",
+          "is_true_positive": false,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "public static field exposing mutable object reference",
+          "developer_explanation": "This alarm is a false positive for your internal utility class. While the tool technically identifies that arrays are mutable even when final-qualified as references, making this public has no practical security impact because only same-package code can access it (requiring reflection or special privileges to bypass). This field serves purely as an HTTP status lookup table and mutating its contents would require substantial capabilities already beyond normal application boundaries.",
+          "run": 2,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 6208,
+            "output_tokens": 200
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 7071,
+          "latency_s": 16.952
+        },
+        {
+          "reasoning": "The code defines a `public` array of objects (line 37) inside an 'internal' package, and while the reference is declared final, Java arrays are mutable containers whose contents can be modified by any code that gains access to them via reflection or direct field manipulation. This aligns with SpotBugs MS_PKGPROTECT rule for exposing potentially modifiable static state publicly.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "SECURITY",
+          "issue_signature": "mutable object referenced in public static field",
+          "developer_explanation": "Although declared final and internal to the package path (org.eclipse.jetty.http3.qpack.internal.metadata), this static array exposes mutable state that can technically be modified by external code. Changing `STATUSES` visibility from `public` to default/package-private ensures these lookup tables cannot be tampered with, protecting Jetty's HTTP/3 logic integrity.",
+          "run": 3,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 15434,
+            "output_tokens": 210
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 49960,
+          "latency_s": 113.48
+        }
+      ],
+      "original_finding_index": 400
+    },
+    {
+      "finding_id": 8,
+      "type": "NM_SAME_SIMPLE_NAME_AS_INTERFACE",
+      "sourcefile": "InitialContextFactory.java",
+      "start_line": "34",
+      "message": "Class names shouldn't shadow simple name of implemented interface",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The class InitialContextFactory in package org.eclipse.jetty.jndi has an identical simple name to its implemented interface javax.naming.spi.InitialContextFactory which is in a different package. This violates standard Java naming conventions where implementing classes should typically have distinct names from their interfaces, creating potential confusion when resolving references through import statements.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "class name shadows simple interface name",
+          "developer_explanation": "Your class InitialContextFactory uses the same simple name as its implemented interface but lives in a different package. This can confuse readers because they must check imports to determine which type is referenced, increasing cognitive load and potential for mistakes when refactoring or reading code by others.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 3634,
+            "output_tokens": 182
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2546,
+          "latency_s": 7.746
+        },
+        {
+          "reasoning": "The warning claims the class name shadows its implemented interface simple name across packages (org.eclipse.jetty.jndi.InitialContextFactory implements javax.naming.spi.InitialContextFactory). The first sentence states this fact: a Java implementation uses same-simple-name pattern with different-package types. While no correctness issue exists in current code (uses fully qualified names), this violates established Java naming conventions for maintainability.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "class implementing same-name interface across package boundary",
+          "developer_explanation": "This warning flags that using identical simple names for your class and the interface it implements can confuse developers who read the code later. It makes readers check import statements to understand which type is being referenced, increasing cognitive load during maintenance. While this compiles fine now, following standard naming conventions helps avoid confusion as code evolves across different modules.",
+          "run": 2,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 5332,
+            "output_tokens": 210
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 12460,
+          "latency_s": 24.291
+        },
+        {
+          "reasoning": "The code implements javax.naming.spi.InitialContextFactory with a class named InitialContextFactory that shadows the interface's simple name, but both are in different packages (org.eclipse.jetty.jndi vs javax.naming.spi). This is standard Java convention for SPI implementations and doesn't create actual maintainability issues because fully qualified names or explicit imports resolve ambiguity. The warning flags this pattern as confusing when it follows established practices with no practical downside.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "class name same simple name as implemented interface in different package",
+          "developer_explanation": "This warning can be safely dismissed because implementing a standard JDK SPI with an identically named class is conventional Java practice for service provider interfaces. No confusion exists here since developers using fully qualified names or explicit imports handle type resolution correctly, and this pattern follows established guidelines rather than creating actual ambiguity.",
+          "run": 3,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 4306,
+            "output_tokens": 214
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 6258,
+          "latency_s": 14.503
+        }
+      ],
+      "original_finding_index": 480
+    },
+    {
+      "finding_id": 9,
+      "type": "OS_OPEN_STREAM",
+      "sourcefile": "AbstractForkedChild.java",
+      "start_line": "177",
+      "message": "Method may fail to close stream",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The method loadWebAppProps creates a new FileInputStream on line 177 but never explicitly closes it nor returns the stream or uses try-with-resources to ensure closure in all exit paths, including exception cases.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "input stream does not close explicitly after use",
+          "developer_explanation": "Your method opens a file input stream but leaves it unclosed when the method finishes or throws an exception. In Java you must manually close streams (or wrap them in try-with-resources) to release underlying OS resources; otherwise repeated calls can exhaust system file handles and cause application failure.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 8813,
+            "output_tokens": 163
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 22387,
+          "latency_s": 49.55
+        },
+        {
+          "reasoning": "The code creates a FileInputStream at line 177 to read properties from webAppPropsFile but never explicitly closes it or wraps it in try-with-resources; if an exception occurs during the load() operation after partially reading, that file handle would leak since Properties.load(InputStream) does not guarantee closing its input stream internally. This potential resource exhaustion issue is valid when this method runs repeatedly in production scenarios where many forked processes may invoke it concurrently.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "PERFORMANCE",
+          "issue_signature": "file stream not closed after load operation",
+          "developer_explanation": "This method opens a FileInputStream but does not ensure the stream is always closed when an error occurs during reading. If properties.load() throws an exception partway through (after opening and partially reading), that file handle leaks because we don't close it explicitly or use try-with-resources. To fix this, wrap the InputStream in try-with-resources so cleanup happens automatically regardless of whether load succeeds or fails.",
+          "run": 2,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 6054,
+            "output_tokens": 230
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 8852,
+          "latency_s": 19.985
+        },
+        {
+          "reasoning": "The method creates a FileInputStream at line 177 without ever calling close(), and Properties.load(InputStream) historically does not consume or close the passed stream according to Java IO API contracts. This means every invocation of loadWebAppProps() leaves an open file descriptor, which can accumulate during repeated calls like those in Scanner listener callbacks (line 138).",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "input stream created but not closed",
+          "developer_explanation": "This code opens a file stream to read properties without explicitly closing it afterwards. While your JVM will eventually free resources through garbage collection and OS cleanup on process termination, repeatedly calling this method can accumulate open files that exhaust system limits or cause issues under sustained operation. Fix by wrapping the creation in try-with-resources so the InputStream closes automatically.",
+          "run": 3,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 8633,
+            "output_tokens": 202
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 22545,
+          "latency_s": 47.409
+        }
+      ],
+      "original_finding_index": 487
+    },
+    {
+      "finding_id": 10,
+      "type": "MS_SHOULD_BE_FINAL",
+      "sourcefile": "MavenServerConnector.java",
+      "start_line": "39",
+      "message": "Field isn't final but should be",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The field PORT_SYSPROPERTY is declared as public static String with an initializer string literal value that identifies which JVM system property name controls the server port configuration. While it's not final, changing this particular constant would only affect which internal naming convention Jetty uses to read a user-configurable port number from System properties - neither enabling nor preventing any exploit scenario since attackers controlling classpath access already have sufficient capability, and modifying just the property identifier string doesn't create new attack surfaces.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "public static field not final in utility code",
+          "developer_explanation": "This warning flags that PORT_SYSPROPERTY should be made final because it's public and mutable by other packages. However, dismissing this alarm is appropriate: changing the string value here would only alter which system property name Jetty checks for port configuration - neither enabling exploitation nor affecting core security or correctness since all users already control System properties through normal JVM options.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 5022,
+            "output_tokens": 231
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3753,
+          "latency_s": 11.547
+        },
+        {
+          "reasoning": "The field PORT_SYSPROPERTY is declared public static without the final modifier and holds only an immutable string identifier 'jetty.http.port'. This constant has no sensitive data stored in it, cannot store user-controlled or attacker-modifiable values at runtime (it's a compile-time literal), and modifying this single identifier value wouldn't enable any exploitable attack vector since it merely changes which property key name is used. The warning flags a common Java style best practice violation rather than an actual security weakness.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "public static field not marked final",
+          "developer_explanation": "This warning is a best-practice alert rather than an actual security vulnerability. The constant simply contains a string identifier for system property lookup and doesn't hold sensitive data that could be compromised by modification. While marking it as final would align with Java conventions for immutable constants, the current code poses no real exploit risk here since changing this value wouldn't enable any meaningful attack.",
+          "run": 2,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 5063,
+            "output_tokens": 235
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3977,
+          "latency_s": 12.041
+        },
+        {
+          "reasoning": "The flagged field PORT_SYSPROPERTY is initialized with an immutable string literal 'jetty.http.port'. Since Java strings are inherently immutable, even if not marked as final, attackers cannot modify this value after class initialization - the security concern about modifying public static fields does not apply to String types.",
+          "is_true_positive": false,
+          "confidence": 0.98,
+          "category": "SECURITY",
+          "issue_signature": "public static mutable field without final modifier",
+          "developer_explanation": "This warning can be safely dismissed because the flagged value is a String literal initialized at class load time. Java's String immutability guarantees that this constant cannot be modified by any code, including malicious third-party dependencies. Making it final would not address or prevent any security issue - only cosmetic preference.",
+          "run": 3,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 4742,
+            "output_tokens": 180
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2166,
+          "latency_s": 7.613
+        }
+      ],
+      "original_finding_index": 523
+    },
+    {
+      "finding_id": 11,
+      "type": "MS_MUTABLE_COLLECTION_PKGPROTECT",
+      "sourcefile": "SelectiveJarResource.java",
+      "start_line": "52",
+      "message": "Field is a mutable collection which should be package protected",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The field DEFAULT_INCLUDES is declared as both `public` and `final`, meaning its reference cannot be reassigned from outside packages due to Java's immutability guarantee on final fields. While the List object itself could theoretically have some elements modified via set() methods, this code uses Arrays.asList which returns a fixed-size list that prevents add/remove operations entirely. The security consequence claimed by SpotBugs (that external malicious code can modify and exploit this collection) is not materially present here because attackers would gain no exploitable capability from modifying only what's exposed in a build-time utility class.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "SECURITY",
+          "issue_signature": "mutable collection as public static final field can be modified externally",
+          "developer_explanation": "This warning is a false positive because your constant cannot actually be changed from other packages without using reflection or similar techniques you're not expected to worry about. The field uses Arrays.asList which creates an unmodifiable list (cannot add/remove elements), and being declared final prevents anyone from replacing the reference itself.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 6485,
+            "output_tokens": 244
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 10521,
+          "latency_s": 25.973
+        },
+        {
+          "reasoning": "The code declares DEFAULT_INCLUDES using Arrays.asList() which returns a modifiable fixed-size list, making it accessible to other packages via public visibility while remaining immutable by default access control.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "mutable static final field exposed publicly",
+          "developer_explanation": "This code exposes a mutable collection as a public static final field that other packages can access directly or through reflection to add elements. While the current default pattern (\"**\") is unlikely to be useful, an attacker with sufficient classloading capabilities could potentially alter these filter patterns and affect resource copying behavior in edge cases where additional vulnerabilities exist.",
+          "run": 2,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 7156,
+            "output_tokens": 166
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 14709,
+          "latency_s": 32.285
+        },
+        {
+          "reasoning": "The field DEFAULT_INCLUDES is declared as 'public' and initialized with Arrays.asList(...) producing a fixed-size but element-mutable List wrapper. External code can use reflection to access this value without needing any special permissions under default JVM policies, allowing modification of list contents via set() which would alter filtering logic at runtime.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "SECURITY",
+          "issue_signature": "exposed static final mutable collection exposed publicly",
+          "developer_explanation": "Your code exposes a constant configuration list that can have its elements modified at runtime through reflection access from other packages. Since Java's default permissions allow reflective field reading and method invocation on returned wrappers, an attacker with classloader capabilities could change the include/exclude patterns to bypass intended resource filtering.",
+          "run": 3,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 20173,
+            "output_tokens": 184
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 78777,
+          "latency_s": 190.576
+        }
+      ],
+      "original_finding_index": 537
+    },
+    {
+      "finding_id": 12,
+      "type": "DM_EXIT",
+      "sourcefile": "ShutdownService.java",
+      "start_line": "348",
+      "message": "Method invokes System.exit(...)",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "This code intentionally uses System.exit() as part of an explicit JVM lifecycle management feature - it receives remote shutdown commands via socket connections (lines 310-416) where the entire purpose is to terminate the VM on specific 'exit' or similar commands. The use of exitVm boolean configuration and logging ('Exiting JVM', lines 347, 382, etc.) shows this termination behavior is intentional design for external process management.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "use of system exit to terminate application when configured appropriately",
+          "developer_explanation": "This warning can be safely ignored because the System.exit() call is intentional shutdown behavior for your external command handler - it's designed specifically to let an outside process (like a deployment manager) tell this service to stop and actually shut down the JVM. The code already has configuration through isExitVm() to control when termination should occur, which shows thoughtful design rather than careless use.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 5834,
+            "output_tokens": 235
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2310,
+          "latency_s": 10.415
+        },
+        {
+          "reasoning": "The System.exit() calls are guarded by an explicit boolean flag that controls when the JVM should terminate, and all components stop before any call to exit occurs. This aligns with intended design of administrative shutdown commands in this server framework.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "invocation of System.exit() terminates virtual machine",
+          "developer_explanation": "The code uses System.exit( ) to terminate the process after an explicit configuration option and cleanup logic have been applied, which is appropriate for administrative shutdown commands in a standalone server scenario.",
+          "run": 2,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 17421,
+            "output_tokens": 149
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 60546,
+          "latency_s": 146.306
+        },
+        {
+          "reasoning": "The code intentionally uses System.exit() in a controlled shutdown service (ShutdownService) that responds to external HTTP stop signals, with explicit configuration checks and proper component cleanup via stopComponents() before exiting.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "OTHER",
+          "issue_signature": "System.exit used in controlled shutdown service",
+          "developer_explanation": "This warning is a false positive because System.exit(0) here represents intentional, expected JVM termination for graceful shutdown of the application server upon receiving external stop signals. The code only exits after validating configuration flags and stopping all registered components first, which aligns with legitimate use cases for controlled lifecycle management.",
+          "run": 3,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 5991,
+            "output_tokens": 160
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3627,
+          "latency_s": 10.306
+        }
+      ],
+      "original_finding_index": 740
+    },
+    {
+      "finding_id": 13,
+      "type": "DMI_RANDOM_USED_ONLY_ONCE",
+      "sourcefile": "DefaultSessionIdManager.java",
+      "start_line": "356",
+      "message": "Random object created and used only once",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "Line 356 calls setSeed() on _random, which was created earlier at lines 342-350 as an instance field that persists beyond this method call. The code re-seeds the existing random generator for entropy rather than creating a new Random object and discarding it after one use; SpotBugs incorrectly interprets the setSeed() invocation on line 356 as evidence of single-use creation.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "OTHER",
+          "issue_signature": "reused random generator seeded for entropy",
+          "developer_explanation": "This warning is a misinterpretation by the analysis tool. The _random instance field is created once during initialization and reused throughout application lifetime to generate many session IDs; line 356 simply re-seeds it with fresh entropy rather than creating and discarding a new random object.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 6582,
+            "output_tokens": 207
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2887,
+          "latency_s": 11.886
+        },
+        {
+          "reasoning": "The code at the flagged line only reseeds _random, an existing RNG stored as a field—it does not allocate a new Random instance there. Because this same object persists across all subsequent invocations (e.g., in each call to generate session IDs), the tool's claim that it is created and used just once for then discarded does not apply here.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "PERFORMANCE",
+          "issue_signature": "new random object instantiated then discarded immediately after first usage",
+          "developer_explanation": "This warning points to re-seeding an already existing RNG stored as a field instead of creating a fresh one each time. Because the same Random or SecureRandom instance is reused across many session ID generations, there is no performance overhead from repeated allocation and no security issue here.",
+          "run": 2,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 14376,
+            "output_tokens": 191
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 39822,
+          "latency_s": 104.994
+        },
+        {
+          "reasoning": "The code stores _random in a class-level field (_random) at line 346, then uses this same stored instance repeatedly across all requests via newSessionId() which is called per request during normal operation. The DMI_RANDOM_USED_ONLY_ONCE rule specifically flags creating a Random and immediately using it once before discarding - but here the object persists as an instance field for reuse throughout application lifetime after initialization.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "PERFORMANCE",
+          "issue_signature": "random created then stored in field for repeated use",
+          "developer_explanation": "This warning is a false positive because your Random instance (_random) lives as an object field and gets reused across thousands of requests after its one-time initialization. This pattern - storing the RNG once during startup and repeatedly calling nextLong() on it - is actually correct Java practice, not wasteful or buggy code.",
+          "run": 3,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 7752,
+            "output_tokens": 210
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 8117,
+          "latency_s": 24.545
+        }
+      ],
+      "original_finding_index": 773
+    },
+    {
+      "finding_id": 14,
+      "type": "NP_BOOLEAN_RETURN_NULL",
+      "sourcefile": "JettyLoggerConfiguration.java",
+      "start_line": "79",
+      "message": "Method with Boolean return type returns explicit null",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "Line 82 shows `return hideStacks != null ? hideStacks : DEFAULT_HIDE_STACKS;` which explicitly guards against unboxing a potentially null Boolean returned by the lambda at line 79 before it can be exposed to any caller of getHideStacks. The tool correctly detects that an internal method returns explicit null with Boolean type, but since all callers must go through this public API and receive only guarded values (either DEFAULT_HIDE_STACKS or boxed boolean), there is no actual NPE risk for legitimate usage.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "Boolean object method returns explicit null instead of true or false value",
+          "developer_explanation": "This warning flags a known bad pattern where Boolean methods return null, but your code actually handles it safely by checking for null before unboxing. Since getHideStacks is the only way to receive this result and line 82 guards against NPE when returning values from here (via DEFAULT_HIDE_STACKS fallback), external callers cannot encounter a NullPointerException. The tool's static check detects the pattern but does not account that your public API never leaks null externally.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 7297,
+            "output_tokens": 268
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 10490,
+          "latency_s": 28.595
+        },
+        {
+          "reasoning": "The lambda on lines 74-80 explicitly returns null when getProperty yields null (line 79), which matches the warning's claim about explicit null return from Boolean-returning method. However, this nullable result is immediately stored in variable hideStacks and then checked against null before unboxing via `hideStacks != null ? ...` on line 82, preventing any NullPointerException during normal execution.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "boolean method returns explicit nullable value with safe handling",
+          "developer_explanation": "This warning can be safely dismissed because the code properly handles the nullable Boolean result before any automatic unboxing occurs to a caller. The lambda stores its return in hideStacks and checks it against null using ternary on line 82, ensuring callers only receive concrete boolean values never raw null objects.",
+          "run": 2,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 6032,
+            "output_tokens": 210
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3882,
+          "latency_s": 12.694
+        },
+        {
+          "reasoning": "The warning claims that line 79 returns explicit null from a lambda with Boolean return type, which SpotBugs treats as inherently dangerous because of potential auto-unboxing by callers. However examining the visible code: getHideStacks() wraps this result in `hideStacks != null ? hideStacks : DEFAULT_HIDE_STACKS`, preventing any immediate NPE and ensuring only non-null Booleans are passed to external usages.",
+          "is_true_positive": false,
+          "confidence": 0.85,
+          "category": "CORRECTNESS",
+          "issue_signature": "boolean method returns null value explicitly",
+          "developer_explanation": "This warning can be safely dismissed in this context because the return value is always checked for null before any automatic unboxing could occur elsewhere (e.g., `hideStacks != null ? hideStacks : DEFAULT_HIDE_STACKS`). The lambda legitimately returns null when no property exists to read, and that case is already handled by wrapping logic. No NullPointerException can arise from this specific code path since callers receive either a proper Boolean or the default value.",
+          "run": 3,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 6887,
+            "output_tokens": 238
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 8604,
+          "latency_s": 22.715
+        }
+      ],
+      "original_finding_index": 808
+    },
+    {
+      "finding_id": 15,
+      "type": "UL_UNRELEASED_LOCK_EXCEPTION_PATH",
+      "sourcefile": "Blocker.java",
+      "start_line": "449",
+      "message": "Method does not release lock on all exception paths",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The flagged close() method at line 458 contains _lock.unlock() within its finally block, which guarantees unlock on all paths including exceptions in the try block or from subsequent statements outside it.",
+          "is_true_positive": false,
+          "confidence": 1.0,
+          "category": "CORRECTNESS",
+          "issue_signature": "method does not release lock on exception path",
+          "developer_explanation": "This warning is a false positive. Your code correctly uses try-finally with unlock in the finally block, which guarantees the lock releases even if an exception occurs. This is the standard Java idiom for safe locking.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 5442,
+            "output_tokens": 147
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2218,
+          "latency_s": 9.247
+        },
+        {
+          "reasoning": "The code snippets for Blocker$Shared$1 internal anonymous class implementations consistently use the standard Java idiom of acquiring a ReentrantLock followed by try-catch-finally with _lock.unlock() in the finally block (lines ~360, 408-421). This pattern ensures that every exception path and return exits the method body before unlock is executed or via stack unwinding guaranteed to execute the finally. Although the specific close() implementation at line 449 isn't clearly shown due to excerpt boundaries, all visible lock acquisitions are correctly wrapped with matching try-finally-unlock patterns throughout Shared$1's anonymous callback implementations.",
+          "is_true_positive": false,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "incomplete resource cleanup on exception path",
+          "developer_explanation": "This warning is likely a false positive because Jetty's code consistently uses the standard try-catch-finally idiom for ReentrantLock management where unlock always executes even if exceptions occur. Since every lock acquisition in visible methods (succeeded, failed, block) includes matching finally blocks with explicit unlock calls, this pattern correctly guarantees release on all exit paths including exception scenarios.",
+          "run": 2,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 23049,
+            "output_tokens": 268
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 80680,
+          "latency_s": 219.314
+        },
+        {
+          "reasoning": "The close() method acquires _lock at line 459 and releases it via unlock() inside a finally block (visible around line 507). In Java, the finally clause always executes whether or not an exception is thrown in the try body, so all code paths from lock acquisition to any potential throw will call unlock(). The warning claims incomplete cleanup but proper release exists for every possible path.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "CONCURRENCY",
+          "issue_signature": "lock not released on all exception paths in method body",
+          "developer_explanation": "This warning can be safely ignored because your code correctly uses try-finally to guarantee lock release even when exceptions occur. The finally block always executes regardless of any throw statements, so unlock() runs every time after lock(). If the analysis tool is reporting this issue but you're already following proper exception safety patterns in Java with a finally clause that contains unlock(), it's likely a false positive from how static analyzers sometimes fail to recognize valid try-finally cleanup structures.",
+          "run": 3,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 7378,
+            "output_tokens": 241
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 11216,
+          "latency_s": 28.253
+        }
+      ],
+      "original_finding_index": 838
+    },
+    {
+      "finding_id": 16,
+      "type": "IT_NO_SUCH_ELEMENT",
+      "sourcefile": "BlockingArrayQueue.java",
+      "start_line": "919",
+      "message": "Iterator next() method cannot throw NoSuchElementException",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The code implements ListIterator with a 'next()' method that does not declare or handle the standard NoSuchElementException exception on exhaustion; instead accessing array elements unconditionally without logical size check leads to different runtime exceptions like OOB if accessed beyond valid items when exposed via public API, violating interface contract expectations for Iterator/Queue iteration behavior.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "iterator next method does not throw NoSuchElementException on exhaustion",
+          "developer_explanation": "This warning flags that your iterator's 'next()' implementation deviates from the standard Iterator contract by not throwing NoSuchElementException when called on an exhausted state. Even if this class is private, it can be returned via public methods like `iterator()`, exposing inconsistent exception behavior to users who expect NoSuchElementException or robust error handling.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 27258,
+            "output_tokens": 192
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 111395,
+          "latency_s": 250.616
+        },
+        {
+          "reasoning": "The warning claims that next() cannot throw NoSuchElementException, which suggests a contract violation per JavaDoc spec for Iterator interface methods. However this is commonly treated as a false positive in array-based iterator implementations because they rely solely on hasNext guards rather than explicit checks inside next(). In practice such designs avoid unnecessary overhead and callers must properly guard usage anyway.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "iterator next does not throw NoSuchElementException when exhausted",
+          "developer_explanation": "This warning is a known false positive for custom array-based iterators in Java projects. Your implementation correctly relies on hasNext() to guard calls before accessing the backing buffer, which prevents any out-of-bounds access under normal usage patterns. While the Iterator contract mentions throwing an exception on exhaustion, relying on caller guards rather than explicit checking inside next() is widely accepted practice and does not cause issues here.",
+          "run": 2,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 15051,
+            "output_tokens": 210
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 54067,
+          "latency_s": 124.345
+        },
+        {
+          "reasoning": "The code shows a blocking array queue internal iterator that implements ListIterator<E>. The next() method (line 917-920) accesses elements without explicit bounds checking, but hasNext() guarantees _cursor < _elements.length is true before any caller would invoke it. In this specific concurrent data structure implementation with proper locking semantics and documented contract assertions in related methods like lockedTakeFromHead(), the Iterator's behavior where next doesn't throw NoSuchElementException follows the pattern that callers must use hasNext() first.",
+          "is_true_positive": false,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "iterator not throwing when no more elements exist",
+          "developer_explanation": "This warning flags that your iterator's next() doesn't throw NoSuchElementException per the Java API contract suggestion. However, for blocking queues where iteration is typically controlled with explicit hasNext checks and internal consistency guarantees via locking, this implementation pattern follows acceptable practice in concurrent data structures. Your design assumes callers use hasNext before calling next(), which aligns with standard Iterator usage patterns.",
+          "run": 3,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 5647,
+            "output_tokens": 238
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 5617,
+          "latency_s": 15.678
+        }
+      ],
+      "original_finding_index": 844
+    },
+    {
+      "finding_id": 17,
+      "type": "NM_CLASS_NOT_EXCEPTION",
+      "sourcefile": "ExceptionUtil.java",
+      "start_line": "304",
+      "message": "Class is not derived from an Exception, even though it is named as such",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The class MultiException at line 304 does not extend Throwable or Exception despite having 'Exception' in its name, which violates Java naming conventions that suggest inheritance relationships for such-named types.",
+          "is_true_positive": true,
+          "confidence": 1.0,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "exception class not extending throwable hierarchy despite naming convention violation causing confusion about exception semantics and throwing behavior expected from the type name alone",
+          "developer_explanation": "This alarm flags that your MultiException inner class ends with 'Exception' but doesn't extend Throwable, which violates Java's implicit contract for such names. Developers seeing this pattern expect a throwable object they can catch or chain causally, not just some wrapper containing exceptions internally. Consider either renaming the class to something like MultiErrorHelper if it's not meant to be thrown directly, or having it properly implement your intended exception semantics with inheritance.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 7370,
+            "output_tokens": 208
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3049,
+          "latency_s": 11.968
+        },
+        {
+          "reasoning": "The class MultiException ends with 'Exception' but does not extend java.lang.Throwable instead holding a Throwable instance as a field for accumulation before controlled rethrow via its methods. The claim is that this naming will be confusing to developers because standard Java convention strongly associates the Exception suffix with inheritance relationships and exception throwability contracts, which are absent here.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "class named with exception suffix not extending throwable hierarchy",
+          "developer_explanation": "This naming violates standard Java conventions where classes ending in 'Exception' should extend Throwable or one of its subclasses to properly signal their contract and throw-ability. While this class functions as an accumulator container, the name misleads developers expecting normal inheritance patterns when reading exception-related code throughout a project.",
+          "run": 2,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 9275,
+            "output_tokens": 194
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 14369,
+          "latency_s": 30.407
+        },
+        {
+          "reasoning": "The class MultiException at line 304 is declared without extending any Exception or Throwable type, yet its name ends with 'Exception'. While the utility API uses this class to accumulate errors before converting them via methods like ifExceptionThrow(), the naming convention still misleads developers expecting it to be an exception they can catch/throw directly. This violates Java's established pattern for exception-like classes.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "exception-named class not deriving from Exception or Throwable",
+          "developer_explanation": "The MultiException class ends with the word 'Exception' but does not extend Throwable or any of its subclasses. This naming convention suggests it's meant to be caught and rethrown like a normal exception, which could confuse developers reading your codebase. The fix is straightforward: rename this inner class (for example) to SomethingLikeMultiErrorContainer() since that better reflects how the object works without inheriting from Exception.",
+          "run": 3,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 7356,
+            "output_tokens": 230
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2947,
+          "latency_s": 10.283
+        }
+      ],
+      "original_finding_index": 860
+    },
+    {
+      "finding_id": 18,
+      "type": "CN_IDIOM",
+      "sourcefile": "LazyList.java",
+      "start_line": "60",
+      "message": "Class implements Cloneable but does not define or use clone method",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The class declares itself implements Cloneable at line 58 but does not override the default Object.clone() instance method required for proper cloning behavior in Java - only provides an unrelated static utility clone(Object) factory method. Implementing Cloneable without implementing its contract means any caller attempting objectA.clone() would receive UnsupportedOperationException from Object's default implementation, which is a real correctness issue.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "implements Cloneable without implementing clone method",
+          "developer_explanation": "Your class claims to implement the Cloneable interface but doesn't provide an instance-level clone() method that follows Java's standard cloning contract. If external code calls .clone() on a LazyList object, it will throw UnsupportedOperationException rather than returning a proper copy as expected by convention and API contracts.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 8769,
+            "output_tokens": 197
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2929,
+          "latency_s": 11.509
+        },
+        {
+          "reasoning": "The class LazyList implements Cloneable interface (line 58) but does not define an instance-level clone() method, meaning it inherits Object's default shallow copy behavior. This is a real issue because calling .clone() on instances would perform shallow copying of internal ArrayList fields and other object references without explicit control over whether deep cloning is needed.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "class implements cloneable without defining instance clone method",
+          "developer_explanation": "Your class declares Cloneable but inherits the default shallow-copy behavior from Object instead of providing custom cloning logic. When someone calls .clone() on a LazyList, they'll get a shallow copy that may not be appropriate for your nested ArrayList and object fields. Consider either adding an instance clone() method or removing Cloneable if you don't need to support copying.",
+          "run": 2,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 8761,
+            "output_tokens": 208
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2827,
+          "latency_s": 9.415
+        },
+        {
+          "reasoning": "The class declares that it implements Cloneable but does not provide a protected/public clone() instance method override, meaning calls to standard .clone() on instances would throw an exception rather than cloning properly. This violates the Java contract implied by implementing this marker interface and falls under code quality/maintenance concerns regarding API design.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "Cloneable implemented without override of clone method",
+          "developer_explanation": "Implementing Cloneable implies that objects should support cloning via the standard API (calling .clone()). However, this class lacks a custom implementation for instance-level cloning. Even though you might use Serializable or internal methods now, leaving an unused interface marker confuses tools and users about supported capabilities. You can safely remove `implements Cloneable` unless deep cloning is explicitly required by your serialization logic.",
+          "run": 3,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 20358,
+            "output_tokens": 205
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 58488,
+          "latency_s": 150.038
+        }
+      ],
+      "original_finding_index": 880
+    },
+    {
+      "finding_id": 19,
+      "type": "SE_COMPARATOR_SHOULD_BE_SERIALIZABLE",
+      "sourcefile": "TopologicalSort.java",
+      "start_line": "183",
+      "message": "Comparator doesn't implement Serializable",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The InitialOrderComparator stores state (_indexes Map) created fresh for each sort operation in local variables (sorted List from line 91, comparator at lines 93/115), which are never serialized and discarded after method return.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "PERFORMANCE",
+          "issue_signature": "comparator lacks serializable implementation for ordered collections",
+          "developer_explanation": "This warning can be safely dismissed because the comparator instances are never serialized - they're created fresh in each method and used only within local sorted sets that exist during a single sort operation. While implementing Serializable would not break anything, it's unnecessary since these comparators have no reason to survive beyond their immediate use case.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 5359,
+            "output_tokens": 176
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2738,
+          "latency_s": 9.952
+        },
+        {
+          "reasoning": "The InitialOrderComparator instances are newly created on each call (lines 93 and 115) within the sort methods, never stored as fields of TopologicalSort that would be serialized. The comparator is passed by value to visit() calls where it's used only for sorting a TreeSet during local execution—there's no indication this code path ever participates in serialization scenarios.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "comparator not implementing serializable interface when never serialized",
+          "developer_explanation": "This warning can be safely dismissed because the comparator instances are created fresh in each sort operation and are never stored as fields of TopologicalSort. Since they're used locally within a single method's execution without ever being part of an object graph that could serialize, implementing Serializable provides no practical benefit here.",
+          "run": 2,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 5295,
+            "output_tokens": 203
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2297,
+          "latency_s": 8.313
+        },
+        {
+          "reasoning": "The code uses InitialOrderComparator only in local variable scope within visit() method, creating temporary TreeSet instances that are never stored or serialized anywhere visible (the TopologicalSort class itself has non-serializable _dependencies fields anyway). Since there is no pathway for serialization to occur with this comparator instance, the claim about missing Serializable doesn't represent a reachable problem in this code.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "comparator not implementing serializable interface",
+          "developer_explanation": "This warning can be dismissed because the comparator is used only with temporary local TreeSet variables within method calls - these never need to be serialized. The TopologicalSort class itself contains non-serializable fields (HashMap, HashSet), so even if this were made serializable it wouldn't help since the whole object couldn't serialize anyway. Making this a true false positive as there is no realistic serialization pathway for code with this structure.",
+          "run": 3,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 6167,
+            "output_tokens": 223
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 6849,
+          "latency_s": 18.704
+        }
+      ],
+      "original_finding_index": 902
+    }
+  ]
+}

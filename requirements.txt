@@ -1,0 +1,11 @@
+# Wersje ze środowiska, w którym policzono wyniki podane w pracy.
+# Do przeliczenia analizy wystarczają numpy i scipy.
+
+numpy==2.5.1
+scipy==1.18.0
+
+# tylko do powtórzenia przebiegu modeli, nie do przeliczenia wyników
+anthropic==0.86.0
+openai==2.29.0
+python-dotenv==1.2.2
+requests==2.32.5

@@ -1,0 +1,1362 @@
+{
+  "model": "claude-opus-5",
+  "tool": "sonarqube",
+  "num_runs": 3,
+  "runs_per_invocation": 3,
+  "source_root": "jetty.project",
+  "call_parameters": {
+    "temperature": null,
+    "concurrency": 20,
+    "response_format": "json_schema",
+    "max_tokens": 8192,
+    "max_retries": 6,
+    "base_url": "https://api.anthropic.com"
+  },
+  "system_prompt_variant": "jetty",
+  "system_prompt_sha256": "b5b634e0a9109c59",
+  "user_prompt_sha256": "233249fc03b8f699",
+  "timestamp": "2026-08-15T07:51:25.178114+00:00",
+  "updated_at": "2026-08-15T07:51:25.178114+00:00",
+  "findings": [
+    {
+      "finding_id": 0,
+      "type": "java:S131",
+      "sourcefile": "ServletPathSpec.java",
+      "start_line": "440",
+      "message": "Complete cases by adding the missing enum constants or add a default case to this switch.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The switch on `_group` at line 440 handles EXACT, PREFIX_GLOB, SUFFIX_GLOB, ROOT and DEFAULT but has no default branch, and Jetty's PathSpecGroup enum also contains MIDDLE_GLOB, which is not covered — so the rule's factual claim (missing enum constant with no default case) is materially correct for this code. Behaviour today is benign since an uncovered constant simply falls through to `return null`, and ServletPathSpec presumably never assigns MIDDLE_GLOB, but the omission is real and is exactly what the rule reports. Sibling methods in the same class (getPathMatch, matches) do include an explicit default, making the inconsistency here evident.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "switch on enum missing constants and default case",
+          "developer_explanation": "This switch does not handle every constant of the enum it switches on and has no default branch, so any unhandled value silently falls through to `return null`. Nearby methods in the same class do supply a default branch, so the handling here is inconsistent and a future enum constant would be silently ignored. Add the missing constant or an explicit default branch making the fall-through intent clear.",
+          "run": 1,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 3520,
+            "output_tokens": 948,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 12.497
+        },
+        {
+          "reasoning": "The switch on `_group` at line 440 handles EXACT, PREFIX_GLOB, SUFFIX_GLOB, ROOT and DEFAULT but has no `default` label, and SonarQube only raises S131 on an enum switch when at least one constant is unhandled — here the PathSpecGroup enum also contains MIDDLE_GLOB, which is not shown in this file but is referenced by the neighbouring switches all carrying an explicit `default`. The decisive evidence (the enum declaration) lies outside the snippet, but the tool's coverage analysis plus the fact that every other switch in this file guards with `default` makes the claim credible. Falling out of the switch silently returns null, so an added enum constant would be handled by an unmarked implicit path rather than an explicit decision.",
+          "is_true_positive": true,
+          "confidence": 0.78,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "switch on enum missing constants and default case",
+          "developer_explanation": "This switch does not cover every constant of the path-spec group enum and has no default branch, so any unhandled value silently drops out of the switch and returns null. That makes the intent unclear and means a future enum constant will be handled by accident rather than by design. Add the missing constant case or an explicit default that documents the fall-through behaviour, as the sibling methods in this class already do.",
+          "run": 2,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 3520,
+            "output_tokens": 1056,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 13.997
+        },
+        {
+          "reasoning": "The switch on `_group` at line 440 handles EXACT, PREFIX_GLOB, SUFFIX_GLOB, ROOT and DEFAULT but has no `default:` label, while the sibling switches in the same class (e.g. `matches` at line 473 and `getPathInfo` at 361) include a default, indicating the PathSpecGroup enum has at least one further constant (MIDDLE_GLOB) that is not listed here. So the tool's factual claim — the switch neither covers all enum constants nor supplies a default — is materially correct for the shown code. Servlet path spec validation makes a middle-glob group unreachable in practice, so the fall-through to `return null` is presumably intended, but that only affects severity, not the correctness of the claim; adding a default (or the missing constant) also protects against future enum additions.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "switch on enum without default and missing constants",
+          "developer_explanation": "This switch lists only five of the path-spec group values and has no default branch, unlike the equivalent switches elsewhere in the same class. Any group value not listed silently falls out of the switch and returns null, which hides the case instead of making it explicit and will silently mishandle any constant added to the enum later. Add an explicit default branch (or handle the remaining constant) so the intended behaviour is stated in the code.",
+          "run": 3,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 3520,
+            "output_tokens": 924,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 11.269
+        }
+      ],
+      "original_finding_index": 346
+    },
+    {
+      "finding_id": 1,
+      "type": "java:S2447",
+      "sourcefile": "IncludeExcludeSet.java",
+      "start_line": "215",
+      "message": "Null is returned but a \"Boolean\" is expected.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The method is declared to return the boxed type Boolean and its Javadoc explicitly documents three-valued semantics: TRUE if included, FALSE if excluded, and null if neither applies. The null return is therefore not an accidental omission but the deliberate reason the boxed type was chosen over primitive boolean \\and and callers are told to expect it. The rule's underlying claim \\u2014 that returning null here is an unintended pitfall for callers who will unbox \\u2014 does not hold for this deliberately tri-state, documented API, so the pattern is justified in this context.",
+          "is_true_positive": false,
+          "confidence": 0.72,
+          "category": "CORRECTNESS",
+          "issue_signature": "null returned from method declared to return boxed Boolean",
+          "developer_explanation": "This method intentionally uses the boxed Boolean type to express three outcomes \\u2014 included, excluded, or neither \\u2014 and the Javadoc states that null means \"neither\". Callers are explicitly informed of this contract, so the null return is part of the designed API rather than an oversight, and the alert can be dismissed here. If you want to remove the warning entirely, an enum or Optional-style result would express the same tri-state without a nullable Boolean.",
+          "run": 1,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 3663,
+            "output_tokens": 960,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 15.179
+        },
+        {
+          "reasoning": "The method's Javadoc at lines 202-207 explicitly documents a three-valued contract: TRUE if included, FALSE if excluded, and null if neither, so the null return at line 215 is the documented and intended semantics rather than an accidental null for a boolean value. The method is named and typed as returning the boxed Boolean precisely to express this tri-state, and a separate primitive-returning test(P) method (line 185) exists for the two-valued case. The rule's underlying concern — an unexpected null where a boolean is assumed, leading to unboxing NPEs — does not apply to a deliberately documented ternary API; callers of this method must handle null by contract. Callers are outside the snippet, but the documented contract in the shown code is decisive.",
+          "is_true_positive": false,
+          "confidence": 0.72,
+          "category": "CORRECTNESS",
+          "issue_signature": "null returned from method declared to return boxed Boolean",
+          "developer_explanation": "This method intentionally has three outcomes — included, excluded, or neither — and the Javadoc states that null means \"neither\", so returning null here is the documented contract rather than a mistake. The usual danger of a null Boolean (an unboxing failure in a caller that assumed true/false) does not apply because the API is explicitly ternary and the primitive-returning test(P) method covers the two-valued case. This alarm can be dismissed for this method.",
+          "run": 2,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 3663,
+            "output_tokens": 800,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 13.433
+        },
+        {
+          "reasoning": "The flagged return is part of a method whose Javadoc explicitly documents a three-valued contract: TRUE if included, FALSE if excluded, and null if neither, so null is the intended and documented result of the 'neither' case rather than an accidental omission. The rule's premise is that a Boolean-returning method should yield only true/false and that null will surprise callers into an unboxing NPE; here the null is the API's designed tri-state signal and every caller must, by contract, handle it. Callers outside the snippet could still auto-unbox, but that would be a misuse of a documented tri-state API rather than a defect at this return statement. The pattern the rule flags is therefore justified in this context and does not represent the problem the rule describes.",
+          "is_true_positive": false,
+          "confidence": 0.62,
+          "category": "CORRECTNESS",
+          "issue_signature": "null returned from method declared to return Boolean",
+          "developer_explanation": "This method is deliberately tri-state: it returns TRUE for included, FALSE for excluded, and null when the item matches neither, and that contract is spelled out in the Javadoc. The null return is the documented signal for the 'unknown' case, not an oversight, so this alert can be dismissed. If you want to remove the possibility of a caller accidentally unboxing the result, consider an enum or Optional, but the current behaviour is intentional and correct.",
+          "run": 3,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 3663,
+            "output_tokens": 943,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 13.801
+        }
+      ],
+      "original_finding_index": 811
+    },
+    {
+      "finding_id": 2,
+      "type": "java:S2157",
+      "sourcefile": "LazyList.java",
+      "start_line": "57",
+      "message": "Add a \"clone()\" method to this class.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The class declares `implements Cloneable, Serializable` but is a pure static-utility class with a private constructor, and no `clone()` override is visible; implementing Cloneable without providing a clone method is exactly the pointless/misleading declaration the rule describes. The decisive fact — the Cloneable marker interface is declared with no accompanying clone implementation — is materially correct for this code, and the marker interface is meaningless on a class that can never be instantiated. The suggested remedy (adding clone()) is not what a developer would actually do here (removing Cloneable is the right fix), but the remedy is not the claim. Only the first ~half of the file is shown, so a clone() further down cannot be fully excluded, though it would make no sense in a non-instantiable utility class.",
+          "is_true_positive": true,
+          "confidence": 0.78,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "class declares Cloneable without implementing clone",
+          "developer_explanation": "This utility class declares that it implements Cloneable but never provides a clone() method, and it has a private constructor so it can never be instantiated or cloned anyway. The Cloneable marker is therefore misleading to readers and to any tooling that reflects on the type. The cleanest fix is to drop `Cloneable` (and probably `Serializable`) from the declaration rather than adding a clone() method.",
+          "run": 1,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 3513,
+            "output_tokens": 936,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 14.683
+        },
+        {
+          "reasoning": "The shown declaration is `public class LazyList implements Cloneable, Serializable` for a class whose constructor is private and whose entire visible API is static helper methods, and no clone() override appears in the visible portion (lines 1-207 of 449, so a later override cannot be fully ruled out from the snippet). Declaring Cloneable without overriding clone() is exactly the misleading-API condition the rule describes, and here it is doubly meaningless: the class is a non-instantiable utility holder, so both Cloneable and Serializable are vestigial markers that signal a capability the class does not and cannot meaningfully provide. The tool's suggested remedy (adding clone()) is not what one would actually do \\u2014 removing the marker interface is \\u2014 but the underlying claim about the code is materially correct.",
+          "is_true_positive": true,
+          "confidence": 0.75,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "class declares Cloneable without overriding clone()",
+          "developer_explanation": "This class advertises itself as cloneable but never provides a clone() implementation, so the marker interface promises behaviour the class does not deliver \\u2014 and since the class is a static utility holder with a private constructor, there is nothing to clone or serialize in the first place. The cleanest fix is to drop the Cloneable (and likely Serializable) declaration rather than to add a clone() method. Leaving them in place misleads readers and tooling about how the class is meant to be used.",
+          "run": 2,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 3513,
+            "output_tokens": 1159,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 15.264
+        },
+        {
+          "reasoning": "The class declares `implements Cloneable, Serializable` at line 58 but no `clone()` override appears in the shown portion, and with a private constructor and only static methods it can never even be instantiated, so the Cloneable declaration is vestigial and misleading. The tool's underlying claim — that a class advertising Cloneable without providing a clone() method is meaningless API — is materially correct here; the suggested remedy (add clone()) is not the change I'd make (removing Cloneable is), but the remedy is not what I judge. The decisive evidence lies in the shown lines 57–64; a clone() could in principle be hidden in the unshown lines 208–449, but that is very unlikely in a static utility class with a private constructor.",
+          "is_true_positive": true,
+          "confidence": 0.82,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "class declares Cloneable without overriding clone",
+          "developer_explanation": "This class advertises itself as cloneable but provides no clone() method, and since it is a static-utility class with a private constructor it can never be instantiated or cloned at all. The Cloneable marker is dead, misleading API surface for readers and tooling. The cleanest fix is to drop `Cloneable` (and likely `Serializable`) from the declaration rather than to add a clone() method.",
+          "run": 3,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 3513,
+            "output_tokens": 897,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 13.427
+        }
+      ],
+      "original_finding_index": 817
+    },
+    {
+      "finding_id": 3,
+      "type": "java:S1452",
+      "sourcefile": "PathCollators.java",
+      "start_line": "54",
+      "message": "Remove usage of generic wildcard type.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "Line 54 declares the public method's return type as `Comparator<? super Path>`, which is literally a generic wildcard in a return position, exactly what the rule reports. The wildcard brings no benefit to callers here: all the returned comparators are usable as `Comparator<Path>`, and `? super` in a return type only forces every caller to deal with a captured type variable instead of a concrete one. The claim is therefore materially correct for this code, and it is a readability/API-design issue rather than a behavioural one.",
+          "is_true_positive": true,
+          "confidence": 0.8,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "generic wildcard used in a method return type",
+          "developer_explanation": "The public factory methods return `Comparator<? super Path>`, a wildcard type. Wildcards belong in parameter positions (so a method can accept a range of comparators); in a return type they only push the wildcard capture onto every caller and make the API harder to compose. Since all the comparators here work on `Path`, declare the fields and the return types as plain `Comparator<Path>`.",
+          "run": 1,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 2277,
+            "output_tokens": 1054,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 14.886
+        },
+        {
+          "reasoning": "The flagged line is a public method whose declared return type is `Comparator<? super Path>`, i.e. a generic wildcard in a return position, exactly the pattern the rule describes. Nothing in the code requires the wildcard: all three factory methods only ever return comparators that compare `Path` values, so `Comparator<Path>` would work for callers and would avoid pushing capture-typed values on them. The claim is therefore materially correct for this code, and the fix is a straightforward signature simplification.",
+          "is_true_positive": true,
+          "confidence": 0.8,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "generic wildcard used in method return type",
+          "developer_explanation": "These public factory methods declare their return type as a comparator with a `? super` wildcard, which forces every caller to work with a captured, less predictable type instead of a plain comparator of paths. Since the returned comparators only ever compare paths, the wildcard buys nothing here. Declaring the return type as `Comparator<Path>` (keeping wildcards only on parameters where they add flexibility) makes the API simpler to use and reason about.",
+          "run": 2,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 2277,
+            "output_tokens": 825,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 12.121
+        },
+        {
+          "reasoning": "Line 54 declares a public static method whose return type is `Comparator<? super Path>`, which is literally a wildcard type in a return position, exactly what the rule flags. The wildcard adds nothing here: every returned value is effectively a `Comparator<Path>`, and the wildcard only degrades usability for callers (e.g. chaining with `thenComparing`, or assigning to a `Comparator<Path>` variable requires extra ceremony or casts). The claim behind the warning is therefore materially correct for this code, even though the issue is stylistic rather than a behavioural bug.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "generic wildcard type used in method return type",
+          "developer_explanation": "This method returns `Comparator<? super Path>`, but everything it can return is really a `Comparator<Path>`. Exposing a wildcard in the return type forces callers to work with an imprecise type \\u2014 chaining with `thenComparing`/`reversed()` or assigning to a `Comparator<Path>` becomes awkward \\u2014 without any benefit. Declaring the return type as `Comparator<Path>` (wildcards are fine on parameters) makes the API easier to consume.",
+          "run": 3,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 2277,
+            "output_tokens": 828,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 11.443
+        }
+      ],
+      "original_finding_index": 875
+    },
+    {
+      "finding_id": 4,
+      "type": "java:S5843",
+      "sourcefile": "AuthenticationProtocolHandler.java",
+      "start_line": "44",
+      "message": "Simplify this regular expression to reduce its complexity from 35 to the 20 allowed.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The flagged line contains a single Pattern.compile with four alternation branches, four named capture groups, several repeated long character classes and nested optional groups — objectively a highly complex regular expression whose readability score plausibly exceeds SonarQube's threshold of 20. The tool's claim is a measurement about the shown code and is materially correct: this expression is difficult to read and to change safely. Whether one chooses to refactor it (e.g., by composing sub-patterns or extracting the repeated token character class into a named constant) is a matter of effort, not of the claim's accuracy.",
+          "is_true_positive": true,
+          "confidence": 0.8,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "overly complex regular expression hard to read and maintain",
+          "developer_explanation": "This single regular expression packs several alternatives, four named groups and repeated long character classes into one line, which makes it hard to read and risky to modify correctly. Consider building it from named string constants (for example the repeated token character class) or splitting the scheme/token68/parameter parsing into separate patterns so each part can be understood and tested on its own. Behaviour need not change; the goal is to make the parsing logic legible.",
+          "run": 1,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 4251,
+            "output_tokens": 595,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 10.107
+        },
+        {
+          "reasoning": "The flagged line contains a single pattern with four named capture groups, two top-level alternations, a nested alternation, several optional/non-greedy constructs, and the same 20-character token class repeated three times, so the tool's factual claim that the expression's complexity is well above the configured threshold is accurate. The regex is genuinely hard to read and to modify safely, and it is realistically simplifiable (e.g. by composing it from named sub-pattern constants for the repeated tchar class). Nothing in the surrounding code makes the metric inapplicable; this is a readability/maintainability observation, not a behavioural claim, so it stands as reported.",
+          "is_true_positive": true,
+          "confidence": 0.8,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "overly complex regular expression exceeding readability threshold",
+          "developer_explanation": "This single regular expression packs several alternations, four named groups and three copies of the same long character class into one line, which makes it very hard to read or change without introducing a subtle parsing bug. Consider building it from named String constants (e.g. one for the token character class, one for token68) and concatenating them, or splitting the scheme-only case into its own pattern. The behaviour need not change; the goal is that a future reader can verify the grammar against RFC 7235 at a glance.",
+          "run": 2,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 4251,
+            "output_tokens": 653,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 10.713
+        },
+        {
+          "reasoning": "The flagged line contains a single regex with three alternations, several optional non-capturing groups, five named capture groups and the same 20-character token class repeated three times, so SonarQube's claim that its structural complexity is well above the configured threshold is factually accurate for this code. The rule is a readability metric, and the pattern here genuinely is hard to read and to change safely; the repeated `[!#$%&'*+\\-.^_`|~0-9A-Za-z]` class is a concrete example of something that could be extracted. Nothing in the snippet indicates the metric was miscomputed or that the pattern is atypically simple. Whether the team chooses to refactor it is a severity/effort question, which is not a criterion for the verdict.",
+          "is_true_positive": true,
+          "confidence": 0.75,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "regular expression exceeding allowed complexity threshold",
+          "developer_explanation": "This single pattern packs the whole HTTP authentication-challenge grammar into one expression: three top-level alternatives, nested optional groups, five named groups and the same long character class spelled out three times. That makes it hard to read and risky to modify without introducing subtle matching bugs. Consider extracting the repeated token character class into a named constant and, if practical, splitting the scheme/token68/auth-param cases into separate patterns or matching steps.",
+          "run": 3,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 4251,
+            "output_tokens": 756,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 11.227
+        }
+      ],
+      "original_finding_index": 1003
+    },
+    {
+      "finding_id": 5,
+      "type": "java:S1871",
+      "sourcefile": "HttpDateTime.java",
+      "start_line": "178",
+      "message": "This branch's code block is the same as the block for the branch on line 174.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "Both the `if (token.length() <= 2)` branch on line 174 and the `else if (token.length() == 4)` branch on lines 178-180 execute exactly the same statement, `year = StringUtil.toInt(token, 0);`, so the tool's factual claim about identical branch bodies is correct for this code. The two conditions could be merged into a single condition (`length() <= 2 || length() == 4`) without any behavioural change, and the current shape either hides a mistake (e.g. a branch that was meant to do something different for 4-digit years) or is redundant. Either way this is duplicated branch logic exactly as reported; the year pivoting later at lines 192-196 already handles the 2-digit case, so no distinct handling is needed in these branches.",
+          "is_true_positive": true,
+          "confidence": 0.92,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "conditional branches with identical bodies",
+          "developer_explanation": "The two branches for a token of length \"at most 2\" and length \"exactly 4\" run the identical statement, so keeping them separate adds no value and suggests either an incomplete edit or an intended difference that was never written. Merge them into one condition such as `if (token.length() <= 2 || token.length() == 4)`, or, if a 4-digit year really needs different handling, implement that handling explicitly.",
+          "run": 1,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 4726,
+            "output_tokens": 761,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 11.398
+        },
+        {
+          "reasoning": "The branch at lines 177-180 (`else if (token.length() == 4)`) has exactly the same body as the branch at line 173-176 (`year = StringUtil.toInt(token, 0);`), so the tool's factual claim of duplicated branch bodies is correct for the shown code. The two-digit case is normalized later at lines 192-196, so no distinct handling exists in the branch itself; the conditions could be merged into a single `token.length() <= 2 || token.length() == 4` test. The duplication is not justified by any differing behaviour visible here, though it may be intentional for documenting the RFC's separate 2-digit and 4-digit year cases; that is a readability choice, not a behavioural difference.",
+          "is_true_positive": true,
+          "confidence": 0.82,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "duplicate code block in two conditional branches",
+          "developer_explanation": "The two-digit-year branch and the four-digit-year branch execute exactly the same statement, so keeping them as separate branches adds no behaviour and invites a future edit to only one of them. Either merge the conditions into one test (length <= 2 or length == 4), or, if they are genuinely meant to differ, add the distinct handling the second branch appears to be missing.",
+          "run": 2,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 4726,
+            "output_tokens": 714,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 9.689
+        },
+        {
+          "reasoning": "The two branches at lines 173-176 and 177-180 both execute exactly `year = StringUtil.toInt(token, 0);`, so the tool's claim that the branch bodies are identical is literally correct for the shown code. The conditions could be collapsed into a single test (`token.length() <= 2 || token.length() == 4`) with no behavioural change, since two-digit year expansion is handled later at lines 192-196. The duplication is real and the code reads as if the two cases were meant to be handled differently, which is exactly the suspicious pattern the rule targets.",
+          "is_true_positive": true,
+          "confidence": 0.92,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "duplicated identical conditional branch bodies",
+          "developer_explanation": "Both the `<= 2` and `== 4` length branches assign the year the same way, so the split into two branches adds no behaviour and just invites a reader to think the two cases differ. Since the two-digit year is expanded later anyway, you can merge the conditions into one test such as `token.length() <= 2 || token.length() == 4` — or, if a different handling for one of the lengths was actually intended, implement it explicitly.",
+          "run": 3,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 4726,
+            "output_tokens": 652,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 9.589
+        }
+      ],
+      "original_finding_index": 1247
+    },
+    {
+      "finding_id": 6,
+      "type": "java:S1700",
+      "sourcefile": "MultiPartByteRanges.java",
+      "start_line": "261",
+      "message": "Rename field \"parser\"",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The flagged field is declared as `private final MultiPart.Parser parser;` inside the enclosing class `MultiPartByteRanges.Parser`, so the field name is indeed identical (ignoring case) to the name of the class that contains it — exactly the property the rule reports. The claim is factually correct for the shown code, and it is a genuine readability concern here because `parser` refers to a *different* `Parser` type (`MultiPart.Parser`) than the class it lives in, which can confuse readers of `parser.parse(chunk)` versus `Parser.this`. This is a naming/maintainability observation only; behaviour is unaffected.",
+          "is_true_positive": true,
+          "confidence": 0.72,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "field name duplicates the name of its containing class",
+          "developer_explanation": "The field `parser` has the same name as the class that declares it, even though it actually holds an instance of a different type (`MultiPart.Parser`). Inside this class, references like `parser` and `Parser.this` sit side by side and readers can easily conflate the wrapper with the delegate. Renaming the field to something like `delegate` or `multiPartParser` makes the distinction explicit without changing behaviour.",
+          "run": 1,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 4785,
+            "output_tokens": 816,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 12.006
+        },
+        {
+          "reasoning": "The inner class is named `Parser` and it declares a field `private final MultiPart.Parser parser;`, so the field name does duplicate the enclosing class name (case-insensitively), exactly the property the rule reports. The code behaves correctly, but the duplication is genuinely present and can create ambiguity between `Parser` (the outer wrapper) and `MultiPart.Parser` (the delegate), as seen where `parser.parse(chunk)` and `Parser.this.parts` are mixed. Triviality of the fix is not a criterion, and nothing in the shown code makes the duplication a false match.",
+          "is_true_positive": true,
+          "confidence": 0.75,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "field name duplicates the name of its enclosing class",
+          "developer_explanation": "The field holding the delegate is called `parser` inside a class that is itself called `Parser`, so the two names differ only in case even though they refer to different types (`MultiPart.Parser` versus the enclosing wrapper). Readers scanning the class have to work out which `Parser` is meant at each use site. Renaming the field to something like `delegate` or `multiPartParser` removes the ambiguity without any behavioural change.",
+          "run": 2,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 4785,
+            "output_tokens": 811,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 11.435
+        },
+        {
+          "reasoning": "The flagged field at line 261 is `private final MultiPart.Parser parser;` declared inside the class `MultiPartByteRanges.Parser`, so the field name does literally duplicate the name of its containing class, which is exactly what the rule claims. The duplication is not merely cosmetic here: the field is of a different type (`MultiPart.Parser`) than the enclosing `Parser`, so a reader encountering `parser.parse(chunk)` inside `Parser` can easily mistake it for a self-reference. The claim is materially correct for the shown code; this is a readability/naming concern rather than a behavioural defect.",
+          "is_true_positive": true,
+          "confidence": 0.72,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "field name duplicates the name of its containing class",
+          "developer_explanation": "The field holding the delegate is named the same as the class that declares it, and it is actually a different type of parser than the enclosing class. That makes code such as `parser.parse(chunk)` inside this class ambiguous to readers, who may assume it refers to the enclosing instance. Giving the field a more specific name (for example `delegate` or `multiPartParser`) removes the ambiguity without any behaviour change.",
+          "run": 3,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 4785,
+            "output_tokens": 805,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 10.919
+        }
+      ],
+      "original_finding_index": 1338
+    },
+    {
+      "finding_id": 7,
+      "type": "java:S5261",
+      "sourcefile": "ServletPathSpec.java",
+      "start_line": "182",
+      "message": "Add explicit curly braces to avoid dangling else.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "Lines 179–187 nest an unbraced `if (info.startsWith(\"/\"))` directly inside an unbraced `if (base.endsWith(\"/\"))`, so the `else` on line 182 attaches to the nearest unmatched `if` — exactly the dangling-else construct the rule describes. The binding happens to match the indentation, so behaviour is as intended, but a reader (or anyone editing the block) cannot tell which `if` either `else` belongs to without applying the language rule. The rule's claim about the code — an `else` whose association is ambiguous to the reader because of missing braces — is factually correct here.",
+          "is_true_positive": true,
+          "confidence": 0.93,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "dangling else in nested if without braces",
+          "developer_explanation": "In this block a brace-less `if` is nested directly inside another brace-less `if`, and the following `else` silently binds to the inner one. It works as the indentation suggests today, but the pairing is easy to misread and a future edit that adds a statement to either branch can change the control flow unnoticed. Wrap the outer `if` body (and ideally both branches) in curly braces to make the association explicit.",
+          "run": 1,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 5414,
+            "output_tokens": 695,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 11.068
+        },
+        {
+          "reasoning": "Lines 179-187 nest an unbraced `if (info.startsWith(\"/\"))` inside an unbraced `if (base.endsWith(\"/\"))`, with an `else` at line 182 and another `else if` at line 184; this is exactly the dangling-else construct the rule targets, where the reader must rely on Java's nearest-unmatched-if rule and on indentation to know which `if` each `else` belongs to. The binding happens to match the indentation, so behaviour is as intended, but the construct is genuinely ambiguous to readers and fragile under edits. The tool's claim about the shown code is materially correct.",
+          "is_true_positive": true,
+          "confidence": 0.9,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "else clause attached to nested if without braces",
+          "developer_explanation": "The `else` here belongs to the inner `if (info.startsWith(\"/\"))`, but because neither `if` uses braces, a reader has to work that out from indentation and Java's nearest-if rule rather than from the code structure. The current behaviour is correct, but adding braces around the nested if/else makes the intent explicit and prevents a future edit from silently re-binding the else to the outer condition.",
+          "run": 2,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 5414,
+            "output_tokens": 690,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 15.153
+        },
+        {
+          "reasoning": "Lines 179–187 nest an `if (info.startsWith(\"/\")) ... else ...` directly inside `if (base.endsWith(\"/\"))` without braces, and then attach a further `else if` at the outer level — precisely the dangling-else construct the rule flags. The parse happens to agree with the indentation (the inner else binds to the inner if, the outer else to the outer if), so behaviour is as intended, but the nesting is genuinely ambiguous to a reader and fragile under edits. The tool's claim about the code structure is materially correct, and the flagged line is the else in question.",
+          "is_true_positive": true,
+          "confidence": 0.92,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "nested if-else without braces creating dangling else ambiguity",
+          "developer_explanation": "The `if`/`else` inside the `base.endsWith(\"/\")` branch has no braces, and it is immediately followed by another `else if` at the outer level. The compiler resolves this the way the indentation suggests, but a reader cannot tell at a glance which `if` each `else` belongs to, and adding a statement later can silently change the branching. Wrapping the outer branch bodies in curly braces makes the intent explicit without changing behaviour.",
+          "run": 3,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 5414,
+            "output_tokens": 783,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 10.185
+        }
+      ],
+      "original_finding_index": 1392
+    },
+    {
+      "finding_id": 8,
+      "type": "java:S6126",
+      "sourcefile": "PrefaceFrame.java",
+      "start_line": "33",
+      "message": "Replace this String concatenation with Text block.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The concatenated literals contain explicit \\r\\n CRLF terminators, and Java text blocks normalize all embedded line terminators to \\n and strip trailing whitespace, so a straightforward text-block rewrite would silently turn the HTTP/2 preface's CRLF sequences into LF and break protocol conformance. Preserving the exact bytes in a text block would require escaping every \\r and appending line-continuation backslashes, which is less readable than the current concatenation, so the premise that this string is a natural text-block candidate is wrong for this code. Because the suggested transformation would change what the code produces, the warning's claim is materially incorrect here.",
+          "is_true_positive": false,
+          "confidence": 0.83,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "multi-line string concatenation that should use a text block",
+          "developer_explanation": "This alarm can be dismissed: the literals here deliberately encode CRLF (\\r\\n) line endings required by the HTTP/2 preface, and a text block would normalize those to plain \\n, corrupting the protocol bytes. Writing it as a text block while keeping the CRLFs would require escaping each \\r plus line-continuation backslashes, which is harder to read than the current concatenation.",
+          "run": 1,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 1318,
+            "output_tokens": 934,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 13.053
+        },
+        {
+          "reasoning": "The concatenated literals deliberately embed explicit CRLF (\\r\\n) terminators because the HTTP/2 preface must be sent with CR-LF line endings, and Java text blocks normalise line terminators to \\n, so a straightforward text-block rewrite would silently change the produced bytes and break the protocol preface. Preserving the behaviour in a text block would require writing every line with an explicit \\r\\n plus a trailing backslash line-continuation, which is no clearer than the current form. The claim that this concatenation should simply be replaced by a text block is therefore materially wrong for this code; the pattern here is justified.",
+          "is_true_positive": false,
+          "confidence": 0.82,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "multi-line string concatenation that could use a text block",
+          "developer_explanation": "This suggestion can be dismissed: the literals here intentionally use \\r\\n line endings because the HTTP/2 preface must be transmitted with CR-LF. A text block would normalise line endings to \\n and change the emitted bytes, and writing the CRLFs explicitly inside a text block with line-continuation backslashes would be less readable than the current concatenation.",
+          "run": 2,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 1318,
+            "output_tokens": 789,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 11.506
+        },
+        {
+          "reasoning": "The concatenated strings encode the HTTP/2 preface with explicit CRLF terminators (\"\\r\\n\"), and a Java text block normalizes its embedded line terminators to \\n, so the suggested replacement cannot reproduce these bytes using real line breaks; a naive conversion would silently change the constant and break the protocol. Expressing it as a text block would require keeping the \\r\\n escapes plus trailing line-continuation backslashes on every line, which offers no readability benefit over the current form. The premise of the warning \reada text block is therefore not materially correct for this particular string.",
+          "is_true_positive": false,
+          "confidence": 0.79,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "multi-line string concatenation not using a text block",
+          "developer_explanation": "This constant deliberately uses CRLF line endings, which a Java text block cannot express with real line breaks because text blocks normalize their line terminators to LF. Converting it would either change the produced bytes and break the HTTP/2 preface, or force you to keep every \\r\\n escape plus line-continuation backslashes, which is no clearer than the current concatenation. The suggestion can safely be ignored here.",
+          "run": 3,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 1318,
+            "output_tokens": 965,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 13.95
+        }
+      ],
+      "original_finding_index": 1477
+    },
+    {
+      "finding_id": 9,
+      "type": "java:S1172",
+      "sourcefile": "HeaderGenerator.java",
+      "start_line": "48",
+      "message": "Remove this unused method parameter \"capacity\".",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "In the shown code, the `capacity` parameter of `generate` is never referenced in the method body — the body only uses `length`, `frameType`, `flags`, and `streamId` on the accumulator. The class declares no superclass or interface, so this method is not an override forced to keep the signature, and the parameter appears to be a leftover from an earlier version that allocated a buffer of that size. The tool's claim that the parameter is unused is therefore materially correct for this code; the only caveat is that callers outside the snippet still pass it, which makes removal an API change but does not make the parameter used here.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "unused method parameter",
+          "developer_explanation": "The `capacity` argument is never read inside this method \\u2014 the frame header is written entirely from `frameType`, `length`, `flags`, and `streamId`. It looks like a leftover from when the method allocated its own buffer instead of writing into a caller-supplied accumulator, and leaving it in misleads callers into thinking the value matters. Consider dropping the parameter and updating the call sites, unless it is deliberately retained for binary/API compatibility, in which case document that.",
+          "run": 1,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 1679,
+            "output_tokens": 790,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 12.549
+        },
+        {
+          "reasoning": "The parameter `capacity` declared on line 48 is never referenced anywhere in the method body, which only writes length, frame type, flags, and stream id into the accumulator. The method is not an override (the class extends nothing and there is no @Override annotation), so no interface contract forces the signature, and it looks like a leftover from an earlier version that allocated a buffer of the given capacity. The tool's claim — that this parameter is unused — is factually correct for the shown code; whether callers outside this file still pass it does not change that it is dead within the method.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "unused method parameter",
+          "developer_explanation": "The `capacity` argument of this generate method is never used in its body \\It It is likely a leftover from an earlier implementation that allocated a buffer of that size; keeping it forces every caller to compute and pass a value that has no effect, which is confusing and easy to misread. Consider removing the parameter and updating the call sites, unless a subclass or a compatibility contract genuinely requires it.",
+          "run": 2,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 1679,
+            "output_tokens": 872,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 13.203
+        },
+        {
+          "reasoning": "The parameter `capacity` declared on line 48 is never referenced anywhere in the method body, which only uses `accumulator`, `length`, `frameType`, `flags`, and `streamId`. The class is a concrete, standalone class (no superclass or interface shown) and the method carries no `@Override`, so the parameter is not forced by an inherited contract visible here. The tool's factual claim — that this parameter is unused — is materially correct for the shown code, even though removing it would require updating callers elsewhere in the project.",
+          "is_true_positive": true,
+          "confidence": 0.83,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "unused method parameter",
+          "developer_explanation": "The `capacity` argument of this method is never read in the method body; the frame header is written entirely from the other arguments. Callers are still forced to compute and pass a value that has no effect, which is misleading and suggests the parameter is a leftover from an earlier implementation. Either remove it and update the call sites, or use it (e.g. for sizing/validation) if it was meant to matter.",
+          "run": 3,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 1679,
+            "output_tokens": 843,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 12.983
+        }
+      ],
+      "original_finding_index": 1479
+    },
+    {
+      "finding_id": 10,
+      "type": "java:S1119",
+      "sourcefile": "WriteFlusher.java",
+      "start_line": "343",
+      "message": "Refactor the code to remove this label and the need for it.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The code at line 343 does declare a label `loop:` on the while statement, and it is used by `break loop;` inside a switch at lines 362 and 379 — so the rule's factual claim (a label is present and could be removed by refactoring) is materially correct. Labels are indeed flagged by this rule as confusing constructs; the code could be restructured (e.g., extracting the loop into a method returning the cause, or using a nullable `cause` sentinel with a plain loop condition) to avoid the label. Whether it is worth changing is a severity/effort question, which is not a criterion here; the pattern the rule reports is genuinely present.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "labeled statement used for non-local loop break",
+          "developer_explanation": "This method uses a labeled `while` loop so that `break loop;` inside the switch can exit the loop rather than just the switch. Labeled breaks are easy to misread, especially when mixed with plain `break` statements inside the same switch that only exit the switch. Consider extracting the state-resolution loop into a helper method that returns the cause (or returns null when nothing to do), which removes the need for the label and makes the control flow obvious.",
+          "run": 1,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 5049,
+            "output_tokens": 419,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 8.341
+        },
+        {
+          "reasoning": "The flagged line does define a `loop:` label on a `while (true)` and the body uses `break loop;` in two switch cases, so the construct the rule reports is literally present. The label is only needed because a plain `break` inside the `switch` would exit the switch rather than the loop; the loop body could be extracted into a helper that returns the cause (or a sentinel/flag could be used), so the label is avoidable and the rule's claim that it can be refactored away holds. This is a readability/maintainability observation, not a behavioural defect \\u2014 the code works as intended.",
+          "is_true_positive": true,
+          "confidence": 0.72,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "labelled break used to exit loop from switch",
+          "developer_explanation": "The loop is labelled purely so that `break loop;` inside the switch statement escapes the enclosing loop instead of just the switch; labelled jumps are easy to misread and make future edits to this state machine riskier. You can remove the label by extracting the state-resolution loop into a small private method that returns the resolved cause (returning early in the CANCEL/IDLE/CANCELLING cases), leaving the suppression handling and callback failure in the caller.",
+          "run": 2,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 5049,
+            "output_tokens": 885,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 13.259
+        },
+        {
+          "reasoning": "The flagged line is a genuine Java label (`loop:`) on a `while (true)` loop, used with `break loop;` from inside a `switch`, so the construct the rule reports is factually present. The code can be restructured without the label — for example by extracting the state-resolution loop into a helper method that `return`s the cause instead of breaking out of it — so the rule's claim that the label and the need for it can be refactored away holds for this code. The usage is one of the more defensible uses of a label (escaping a loop from within a switch), but that concerns how worthwhile the fix is, not whether the reported property exists.",
+          "is_true_positive": true,
+          "confidence": 0.62,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "labeled break used to exit loop from switch",
+          "developer_explanation": "This method uses a labeled loop with `break loop;` inside a switch to jump out of the retry loop, which forces a reader to track control flow across two nested constructs. The same logic can be expressed by extracting the state-resolution loop into a small helper method that returns the resolved cause (or signals \"nothing to do\"), removing the label entirely. Behaviour would be unchanged and the failure path would read more directly.",
+          "run": 3,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 5049,
+            "output_tokens": 1212,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 17.94
+        }
+      ],
+      "original_finding_index": 1738
+    },
+    {
+      "finding_id": 11,
+      "type": "java:S127",
+      "sourcefile": "WriteThroughWriter.java",
+      "start_line": "249",
+      "message": "Refactor the code in order to not assign to this loop counter from within the loop body.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "Line 249 executes `i--` inside the body of the `for (int i = 0; i < chars; i++)` loop, which is literally an assignment to the loop counter from within the loop body — exactly the pattern the rule describes. The claim is materially correct: the counter is rewound so the current character is reprocessed after a pending surrogate is flushed, and this interacts non-obviously with the later `chars = i` / `chars = i + 1` break assignments, making the loop's control flow hard to follow and easy to break during maintenance. Nothing in the shown code makes the flagged property absent or clearly justified as a non-issue; the loop still terminates, so this is a readability/maintainability pitfall rather than a demonstrated wrong result.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "loop counter modified inside loop body",
+          "developer_explanation": "Inside the character-encoding loop the index variable is decremented in one branch so the same character is processed again on the next pass. Mixing this manual rewind with the loop's own increment, and with the branches that later assign the loop bound from the index, makes the iteration logic hard to follow and easy to break when the loop is edited. Consider restructuring so the pending-surrogate case is handled without rewinding the counter, for example by handling the buffered surrogate before reading the next character, or by using an explicit while loop with an index you advance deliberately.",
+          "run": 1,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 5389,
+            "output_tokens": 1000,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 16.326
+        },
+        {
+          "reasoning": "Line 249 executes `i--` on the counter of the enclosing `for (int i = 0; i < chars; i++)` loop, so the rule's factual claim — the loop counter is assigned from within the loop body — is literally and materially correct for this code. The modification is used to re-process the current character after flushing a pending unpaired high surrogate, and it interacts non-obviously with the `chars = i` / `chars = i + 1` assignments in the break paths and with the outer `length -= chars; offset += chars` bookkeeping, which is exactly the reasoning hazard the rule warns about. Nothing in the snippet makes the pattern a benign idiom that the rule mis-identifies; it is a genuine readability/maintainability pitfall even though the loop still terminates (the surrogate flag is cleared before the decrement, so the same index cannot be revisited twice).",
+          "is_true_positive": true,
+          "confidence": 0.82,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "loop counter reassigned inside the loop body",
+          "developer_explanation": "Inside the character loop the index variable is decremented in the body so the same character gets processed again on the next iteration. That makes the loop bounds hard to reason about, especially since the same index is also used to recompute the number of consumed characters when the loop breaks early, which then feeds the outer offset/length bookkeeping. Consider restructuring so the pending-surrogate character is handled explicitly (e.g. a small helper or an inner loop over the decoded code point) instead of rewinding the counter.",
+          "run": 2,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 5389,
+            "output_tokens": 1216,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 17.888
+        },
+        {
+          "reasoning": "The flagged line `i--;` is literally an assignment to the counter of the enclosing `for (int i = 0; i < chars; i++)` loop from inside its body, so the rule's factual claim holds exactly. The pattern is also genuinely pitfall-prone here: the decrement makes the same character be reprocessed on the next iteration, and it interacts with the other in-body assignments to the stop condition (`chars = i;`, `chars = i + 1;`), so the loop's progress and termination are far from obvious (e.g. if `_surrogate` is carried over from a previous call, `i` can become -1 at index 0). Nothing in the shown code makes this an exempt or clearly safe usage; it is exactly the construct the rule targets.",
+          "is_true_positive": true,
+          "confidence": 0.88,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "loop counter modified inside the loop body",
+          "developer_explanation": "Inside the character loop you decrement the loop index so the current character is processed again on the next pass, while other branches also overwrite the loop bound. Mixing manual index adjustment with the loop's own increment and with in-body changes to the limit makes the loop's progress and termination very hard to verify, and it is easy for a later edit to introduce an off-by-one or a non-terminating case. Consider restructuring this as an explicit while loop with a clearly managed index, or hoisting the 'pending surrogate' handling out so the index is only advanced in one place.",
+          "run": 3,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 5389,
+            "output_tokens": 1530,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 21.666
+        }
+      ],
+      "original_finding_index": 1743
+    },
+    {
+      "finding_id": 12,
+      "type": "java:S3011",
+      "sourcefile": "DefaultFileLocatorHelper.java",
+      "start_line": "153",
+      "message": "This accessibility update should be removed.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The flagged line literally calls setAccessible(true) on a private field obtained via getDeclaredField on an internal Equinox class, so the fact the rule asserts — reflective suppression of Java access control — is plainly present in the shown code. This is real encapsulation-breaking behaviour: it depends on undocumented internal field names (\"bundleFile\"), will break when the OSGi implementation changes, and fails under a security manager or strong module encapsulation. The code's own comments (\"hack to locate the file-system directly from the bundle\", \"introspection like there is no tomorrow\") confirm the fragility rather than refuting it; the fact that no alternative API may exist affects the fix, not the correctness of the claim. Whether a cleaner replacement exists is outside the snippet, but the property reported is unquestionably in the code.",
+          "is_true_positive": true,
+          "confidence": 0.72,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "reflective suppression of java access control on a private member",
+          "developer_explanation": "This code reaches into a private field of an internal OSGi implementation class and disables Java's access checks to read it. That makes the code dependent on undocumented internals that can be renamed or removed by a framework upgrade, and it will throw when running under a security manager or with strong module encapsulation. If a supported API or SPI can supply the bundle file location, prefer it; otherwise the reflection should at least be isolated and guarded with a clear fallback.",
+          "run": 1,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 6502,
+            "output_tokens": 1319,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 20.553
+        },
+        {
+          "reasoning": "The flagged line literally performs `setAccessible(true)` on a privately declared field (`bundleFile`) obtained by reflection from an internal Equinox class, so the property the rule reports — a runtime bypass of Java access control — is factually present. The surrounding code even documents itself as a \"hack\" that reaches into framework internals, which is exactly the fragility the rule targets: such reflection can break across OSGi implementations/versions and fails under a security manager or strong module encapsulation. Whether the maintainers consider it unavoidable does not make the claim materially wrong; it is a real robustness/encapsulation concern in the shown code. There is no attacker-controlled input reaching this reflection, so the practical impact is maintainability/robustness rather than an exploitable weakness.",
+          "is_true_positive": true,
+          "confidence": 0.7,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "reflective bypass of member accessibility via setAccessible",
+          "developer_explanation": "This code forces access to a private field of an internal framework class through reflection, which breaks encapsulation and ties the implementation to non-public details that can change between OSGi/Equinox versions; it can also fail outright under a security manager or with strong module encapsulation. If a supported API exists to obtain the bundle file location, prefer it; otherwise, isolate this reflection behind a clearly documented fallback with proper failure handling so an internal change does not break the whole code path.",
+          "run": 2,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 6502,
+            "output_tokens": 1286,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 20.871
+        },
+        {
+          "reasoning": "The flagged line calls setAccessible(true) on a private field (\"bundleFile\") obtained reflectively from an internal Equinox class, so the pattern the rule reports — bypassing Java access control via reflection — is literally and materially present in the shown code. The surrounding comments (\"hack to locate the file-system directly from the bundle\", \"we use introspection like there is no tomorrow\") confirm the code deliberately reaches into unsupported internal implementation details, which is exactly the fragility the rule targets: such access breaks under module-system strong encapsulation or when the framework's internals change, and can throw InaccessibleObjectException/SecurityException. That the suggested remedy (simply removing the call) would break the workaround does not make the underlying claim wrong; the claim is about the presence and undesirability of the accessibility bypass. There is no attacker-reachable exposure here, so the real cost is fragility and maintainability rather than exploitability.",
+          "is_true_positive": true,
+          "confidence": 0.68,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "reflective bypass of member accessibility restrictions",
+          "developer_explanation": "This code forcibly opens a private field of an internal OSGi framework class through reflection so it can read implementation internals. That works only as long as the framework's internal class layout stays the same and the JVM allows deep reflection into that package; under the Java module system or a restrictive security policy the call can fail outright, and any refactoring in Equinox silently breaks bundle location. If a supported API (or an OSGi-provided location lookup) can give the same information, prefer it; otherwise isolate and document this hack and make sure failures degrade gracefully.",
+          "run": 3,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 6502,
+            "output_tokens": 2308,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 33.128
+        }
+      ],
+      "original_finding_index": 1955
+    },
+    {
+      "finding_id": 13,
+      "type": "java:S5738",
+      "sourcefile": "Server.java",
+      "start_line": "904",
+      "message": "Remove this call to a deprecated class, it has been marked for removal.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The flagged expression `FileSystemPool.INSTANCE` at line 904 references a type that the analyzer resolved as annotated `@Deprecated(forRemoval = true)`; the deprecation annotation itself lives in FileSystemPool's own source, which is outside this snippet, so the decisive evidence is not visible here. SonarQube's S5738 is driven directly by the resolved symbol's annotation and its semantic model, and this rule has a very low false-alarm rate because it does not rely on heuristics. In Jetty 12 the resource `FileSystemPool` singleton is indeed being phased out, which is consistent with the report. Nothing in the shown code suppresses the deprecation (no `@Deprecated` or `@SuppressWarnings(\"removal\")` on the enclosing `dump` method), so the warning's claim stands.",
+          "is_true_positive": true,
+          "confidence": 0.75,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "use of api deprecated and marked for removal",
+          "developer_explanation": "This dump method references a class that its authors have marked as deprecated and scheduled for removal, so this code will stop compiling once that class disappears in a future release. Even though the reference is only used to add a dumpable object to the server dump, it should be migrated to the replacement API (or the dump entry dropped) before the removal lands. If the reference is intentional for the current release line, mark the enclosing method accordingly so the intent is explicit.",
+          "run": 1,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 4132,
+            "output_tokens": 1088,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 16.335
+        },
+        {
+          "reasoning": "The flagged line passes `FileSystemPool.INSTANCE` to `dumpObjects`, i.e. it references the `FileSystemPool` type and its static field; the rule fires only when the analyzer resolves that symbol and finds an `@Deprecated(forRemoval = true)` annotation on it, so the decisive fact (the annotation) lies in a file not shown to me. Nothing in the snippet contradicts the claim, and SonarQube's S5738 does not report anything for unresolved or merely plain-`@Deprecated` symbols, so the annotation is very likely present on the referenced class/field in this project's dependency version. The consequence the rule asserts — the reference will stop compiling once the API is dropped — follows directly from the annotation and is not ruled out by anything in the shown code. Judged on what I can see, this is most likely a correct report of an obsolete-API reference.",
+          "is_true_positive": true,
+          "confidence": 0.72,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "use of an api deprecated for removal",
+          "developer_explanation": "This dump call references an API that its authors have marked as deprecated and scheduled for removal, so this code will break when the next upgrade of that dependency actually deletes it. Check the deprecation note on the referenced type for the intended replacement and switch to it, or drop the entry from the dump output if the information is no longer meaningful.",
+          "run": 2,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 4132,
+            "output_tokens": 1218,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 16.643
+        },
+        {
+          "reasoning": "The flagged line references FileSystemPool.INSTANCE, and in Jetty 12 the FileSystemPool type is annotated @Deprecated(forRemoval = true), so the rule's claim that the code uses a class marked for removal rests on an annotation that SonarQube reads directly from the referenced type. That decisive evidence (the annotation on FileSystemPool) is outside the shown snippet, but this rule is driven by the annotation rather than heuristics, so a mismatch is unlikely. Nothing in the shown code suppresses or justifies the usage — the enclosing dump() method is not itself deprecated and no suppression annotation is present. The claim is therefore materially correct: this is a live reference to an API scheduled for deletion.",
+          "is_true_positive": true,
+          "confidence": 0.72,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "use of a class deprecated for removal",
+          "developer_explanation": "This dump method references a type that its authors have marked as deprecated and scheduled for deletion in a future release, so this code will stop compiling once that type is actually removed. Check the deprecation notes on that type for the intended replacement and migrate the dump output to it, or, if the reference is deliberate for the current release line, document that and suppress the notice explicitly.",
+          "run": 3,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 4132,
+            "output_tokens": 929,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 13.653
+        }
+      ],
+      "original_finding_index": 2258
+    },
+    {
+      "finding_id": 14,
+      "type": "java:S112",
+      "sourcefile": "SessionDataMap.java",
+      "start_line": "58",
+      "message": "Replace generic exceptions with specific library exceptions or a custom exception.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The flagged line declares `public boolean delete(String id) throws Exception;`, i.e. the checked exception type in the throws clause is the generic java.lang.Exception, which is exactly the property the rule reports. Callers of this interface method are forced to catch or propagate Exception, losing the ability to distinguish storage-specific failures, so the claim is materially correct for the shown code. One could argue the generic type is convenient for an SPI with heterogeneous backends (JDBC, NoSQL, file), but that is a design trade-off, not evidence that the flagged property is absent; a dedicated checked exception type would serve the same purpose without the generic declaration.",
+          "is_true_positive": true,
+          "confidence": 0.75,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "method declares generic java.lang.Exception in throws clause",
+          "developer_explanation": "This interface method (like its siblings) declares `throws Exception`, which forces every caller to handle the broadest possible checked exception and makes it impossible to react to specific failure modes such as a storage or serialization error. Consider declaring a dedicated checked exception for session data access failures (or an existing specific type) so implementations can signal what actually went wrong and callers can handle it meaningfully. Note this is an API-level change affecting all implementations of the interface.",
+          "run": 1,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 1471,
+            "output_tokens": 879,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 13.734
+        },
+        {
+          "reasoning": "The flagged line literally declares `throws Exception`, the generic checked exception type that the rule targets, and the same pattern appears throughout this interface. The claim behind the warning \\u2014 that a non-specific exception type is being propagated \\u2014 is factually true of the shown code, and it does force every caller to catch or declare `Exception`, obscuring what failures can actually occur. One could argue the broad type is a deliberate SPI choice so that pluggable backends (JDBC, NoSQL, file) can throw whatever they need, but that is a design trade-off, not evidence that the property the rule reports is absent; a dedicated checked exception for session-store failures would serve the same purpose with better typing.",
+          "is_true_positive": true,
+          "confidence": 0.75,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "method declares generic exception type instead of specific one",
+          "developer_explanation": "This interface method declares `throws Exception`, which tells callers nothing about what can actually go wrong and forces them to catch the broadest possible checked exception, potentially swallowing unrelated programming errors. Consider declaring a dedicated checked exception for session data store failures (or an existing specific type) so implementations and callers can handle real failure modes precisely.",
+          "run": 2,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 1471,
+            "output_tokens": 749,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 11.222
+        },
+        {
+          "reasoning": "The flagged line declares `public boolean delete(String id) throws Exception;`, so the generic exception type the rule reports is literally present in the shown code. The claim behind the warning — that a generic `Exception` is declared instead of a specific or custom exception — is materially correct; callers must catch or propagate `Exception`, losing the ability to distinguish failure modes. Being an abstract SPI interface where implementations may fail in many ways is a plausible design rationale, but it does not make the tool's factual claim wrong; the interface could still declare a dedicated checked exception type.",
+          "is_true_positive": true,
+          "confidence": 0.75,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "method declares or throws generic exception type",
+          "developer_explanation": "This interface method declares `throws Exception`, which forces every caller to handle the broadest possible checked exception and hides what can actually go wrong. Callers cannot react differently to, say, a storage I/O failure versus a serialization problem, and legitimate runtime errors get lumped together with expected failures. Consider declaring a dedicated checked exception (for example a session-storage-specific exception) that implementations wrap their underlying failures in.",
+          "run": 3,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 1471,
+            "output_tokens": 710,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 10.883
+        }
+      ],
+      "original_finding_index": 2457
+    },
+    {
+      "finding_id": 15,
+      "type": "java:S3824",
+      "sourcefile": "TopologicalSort.java",
+      "start_line": "57",
+      "message": "Replace this \"Map.get()\" and condition with a call to \"Map.computeIfAbsent()\".",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "Lines 57–62 are the textbook get-then-null-check-then-put pattern on a HashMap whose values are never null, so `_dependencies.computeIfAbsent(dependent, k -> new HashSet<>())` is an exact behavioural equivalent. The map is a plain HashMap field of this class, not a concurrent or null-value-permitting map, so no subtlety invalidates the suggestion. The tool's claim about the flagged code is materially correct, and the change is behaviour-preserving.",
+          "is_true_positive": true,
+          "confidence": 0.92,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "map get with null check instead of computeIfAbsent",
+          "developer_explanation": "This method looks up a key, checks for null, then creates and inserts a default value \"computed if absent\" already covers. Replacing the three-step lookup with `_dependencies.computeIfAbsent(dependent, k -> new HashSet<>())` does exactly the same thing with one map operation and one line, making the intent clearer. Behaviour is unchanged because the map never stores null values.",
+          "run": 1,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 3838,
+            "output_tokens": 440,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 7.831
+        },
+        {
+          "reasoning": "Lines 57–62 are exactly the get / null-check / create / put idiom on a HashMap that computeIfAbsent replaces: the value stored is never null (always a new HashSet), so the rewrite `Set<T> set = _dependencies.computeIfAbsent(dependent, k -> new HashSet<>())` is behaviourally equivalent and avoids the double lookup. The claim that a get plus condition can be collapsed into computeIfAbsent is materially correct for this code. The class targets Java 8+ (the codebase already uses generics/diamond and the tool tags it java8), so the API is available.",
+          "is_true_positive": true,
+          "confidence": 0.9,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "map get with null check instead of computeIfAbsent",
+          "developer_explanation": "This block looks up the key, checks for null, creates a new set and puts it back \two branertion of the same key. Since the stored value is always a non-null HashSet, the whole block can be replaced with a single computeIfAbsent call, which is shorter, clearer, and does one map lookup instead of two.",
+          "run": 2,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 3838,
+            "output_tokens": 486,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 8.456
+        },
+        {
+          "reasoning": "Lines 57-62 are the textbook get / null-check / create-and-put sequence on a plain HashMap, which is exactly the pattern computeIfAbsent replaces with a single lookup. There is no null-value semantics or side-effect that would make the rewrite behave differently, and the map is a private non-concurrent HashMap, so the substitution is safe. The tool's claim about the code is materially correct.",
+          "is_true_positive": true,
+          "confidence": 0.92,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "map get with null check and put instead of computeIfAbsent",
+          "developer_explanation": "This method looks the key up, checks for null, then creates and stores a new set \ropeated conditional. That double lookup and branching can be collapsed into a single call that creates the set only when absent, making the intent clearer and slightly cheaper. Replace the get/null-check/put block with a computeIfAbsent call that supplies a new HashSet.",
+          "run": 3,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 3838,
+            "output_tokens": 392,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 6.953
+        }
+      ],
+      "original_finding_index": 2693
+    },
+    {
+      "finding_id": 16,
+      "type": "java:S108",
+      "sourcefile": "TypeUtil.java",
+      "start_line": "622",
+      "message": "Remove this block of code, fill it in, or add a comment explaining why it is empty.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The catch block at lines 621–623 is literally empty: it contains no statements and no comment, so the tool's factual claim about the code is accurate. The parameter name \"ignored\" hints at intent, but the rule's specific complaint — that a reader cannot tell from the block itself why nothing is done and the URISyntaxException is silently swallowed with no logging — holds here, especially since the sibling method at 646–648 repeats the same pattern. Adding a brief comment (or a debug log) would satisfy the rule without behaviour change, so the claim is materially correct rather than an artifact of pattern matching.",
+          "is_true_positive": true,
+          "confidence": 0.72,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "empty catch block without explanatory comment or logging",
+          "developer_explanation": "This catch block discards the URISyntaxException entirely: nothing is logged and no note explains the decision, so a malformed resource URL will silently turn into a null return with no diagnostic trace. Naming the parameter \"ignored\" signals intent to other developers but leaves no record at runtime and no explanation in the code. Add a short comment stating why the exception is safe to swallow, or log it at debug level.",
+          "run": 1,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 5372,
+            "output_tokens": 1229,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 18.485
+        },
+        {
+          "reasoning": "The catch block at lines 621-623 is genuinely empty: it contains no statements and no comment explaining the deliberate suppression of the URISyntaxException, which is exactly the condition the rule describes. The only hint of intent is the parameter name \"ignored\"; the code silently swallows the exception and falls through to `return null`, so a reader cannot tell from the block itself whether the omission is deliberate or an oversight. The naming convention is a weak substitute for an explicit comment, and the tool's factual claim (empty block, no explanatory comment) is materially correct for the shown code.",
+          "is_true_positive": true,
+          "confidence": 0.66,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "empty catch block without explanatory comment",
+          "developer_explanation": "The catch block that handles the URI syntax failure is completely empty, so the exception is discarded with no trace and no explanation of why that is safe. Even though the parameter name suggests the omission is intentional, a future reader (or a debugging session) has nothing to confirm it. Add a short comment stating why the malformed URI can be ignored, or log it at debug level.",
+          "run": 2,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 5372,
+            "output_tokens": 1601,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 22.821
+        },
+        {
+          "reasoning": "The catch block at lines 621–623 is literally empty: it contains no statements and no comment. The warning's claim — that an empty block exists here that should be filled or explained — is materially correct for the shown code; the exception is silently swallowed and the method falls through to `return null`. The parameter name `ignored` hints at intent but is not a comment, and readers cannot tell whether swallowing the URI syntax error is deliberate or an oversight, so the maintainability concern the rule describes genuinely applies.",
+          "is_true_positive": true,
+          "confidence": 0.75,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "empty catch block without explanatory comment",
+          "developer_explanation": "This catch block swallows the exception without doing or documenting anything, so a reader cannot tell whether ignoring the malformed URI is intentional or an omission. Add a short comment stating why the exception is safe to ignore here (e.g. that a non-URI resource URL simply means no location can be determined), or log it at debug level as is done elsewhere in this class.",
+          "run": 3,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 5372,
+            "output_tokens": 1306,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 19.438
+        }
+      ],
+      "original_finding_index": 2703
+    },
+    {
+      "finding_id": 17,
+      "type": "java:S1144",
+      "sourcefile": "SecurityUtils.java",
+      "start_line": "233",
+      "message": "Remove this unused private \"callableToPrivilegedAction\" method.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The flagged method is `private static`, so any use must occur inside this same file; in the shown portion (lines 83-255, covering all methods from `lookupCheckPermission` onward, including `doAs`, `callAs`, `doPrivileged` and the private constructor) there is no call to `callableToPrivilegedAction`. The unshown lines 1-82 would hold the class declaration, imports, static fields and the `lookupGetSecurityManager`-style helpers, which are MethodHandle lookups and would have no plausible reason to invoke a Callable-to-PrivilegedAction adapter. `callAs` invokes the `callAs` MethodHandle directly rather than converting the Callable, which is exactly where such a helper would otherwise be used, so it appears to be leftover from an earlier implementation. The decisive evidence about lines 1-82 is outside the snippet, but on what is visible the method is dead code.",
+          "is_true_positive": true,
+          "confidence": 0.79,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "unused private method",
+          "developer_explanation": "This private helper that wraps a Callable into a PrivilegedAction is never called anywhere in the class; the subject/privileged execution paths invoke the looked-up method handles directly instead. It is leftover code from a previous implementation and only adds noise and maintenance burden, so it should be deleted (or wired back in if it was meant to be used).",
+          "run": 1,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 2888,
+            "output_tokens": 827,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 12.373
+        },
+        {
+          "reasoning": "The flagged private generic helper is not referenced anywhere in the shown portion (lines 83–255, which includes every method of the class up to its closing brace), and a private method in a final utility class with a private constructor can only be invoked from within this same file. The unseen lines 1–82 would normally hold imports, fields and the MethodHandle lookup initialisation; the surrounding code path that would plausibly use a Callable-to-PrivilegedAction adapter (doAs) now simply delegates to callAs, so the helper appears to be leftover from a refactor. Decisive evidence from lines 1–82 is not visible, but nothing there is likely to call this helper.",
+          "is_true_positive": true,
+          "confidence": 0.82,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "unused private method",
+          "developer_explanation": "This private helper that wraps a Callable into a PrivilegedAction is never called anywhere in the class; the deprecated doAs now just forwards to callAs, so the adapter is leftover dead code. Since it is private, no code outside this file can use it either. Delete it to keep the class clean, or wire it back in if it was meant to be used by one of the privileged-execution paths.",
+          "run": 2,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 2888,
+            "output_tokens": 677,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 9.538
+        },
+        {
+          "reasoning": "The flagged method is private and static, so it can only be referenced from within this compilation unit; nothing in the visible portion (lines 83-255, including all the public API methods callAs, doAs, doPrivileged, checkPermission) calls it, and the remaining unseen lines 1-82 would be imports, field declarations and the lookup* helpers, which would have no reason to convert a Callable into a PrivilegedAction. SonarQube resolves private-member usage across the whole file, so its conclusion that there is no caller is trustworthy here. This looks like leftover code from the refactoring that made callAs invoke Subject.callAs directly instead of routing a Callable through doPrivileged.",
+          "is_true_positive": true,
+          "confidence": 0.87,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "unused private method never called within its class",
+          "developer_explanation": "This private helper that wraps a Callable into a PrivilegedAction is never invoked anywhere in the class, so it is dead code left over from an earlier version of the subject/privileged handling. Unused code adds noise and can mislead future maintainers into thinking it is part of the flow. Delete it, or wire it back in if some path was supposed to use it.",
+          "run": 3,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 2888,
+            "output_tokens": 760,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 12.27
+        }
+      ],
+      "original_finding_index": 2869
+    },
+    {
+      "finding_id": 18,
+      "type": "java:S6204",
+      "sourcefile": "JettyClientUpgradeRequest.java",
+      "start_line": "52",
+      "message": "Replace this usage of 'Stream.collect(Collectors.toList())' with 'Stream.toList()' and ensure that the list is unmodified.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "Line 52 terminates a stream with `collect(Collectors.toList())` and the resulting list is used only as an argument to `setExtensions(...)`, never modified in the shown code, so the rule's structural claim (a `toList()`-eligible collect in a Java 16+ codebase) holds here. The rule's message is explicitly conditional (\"ensure that the list is unmodified\"), and the only uncertainty is whether the setter's implementation, which is outside this snippet, mutates the stored list; nothing visible here suggests local mutation. Judged on the shown code, the flagged pattern is genuinely a case where the simpler, unmodifiable `Stream.toList()` applies, making this a valid code-smell report rather than a mistaken match.",
+          "is_true_positive": true,
+          "confidence": 0.72,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "stream collected with collector instead of terminal list operation",
+          "developer_explanation": "The stream here ends with `collect(Collectors.toList())`, but on Java 16 and later `toList()` expresses the same intent more concisely and returns an unmodifiable list. Since the resulting list is only handed straight to the setter and never changed locally, you can simplify it \\u2014 just confirm that the receiving code does not add to or remove from the list it is given, since the replacement list cannot be modified.",
+          "run": 1,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 2306,
+            "output_tokens": 1102,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 16.671
+        },
+        {
+          "reasoning": "The flagged line uses `stream()...collect(Collectors.toList())` in a codebase compiled at Java 16+ (the rule only fires for such source levels, and this Jetty module targets a modern JDK), so the more concise `Stream.toList()` is indeed available and the pattern the rule describes is literally present. The collected list is created fresh and handed straight to `setExtensions(...)`; nothing in the shown code mutates it, though whether `CoreClientUpgradeRequest.setExtensions` or a later `addExtensions` mutates the stored list cannot be verified from this snippet, and the warning itself explicitly conditions its advice on the list not being modified. On the evidence visible, the claim that this collector call can be replaced with the terser, unmodifiable-list factory is materially correct.",
+          "is_true_positive": true,
+          "confidence": 0.7,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "stream collected with collector instead of terser list factory",
+          "developer_explanation": "Since Java 16 a stream can be turned into a list directly with `toList()`, which is shorter and clearer than `collect(Collectors.toList())`. Here the list is built and immediately passed on, so switching is straightforward \\u2014 just confirm that the receiving code never adds to or removes from the list, because the list returned by `toList()` is unmodifiable.",
+          "run": 2,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 2306,
+            "output_tokens": 1296,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 17.637
+        },
+        {
+          "reasoning": "The flagged expression builds a list purely as an argument to setExtensions and the list is never modified in the shown code, so the terminal operation can be expressed as Stream.toList(); the project targets Java 16+ (Jetty 12 modules use modern Java), making the replacement available. The rule's claim — that this collect(Collectors.toList()) is a candidate for the more concise Stream.toList() — is materially correct for this line. The only caveat, whether the downstream setExtensions implementation mutates the passed list, lies outside the snippet, and the warning itself explicitly conditions on that (\"ensure that the list is unmodified\"), so it does not make the claim wrong.",
+          "is_true_positive": true,
+          "confidence": 0.75,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "stream collected with collector instead of concise terminal list operation",
+          "developer_explanation": "This stream pipeline ends with collect(Collectors.toList()) even though the newer Stream.toList() expresses the same intent more directly and avoids the extra Collectors import. Since the resulting list is only handed straight to the setter and never modified here, you can switch to .toList() \\u2014 just confirm the setter (and anything it hands the list to) does not mutate it, because toList() returns an unmodifiable list.",
+          "run": 3,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 2306,
+            "output_tokens": 822,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 12.197
+        }
+      ],
+      "original_finding_index": 3055
+    },
+    {
+      "finding_id": 19,
+      "type": "xml:S1134",
+      "sourcefile": "pom.xml",
+      "start_line": "54",
+      "message": "Take the required action to fix the issue indicated by this \"FIXME\" comment.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The flagged line 54 is `<organizationUrl>https://webtide.com</organizationUrl>` inside a `<developer>` block, which contains no \"FIXME\" comment or any comment at all; in fact no FIXME appears anywhere in the 204 shown lines. The rule's claim is that this location holds an unresolved FIXME marker, and that claim is materially wrong for the code shown. A FIXME could exist elsewhere in the remaining ~2800 unseen lines, but the warning points at this specific line, where the property it reports is plainly absent.",
+          "is_true_positive": false,
+          "confidence": 0.83,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "unresolved FIXME marker left in source",
+          "developer_explanation": "The line called out here is just a developer's organization URL entry in the POM's developer list \\u2014 it contains no FIXME note or comment of any kind, so there is nothing to act on at this location. This alert can be dismissed for this line; if you want to be thorough, search the rest of the file for a genuine FIXME marker that the report may have mislocated.",
+          "run": 1,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 4856,
+            "output_tokens": 555,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 8.798
+        },
+        {
+          "reasoning": "The flagged line 54 is `<organizationUrl>https://webtide.com</organizationUrl>` inside a developer entry — there is no FIXME comment on that line, nor anywhere in the shown portion of the file. The rule claims a FIXME comment exists at this location requiring action, but the shown XML contains no such marker (the only comments visible are the license/upgrade notes around lines 171-176, which say \"DO NOT UPGRADE\", not FIXME). Since the property the rule reports is simply not present in the flagged code, the warning's claim is materially wrong here.",
+          "is_true_positive": false,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "unresolved fixme marker left in source",
+          "developer_explanation": "The line flagged here is just a developer's organization URL in the project metadata; there is no FIXME note on or near it. Nothing needs to be fixed at this location, so this alert can be dismissed.",
+          "run": 2,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 4856,
+            "output_tokens": 327,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 7.504
+        },
+        {
+          "reasoning": "Line 54 is a plain `<organizationUrl>https://webtide.com</organizationUrl>` element inside a `<developer>` block, and there is no FIXME comment on that line or anywhere in the surrounding shown region (lines 1–204); the only comments visible are the license/URL text and the \"DO NOT UPGRADE\" note at lines 171–176. The rule's claim is that a FIXME comment at this location marks unfinished work, and that fact is simply not present in the flagged code, so there is nothing for a developer to act on here. The remainder of the 3025-line file is not shown, so a FIXME could exist elsewhere, but the warning is anchored to line 54 and the reported property does not hold there.",
+          "is_true_positive": false,
+          "confidence": 0.79,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "unresolved FIXME comment marking incomplete work",
+          "developer_explanation": "This alert says there is a FIXME comment at this line that needs to be resolved, but the line in question is just a developer's organization URL entry in the POM metadata, with no FIXME marker on it or near it. There is no pending work indicated here, so the alert can be dismissed for this location.",
+          "run": 3,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 4856,
+            "output_tokens": 662,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 9.088
+        }
+      ],
+      "original_finding_index": 3102
+    }
+  ]
+}

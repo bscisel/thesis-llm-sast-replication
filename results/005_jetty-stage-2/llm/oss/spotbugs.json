@@ -1,0 +1,1546 @@
+{
+  "model": "openai/gpt-oss-120b",
+  "tool": "spotbugs",
+  "num_runs": 3,
+  "runs_per_invocation": 3,
+  "source_root": "jetty.project",
+  "call_parameters": {
+    "temperature": null,
+    "concurrency": 3,
+    "response_format": "json_schema",
+    "max_tokens": 8192,
+    "max_retries": 6,
+    "base_url": "https://openrouter.ai/api/v1",
+    "provider": "deepinfra/bf16",
+    "allow_fallbacks": false,
+    "require_parameters": true,
+    "cache_control": false
+  },
+  "system_prompt_variant": "jetty",
+  "system_prompt_sha256": "b5b634e0a9109c59",
+  "user_prompt_sha256": "14894866e018872e",
+  "timestamp": "2026-08-15T08:25:34.604001+00:00",
+  "updated_at": "2026-08-15T08:25:34.604001+00:00",
+  "findings": [
+    {
+      "finding_id": 0,
+      "type": "PERM_SUPER_NOT_CALLED_IN_GETPERMISSIONS",
+      "sourcefile": "WebAppClassLoader.java",
+      "start_line": "333",
+      "message": "Custom class loader does not call its superclass's getPermissions()",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The getPermissions method returns a PermissionCollection from _context without always delegating to super.getPermissions, so the superclass method is not guaranteed to be called. This violates the rule that a custom class loader must always call the superclass implementation to incorporate system policy.",
+          "is_true_positive": true,
+          "confidence": 0.78,
+          "category": "SECURITY",
+          "issue_signature": "custom class loader skips superclass getPermissions",
+          "developer_explanation": "The getPermissions implementation may return a permission set that bypasses the system-wide security policy because it only calls super.getPermissions when the context returns null. This can allow classes to obtain permissions independent of the configured policy. Ensure the method always merges or delegates to super.getPermissions, e.g., by calling super.getPermissions first and then adding any context-specific permissions.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 5343,
+            "output_tokens": 1597,
+            "reasoning_tokens": 1774,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000469181
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 7077,
+          "latency_s": 92.403
+        },
+        {
+          "reasoning": "The getPermissions method returns a PermissionCollection from _context without always delegating to super.getPermissions, so the superclass method is not guaranteed to be called. This violates the rule that a custom class loader must always call the superclass implementation to incorporate system policy.",
+          "is_true_positive": true,
+          "confidence": 0.78,
+          "category": "SECURITY",
+          "issue_signature": "custom class loader skips superclass getPermissions",
+          "developer_explanation": "The getPermissions implementation may return a permission set that bypasses the system-wide security policy because it only calls super.getPermissions when the context returns null. This can allow classes to obtain permissions independent of the configured policy. Ensure the method always merges or delegates to super.getPermissions, e.g., by calling super.getPermissions first and then adding any context-specific permissions.",
+          "run": 2,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 5343,
+            "output_tokens": 1597,
+            "reasoning_tokens": 1774,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000469181
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 7077,
+          "latency_s": 103.639
+        },
+        {
+          "reasoning": "The getPermissions method returns a PermissionCollection from _context without always delegating to super.getPermissions, so the superclass method is not guaranteed to be called. This violates the rule that a custom class loader must always call the superclass implementation to incorporate system policy.",
+          "is_true_positive": true,
+          "confidence": 0.78,
+          "category": "SECURITY",
+          "issue_signature": "custom class loader skips superclass getPermissions",
+          "developer_explanation": "The getPermissions implementation may return a permission set that bypasses the system-wide security policy because it only calls super.getPermissions when the context returns null. This can allow classes to obtain permissions independent of the configured policy. Ensure the method always merges or delegates to super.getPermissions, e.g., by calling super.getPermissions first and then adding any context-specific permissions.",
+          "run": 3,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 5343,
+            "output_tokens": 1597,
+            "reasoning_tokens": 1774,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000469181
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 7077,
+          "latency_s": 145.478
+        }
+      ],
+      "original_finding_index": 103
+    },
+    {
+      "finding_id": 1,
+      "type": "EQ_CHECK_FOR_OPERAND_NOT_COMPATIBLE_WITH_THIS",
+      "sourcefile": "JettyHttpExchange.java",
+      "start_line": "96",
+      "message": "Equals checks for incompatible operand",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The equals method simply returns _delegate.equals(obj), and the delegate's equals implementation checks for a JettyHttpExchangeDelegate, which is not a supertype or subtype of JettyHttpExchange, causing an incompatible operand check.",
+          "is_true_positive": true,
+          "confidence": 0.92,
+          "category": "CORRECTNESS",
+          "issue_signature": "equals method checks incompatible operand type",
+          "developer_explanation": "The equals implementation delegates to a delegate that only accepts JettyHttpExchangeDelegate, breaking the equals contract (symmetry and transitivity). This can lead to unexpected behavior when comparing instances. Implement equals directly in JettyHttpExchange or ensure the delegate's equals handles JettyHttpExchange correctly.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 3709,
+            "output_tokens": 507,
+            "reasoning_tokens": 439,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000223423
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1750,
+          "latency_s": 34.265
+        },
+        {
+          "reasoning": "The equals method simply returns _delegate.equals(obj), and the delegate's equals implementation checks for a JettyHttpExchangeDelegate, which is not a supertype or subtype of JettyHttpExchange, causing an incompatible operand check.",
+          "is_true_positive": true,
+          "confidence": 0.92,
+          "category": "CORRECTNESS",
+          "issue_signature": "equals method checks incompatible operand type",
+          "developer_explanation": "The equals implementation delegates to a delegate that only accepts JettyHttpExchangeDelegate, breaking the equals contract (symmetry and transitivity). This can lead to unexpected behavior when comparing instances. Implement equals directly in JettyHttpExchange or ensure the delegate's equals handles JettyHttpExchange correctly.",
+          "run": 2,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 3709,
+            "output_tokens": 507,
+            "reasoning_tokens": 439,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000223423
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1750,
+          "latency_s": 32.081
+        },
+        {
+          "reasoning": "The equals method simply returns _delegate.equals(obj), and the delegate's equals implementation checks for a JettyHttpExchangeDelegate, which is not a supertype or subtype of JettyHttpExchange, causing an incompatible operand check.",
+          "is_true_positive": true,
+          "confidence": 0.92,
+          "category": "CORRECTNESS",
+          "issue_signature": "equals method checks incompatible operand type",
+          "developer_explanation": "The equals implementation delegates to a delegate that only accepts JettyHttpExchangeDelegate, breaking the equals contract (symmetry and transitivity). This can lead to unexpected behavior when comparing instances. Implement equals directly in JettyHttpExchange or ensure the delegate's equals handles JettyHttpExchange correctly.",
+          "run": 3,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 3709,
+            "output_tokens": 507,
+            "reasoning_tokens": 439,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000223423
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1750,
+          "latency_s": 28.801
+        }
+      ],
+      "original_finding_index": 124
+    },
+    {
+      "finding_id": 2,
+      "type": "EI_EXPOSE_STATIC_REP2",
+      "sourcefile": "JettyHttpServerProvider.java",
+      "start_line": "36",
+      "message": "May expose internal static state by storing a mutable object into a static field",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The setServer method assigns the passed mutable Server instance directly to the static field _server, exposing mutable internal state that can be altered by external code.",
+          "is_true_positive": true,
+          "confidence": 0.92,
+          "category": "CORRECTNESS",
+          "issue_signature": "mutable object stored in static field",
+          "developer_explanation": "Storing the mutable Server instance in a static field lets any code that holds a reference modify the server after it has been set, which can lead to incorrect or unsafe behavior across the application. Consider avoiding a static mutable field, or store an immutable copy or use proper synchronization to protect the shared state.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2835,
+            "output_tokens": 609,
+            "reasoning_tokens": 592,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000208425
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2356,
+          "latency_s": 43.719
+        },
+        {
+          "reasoning": "The setServer method assigns the provided Server instance to the static field _server, storing a mutable object in a static variable. This matches the rule's claim that internal static state may be exposed, so the warning is valid.",
+          "is_true_positive": true,
+          "confidence": 0.92,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "mutable object stored in static field",
+          "developer_explanation": "Storing a mutable Server instance in a static field makes the server globally shared and allows any code that holds a reference to modify it, which can lead to unexpected behavior across uses. Consider using an immutable wrapper, a copy, or redesigning to avoid a static mutable field to keep state encapsulated.",
+          "run": 2,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2835,
+            "output_tokens": 881,
+            "reasoning_tokens": 877,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000254665
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3498,
+          "latency_s": 72.025
+        },
+        {
+          "reasoning": "The setServer method assigns the provided Server instance to the static field _server, storing a mutable object in a static variable. This matches the rule's claim that internal static state may be exposed, so the warning is valid.",
+          "is_true_positive": true,
+          "confidence": 0.92,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "mutable object stored in static field",
+          "developer_explanation": "Storing a mutable Server instance in a static field makes the server globally shared and allows any code that holds a reference to modify it, which can lead to unexpected behavior across uses. Consider using an immutable wrapper, a copy, or redesigning to avoid a static mutable field to keep state encapsulated.",
+          "run": 3,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2835,
+            "output_tokens": 881,
+            "reasoning_tokens": 877,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000254665
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3498,
+          "latency_s": 74.751
+        }
+      ],
+      "original_finding_index": 132
+    },
+    {
+      "finding_id": 3,
+      "type": "ES_COMPARING_PARAMETER_STRING_WITH_EQ",
+      "sourcefile": "HttpCookie.java",
+      "start_line": "869",
+      "message": "Comparison of String parameter using == or !=",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The method first checks if the two String arguments are the same object using ==, which is a correct fast‑path check for reference equality and does not affect the logical result. Therefore the warning that this is a bug is not materially correct.",
+          "is_true_positive": false,
+          "confidence": 0.96,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "string reference equality comparison",
+          "developer_explanation": "The == check is used only as an optimization to return true when both parameters refer to the same String instance; it does not change the method's semantics. The warning can be ignored because the code is functionally correct, though you may keep the check for performance reasons.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 4917,
+            "output_tokens": 712,
+            "reasoning_tokens": 677,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000302969
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2679,
+          "latency_s": 48.757
+        },
+        {
+          "reasoning": "The method first checks if the two String arguments are the same object using ==, which is a correct fast‑path check for reference equality and does not affect the logical result. Therefore the warning that this is a bug is not materially correct.",
+          "is_true_positive": false,
+          "confidence": 0.96,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "string reference equality comparison",
+          "developer_explanation": "The == check is used only as an optimization to return true when both parameters refer to the same String instance; it does not change the method's semantics. The warning can be ignored because the code is functionally correct, though you may keep the check for performance reasons.",
+          "run": 2,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 4917,
+            "output_tokens": 712,
+            "reasoning_tokens": 677,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000302969
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2679,
+          "latency_s": 90.853
+        },
+        {
+          "reasoning": "The method uses `obj1 == obj2` to test if the two String references are identical, which is a correct fast‑path check for equality before calling `equalsIgnoreCase`. This does not cause incorrect behavior, so the warning is a false positive.",
+          "is_true_positive": false,
+          "confidence": 0.96,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "string reference equality comparison",
+          "developer_explanation": "The `==` check is only used to quickly detect when both parameters refer to the same object, which is safe and correct. It does not affect the method's semantics, so the warning can be ignored. No code change is required.",
+          "run": 3,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 4917,
+            "output_tokens": 524,
+            "reasoning_tokens": 432,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000271009
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1700,
+          "latency_s": 30.408
+        }
+      ],
+      "original_finding_index": 144
+    },
+    {
+      "finding_id": 4,
+      "type": "AT_NONATOMIC_OPERATIONS_ON_SHARED_VARIABLE",
+      "sourcefile": "HttpParser.java",
+      "start_line": "1366",
+      "message": "Operation on shared variable is not atomic",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The code increments the instance field `_length` with `_length++;` but there is no evidence in the shown snippet that the HttpParser object is accessed by multiple threads concurrently.",
+          "is_true_positive": false,
+          "confidence": 0.85,
+          "category": "CONCURRENCY",
+          "issue_signature": "non-atomic increment of shared field",
+          "developer_explanation": "This warning can be ignored because each HttpParser instance is used by a single thread handling one connection, so the `_length` field is not accessed concurrently. Therefore the increment does not introduce a race condition and does not require synchronization.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 5740,
+            "output_tokens": 485,
+            "reasoning_tokens": 421,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00029483
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1671,
+          "latency_s": 30.363
+        },
+        {
+          "reasoning": "The code increments the instance field `_length` with `_length++;` but there is no evidence in the shown snippet that the HttpParser object is accessed by multiple threads concurrently.",
+          "is_true_positive": false,
+          "confidence": 0.85,
+          "category": "CONCURRENCY",
+          "issue_signature": "non-atomic increment of shared field",
+          "developer_explanation": "This warning can be ignored because each HttpParser instance is used by a single thread handling one connection, so the `_length` field is not accessed concurrently. Therefore the increment does not introduce a race condition and does not require synchronization.",
+          "run": 2,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 5740,
+            "output_tokens": 485,
+            "reasoning_tokens": 421,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00029483
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1671,
+          "latency_s": 21.314
+        },
+        {
+          "reasoning": "The flagged line `_length++;` increments a field of the parser object, but the parser instance is used only within a single thread and is not shared across threads, so the non‑atomic increment does not cause a race condition.",
+          "is_true_positive": false,
+          "confidence": 0.92,
+          "category": "CONCURRENCY",
+          "issue_signature": "non-atomic increment of shared field",
+          "developer_explanation": "The parser object is created per connection and is not accessed concurrently, so the `_length++` operation is safe without synchronization. The warning can be ignored because there is no shared mutable state across threads in this context.",
+          "run": 3,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 5740,
+            "output_tokens": 582,
+            "reasoning_tokens": 534,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00031132
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2121,
+          "latency_s": 56.2
+        }
+      ],
+      "original_finding_index": 172
+    },
+    {
+      "finding_id": 5,
+      "type": "VA_FORMAT_STRING_USES_NEWLINE",
+      "sourcefile": "HttpTester.java",
+      "start_line": "636",
+      "message": "Format string should use %n rather than \\n",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The toString method builds a format string that contains the literal \"\\n\" newline characters instead of the platform‑independent \"%n\" placeholder. This matches the rule's condition, so the tool correctly flags a non‑portable newline usage.",
+          "is_true_positive": true,
+          "confidence": 0.96,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "newline character in format string",
+          "developer_explanation": "The method uses \"\\n\" in String.format, which will always produce a Unix‑style line break and may not match the host OS line separator. Replace \"\\n\" with \"%n\" to make the output portable across platforms. This change improves maintainability and avoids subtle formatting differences on Windows.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 3505,
+            "output_tokens": 694,
+            "reasoning_tokens": 600,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000247665
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2388,
+          "latency_s": 62.066
+        },
+        {
+          "reasoning": "The toString method builds a format string that contains the literal \"\\n\" newline characters instead of the platform‑independent \"%n\" placeholder. This matches the rule's condition, so the tool correctly flags a non‑portable newline usage.",
+          "is_true_positive": true,
+          "confidence": 0.96,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "newline character in format string",
+          "developer_explanation": "The method uses \"\\n\" in String.format, which will always produce a Unix‑style line break and may not match the host OS line separator. Replace \"\\n\" with \"%n\" to make the output portable across platforms. This change improves maintainability and avoids subtle formatting differences on Windows.",
+          "run": 2,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 3505,
+            "output_tokens": 694,
+            "reasoning_tokens": 600,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000247665
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2388,
+          "latency_s": 52.551
+        },
+        {
+          "reasoning": "The toString method builds a format string that contains the literal \"\\n\" newline characters instead of the platform‑independent \"%n\" placeholder. This matches the rule's condition, so the tool correctly flags a non‑portable newline usage.",
+          "is_true_positive": true,
+          "confidence": 0.96,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "newline character in format string",
+          "developer_explanation": "The method uses \"\\n\" in String.format, which will always produce a Unix‑style line break and may not match the host OS line separator. Replace \"\\n\" with \"%n\" to make the output portable across platforms. This change improves maintainability and avoids subtle formatting differences on Windows.",
+          "run": 3,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 3505,
+            "output_tokens": 694,
+            "reasoning_tokens": 600,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000247665
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2388,
+          "latency_s": 61.163
+        }
+      ],
+      "original_finding_index": 201
+    },
+    {
+      "finding_id": 6,
+      "type": "RV_NEGATING_RESULT_OF_COMPARETO",
+      "sourcefile": "QuotedQualityCSV.java",
+      "start_line": "335",
+      "message": "Negating the result of compareTo()/compare()",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "Integer.compare returns only -1, 0, or 1, so negating its result cannot produce the Integer.MIN_VALUE overflow that the rule warns about. Therefore the reported issue does not represent a real bug in this code.",
+          "is_true_positive": false,
+          "confidence": 0.96,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "negating result of compare method",
+          "developer_explanation": "The compareTo implementation uses -Integer.compare to reverse ordering, but Integer.compare never returns Integer.MIN_VALUE, so the negation cannot cause an incorrect sign. This is merely a stylistic choice, not a correctness problem. You may keep the code as is or rewrite it by swapping the arguments for clarity, but no functional change is required.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 4253,
+            "output_tokens": 589,
+            "reasoning_tokens": 438,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000257491
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1738,
+          "latency_s": 54.998
+        },
+        {
+          "reasoning": "The flagged line negates the result of Integer.compare, which only returns -1, 0, or 1, so negation cannot produce Integer.MIN_VALUE and thus no overflow risk exists.",
+          "is_true_positive": false,
+          "confidence": 0.96,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "negating result of Integer.compare",
+          "developer_explanation": "Negating the result of Integer.compare is unnecessary because the method never returns Integer.MIN_VALUE, so the sign flip cannot cause overflow. The code works correctly, but you can improve readability by swapping the compare arguments instead of applying a unary minus.",
+          "run": 2,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 4253,
+            "output_tokens": 507,
+            "reasoning_tokens": 384,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000243551
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1521,
+          "latency_s": 39.215
+        },
+        {
+          "reasoning": "Integer.compare returns only -1, 0, or 1, so negating its result cannot produce the Integer.MIN_VALUE overflow that the rule warns about. Therefore the reported issue does not represent a real bug in this code.",
+          "is_true_positive": false,
+          "confidence": 0.96,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "negating result of compare method",
+          "developer_explanation": "The compareTo implementation uses -Integer.compare to reverse ordering, but Integer.compare never returns Integer.MIN_VALUE, so the negation cannot cause an incorrect sign. This is merely a stylistic choice, not a correctness problem. You may keep the code as is or rewrite it by swapping the arguments for clarity, but no functional change is required.",
+          "run": 3,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 4253,
+            "output_tokens": 589,
+            "reasoning_tokens": 438,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000257491
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1738,
+          "latency_s": 78.785
+        }
+      ],
+      "original_finding_index": 223
+    },
+    {
+      "finding_id": 7,
+      "type": "MS_PKGPROTECT",
+      "sourcefile": "Http3Fields.java",
+      "start_line": "37",
+      "message": "Field should be package protected",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The code declares a public static final HttpField[] array, which is mutable because its elements can be changed, allowing any code to modify it.",
+          "is_true_positive": true,
+          "confidence": 0.96,
+          "category": "SECURITY",
+          "issue_signature": "public mutable static array field",
+          "developer_explanation": "The STATUSES array is publicly accessible and its contents can be altered, which could corrupt the status fields used throughout the library. Restrict the field's visibility (e.g., make it package-private) or replace it with an immutable structure to prevent external modification.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 4374,
+            "output_tokens": 691,
+            "reasoning_tokens": 670,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000279308
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2666,
+          "latency_s": 55.631
+        },
+        {
+          "reasoning": "The code declares a public static final HttpField[] array, which is mutable because its elements can be changed, allowing any code to modify it.",
+          "is_true_positive": true,
+          "confidence": 0.96,
+          "category": "SECURITY",
+          "issue_signature": "public mutable static array field",
+          "developer_explanation": "The STATUSES array is publicly accessible and its contents can be altered, which could corrupt the status fields used throughout the library. Restrict the field's visibility (e.g., make it package-private) or replace it with an immutable structure to prevent external modification.",
+          "run": 2,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 4374,
+            "output_tokens": 691,
+            "reasoning_tokens": 670,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000279308
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2666,
+          "latency_s": 46.816
+        },
+        {
+          "reasoning": "The code declares a public static final HttpField[] array, which is mutable because its elements can be changed, allowing any code to modify it.",
+          "is_true_positive": true,
+          "confidence": 0.96,
+          "category": "SECURITY",
+          "issue_signature": "public mutable static array field",
+          "developer_explanation": "The STATUSES array is publicly accessible and its contents can be altered, which could corrupt the status fields used throughout the library. Restrict the field's visibility (e.g., make it package-private) or replace it with an immutable structure to prevent external modification.",
+          "run": 3,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 4374,
+            "output_tokens": 691,
+            "reasoning_tokens": 670,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000279308
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2666,
+          "latency_s": 19.656
+        }
+      ],
+      "original_finding_index": 400
+    },
+    {
+      "finding_id": 8,
+      "type": "NM_SAME_SIMPLE_NAME_AS_INTERFACE",
+      "sourcefile": "InitialContextFactory.java",
+      "start_line": "34",
+      "message": "Class names shouldn't shadow simple name of implemented interface",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The class InitialContextFactory implements the interface javax.naming.spi.InitialContextFactory, and both have the identical simple name InitialContextFactory, which the rule flags as name shadowing. This naming overlap can cause confusion when reading or maintaining the code, so the warning correctly identifies a maintainability concern.",
+          "is_true_positive": true,
+          "confidence": 0.98,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "class name shadows interface name",
+          "developer_explanation": "The class and the interface share the same simple name, which makes it hard to tell them apart without looking at import statements. This can lead to mistakes or reduced readability. Consider renaming the class (or the interface) to a distinct name or adding clear documentation to avoid confusion.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 3005,
+            "output_tokens": 458,
+            "reasoning_tokens": 360,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000189045
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1429,
+          "latency_s": 25.134
+        },
+        {
+          "reasoning": "The class declared as public class InitialContextFactory implements javax.naming.spi.InitialContextFactory has the same simple name as the interface it implements, which the rule flags as shadowing. This naming overlap is indeed present and can cause confusion when reading or maintaining the code. Therefore the tool's claim is correct.",
+          "is_true_positive": true,
+          "confidence": 0.96,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "class name shadows implemented interface name",
+          "developer_explanation": "The class name InitialContextFactory is identical to the interface name javax.naming.spi.InitialContextFactory, which can make the code harder to read and increase the risk of mistakes. Consider renaming the class (or the interface) to a distinct name to avoid this confusion and improve maintainability.",
+          "run": 2,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 3005,
+            "output_tokens": 483,
+            "reasoning_tokens": 391,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000193295
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1547,
+          "latency_s": 15.855
+        },
+        {
+          "reasoning": "The class declared on line 34 is named InitialContextFactory and implements the interface javax.naming.spi.InitialContextFactory, which has the same simple name, so the class name shadows the interface name.",
+          "is_true_positive": true,
+          "confidence": 0.98,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "class name shadows interface simple name",
+          "developer_explanation": "The class name duplicates the simple name of the interface it implements, which can be confusing when reading or maintaining the code. Consider renaming the class (or the interface, if possible) to a distinct name to avoid ambiguity and improve readability.",
+          "run": 3,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 3005,
+            "output_tokens": 469,
+            "reasoning_tokens": 403,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000190915
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1599,
+          "latency_s": 10.848
+        }
+      ],
+      "original_finding_index": 480
+    },
+    {
+      "finding_id": 9,
+      "type": "OS_OPEN_STREAM",
+      "sourcefile": "AbstractForkedChild.java",
+      "start_line": "177",
+      "message": "Method may fail to close stream",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The method creates a new FileInputStream and passes it to Properties.load without ever closing the stream, and the stream is not returned or stored elsewhere, so it can remain open.",
+          "is_true_positive": true,
+          "confidence": 0.97,
+          "category": "CORRECTNESS",
+          "issue_signature": "unclosed file input stream",
+          "developer_explanation": "The FileInputStream opened in loadWebAppProps is never closed, which can lead to file descriptor leaks and eventual failures. Wrap the stream in a try‑with‑resources block or close it in a finally clause after loading the properties. This ensures the resource is always released.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 3961,
+            "output_tokens": 477,
+            "reasoning_tokens": 388,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000227647
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1537,
+          "latency_s": 30.726
+        },
+        {
+          "reasoning": "The method creates a new FileInputStream and passes it to Properties.load without ever closing the stream, and the stream is not returned or stored elsewhere, so it can remain open.",
+          "is_true_positive": true,
+          "confidence": 0.97,
+          "category": "CORRECTNESS",
+          "issue_signature": "unclosed file input stream",
+          "developer_explanation": "The FileInputStream opened in loadWebAppProps is never closed, which can lead to file descriptor leaks and eventual failures. Wrap the stream in a try‑with‑resources block or close it in a finally clause after loading the properties. This ensures the resource is always released.",
+          "run": 2,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 3961,
+            "output_tokens": 477,
+            "reasoning_tokens": 388,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000227647
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1537,
+          "latency_s": 15.443
+        },
+        {
+          "reasoning": "The method creates a new FileInputStream and passes it to Properties.load without ever closing the stream, and the stream is not returned or stored elsewhere, so it can remain open.",
+          "is_true_positive": true,
+          "confidence": 0.97,
+          "category": "CORRECTNESS",
+          "issue_signature": "unclosed file input stream",
+          "developer_explanation": "The FileInputStream opened in loadWebAppProps is never closed, which can lead to file descriptor leaks and eventual failures. Wrap the stream in a try‑with‑resources block or close it in a finally clause after loading the properties. This ensures the resource is always released.",
+          "run": 3,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 3961,
+            "output_tokens": 477,
+            "reasoning_tokens": 388,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000227647
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1537,
+          "latency_s": 10.093
+        }
+      ],
+      "original_finding_index": 487
+    },
+    {
+      "finding_id": 10,
+      "type": "MS_SHOULD_BE_FINAL",
+      "sourcefile": "MavenServerConnector.java",
+      "start_line": "39",
+      "message": "Field isn't final but should be",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The code declares a public static String field PORT_SYSPROPERTY without the final modifier, allowing it to be reassigned from any other class. This matches the rule that such fields should be final to prevent accidental or malicious modification, which can affect configuration behavior. Therefore the warning correctly identifies a potential security issue.",
+          "is_true_positive": true,
+          "confidence": 0.88,
+          "category": "SECURITY",
+          "issue_signature": "public static field not declared final",
+          "developer_explanation": "The PORT_SYSPROPERTY field is public and mutable, so any code can change its value at runtime, potentially altering how the server reads the Jetty HTTP port system property. Mark the field as final to make it immutable and protect against accidental or malicious changes. Change the declaration to 'public static final String PORT_SYSPROPERTY = \"jetty.http.port\";'.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 3870,
+            "output_tokens": 657,
+            "reasoning_tokens": 561,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00025488
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2229,
+          "latency_s": 16.118
+        },
+        {
+          "reasoning": "The code declares a public static String field PORT_SYSPROPERTY without the final modifier, allowing it to be reassigned from any other class. This matches the rule that such fields should be final to prevent accidental or malicious modification, which can affect configuration behavior. Therefore the warning correctly identifies a potential security issue.",
+          "is_true_positive": true,
+          "confidence": 0.88,
+          "category": "SECURITY",
+          "issue_signature": "public static field not declared final",
+          "developer_explanation": "The PORT_SYSPROPERTY field is public and mutable, so any code can change its value at runtime, potentially altering how the server reads the Jetty HTTP port system property. Mark the field as final to make it immutable and prevent unintended or malicious changes. Change the declaration to 'public static final String PORT_SYSPROPERTY = \"jetty.http.port\";'.",
+          "run": 2,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 3870,
+            "output_tokens": 656,
+            "reasoning_tokens": 561,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00025471
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2229,
+          "latency_s": 16.071
+        },
+        {
+          "reasoning": "The code declares a public static String field PORT_SYSPROPERTY without the final modifier, allowing any other class to reassign its value. This matches the rule that such fields should be final to prevent accidental or malicious modification.",
+          "is_true_positive": true,
+          "confidence": 0.96,
+          "category": "SECURITY",
+          "issue_signature": "public static mutable field not final",
+          "developer_explanation": "PORT_SYSPROPERTY is intended to be a constant key for a system property, but because it is not final any code can change its value at runtime. This can lead to unexpected behavior or allow an attacker to alter configuration. Declare the field as final (e.g., `public static final String PORT_SYSPROPERTY = \"jetty.http.port\";`).",
+          "run": 3,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 3870,
+            "output_tokens": 693,
+            "reasoning_tokens": 635,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000261
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2528,
+          "latency_s": 14.45
+        }
+      ],
+      "original_finding_index": 523
+    },
+    {
+      "finding_id": 11,
+      "type": "MS_MUTABLE_COLLECTION_PKGPROTECT",
+      "sourcefile": "SelectiveJarResource.java",
+      "start_line": "52",
+      "message": "Field is a mutable collection which should be package protected",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The code declares DEFAULT_INCLUDES as a public static final List initialized with Arrays.asList, which returns a mutable list that any code in any package can modify.",
+          "is_true_positive": true,
+          "confidence": 0.96,
+          "category": "SECURITY",
+          "issue_signature": "public mutable static collection field",
+          "developer_explanation": "Because DEFAULT_INCLUDES is a mutable list exposed publicly, other code can change its contents and affect the default include patterns used by the class, potentially leading to incorrect or unsafe behavior. Change the field to package‑private or wrap it with Collections.unmodifiableList to prevent external modification.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 4069,
+            "output_tokens": 566,
+            "reasoning_tokens": 541,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000246773
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2149,
+          "latency_s": 17.263
+        },
+        {
+          "reasoning": "The field DEFAULT_INCLUDES is declared public static final but holds a mutable List returned by Arrays.asList, allowing external code to modify its contents. This exposure can lead to unintended behavior when the defaults are changed by other classes.",
+          "is_true_positive": true,
+          "confidence": 0.96,
+          "category": "CORRECTNESS",
+          "issue_signature": "public mutable collection field",
+          "developer_explanation": "Because the list is mutable and publicly accessible, any code can change the default include patterns, potentially breaking the resource copying logic. Replace the list with an unmodifiable view (e.g., Collections.unmodifiableList) or restrict its visibility to package-private. This prevents accidental or malicious modification of the defaults.",
+          "run": 2,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 4069,
+            "output_tokens": 624,
+            "reasoning_tokens": 595,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000256633
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2365,
+          "latency_s": 13.44
+        },
+        {
+          "reasoning": "The code declares DEFAULT_INCLUDES as a public static final List initialized with Arrays.asList, which returns a mutable list that any code in any package can modify.",
+          "is_true_positive": true,
+          "confidence": 0.96,
+          "category": "SECURITY",
+          "issue_signature": "public mutable static collection field",
+          "developer_explanation": "Because DEFAULT_INCLUDES is mutable and publicly accessible, other code can change its contents at runtime, potentially altering the default include patterns and causing incorrect or unsafe behavior. Change the field to package‑private or wrap it with Collections.unmodifiableList to prevent external modification.",
+          "run": 3,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 4069,
+            "output_tokens": 562,
+            "reasoning_tokens": 541,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000246093
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2149,
+          "latency_s": 11.847
+        }
+      ],
+      "original_finding_index": 537
+    },
+    {
+      "finding_id": 12,
+      "type": "DM_EXIT",
+      "sourcefile": "ShutdownService.java",
+      "start_line": "348",
+      "message": "Method invokes System.exit(...)",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The run() method calls System.exit(0) to terminate the JVM when handling shutdown commands. This unconditional termination is a bad practice for reusable code because it forces the entire virtual machine to exit, which can interfere with other components or applications that embed this service.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "use of System.exit to terminate JVM",
+          "developer_explanation": "Calling System.exit from library code forces the whole JVM to stop, which can break callers that expect the process to continue. Consider making the exit optional or replacing it with a controlled shutdown mechanism, such as throwing an exception or delegating to the surrounding application to decide when to exit.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 4619,
+            "output_tokens": 898,
+            "reasoning_tokens": 862,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000323563
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3434,
+          "latency_s": 18.066
+        },
+        {
+          "reasoning": "The flagged line calls System.exit(0) as part of a configurable shutdown command, and the surrounding code shows that exiting the JVM is an intended behavior when the exitVm flag is true, so the tool's claim that this is a bug is not correct in this context.",
+          "is_true_positive": false,
+          "confidence": 0.92,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "use of System.exit to terminate JVM",
+          "developer_explanation": "The System.exit call is deliberate: the shutdown service can be configured to exit the whole JVM after stopping components. This is not a bug but a design choice, so the warning can be safely ignored. If you need a different shutdown strategy, adjust the configuration rather than removing the call.",
+          "run": 2,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 4619,
+            "output_tokens": 747,
+            "reasoning_tokens": 690,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000297893
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2742,
+          "latency_s": 13.785
+        },
+        {
+          "reasoning": "The flagged line calls System.exit(0) as part of a configurable shutdown command, and the surrounding code shows that exiting the JVM is an intended behavior when the exitVm flag is true, so the tool's claim that this is a bug is not correct in this context.",
+          "is_true_positive": false,
+          "confidence": 0.92,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "use of System.exit to terminate JVM",
+          "developer_explanation": "The System.exit calls are deliberate: the shutdown service can be configured to exit the whole JVM after stopping components. This is not a coding error but a design choice, so the warning can be safely ignored. If you need a different shutdown strategy, adjust the configuration rather than removing the calls.",
+          "run": 3,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 4619,
+            "output_tokens": 748,
+            "reasoning_tokens": 690,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000298063
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2742,
+          "latency_s": 13.716
+        }
+      ],
+      "original_finding_index": 740
+    },
+    {
+      "finding_id": 13,
+      "type": "DMI_RANDOM_USED_ONLY_ONCE",
+      "sourcefile": "DefaultSessionIdManager.java",
+      "start_line": "356",
+      "message": "Random object created and used only once",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The code creates a Random (or SecureRandom) once and stores it in the _random field, then reuses it in other methods, so it is not created and used only once as the warning claims.",
+          "is_true_positive": false,
+          "confidence": 0.96,
+          "category": "PERFORMANCE",
+          "issue_signature": "random object created and used only once",
+          "developer_explanation": "The warning is a false alarm because the Random instance is stored in a field and reused throughout the class, not discarded after a single use. You can safely ignore this specific warning; the existing implementation already avoids the pattern the rule is trying to flag.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 5145,
+            "output_tokens": 879,
+            "reasoning_tokens": 879,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000339795
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3504,
+          "latency_s": 17.493
+        },
+        {
+          "reasoning": "The flagged line only reseeds an existing _random field; the Random object is created earlier in initRandom() and is used throughout the class for generating session IDs, so it is not created and used only once.",
+          "is_true_positive": false,
+          "confidence": 0.96,
+          "category": "SECURITY",
+          "issue_signature": "random object created and used only once",
+          "developer_explanation": "The warning is a false positive because the Random instance is stored in the _random field and reused for many ID generations, not instantiated for a single use. Therefore there is no wasteful one‑time Random creation here, and the code's randomness handling is intentional.",
+          "run": 2,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 5145,
+            "output_tokens": 639,
+            "reasoning_tokens": 560,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000298995
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2227,
+          "latency_s": 16.141
+        },
+        {
+          "reasoning": "The code stores the Random (or SecureRandom) in the field _random and reuses it in other methods, so it is not created and used only once.",
+          "is_true_positive": false,
+          "confidence": 0.96,
+          "category": "PERFORMANCE",
+          "issue_signature": "single-use Random instance",
+          "developer_explanation": "The warning is a false alarm because the Random object is kept in the _random field and used throughout the class, not just once. Therefore there is no inefficiency or weak randomness from creating a new Random each time, and the code can remain as is.",
+          "run": 3,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 5145,
+            "output_tokens": 809,
+            "reasoning_tokens": 814,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000327895
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3240,
+          "latency_s": 16.799
+        }
+      ],
+      "original_finding_index": 773
+    },
+    {
+      "finding_id": 14,
+      "type": "NP_BOOLEAN_RETURN_NULL",
+      "sourcefile": "JettyLoggerConfiguration.java",
+      "start_line": "79",
+      "message": "Method with Boolean return type returns explicit null",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The lambda returns null but the caller checks for null before any unboxing, so no NullPointerException can occur.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "Boolean method returns null",
+          "developer_explanation": "The lambda may return null, but the surrounding code tests the result for null before converting it to a primitive boolean, preventing a NullPointerException. Therefore the warning can be safely ignored; the null return is intentional and handled correctly.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 4669,
+            "output_tokens": 489,
+            "reasoning_tokens": 433,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000255883
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1714,
+          "latency_s": 11.706
+        },
+        {
+          "reasoning": "The lambda returns null, but the result is stored in a Boolean variable and later checked for null before any unboxing, so a NullPointerException cannot occur. Therefore the tool's claim that returning null is an accident is incorrect in this context.",
+          "is_true_positive": false,
+          "confidence": 0.96,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "boolean method returns null",
+          "developer_explanation": "The lambda intentionally returns null to signal the absence of a value, and the code safely tests for null before using the Boolean. This pattern is acceptable here, so the warning can be ignored. If desired, you could refactor to avoid returning null, e.g., by using Optional<Boolean> or a primitive boolean with a sentinel.",
+          "run": 2,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 4669,
+            "output_tokens": 675,
+            "reasoning_tokens": 612,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000287503
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2415,
+          "latency_s": 11.36
+        },
+        {
+          "reasoning": "The lambda returns null but the calling code checks for null before any unboxing, so no NullPointerException can occur. Therefore the warning about returning null from a Boolean method is not a real bug here.",
+          "is_true_positive": false,
+          "confidence": 0.96,
+          "category": "CORRECTNESS",
+          "issue_signature": "method returns null Boolean",
+          "developer_explanation": "The lambda may return null, but the result is examined for null before being used, so there is no risk of automatic unboxing causing a NullPointerException. The warning can be ignored because the code safely handles the null case.",
+          "run": 3,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 4669,
+            "output_tokens": 711,
+            "reasoning_tokens": 688,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000293623
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2736,
+          "latency_s": 13.244
+        }
+      ],
+      "original_finding_index": 808
+    },
+    {
+      "finding_id": 15,
+      "type": "UL_UNRELEASED_LOCK_EXCEPTION_PATH",
+      "sourcefile": "Blocker.java",
+      "start_line": "449",
+      "message": "Method does not release lock on all exception paths",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The close() method acquires the lock before the try block and always releases it in the finally block, so no exception path can exit the method without unlocking.",
+          "is_true_positive": false,
+          "confidence": 0.96,
+          "category": "CORRECTNESS",
+          "issue_signature": "lock not released on exception path",
+          "developer_explanation": "The lock is acquired and then unlocked in a finally clause, guaranteeing release even if an exception occurs. Therefore the warning about an unreleased lock is a false alarm and can be safely ignored. No code change is needed.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 4192,
+            "output_tokens": 530,
+            "reasoning_tokens": 489,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000245204
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1910,
+          "latency_s": 9.618
+        },
+        {
+          "reasoning": "The close() method acquires the lock and releases it in a finally block that always executes, even if an exception occurs in the try block, so there is no path that leaves the lock held. Therefore the tool's claim that a lock may remain held is incorrect.",
+          "is_true_positive": false,
+          "confidence": 0.96,
+          "category": "CORRECTNESS",
+          "issue_signature": "lock not released on exception path",
+          "developer_explanation": "In this method the lock is unlocked in the finally clause, which runs for any exception thrown in the try block, guaranteeing the lock is always released. Because the finally block always executes, the warning can be safely ignored. No change is needed.",
+          "run": 2,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 4192,
+            "output_tokens": 721,
+            "reasoning_tokens": 681,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000277674
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2680,
+          "latency_s": 14.582
+        },
+        {
+          "reasoning": "The close() method acquires the lock before the try block and always releases it in the finally block, so the lock is unlocked on every exit path, including exception paths.",
+          "is_true_positive": false,
+          "confidence": 0.96,
+          "category": "CORRECTNESS",
+          "issue_signature": "lock not released on exception path",
+          "developer_explanation": "The lock is acquired and then released inside a finally block, guaranteeing that it is unlocked even if an exception occurs. Therefore there is no missing unlock and the warning can be ignored. The current implementation correctly handles lock cleanup.",
+          "run": 3,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 4192,
+            "output_tokens": 783,
+            "reasoning_tokens": 788,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000288214
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3104,
+          "latency_s": 30.946
+        }
+      ],
+      "original_finding_index": 838
+    },
+    {
+      "finding_id": 16,
+      "type": "IT_NO_SUCH_ELEMENT",
+      "sourcefile": "BlockingArrayQueue.java",
+      "start_line": "919",
+      "message": "Iterator next() method cannot throw NoSuchElementException",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The Itr.next() method returns an element without checking the cursor bounds, so calling next() when the iterator is exhausted will cause an ArrayIndexOutOfBoundsException instead of the required NoSuchElementException.",
+          "is_true_positive": true,
+          "confidence": 0.96,
+          "category": "CORRECTNESS",
+          "issue_signature": "iterator next() does not throw NoSuchElementException",
+          "developer_explanation": "The iterator implementation violates the Iterator contract: next() must throw NoSuchElementException when no more elements are available. As written it can produce an ArrayIndexOutOfBoundsException, which is incorrect behavior. Add a bounds check and throw NoSuchElementException when _cursor >= _elements.length.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 4025,
+            "output_tokens": 496,
+            "reasoning_tokens": 392,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000233245
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1560,
+          "latency_s": 9.754
+        },
+        {
+          "reasoning": "The Itr.next() method returns an element without checking the cursor bounds, so calling next() when the iterator is exhausted will cause an ArrayIndexOutOfBoundsException instead of the required NoSuchElementException.",
+          "is_true_positive": true,
+          "confidence": 0.96,
+          "category": "CORRECTNESS",
+          "issue_signature": "iterator next() does not throw NoSuchElementException",
+          "developer_explanation": "The iterator implementation violates the Iterator contract: next() must throw NoSuchElementException when no more elements are available. As written, it can produce an ArrayIndexOutOfBoundsException, which is incorrect behavior. Add a bounds check and throw NoSuchElementException when _cursor >= _elements.length.",
+          "run": 2,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 4025,
+            "output_tokens": 497,
+            "reasoning_tokens": 392,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000233415
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1560,
+          "latency_s": 11.31
+        },
+        {
+          "reasoning": "The next() method returns an element without checking the cursor against the array length, so it can throw ArrayIndexOutOfBoundsException instead of the required NoSuchElementException.",
+          "is_true_positive": true,
+          "confidence": 0.96,
+          "category": "CORRECTNESS",
+          "issue_signature": "iterator next() does not throw NoSuchElementException",
+          "developer_explanation": "The iterator's next() method violates the Iterator contract by not throwing NoSuchElementException when there are no more elements, which can lead to an ArrayIndexOutOfBoundsException. Add a bounds check (e.g., if (!hasNext()) throw new NoSuchElementException()) before returning the element to comply with the contract.",
+          "run": 3,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 4025,
+            "output_tokens": 500,
+            "reasoning_tokens": 406,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000233925
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1612,
+          "latency_s": 11.324
+        }
+      ],
+      "original_finding_index": 844
+    },
+    {
+      "finding_id": 17,
+      "type": "NM_CLASS_NOT_EXCEPTION",
+      "sourcefile": "ExceptionUtil.java",
+      "start_line": "304",
+      "message": "Class is not derived from an Exception, even though it is named as such",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The class MultiException is declared without extending Exception or any Throwable subclass, yet its name ends with 'Exception', which the rule flags as a naming mismatch.",
+          "is_true_positive": true,
+          "confidence": 0.96,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "class named exception but not extending throwable",
+          "developer_explanation": "The class name suggests it is an exception type, but it does not inherit from java.lang.Exception or java.lang.Throwable. This can mislead users of the API. Consider renaming the class to something like MultiErrorCollector or make it extend Exception if it is intended to be thrown.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 5784,
+            "output_tokens": 528,
+            "reasoning_tokens": 450,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000303768
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1790,
+          "latency_s": 10.333
+        },
+        {
+          "reasoning": "The class MultiException is declared without extending Exception or any Throwable subclass, yet its name ends with 'Exception', which the rule flags as a naming mismatch.",
+          "is_true_positive": true,
+          "confidence": 0.96,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "class named exception but not extending throwable",
+          "developer_explanation": "The class name suggests it is an exception type, but it does not inherit from java.lang.Exception or java.lang.Throwable. This can mislead users of the API. Consider renaming the class to avoid the 'Exception' suffix or make it extend an appropriate exception class.",
+          "run": 2,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 5784,
+            "output_tokens": 525,
+            "reasoning_tokens": 450,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000303258
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1790,
+          "latency_s": 11.873
+        },
+        {
+          "reasoning": "The class MultiException does not extend Exception or any Throwable subclass despite its name ending with 'Exception', which the rule flags as a naming problem. This mismatch can confuse developers who expect it to be an exception type, so the warning is valid.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "class named with Exception suffix but not extending Throwable",
+          "developer_explanation": "The class name suggests it is an exception, but it is just a utility holder and does not inherit from Throwable. Rename the class to something like MultiErrorCollector or remove the 'Exception' suffix to avoid confusion for users of the API.",
+          "run": 3,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 5784,
+            "output_tokens": 643,
+            "reasoning_tokens": 557,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000323318
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2216,
+          "latency_s": 33.818
+        }
+      ],
+      "original_finding_index": 860
+    },
+    {
+      "finding_id": 18,
+      "type": "CN_IDIOM",
+      "sourcefile": "LazyList.java",
+      "start_line": "60",
+      "message": "Class implements Cloneable but does not define or use clone method",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "LazyList declares implements Cloneable but only defines a static clone(Object) method and never provides an instance clone() method or calls clone. The Cloneable contract expects an instance clone method, which is missing. Therefore the tool correctly flags a misuse of Cloneable.",
+          "is_true_positive": true,
+          "confidence": 0.96,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "class implements Cloneable without clone method",
+          "developer_explanation": "The class implements Cloneable but does not override the protected Object clone() method, and the static clone method does not satisfy the Cloneable contract. This can mislead users and is unnecessary. Remove the Cloneable interface or add a proper instance clone implementation to resolve the issue.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 7056,
+            "output_tokens": 580,
+            "reasoning_tokens": 513,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000359672
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2037,
+          "latency_s": 36.207
+        },
+        {
+          "reasoning": "The LazyList class declares implements Cloneable but only provides a static clone method and does not override the instance clone() method required by the Cloneable contract.",
+          "is_true_positive": true,
+          "confidence": 0.98,
+          "category": "CORRECTNESS",
+          "issue_signature": "cloneable class missing clone implementation",
+          "developer_explanation": "This class claims to be Cloneable but does not provide an instance clone() method, so attempts to clone it using the standard Object.clone mechanism will fail with CloneNotSupportedException. Either remove the Cloneable interface or implement a proper clone() method that returns a copy of the LazyList.",
+          "run": 2,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 7056,
+            "output_tokens": 570,
+            "reasoning_tokens": 544,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000357972
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2163,
+          "latency_s": 42.159
+        },
+        {
+          "reasoning": "The LazyList class declares implements Cloneable but only provides a static clone method and does not override the instance clone() method required by the Cloneable contract.",
+          "is_true_positive": true,
+          "confidence": 0.98,
+          "category": "CORRECTNESS",
+          "issue_signature": "cloneable class missing clone implementation",
+          "developer_explanation": "This class claims to be Cloneable but does not provide an instance clone() method, so attempts to clone it using the standard Object.clone mechanism will fail with CloneNotSupportedException. Either remove the Cloneable interface or implement a proper clone() method that returns a copy of the LazyList.",
+          "run": 3,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 7056,
+            "output_tokens": 570,
+            "reasoning_tokens": 544,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000357972
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2163,
+          "latency_s": 43.406
+        }
+      ],
+      "original_finding_index": 880
+    },
+    {
+      "finding_id": 19,
+      "type": "SE_COMPARATOR_SHOULD_BE_SERIALIZABLE",
+      "sourcefile": "TopologicalSort.java",
+      "start_line": "183",
+      "message": "Comparator doesn't implement Serializable",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The InitialOrderComparator class implements Comparator but does not implement Serializable, and it is only used as a local variable to create a temporary TreeSet that is never serialized or stored in a serializable field.",
+          "is_true_positive": false,
+          "confidence": 0.96,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "non-serializable comparator",
+          "developer_explanation": "The comparator is created and used only within the sort method to order a temporary TreeSet, which is not serialized or persisted. Because it never becomes part of a serialized object, lacking Serializable does not cause a functional problem and can be safely ignored. Implement Serializable only if you later store the comparator in a serializable structure.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 4307,
+            "output_tokens": 553,
+            "reasoning_tokens": 484,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000253369
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1923,
+          "latency_s": 26.158
+        },
+        {
+          "reasoning": "The InitialOrderComparator class implements Comparator but does not implement Serializable, and it is only used locally to sort a temporary TreeSet that is never serialized.",
+          "is_true_positive": false,
+          "confidence": 0.9,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "comparator not implementing serializable",
+          "developer_explanation": "The comparator is created solely for ordering dependencies inside the sort method and the resulting TreeSet is not persisted or serialized. Because the comparator is never serialized, lacking Serializable does not cause a functional problem, so the warning can be safely ignored.",
+          "run": 2,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 4307,
+            "output_tokens": 628,
+            "reasoning_tokens": 610,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000266119
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2426,
+          "latency_s": 68.138
+        },
+        {
+          "reasoning": "The InitialOrderComparator class implements Comparator but does not implement Serializable, and it is only used as a local variable to create a temporary TreeSet that is never serialized or stored in a serializable field.",
+          "is_true_positive": false,
+          "confidence": 0.96,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "non-serializable comparator",
+          "developer_explanation": "The comparator is created and used only within the sort method to order a temporary TreeSet, which is not serialized or persisted. Because it never becomes part of a serialized object, lacking Serializable does not cause a functional problem and can be safely ignored. Implement Serializable only if you later store the comparator in a serializable structure.",
+          "run": 3,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 4307,
+            "output_tokens": 553,
+            "reasoning_tokens": 484,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000253369
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1923,
+          "latency_s": 47.97
+        }
+      ],
+      "original_finding_index": 902
+    }
+  ]
+}

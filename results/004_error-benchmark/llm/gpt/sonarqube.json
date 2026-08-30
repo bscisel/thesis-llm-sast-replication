@@ -1,0 +1,1078 @@
+{
+  "model": "gpt-5.6-terra",
+  "tool": "sonarqube",
+  "num_runs": 3,
+  "runs_per_invocation": 3,
+  "source_root": "java-errors-benchmark",
+  "call_parameters": {
+    "temperature": null,
+    "concurrency": 3,
+    "response_format": "json_schema",
+    "max_completion_tokens": 8192,
+    "max_retries": 6,
+    "reasoning_effort": "default"
+  },
+  "system_prompt_variant": "benchmark",
+  "system_prompt_sha256": "b5b634e0a9109c59",
+  "user_prompt_sha256": "233249fc03b8f699",
+  "timestamp": "2026-08-09T18:25:19.027205+00:00",
+  "updated_at": "2026-08-09T18:25:19.027205+00:00",
+  "findings": [
+    {
+      "finding_id": 0,
+      "type": "java:S2251",
+      "sourcefile": "CountdownPrinter.java",
+      "start_line": "5",
+      "message": "\"i\" is incremented and will never reach \"stop condition\".",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.99,
+          "developer_explanation": "The loop starts at 5, tests whether the value is at least 0, and then increments it. It will therefore continue until integer overflow eventually makes the value negative, printing an enormous unintended sequence rather than counting down. Decrement the loop variable (`i--`) so it reaches the terminating condition after printing 0.",
+          "is_true_positive": true,
+          "issue_signature": "loop counter moves away from termination condition",
+          "reasoning": "The loop condition is `i >= 0`, but the update expression is `i++`, so after starting at 5 the counter moves away from the value that would end the loop. The loop will only terminate after signed integer overflow wraps `i` to a negative value, after billions of iterations, rather than behaving as a countdown. This is a correctness issue, and the complete shown file provides no context that justifies it.",
+          "run": 1,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 2096,
+            "output_tokens": 199,
+            "reasoning_tokens": 0,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.298
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.99,
+          "developer_explanation": "The loop starts at 5, continues while the value is nonnegative, and increments it after every iteration. It will therefore never terminate under normal integer progression, eventually wrapping around only after an enormous number of iterations. Decrement the counter (`i--`) to print a countdown from 5 to 0.",
+          "is_true_positive": true,
+          "issue_signature": "loop counter moves away from termination condition",
+          "reasoning": "The loop condition requires `i >= 0`, but the update expression is `i++`, so `i` moves away from the terminating negative value. The loop prints increasing values rather than a countdown and does not end until integer overflow eventually makes `i` negative, which is a real correctness defect.",
+          "run": 2,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 2096,
+            "output_tokens": 170,
+            "reasoning_tokens": 0,
+            "cached_input_tokens": 2093
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.779
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.99,
+          "developer_explanation": "The loop starts at 5, continues while the counter is nonnegative, and increments the counter, so the condition never becomes false under normal integer values. This repeatedly prints increasing integers and eventually wraps around after integer overflow; decrement the counter (`i--`) to implement the apparent countdown.",
+          "is_true_positive": true,
+          "issue_signature": "loop counter moves away from termination condition",
+          "reasoning": "The loop condition requires `i >= 0`, but its update expression increments `i`, so starting at 5 moves the counter away from the value that would terminate the loop. It therefore does not implement a terminating countdown and will continue until signed integer overflow eventually changes the counter to a negative value. The reported nontermination-direction defect is a real correctness issue.",
+          "run": 3,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 2096,
+            "output_tokens": 176,
+            "reasoning_tokens": 0,
+            "cached_input_tokens": 2093
+          },
+          "stop_reason": "stop",
+          "latency_s": 2.691
+        }
+      ]
+    },
+    {
+      "finding_id": 1,
+      "type": "java:S2189",
+      "sourcefile": "CountdownPrinter.java",
+      "start_line": "5",
+      "message": "Correct this loop's end condition.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.99,
+          "developer_explanation": "The loop starts at 5, continues while the counter is nonnegative, and increments the counter. Once it reaches 0, it becomes 1 and will remain nonnegative as it increases, so the loop never terminates. Decrement the counter instead, for example with i--, to print a finite countdown.",
+          "is_true_positive": true,
+          "issue_signature": "non-terminating loop due to incorrect counter update",
+          "reasoning": "The loop starts at 5, tests `i >= 0`, and increments `i`, so after reaching 0 it continues increasing forever and can never fail its condition. This produces an unbounded stream of output rather than a countdown that terminates. The warning correctly identifies a real loop-end-condition/counter-update correctness defect.",
+          "run": 1,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 2095,
+            "output_tokens": 180,
+            "reasoning_tokens": 0,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.067
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.99,
+          "developer_explanation": "The loop starts at 5, tests whether the value is nonnegative, and increments it on every iteration. Once the condition is true it remains true until integer overflow, so this does not produce a finite countdown and will print an enormous ascending sequence. Decrement the counter (for example, use i--) if the intended output is 5 down to 0.",
+          "is_true_positive": true,
+          "issue_signature": "non-terminating loop due to wrong counter update",
+          "reasoning": "The loop condition is `i >= 0`, but `i` is incremented from 5 on each iteration, so the condition remains true rather than ending after reaching zero. The loop will continue until integer overflow and then eventually terminate, printing values in ascending order rather than a finite countdown. This is a correctness issue because the counter update contradicts the stated end condition and apparent countdown behavior.",
+          "run": 2,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 2095,
+            "output_tokens": 202,
+            "reasoning_tokens": 0,
+            "cached_input_tokens": 2092
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.849
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.99,
+          "developer_explanation": "The loop starts with 5 and increments `i` while its condition requires `i` to remain at least 0. Once entered, `i` will only grow, so the condition never becomes false and the program prints indefinitely. Decrement `i` instead, for example `i--`, so the loop ends after printing 0.",
+          "is_true_positive": true,
+          "issue_signature": "loop counter moves away from termination condition",
+          "reasoning": "The loop initializes `i` to 5, tests `i >= 0`, and increments `i`, so after the first iteration `i` can never make the condition false. It will print ever-increasing integers until overflow, after which it still eventually reaches nonnegative values again, making this an effectively nonterminating loop rather than a countdown. This is a correctness issue because the evident countdown behavior requires decrementing the counter.",
+          "run": 3,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 2095,
+            "output_tokens": 203,
+            "reasoning_tokens": 0,
+            "cached_input_tokens": 2092
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.241
+        }
+      ]
+    },
+    {
+      "finding_id": 2,
+      "type": "java:S6880",
+      "sourcefile": "InputRouter.java",
+      "start_line": "13",
+      "message": "Replace the chain of if/else with a switch expression.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.88,
+          "developer_explanation": "The conditional starting at line 13 is an if/else-if/else chain that dispatches on the same integer value. A switch over that value would express the available cases more directly and make later additions easier to maintain, while preserving this chain's current behavior. Keep it separate from the earlier conditional unless the intended routing logic is also corrected deliberately.",
+          "is_true_positive": true,
+          "issue_signature": "if/else chain suitable for switch expression",
+          "reasoning": "Lines 13-18 form an if/else-if/else chain that tests the same integer against constant values. That chain can be represented directly as a switch while retaining its behavior, so the requested refactoring is a valid maintainability improvement. The preceding conditional is independent because there is no `else` before line 13, but that does not invalidate the warning about the chain beginning on line 13.",
+          "run": 1,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 2243,
+            "output_tokens": 1068,
+            "reasoning_tokens": 855,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 14.536
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.94,
+          "developer_explanation": "This is not one if/else chain: the `if (input == 3)` statement starts a separate conditional after the preceding `if` statement has ended. Replacing the apparent four-case structure with one switch would change behavior, so this refactoring suggestion does not apply. Independently, review whether the missing `else` before the second `if` was accidental, since inputs 1 and 2 currently also print the default message.",
+          "is_true_positive": false,
+          "issue_signature": "if-else chain that could use a switch expression",
+          "reasoning": "The shown code contains two separate conditional statements because line 13 begins `if`, rather than `else if`, after the first statement has already closed. Therefore there is no single if/else chain covering inputs 1 through 4 that can be behavior-preservingly replaced by the suggested switch expression. The missing `else` may itself be a correctness defect, but that is a different issue from the claimed switch refactoring.",
+          "run": 2,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 2243,
+            "output_tokens": 743,
+            "reasoning_tokens": 512,
+            "cached_input_tokens": 2240
+          },
+          "stop_reason": "stop",
+          "latency_s": 9.864
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.9,
+          "developer_explanation": "The condition for input 3 starts a separate if/else chain instead of continuing the earlier one. As a result, inputs 1 and 2 print their specific message and then also print the default message. Use one switch over the input value (or change the second if to else if) so exactly one routing branch is selected.",
+          "is_true_positive": true,
+          "issue_signature": "if/else routing chain requiring a switch",
+          "reasoning": "The `if (input == 3)` starts a new independent conditional rather than continuing the preceding `else if` chain. Consequently, inputs 1 and 2 execute their matching branch and then execute the default branch of the second chain, which is inconsistent with single-value routing. A single switch over `input` would make the alternatives mutually exclusive and prevent this behavior.",
+          "run": 3,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 2243,
+            "output_tokens": 1225,
+            "reasoning_tokens": 1024,
+            "cached_input_tokens": 2240
+          },
+          "stop_reason": "stop",
+          "latency_s": 15.179
+        }
+      ]
+    },
+    {
+      "finding_id": 3,
+      "type": "java:S3972",
+      "sourcefile": "InputRouter.java",
+      "start_line": "13",
+      "message": "Move this \"if\" to a new line or add the missing \"else\".",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.99,
+          "developer_explanation": "The conditional for input 3 starts a new, independent conditional rather than continuing the preceding chain. As a result, inputs 1 and 2 also execute the second chain's final else and print the default message. Make this an `else if (input == 3)` in the same conditional chain if the cases are intended to be mutually exclusive.",
+          "is_true_positive": true,
+          "issue_signature": "independent conditional following an if chain",
+          "reasoning": "The `if (input == 3)` at line 13 is independent of the preceding `if`/`else if` chain, so inputs 1 and 2 print their specific message and then also print the default message from the second chain. This is inconsistent with the apparent mutually exclusive input-routing logic, and the missing `else` linkage changes the program's behavior.",
+          "run": 1,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 2246,
+            "output_tokens": 329,
+            "reasoning_tokens": 130,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 4.569
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.99,
+          "developer_explanation": "The conditional beginning on the flagged line is a separate `if` statement rather than part of the preceding `else if` chain. Consequently, inputs 1 and 2 produce their specific message and then also produce the default message. Make this condition `else if (input == 3)` so all four cases and the default are part of one chain.",
+          "is_true_positive": true,
+          "issue_signature": "adjacent conditional chains with unintended default branch",
+          "reasoning": "The `if (input == 3)` at line 13 starts a new conditional chain, so the `else` at line 17 belongs only to that second chain. As a result, inputs 1 and 2 print both their intended message and the default message, which is materially inconsistent with a mutually exclusive input-routing chain.",
+          "run": 2,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 2246,
+            "output_tokens": 284,
+            "reasoning_tokens": 92,
+            "cached_input_tokens": 2243
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.769
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.99,
+          "developer_explanation": "The conditional for input 3 starts a separate if/else-if chain rather than continuing the chain for inputs 1 and 2. As a result, inputs 1 and 2 print their specific message and then also print the default message. Make the input-3 condition an `else if` (or otherwise join the two chains) so exactly one routing branch is selected.",
+          "is_true_positive": true,
+          "issue_signature": "unintended separate conditional chain",
+          "reasoning": "The `if (input == 3)` on line 13 is a new conditional chain rather than an `else if` continuation of the chain starting on line 9. Consequently, for inputs 1 or 2, the first chain prints the corresponding message and the second chain reaches its `else`, printing the default message as well. This is a real routing error, not merely a formatting concern.",
+          "run": 3,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 2246,
+            "output_tokens": 203,
+            "reasoning_tokens": 0,
+            "cached_input_tokens": 2243
+          },
+          "stop_reason": "stop",
+          "latency_s": 2.826
+        }
+      ]
+    },
+    {
+      "finding_id": 4,
+      "type": "java:S127",
+      "sourcefile": "MatrixNormalizer.java",
+      "start_line": "21",
+      "message": "Refactor the code in order to not assign to this loop counter from within the loop body.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.99,
+          "developer_explanation": "The inner loop tests and increments i, which is the outer-loop index, instead of testing and incrementing j. This can advance i beyond the available rows while data[i][j] is evaluated, causing an ArrayIndexOutOfBoundsException and leaving elements unprocessed. Use j < columns and j++ in the inner loop header.",
+          "is_true_positive": true,
+          "issue_signature": "incorrect loop counter modification",
+          "reasoning": "The inner loop's condition and update use i rather than j, so it modifies the outer loop counter while j remains zero. This makes the loop control incorrect and can cause data[i][j] to access beyond the row array bounds. Although the warning is phrased generally, the flagged counter assignment corresponds to a real correctness defect here.",
+          "run": 1,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 2375,
+            "output_tokens": 283,
+            "reasoning_tokens": 99,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.998
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.99,
+          "developer_explanation": "The inner loop declares j but tests and increments i, which is the outer loop's counter. As a result j never advances, i is changed unexpectedly, and the code will access a row outside the array; use j in the inner loop condition and increment expression.",
+          "is_true_positive": true,
+          "issue_signature": "assignment to loop counter within loop body",
+          "reasoning": "The inner loop declares `j` as its counter but uses and increments the outer counter `i` in its condition and update expression. This leaves `j` at zero, corrupts the outer iteration, and reaches an out-of-bounds `data[i][j]` access for the shown input. The reported counter modification therefore exposes a real correctness error rather than merely a stylistic concern.",
+          "run": 2,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 2375,
+            "output_tokens": 389,
+            "reasoning_tokens": 204,
+            "cached_input_tokens": 2372
+          },
+          "stop_reason": "stop",
+          "latency_s": 4.847
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.99,
+          "developer_explanation": "The inner loop tests and increments i, which is the outer loop counter, instead of using j. As a result, j remains 0 and the inner loop changes the row index, causing columns to be skipped and potentially leading to invalid indexing for differently shaped input. Change the inner loop to use j in both its condition and increment: for (int j = 0; j < columns; j++).",
+          "is_true_positive": true,
+          "issue_signature": "loop counter modified within loop body",
+          "reasoning": "The inner loop declares j but uses and increments the outer loop counter i in its condition and update expression. This modifies the outer loop's control variable while its body is executing, leaving j at zero and causing normalization to process incorrect elements. The resulting behavior is incorrect rather than merely a stylistic concern.",
+          "run": 3,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 2375,
+            "output_tokens": 421,
+            "reasoning_tokens": 226,
+            "cached_input_tokens": 2372
+          },
+          "stop_reason": "stop",
+          "latency_s": 5.248
+        }
+      ]
+    },
+    {
+      "finding_id": 5,
+      "type": "java:S128",
+      "sourcefile": "MenuHandler.java",
+      "start_line": "11",
+      "message": "End this switch case with an unconditional break, return or throw statement.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.99,
+          "developer_explanation": "The `case 1` branch has no terminating statement, so it falls through into `default` and prints both \"User 1\" and \"Invalid option\". Add a `break`, `return`, or other explicit terminating control-flow statement after the `case 1` output unless this fall-through is intentionally required and documented.",
+          "is_true_positive": true,
+          "issue_signature": "unintended switch case fall-through",
+          "reasoning": "The `case 1` block prints \"User 1\" and then reaches `default` without a `break`, `return`, or `throw`, so selecting 1 also prints \"Invalid option\". This is a real control-flow error unless the fall-through is deliberately intended, and the shown output messages strongly indicate it is not.",
+          "run": 1,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 2174,
+            "output_tokens": 182,
+            "reasoning_tokens": 0,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 2.281
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.99,
+          "developer_explanation": "Selecting option 1 prints \"User 1\" and then falls through to the default branch, also printing \"Invalid option\". This makes a valid option be treated as invalid; add a `break`, `return`, or other explicit control transfer after the case-1 output unless this combined behavior is deliberately intended.",
+          "is_true_positive": true,
+          "issue_signature": "unintended switch case fall-through",
+          "reasoning": "The `case 1` branch has no `break`, `return`, or `throw`, so it necessarily falls through into `default` and prints \"Invalid option\" after printing \"User 1\". Since `default` represents an invalid-option message, this fall-through causes the valid choice `1` to be handled as invalid as well. The shown code contains no indication that this combined behavior is intentional.",
+          "run": 2,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 2174,
+            "output_tokens": 193,
+            "reasoning_tokens": 0,
+            "cached_input_tokens": 2171
+          },
+          "stop_reason": "stop",
+          "latency_s": 2.627
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.99,
+          "developer_explanation": "Selecting option 1 prints \"User 1\" and then falls through into the default branch, also printing \"Invalid option\". This makes a valid choice be treated as invalid; add a break or return after the option-1 output unless this combined behavior is explicitly intended.",
+          "is_true_positive": true,
+          "issue_signature": "unintentional switch case fall-through",
+          "reasoning": "The `case 1` branch has no unconditional control-transfer statement, so execution falls through to `default` and prints \"Invalid option\" after printing \"User 1\". Since `case 1` represents a valid option while the default message says it is invalid, the fall-through produces an evidently incorrect result. The warning therefore identifies a real correctness issue.",
+          "run": 3,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 2174,
+            "output_tokens": 175,
+            "reasoning_tokens": 0,
+            "cached_input_tokens": 2171
+          },
+          "stop_reason": "stop",
+          "latency_s": 2.582
+        }
+      ]
+    },
+    {
+      "finding_id": 6,
+      "type": "java:S4973",
+      "sourcefile": "NumberComparison.java",
+      "start_line": "7",
+      "message": "Strings and Boxed types should be compared using \"equals()\".",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.99,
+          "developer_explanation": "`num1` and `num2` are separate boxed `Integer` instances for the value 1024, which is outside Java's required small-integer cache range. Therefore `==` compares object identity and prints `false` despite the numeric values being equal. Use `num1.equals(num2)` (or unbox to `int` before comparing) to compare the values.",
+          "is_true_positive": true,
+          "issue_signature": "boxed value compared by reference",
+          "reasoning": "`num1` and `num2` are boxed `Integer` values of 1024, so `==` compares their object references rather than their numeric values. Since 1024 is outside the standard boxed-integer cache range, these references will normally differ and this program prints `false` even though both values are 1024. This is a real correctness issue when the intent is numeric equality.",
+          "run": 1,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 2101,
+            "output_tokens": 253,
+            "reasoning_tokens": 42,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.003
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.99,
+          "developer_explanation": "`num1` and `num2` are separate boxed `Integer` instances for the value 1024, so `==` compares their references and prints `false` rather than comparing their numeric values. Use `num1.equals(num2)` (or unbox both values) when testing numeric equality.",
+          "is_true_positive": true,
+          "issue_signature": "reference comparison of boxed values",
+          "reasoning": "The shown code compares two separately boxed `Integer` values of 1024 with `==`, which compares object identity rather than numeric value. Since 1024 is outside Java's required small-integer cache range, these initializations ordinarily produce distinct objects and the expression prints `false` despite equal values. This is a correctness issue; value equality should use `equals()` or unboxed numeric comparison.",
+          "run": 2,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 2101,
+            "output_tokens": 187,
+            "reasoning_tokens": 0,
+            "cached_input_tokens": 2098
+          },
+          "stop_reason": "stop",
+          "latency_s": 2.483
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.99,
+          "developer_explanation": "`num1` and `num2` are separate boxed `Integer` references for the value 1024, so `==` tests object identity rather than their numeric values. This can print `false` even though both values are 1024; compare them with `num1.equals(num2)` (or unbox them before comparing) instead.",
+          "is_true_positive": true,
+          "issue_signature": "boxed value compared by reference identity",
+          "reasoning": "`num1` and `num2` are boxed `Integer` values of 1024, and `==` compares their object references rather than their numeric contents. Integer identity caching is not guaranteed for 1024, so the expression can be false despite both variables representing the same value. This is a correctness issue if the intended comparison is numeric equality.",
+          "run": 3,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 2101,
+            "output_tokens": 302,
+            "reasoning_tokens": 107,
+            "cached_input_tokens": 2098
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.968
+        }
+      ]
+    },
+    {
+      "finding_id": 7,
+      "type": "java:S1905",
+      "sourcefile": "NumberReader.java",
+      "start_line": "6",
+      "message": "Remove this unnecessary cast to \"Integer\".",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.99,
+          "developer_explanation": "The object holds a String, not an Integer, so the cast will always fail at runtime with ClassCastException. Do not cast this value to Integer; either use it as a String or parse it with Integer.parseInt((String) obj) if an integer value is intended.",
+          "is_true_positive": true,
+          "issue_signature": "invalid cast to an incompatible runtime type",
+          "reasoning": "The shown code assigns the String literal \"10\" to obj, so casting obj to Integer is not unnecessary; it will always throw ClassCastException. The warning's claim of a redundant Integer cast is therefore incorrect, but the flagged line contains a real incompatible-cast correctness defect. Because the warning identifies this line but describes the wrong problem, it is a false positive for the reported claim.",
+          "run": 1,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 2082,
+            "output_tokens": 181,
+            "reasoning_tokens": 0,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.003
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.99,
+          "developer_explanation": "The cast is not redundant: `obj` has static type `Object`, and the cast performs a runtime type check. In this code it fails because the actual value is a `String`; removing the cast would instead print `10` as an object, so this alarm can be dismissed. If an integer is intended, convert or parse the string explicitly rather than casting it.",
+          "is_true_positive": false,
+          "issue_signature": "unnecessary type cast",
+          "reasoning": "`obj` is declared as `Object` and is initialized with a `String`, so casting it to `Integer` is not unnecessary and performs a runtime check that throws `ClassCastException`. Removing the cast would materially change the program's behavior by selecting `println(Object)` and printing the string instead. The cast is erroneous for the intended apparent conversion, but that does not make the claim that it is redundant correct.",
+          "run": 2,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 2082,
+            "output_tokens": 344,
+            "reasoning_tokens": 134,
+            "cached_input_tokens": 2079
+          },
+          "stop_reason": "stop",
+          "latency_s": 4.299
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.99,
+          "developer_explanation": "The value stored in `obj` is a `String`, not an `Integer`, so this cast will always fail with a `ClassCastException` before anything is printed. Change the value to an `Integer` if numeric output is intended, or print/parse the string as appropriate.",
+          "is_true_positive": true,
+          "issue_signature": "invalid cast to incompatible runtime type",
+          "reasoning": "`obj` is assigned the string literal `\"10\"`, so its runtime type is `String` and casting it to `Integer` always throws `ClassCastException`. Although the reported suggestion calls the cast unnecessary, the material issue at the flagged expression is that the cast is invalid and prevents the program from producing its intended output.",
+          "run": 3,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 2082,
+            "output_tokens": 171,
+            "reasoning_tokens": 0,
+            "cached_input_tokens": 2079
+          },
+          "stop_reason": "stop",
+          "latency_s": 2.467
+        }
+      ]
+    },
+    {
+      "finding_id": 8,
+      "type": "java:S2696",
+      "sourcefile": "PersonProfile.java",
+      "start_line": "8",
+      "message": "Make the enclosing method \"static\" or remove this set.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.98,
+          "developer_explanation": "`name` is static, so it is shared by every `PersonProfile` instance. Setting the name on `person2` overwrites the value seen through `person1`, causing this program to print `Kate` twice. Make `name` an instance field if each profile is meant to have its own name; only make the accessor methods static if one shared application-wide name is actually intended.",
+          "is_true_positive": true,
+          "issue_signature": "instance method modifies static state",
+          "reasoning": "The shown code declares `name` as static while using separate `PersonProfile` instances as though each can retain its own name. Consequently, assigning `Kate` through `person2` overwrites the value assigned through `person1`, so both getters return `Kate`. This is a real correctness issue in the demonstrated usage, rather than merely a stylistic concern.",
+          "run": 1,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 2239,
+            "output_tokens": 365,
+            "reasoning_tokens": 161,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 4.708
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.99,
+          "developer_explanation": "The name field is shared by every PersonProfile instance, so setting person2's name overwrites person1's name. In this program both print statements produce \"Kate\". Make name an instance field if each PersonProfile is meant to hold its own name.",
+          "is_true_positive": true,
+          "issue_signature": "shared static state used for per-instance data",
+          "reasoning": "The shown code declares name as static but uses two separate PersonProfile instances as though each should retain its own value; after person2 sets \"Kate\", person1.getName() also returns \"Kate\". This is a real correctness issue in the demonstrated behavior, regardless of the tool's suggested change to make the setter static. The static mutable field also makes updates globally shared rather than associated with a particular profile.",
+          "run": 2,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 2239,
+            "output_tokens": 441,
+            "reasoning_tokens": 253,
+            "cached_input_tokens": 2236
+          },
+          "stop_reason": "stop",
+          "latency_s": 6.407
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.99,
+          "developer_explanation": "`name` is static, so it is shared by every `PersonProfile` instance, while the setter and getter are instance methods. As a result, setting the name on `person2` overwrites the value observed through `person1`, as the shown `main` demonstrates. Make `name` an instance field for per-person state, or make the API static if one shared application-wide name is intended.",
+          "is_true_positive": true,
+          "issue_signature": "static field modified through an instance method",
+          "reasoning": "The shown code declares `name` as static but modifies it through instance methods, and the two instances in `main` consequently share and overwrite the same value. This produces behavior inconsistent with independently named person profiles: both getters return the last assigned name. The warning therefore identifies a real correctness and design issue, not merely a cosmetic mismatch.",
+          "run": 3,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 2239,
+            "output_tokens": 369,
+            "reasoning_tokens": 166,
+            "cached_input_tokens": 0
+          },
+          "stop_reason": "stop",
+          "latency_s": 5.01
+        }
+      ]
+    },
+    {
+      "finding_id": 9,
+      "type": "java:S1210",
+      "sourcefile": "PersonRanking.java",
+      "start_line": "18",
+      "message": "Override \"equals(Object obj)\" to comply with the contract of the \"compareTo(T o)\" method.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.9,
+          "developer_explanation": "The comparison never returns zero: even comparing an object with itself, or comparing two objects with the same age, returns -1. This violates the comparison contract and is inconsistent with equality. Return zero for equal ages (for example, use Integer.compare(age, other.age)) and implement equals and hashCode using the same age-based identity if age is the intended natural ordering.",
+          "is_true_positive": true,
+          "issue_signature": "comparison inconsistent with equality",
+          "reasoning": "The compareTo method returns -1 when the two ages are equal, including when an instance is compared with itself, while the inherited equals method considers an instance equal to itself. Thus the comparison is not consistent with equality and also violates Comparable's requirement that an object compare equal to itself. The comparison should be corrected to return zero for equal ages, with equals and hashCode defined consistently if age is the intended equality criterion.",
+          "run": 1,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 2230,
+            "output_tokens": 1238,
+            "reasoning_tokens": 1024,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 15.715
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.95,
+          "developer_explanation": "Two people with the same age are evidently intended to compare as equal, but `compareTo` returns `-1` for them and equality remains identity-based. This makes the natural ordering inconsistent with logical person equality and will give incorrect results in sorted collections. Return `0` when the ages are equal and implement `equals` (and `hashCode`) using the same equality-defining fields.",
+          "is_true_positive": true,
+          "issue_signature": "inconsistent equality and natural ordering",
+          "reasoning": "`compareTo` compares the age field while `Person` inherits identity-based `equals`, and it also returns `-1` rather than `0` when two ages are equal. The call in `main` demonstrates that equal ages are expected to compare as equal, so the ordering is both incorrect for that case and inconsistent with logical equality. Equality and hash code semantics should be aligned with the corrected natural ordering.",
+          "run": 2,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 2230,
+            "output_tokens": 1027,
+            "reasoning_tokens": 809,
+            "cached_input_tokens": 2227
+          },
+          "stop_reason": "stop",
+          "latency_s": 14.662
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.99,
+          "developer_explanation": "`compareTo` returns `-1` when the ages are equal, including when an object is compared with itself. It must return `0` for equal ordering values; if age defines the ordering, make `equals` (and `hashCode`) use age as well so that two people with the same age compare as equal and are equal objects.",
+          "is_true_positive": true,
+          "issue_signature": "inconsistent equals and compareTo methods",
+          "reasoning": "`compareTo` returns `-1` for equal ages, including for an object compared with itself, while the inherited `equals` method returns true for that same object. Thus equality and ordering are inconsistent, and the comparison also violates the `Comparable` contract by failing to return zero for self-comparison. Although overriding `equals` alone is not sufficient here, the reported inconsistency is real.",
+          "run": 3,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 2230,
+            "output_tokens": 532,
+            "reasoning_tokens": 328,
+            "cached_input_tokens": 2227
+          },
+          "stop_reason": "stop",
+          "latency_s": 6.574
+        }
+      ]
+    },
+    {
+      "finding_id": 10,
+      "type": "java:S1206",
+      "sourcefile": "PersonRegistry.java",
+      "start_line": "21",
+      "message": "This class overrides \"equals()\" and should therefore also override \"hashCode()\".",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.99,
+          "developer_explanation": "This type defines value equality in equals(Object) but inherits Object.hashCode(). Equal Person instances can therefore have different hash codes and will behave incorrectly as keys in hash-based collections such as HashMap or HashSet. Implement hashCode() using the same fields intended for equality, such as name and age; also correct the comparison to use the other person's name rather than comparing name to itself.",
+          "is_true_positive": true,
+          "issue_signature": "equals overridden without matching hashCode",
+          "reasoning": "The Person class overrides equals(Object) but does not override hashCode(), so it inherits identity-based hashing despite defining non-identity equality. This violates the equals/hashCode contract: two instances considered equal can have different hash codes, causing incorrect behavior in hash-based collections. Independently, the shown equals implementation compares name.equals(name), which is always true for a non-null name, but that separate defect does not invalidate this warning.",
+          "run": 1,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 2319,
+            "output_tokens": 208,
+            "reasoning_tokens": 0,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.183
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.99,
+          "developer_explanation": "The class defines value-based equality but inherits Object.hashCode(), so equal instances can have different hash codes. This violates the equality/hash-code contract and causes incorrect behavior when instances are used in hash-based collections or maps. Implement hashCode() using the same fields used by equals(), such as name and age. Also correct the equality comparison to compare this.name with person.name rather than name with itself.",
+          "is_true_positive": true,
+          "issue_signature": "equals overridden without hashcode",
+          "reasoning": "Person overrides equals(Object) but does not override hashCode(), so it inherits identity-based hashing from Object. Two distinct Person instances can be considered equal by equals yet have different hash codes, violating the required contract and producing incorrect behavior in HashMap, HashSet, and similar collections. The equals implementation also has a separate defect at line 29, but that does not invalidate this warning.",
+          "run": 2,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 2319,
+            "output_tokens": 201,
+            "reasoning_tokens": 0,
+            "cached_input_tokens": 2316
+          },
+          "stop_reason": "stop",
+          "latency_s": 7.87
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.99,
+          "developer_explanation": "This type defines value equality in equals(Object) but inherits Object.hashCode(), so two instances that compare equal can have different hash codes. That breaks lookups and duplicate handling if instances are used in HashMap, HashSet, or other hash-based collections. Add a hashCode() implementation consistent with the fields used by equals (and ensure equals compares the intended fields).",
+          "is_true_positive": true,
+          "issue_signature": "equals overridden without matching hashcode",
+          "reasoning": "The nested Person class overrides equals(Object) but does not override hashCode(), so it inherits identity-based hashing from Object. This violates the equals/hashCode contract because distinct Person instances can compare equal while producing different hash codes, causing incorrect behavior in hash-based collections. The absence of such a collection in this small example does not remove the defect from the type's equality implementation.",
+          "run": 3,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 2319,
+            "output_tokens": 309,
+            "reasoning_tokens": 109,
+            "cached_input_tokens": 2316
+          },
+          "stop_reason": "stop",
+          "latency_s": 4.306
+        }
+      ]
+    },
+    {
+      "finding_id": 11,
+      "type": "java:S1764",
+      "sourcefile": "PersonRegistry.java",
+      "start_line": "29",
+      "message": "Correct one of the identical sub-expressions on both sides of equals.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.99,
+          "developer_explanation": "The equality check compares `name` with itself, so it is always true for any non-null name and never compares this person's name to the other person's name. As a result, people of the same age but different names are considered equal. Compare the two instances' names instead, for example with `Objects.equals(name, person.name)` to handle null names safely.",
+          "is_true_positive": true,
+          "issue_signature": "self-comparison in equality check",
+          "reasoning": "The expression `name.equals(name)` compares the same field to itself rather than comparing it with `person.name`. Consequently, after the age comparison succeeds, the name has no effect on equality (and a null name would throw), so the method can report distinct people as equal. This is a real correctness defect in the shown `equals` implementation.",
+          "run": 1,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 2314,
+            "output_tokens": 188,
+            "reasoning_tokens": 0,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.01
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.99,
+          "developer_explanation": "The equality check compares `name` with itself, so it is always true for any non-null name and never checks the other person's name. As a result, two people with the same age but different names are considered equal. Compare this object's name with the other object's name, preferably using `Objects.equals(name, person.name)` to handle null values safely.",
+          "is_true_positive": true,
+          "issue_signature": "self-comparison in equality check",
+          "reasoning": "The expression `name.equals(name)` compares the same field reference on both sides, rather than comparing this person's name with `person.name`. It is therefore true whenever `name` is non-null and causes `equals` to ignore the other object's name, producing incorrect equality results for people of the same age with different names. The warning identifies a real correctness defect.",
+          "run": 2,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 2314,
+            "output_tokens": 189,
+            "reasoning_tokens": 0,
+            "cached_input_tokens": 2311
+          },
+          "stop_reason": "stop",
+          "latency_s": 2.576
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.99,
+          "developer_explanation": "The equality check compares `name` with itself, so it is always true for a non-null name and never compares this person's name with the other person's name. As a result, two people of the same age but different names are considered equal. Compare the two instances' names instead, for example with `Objects.equals(name, person.name)` to also handle null names safely.",
+          "is_true_positive": true,
+          "issue_signature": "self-comparison in equality check",
+          "reasoning": "The expression `name.equals(name)` compares the same field to itself rather than comparing it with `person.name`. It therefore ignores names when determining equality (and can also throw if `name` is null), so people with equal ages but different names are incorrectly considered equal. This is a real correctness defect in the shown `equals` implementation.",
+          "run": 3,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 2314,
+            "output_tokens": 189,
+            "reasoning_tokens": 0,
+            "cached_input_tokens": 2311
+          },
+          "stop_reason": "stop",
+          "latency_s": 2.572
+        }
+      ]
+    },
+    {
+      "finding_id": 12,
+      "type": "java:S1317",
+      "sourcefile": "TextAssembler.java",
+      "start_line": "5",
+      "message": "Replace the constructor character parameter 'a' with string parameter \"a\".",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.99,
+          "developer_explanation": "The character argument selects the capacity-taking constructor, so it creates an empty builder with capacity 97 rather than initializing it with \"a\". As a result the program prints \"bc\", not \"abc\"; use new StringBuilder(\"a\") to initialize the builder with that text.",
+          "is_true_positive": true,
+          "issue_signature": "character argument interpreted as StringBuilder capacity",
+          "reasoning": "In the shown code, new StringBuilder('a') invokes the constructor that takes an integer capacity because a char is widened to int; it does not append or initialize the builder with the character. The builder is therefore initially empty and the program prints \"bc\" after the append, which differs from the apparent intent to construct \"abc\".",
+          "run": 1,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 2095,
+            "output_tokens": 216,
+            "reasoning_tokens": 38,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.262
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.99,
+          "developer_explanation": "The character literal is converted to the integer value 97 and selects the capacity constructor, so it does not add \"a\" to the builder. Consequently this program prints \"bc\" rather than \"abc\"; initialize the builder with \"a\" if that prefix is intended.",
+          "is_true_positive": true,
+          "issue_signature": "character passed as string builder capacity",
+          "reasoning": "The character literal 'a' is widened to an int and invokes StringBuilder(int capacity), so the builder starts empty with capacity 97 rather than containing the character. After appending \"bc\", the program prints \"bc\", not \"abc\". This is a correctness issue because the character argument has materially different semantics from the string argument suggested by the warning.",
+          "run": 2,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 2095,
+            "output_tokens": 232,
+            "reasoning_tokens": 53,
+            "cached_input_tokens": 2092
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.755
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.99,
+          "developer_explanation": "The character literal selects the StringBuilder constructor that takes an initial capacity, using the numeric value of 'a' (97), rather than initializing the builder with the text \"a\". As a result, this program prints \"bc\" instead of \"abc\". Pass the string \"a\" to initialize the builder with that character.",
+          "is_true_positive": true,
+          "issue_signature": "character passed to StringBuilder capacity constructor",
+          "reasoning": "The character literal 'a' invokes StringBuilder(int capacity), whose argument is the character's numeric value (97), so the builder starts empty rather than containing \"a\". After appending \"bc\", the program prints \"bc\" instead of the evidently intended \"abc\", making the warning a real correctness issue.",
+          "run": 3,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 2095,
+            "output_tokens": 218,
+            "reasoning_tokens": 35,
+            "cached_input_tokens": 2092
+          },
+          "stop_reason": "stop",
+          "latency_s": 2.827
+        }
+      ]
+    },
+    {
+      "finding_id": 13,
+      "type": "java:S2201",
+      "sourcefile": "TextTrimmer.java",
+      "start_line": "6",
+      "message": "The return value of \"substring\" must be used.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.99,
+          "developer_explanation": "`String` is immutable, so calling `substring(3)` does not modify `s`; its result is discarded and the program prints `abcdef`. If the intended output is the suffix, assign the result back (`s = s.substring(3)`) or print/use the returned string directly.",
+          "is_true_positive": true,
+          "issue_signature": "discarded string substring result",
+          "reasoning": "The code calls `s.substring(3)` and discards the returned `String`, while `String` is immutable and `s` is subsequently printed unchanged. Thus the call has no effect and is very likely failing to perform the intended trimming operation. The complete shown file provides no alternative use or side effect that would justify discarding this result.",
+          "run": 1,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 2095,
+            "output_tokens": 173,
+            "reasoning_tokens": 0,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 2.831
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.99,
+          "developer_explanation": "`String` is immutable, so calling `substring(3)` does not modify `s`; its result is discarded and the program prints `abcdef`. If the intent is to trim the first three characters, assign or use the result, for example `s = s.substring(3);`.",
+          "is_true_positive": true,
+          "issue_signature": "ignored string substring result",
+          "reasoning": "The call to `s.substring(3)` returns a new `String`, but the returned value is discarded and `s` remains `\"abcdef\"`. Since the call has no side effects, it cannot affect the subsequent output and is almost certainly an unintended ignored result.",
+          "run": 2,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 2095,
+            "output_tokens": 157,
+            "reasoning_tokens": 0,
+            "cached_input_tokens": 2092
+          },
+          "stop_reason": "stop",
+          "latency_s": 2.534
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.99,
+          "developer_explanation": "Strings are immutable, so calling substring(3) creates a new value but does not modify the existing string. The returned value is discarded and the program prints \"abcdef\"; assign the result back to the variable or use it directly if the intended output is \"def\".",
+          "is_true_positive": true,
+          "issue_signature": "ignored String substring result",
+          "reasoning": "The call to substring(3) returns a new String, but its return value is discarded and the original value of s is printed unchanged. Since String is immutable, this call has no effect, making the code fail to perform any apparent trimming. The warning correctly identifies an ignored result whose intended effect is otherwise absent.",
+          "run": 3,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 2095,
+            "output_tokens": 162,
+            "reasoning_tokens": 0,
+            "cached_input_tokens": 2092
+          },
+          "stop_reason": "stop",
+          "latency_s": 2.792
+        }
+      ]
+    },
+    {
+      "finding_id": 14,
+      "type": "java:S3984",
+      "sourcefile": "ValueProcessor.java",
+      "start_line": "11",
+      "message": "Throw this exception or remove this useless statement.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.99,
+          "developer_explanation": "The negative-value branch constructs an IllegalArgumentException but does not throw it, so processing continues normally and prints a message that accepts the negative value. Throw the exception (for example, `throw new IllegalArgumentException(...)`) or remove the construction if negative values are intentionally allowed.",
+          "is_true_positive": true,
+          "issue_signature": "exception created but not thrown",
+          "reasoning": "The `if (value < 0)` branch only creates an `IllegalArgumentException` object and immediately discards it; it neither throws it nor otherwise uses it. Consequently, the negative value supplied by `main` continues to the success-style output, so the apparent validation has no effect. This is a real correctness issue rather than merely a cosmetic concern.",
+          "run": 1,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 2148,
+            "output_tokens": 172,
+            "reasoning_tokens": 0,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.131
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.99,
+          "developer_explanation": "The exception object is created when the value is negative but is neither thrown nor otherwise used. Execution therefore continues and prints that the value is positive or zero even for -1; throw the exception (for example, `throw new IllegalArgumentException(...)`) or remove the ineffective validation if negative values are valid.",
+          "is_true_positive": true,
+          "issue_signature": "exception constructed but not thrown",
+          "reasoning": "The negative-value branch constructs an `IllegalArgumentException` but does not throw, store, or use it, so execution continues to line 13 even when `value` is -1. This makes the validation ineffective and produces an incorrect success-style message for an invalid value. The warning correctly identifies a real correctness issue.",
+          "run": 2,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 2148,
+            "output_tokens": 170,
+            "reasoning_tokens": 0,
+            "cached_input_tokens": 2145
+          },
+          "stop_reason": "stop",
+          "latency_s": 2.785
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.99,
+          "developer_explanation": "The exception object is created but never thrown, so negative input does not stop processing or report an error. As a result, this program prints that a negative value is positive or zero. Throw the exception (for example, `throw new IllegalArgumentException(...)`) or remove the validation if negative values are intentionally accepted.",
+          "is_true_positive": true,
+          "issue_signature": "exception instantiated but not thrown",
+          "reasoning": "The code constructs an `IllegalArgumentException` for a negative value but discards it without throwing it, and execution continues to the success message. Thus the apparent validation has no effect and the method produces behavior inconsistent with its negative-value check. This is a correctness issue, not merely a cosmetic exception-handling style concern.",
+          "run": 3,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 2148,
+            "output_tokens": 172,
+            "reasoning_tokens": 0,
+            "cached_input_tokens": 2145
+          },
+          "stop_reason": "stop",
+          "latency_s": 2.632
+        }
+      ]
+    },
+    {
+      "finding_id": 15,
+      "type": "java:S2757",
+      "sourcefile": "ValueReporter.java",
+      "start_line": "11",
+      "message": "Was \"+=\" meant instead?",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.99,
+          "developer_explanation": "`x =+ 2` assigns the unary-positive value `2` to `x`; it does not add 2 to its existing value. Since this method initializes `x` to 1 and is named to print a sum, use `x += 2` if the intended result is 3.",
+          "is_true_positive": true,
+          "issue_signature": "assignment used instead of addition assignment",
+          "reasoning": "The shown statement `x =+ 2` is parsed as assignment of unary `+2`, so it overwrites the initialized value of `x` and prints 2 rather than adding 2 and printing 3. Given the initialization and the `printSum` method purpose, this is materially consistent with an accidental use of `=+` instead of `+=`.",
+          "run": 1,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 2183,
+            "output_tokens": 310,
+            "reasoning_tokens": 119,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 4.922
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.99,
+          "developer_explanation": "`x =+ 2` assigns the positive value `2` to `x`; it does not add 2 to the existing value. Since `x` is initialized to 1, this prints 2 rather than the likely intended sum of 3. Use `x += 2` (or `x = x + 2`) if the value should be incremented.",
+          "is_true_positive": true,
+          "issue_signature": "assignment used instead of compound addition",
+          "reasoning": "The code initializes `x` to 1 and then executes `x =+ 2`, which is an assignment of unary-positive 2 rather than an addition assignment. Consequently it prints 2, whereas the initialization and method name strongly indicate the intended result is 3. This is a real correctness issue, not merely a stylistic distinction.",
+          "run": 2,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 2183,
+            "output_tokens": 193,
+            "reasoning_tokens": 0,
+            "cached_input_tokens": 2180
+          },
+          "stop_reason": "stop",
+          "latency_s": 2.667
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.99,
+          "developer_explanation": "`x =+ 2` assigns the value positive 2 to `x`; it does not add 2 to the existing value. Since this method is named `printSum` and initializes `x` to 1, use `x += 2` if the intended result is 3.",
+          "is_true_positive": true,
+          "issue_signature": "assignment used instead of compound addition",
+          "reasoning": "The statement `x =+ 2` is parsed as an assignment of unary-positive `2`, so it replaces the initialized value `1` and prints `2`. In a method named `printSum`, this strongly indicates an accidental use of `=+` instead of `+=`, which changes the result from the apparent intended sum of `3` to `2`.",
+          "run": 3,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 2183,
+            "output_tokens": 311,
+            "reasoning_tokens": 122,
+            "cached_input_tokens": 2180
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.895
+        }
+      ]
+    }
+  ]
+}

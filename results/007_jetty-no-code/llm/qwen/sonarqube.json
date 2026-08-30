@@ -1,0 +1,3622 @@
+{
+  "model": "qwen3.5:9b",
+  "tool": "sonarqube",
+  "num_runs": 1,
+  "runs_per_invocation": 1,
+  "source_root": "jetty.project",
+  "call_parameters": {
+    "temperature": null,
+    "concurrency": 1,
+    "response_format": "json_schema",
+    "num_ctx": 32768,
+    "request_timeout_s": 900,
+    "base_url": "http://localhost:11434"
+  },
+  "system_prompt_variant": "jetty",
+  "system_prompt_sha256": "382740d7fcf34c9c",
+  "user_prompt_sha256": "71523495aedd174c",
+  "timestamp": "2026-08-16T20:27:27.572122+00:00",
+  "updated_at": "2026-08-16T20:27:27.572122+00:00",
+  "findings": [
+    {
+      "finding_id": 0,
+      "type": "java:S2095",
+      "sourcefile": "HttpProxy.java",
+      "start_line": "270",
+      "message": "Use try-with-resources or close this \"Connection\" in a \"finally\" clause.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The tool explicitly claims that the Connection object is not properly closed using try-with-resources or finally logic. Without source code context showing alternative handling like framework-managed pools, and given the rule flags a real lifecycle management gap for standard resources in Java (often leading to OutOfMemoryErrors or Denial-of-Service), I consider this warning valid as a correctness issue.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "unclosed connection resource leaking handle",
+          "developer_explanation": "This code opens a Connection object but does not guarantee its closure when exceptions occur or methods exit early. Failing to close this stream can exhaust server resources and potentially cause your application to crash under load or become vulnerable to denial-of-service attacks by an adversary.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 8502,
+            "output_tokens": 187
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 31044,
+          "latency_s": 64.061
+        }
+      ],
+      "original_finding_index": 0
+    },
+    {
+      "finding_id": 1,
+      "type": "java:S2142",
+      "sourcefile": "InputStreamResponseListener.java",
+      "start_line": "354",
+      "message": "Either re-interrupt this method or rethrow the \"InterruptedException\" that can be caught here.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that an InterruptedException was caught without either rethrowing it or restoring the interrupted state using Thread.currentThread().interrupt() inside the catch block.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CONCURRENCY",
+          "issue_signature": "InterruptedException caught without rethrow or resetting interrupt flag",
+          "developer_explanation": "Swallowing an InterruptedException can cause threads to ignore interruption signals meant for graceful shutdown or cooperative cancellation.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 5569,
+            "output_tokens": 116
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 18883,
+          "latency_s": 34.747
+        }
+      ],
+      "original_finding_index": 1
+    },
+    {
+      "finding_id": 2,
+      "type": "java:S2095",
+      "sourcefile": "ProxyProtocolClientConnectionFactory.java",
+      "start_line": "543",
+      "message": "Use try-with-resources or close this \"Connection\" in a \"finally\" clause.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning S2095 from SonarQube specifically targets resource leaks where objects implementing AutoCloseable are allocated without proper cleanup via try-with-resources or explicit close in finally blocks. Without source code to verify context like shared resources, intentional fire-and-forget patterns, or legitimate exception handling scenarios that might justify the leak, this is a standard correctness issue about memory/file/socket exhaustion risks.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "PERFORMANCE",
+          "issue_signature": "resource not properly closed causing potential leak",
+          "developer_explanation": "Your Connection object may be held open when this code path is taken without explicit cleanup, which can exhaust connection pools or cause memory leaks over time in long-running applications. Implement try-with-resources to ensure automatic closure, even if you expect exceptions - the resource should still be released.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 2493,
+            "output_tokens": 197
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2555,
+          "latency_s": 7.151
+        }
+      ],
+      "original_finding_index": 2
+    },
+    {
+      "finding_id": 3,
+      "type": "java:S2095",
+      "sourcefile": "Socks4Proxy.java",
+      "start_line": "232",
+      "message": "Use try-with-resources or close this \"Connection\" in a \"finally\" clause.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The SonarQube java:S2095 warning explicitly claims a Connection resource lacks proper disposal via try-with-resources or finally clause, matching established correctness patterns for Java AutoCloseable lifecycle management even without full code inspection. Resource leaks in network/database contexts represent genuine concerns since connections aren't automatically cleaned up unless properly managed per closeable conventions. The lack of specific mitigating context information available and standard tool behavior suggests this represents a legitimate issue requiring closure pattern compliance.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "CORRECTNESS",
+          "issue_signature": "connection left unclosed without try-with-resources or finally block handling",
+          "developer_explanation": "Your code uses a Connection object that doesn't follow Java resource management conventions for AutoCloseable types. This can lead to connection pool exhaustion and application instability over time if multiple instances are created but not properly cleaned up after use.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 7377,
+            "output_tokens": 207
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 27817,
+          "latency_s": 52.538
+        }
+      ],
+      "original_finding_index": 3
+    },
+    {
+      "finding_id": 4,
+      "type": "java:S2095",
+      "sourcefile": "Socks5Proxy.java",
+      "start_line": "400",
+      "message": "Use try-with-resources or close this \"Connection\" in a \"finally\" clause.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "Without seeing the code, I cannot verify whether an object at line 400 implements AutoCloseable but isn't properly closed via try-with-resources or finally block, which is what SonarQube S2095 claims to detect. Resource leak warnings can be legitimate (real issue) when a Closeable/AutoCloseable resource is obtained and not properly released in the calling context.",
+          "is_true_positive": false,
+          "confidence": 0.7,
+          "category": "PERFORMANCE",
+          "issue_signature": "resource leak from unclosed auto-closeable object",
+          "developer_explanation": "This warning cannot be verified as a true issue without seeing the code at line 400 of Socks5Proxy.java. The rule typically flags objects implementing AutoCloseable that don't use try-with-resources, but connection pool patterns and framework-managed resources can legitimately bypass this requirement.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 2908,
+            "output_tokens": 202
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 4758,
+          "latency_s": 11.334
+        }
+      ],
+      "original_finding_index": 4
+    },
+    {
+      "finding_id": 5,
+      "type": "java:S2142",
+      "sourcefile": "StandardDeployer.java",
+      "start_line": "153",
+      "message": "Either re-interrupt this method or rethrow the \"InterruptedException\" that can be caught here.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "This warning addresses proper handling of InterruptedException in multi-threaded contexts where catching it without re-interrupting or re-throwing can cause interruption signals to be lost, potentially preventing other threads from responding correctly to shutdown requests.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "CONCURRENCY",
+          "issue_signature": "catch interrupted exception without preserving interrupt status",
+          "developer_explanation": "When catching InterruptedException in Java threads, you must preserve the thread's interrupt signal by either re-throwing it or calling Thread.currentThread().interrupt() before continuing. Failing to do so can cause other code that depends on this interruption to work incorrectly later.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 2669,
+            "output_tokens": 159
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3838,
+          "latency_s": 8.443
+        }
+      ],
+      "original_finding_index": 15
+    },
+    {
+      "finding_id": 6,
+      "type": "java:S6218",
+      "sourcefile": "ClientParser.java",
+      "start_line": "52",
+      "message": "Override equals, hashCode and toString to consider array's content in the method",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "S6218 flags classes containing arrays as fields when equals()/hashCode() don't consider the array contents - this breaks Java's contract and causes real correctness issues with HashMap/HashSet operations.",
+          "is_true_positive": true,
+          "confidence": 0.75,
+          "category": "CORRECTNESS",
+          "issue_signature": "equals hashcode not considering array content properly",
+          "developer_explanation": "If your class contains arrays as fields and you override equals() or hashCode(), the implementations must consider whether two objects with different underlying data but equal-appearing arrays should be treated differently. Failing to do so can break contract expectations in collections like HashMap where lookups fail unexpectedly.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 2999,
+            "output_tokens": 160
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 5408,
+          "latency_s": 11.505
+        }
+      ],
+      "original_finding_index": 17
+    },
+    {
+      "finding_id": 7,
+      "type": "java:S1201",
+      "sourcefile": "HttpStatus.java",
+      "start_line": "196",
+      "message": "Either override Object.equals(Object), or rename the method to prevent any confusion.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning rule java:S1201 typically flags cases where a class defines an `equals`-like method that doesn't properly override Object.equals(), which can break collection semantics in HashMap/HashSet usage without proper hashCode implementation, OR it fires on custom-named methods that look like they could be mistaken for the equality contract. Without seeing actual source code to verify if this is truly an equals() confusion case or a legitimately named utility method.",
+          "is_true_positive": false,
+          "confidence": 0.75,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "custom equals-like method without proper contract implementation",
+          "developer_explanation": "This warning typically flags methods that could confuse readers into thinking they're Object.equals() implementations but aren't following the full equality and hashCode contract. If this is a utility or domain-specific comparison meant to be intentional (not overriding Object.equals), it's safe to ignore since your code isn't relying on collection semantics for custom comparisons here.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 3328,
+            "output_tokens": 221
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 7362,
+          "latency_s": 16.501
+        }
+      ],
+      "original_finding_index": 24
+    },
+    {
+      "finding_id": 8,
+      "type": "java:S2259",
+      "sourcefile": "HttpTester.java",
+      "start_line": "493",
+      "message": "A \"NullPointerException\" could be thrown; \"header\" is nullable here.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly states that the variable 'header' can be Null at line 493 and a NullPointerException could result if accessed, which directly describes an unhandled null reference scenario in Java runtime behavior. SonarQube's Rule S2259 employs symbolic execution to trace control flow paths indicating such unsafe dereferences exist rather than merely relying on annotation heuristics alone; therefore the tool's claim represents a genuine correctness risk where code may crash.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "CORRECTNESS",
+          "issue_signature": "potential NullPointerException when dereferencing nullable object",
+          "developer_explanation": "Your application may encounter a runtime crash at this location because the 'header' variable is not guaranteed to hold an initialized reference value here according to the analysis. Since Java throws exceptions upon accessing null references without explicit checks, ensuring that all paths initializing or modifying 'header' guarantee non-nullness before line 493 prevents these failures.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 7885,
+            "output_tokens": 224
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 27634,
+          "latency_s": 58.861
+        }
+      ],
+      "original_finding_index": 25
+    },
+    {
+      "finding_id": 9,
+      "type": "java:S2259",
+      "sourcefile": "RFC6265CookieParser.java",
+      "start_line": "377",
+      "message": "A \"NullPointerException\" could be thrown; \"attributeName\" is nullable here.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning from SonarQube S2259 claims 'NullPointerException' could be thrown because 'attributeName' is nullable at line 377. Static analysis tools like this track nullability through annotations and API signatures, making their NPE warnings typically reflect actual reachable paths where a field might not have been validated against null before access.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "CORRECTNESS",
+          "issue_signature": "potential null pointer dereference on nullable attribute name",
+          "developer_explanation": "The code uses attributeName without first verifying it is not null before accessing its properties or calling methods that could throw exceptions if passed a null value. This creates real risk of runtime failures when the field contains unexpected null values, so add an explicit null check or use Optional-based handling to ensure safe access.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 2658,
+            "output_tokens": 195
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3421,
+          "latency_s": 9.08
+        }
+      ],
+      "original_finding_index": 34
+    },
+    {
+      "finding_id": 10,
+      "type": "java:S2259",
+      "sourcefile": "RFC6265SetCookieParser.java",
+      "start_line": "185",
+      "message": "\"NullPointerException\" will be thrown when invoking method \"setAttribute()\".",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning claims a NullPointerException WILL be thrown (definitive assertion rather than potential) at setAttribute() call site, which suggests the static analyzer has verified a concrete execution path where an object is null when that method is invoked. Without source code to verify actual conditions like defensive null checks or guaranteed non-null initialization paths between declaration and this usage point, I must judge based on typical behavior of symbolically-execution-based analyzers for rule S2259.",
+          "is_true_positive": true,
+          "confidence": 0.65,
+          "category": "CORRECTNESS",
+          "issue_signature": "null dereference when object is null before method call",
+          "developer_explanation": "This indicates your code calls setAttribute() on an object that could be null at runtime without prior validation checks ensuring it's not null. Modern analyzers using symbolic execution can prove such paths exist, and the definitive 'will throw' language suggests they found actual conditions allowing this failure to occur in practice.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 3187,
+            "output_tokens": 220
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 6179,
+          "latency_s": 14.412
+        }
+      ],
+      "original_finding_index": 40
+    },
+    {
+      "finding_id": 11,
+      "type": "java:S2095",
+      "sourcefile": "HTTP2Session.java",
+      "start_line": "2564",
+      "message": "Use try-with-resources or close this \"HTTP2Stream\" in a \"finally\" clause.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The rule java:S2095 specifically detects objects implementing AutoCloseable that are not closed via try-with-resources or finally, and the warning message identifies a network stream ('HTTP2Stream') which holds OS-level resources (sockets/file descriptors). Without explicit code inspection to verify framework-managed cleanup—which is rare for manual HTTP/2 streams—this pattern represents a legitimate risk of resource exhaustion leading to Denial-of-Service attacks.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "SECURITY",
+          "issue_signature": "resource leak due to missing explicit close path",
+          "developer_explanation": "This code allocates a network stream that must be explicitly closed when done; failing to do so leaks system resources like sockets or memory and can crash the application under load. You should use try-with-resources syntax or ensure every execution path closes this object in a finally block.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 5623,
+            "output_tokens": 205
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 16915,
+          "latency_s": 36.488
+        }
+      ],
+      "original_finding_index": 45
+    },
+    {
+      "finding_id": 12,
+      "type": "java:S2095",
+      "sourcefile": "HTTP2CServerConnectionFactory.java",
+      "start_line": "78",
+      "message": "Use try-with-resources or close this \"Connection\" in a \"finally\" clause.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The S2095 rule specifically warns about unclosed resources like Connection objects that can leak server-side connection pools or cause denial-of-service vulnerabilities through exhausted connections. Without viewing the code to verify if proper closing mechanisms exist elsewhere, and given this is marked as a BLOCKER severity issue with explicit resource leak tags indicating exploitable consequences for an attacker exhausting serverside pool capacity",
+          "is_true_positive": true,
+          "confidence": 0.65,
+          "category": "OTHER",
+          "issue_signature": "resource not closed leading to potential exhaustion of system resources",
+          "developer_explanation": "This connection is being created but may not be properly closed after use. Unclosed connections leak from your server-side pool and can eventually exhaust available connections causing denial-of-service conditions for other clients. Use try-with-resources or ensure closing happens in a finally block to guarantee cleanup on all execution paths.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 2614,
+            "output_tokens": 198
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3245,
+          "latency_s": 8.315
+        }
+      ],
+      "original_finding_index": 49
+    },
+    {
+      "finding_id": 13,
+      "type": "java:S2583",
+      "sourcefile": "EncodableEntry.java",
+      "start_line": "145",
+      "message": "Change this condition so that it does not always evaluate to \"false\"",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The rule metadata lists 'symbolic-execution' among its tags which indicates the tool performed actual control-flow verification rather than simple heuristic pattern matching. This analysis capability makes claims about always-false conditions significantly more reliable unless source code reveals intentional suppression annotations we cannot inspect here, but without such visible evidence the warning reflects a genuine logical issue with branching logic.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "CORRECTNESS",
+          "issue_signature": "boolean condition always evaluates to false",
+          "developer_explanation": "Your code contains a boolean expression that will never evaluate to true under any execution path the tool analyzed, making all code in its conditional block unreachable. This indicates either an unintentional logic error hiding potential bugs or requires verification if intentionally disabled for guard-clause documentation purposes.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 9435,
+            "output_tokens": 186
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 40911,
+          "latency_s": 72.892
+        }
+      ],
+      "original_finding_index": 51
+    },
+    {
+      "finding_id": 14,
+      "type": "java:S2142",
+      "sourcefile": "ManagedSelector.java",
+      "start_line": "783",
+      "message": "Either re-interrupt this method or rethrow the \"InterruptedException\" that can be caught here.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The SonarQube S2142 rule warns that catching InterruptedException without either re-interrupting the thread or propagating the exception can lose interrupt status, breaking expected cancellation behavior in multi-threaded programs. Without source code verification to confirm Thread.interrupt() is called after catch or if any alternative shutdown-safe pattern exists elsewhere, this warning represents a genuine correctness issue for concurrent applications.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CONCURRENCY",
+          "issue_signature": "interrupted exception caught without preserving interrupt status",
+          "developer_explanation": "When catching InterruptedException you must either re-throw the exception or call Thread.interrupt() to preserve cancellation semantics for your thread. This is critical in server applications where shutdown signals need threads to exit their waiting operations. Without doing this, interrupted flags get cleared and your application may not shut down properly when external interrupt requests occur.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 3109,
+            "output_tokens": 207
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 6337,
+          "latency_s": 13.53
+        }
+      ],
+      "original_finding_index": 61
+    },
+    {
+      "finding_id": 15,
+      "type": "java:S2095",
+      "sourcefile": "ConnectorServer.java",
+      "start_line": "309",
+      "message": "Use try-with-resources or close this \"ServerSocket\" in a \"finally\" clause.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The tool explicitly identifies a 'ServerSocket' object that requires closing but is not using try-with-resources or finally to do so, which standardly constitutes an unrecoverable OS file descriptor leak. Without source code to confirm wrapping logic or auto-close behavior, the structural claim regarding resource lifecycle management holds true based on Java API norms.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "SECURITY",
+          "issue_signature": "resource leak due to unhandled close of server socket",
+          "developer_explanation": "This warning indicates that a 'ServerSocket' is created but never closed explicitly when the method exits (e.g., during return or exception). Because these sockets bind OS-level network handles, leaving them open can exhaust system limits and allow attackers to crash your service via resource exhaustion.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 7925,
+            "output_tokens": 187
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 27231,
+          "latency_s": 57.223
+        }
+      ],
+      "original_finding_index": 69
+    },
+    {
+      "finding_id": 16,
+      "type": "java:S5164",
+      "sourcefile": "ContextFactory.java",
+      "start_line": "67",
+      "message": "Call \"remove()\" on \"__threadClassLoader\".",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The SonarQube S5164 rule flags potential ThreadLocal-related memory leaks when static context variables are not properly cleaned up. Without source code to verify whether proper removal logic exists or if the warning points at actual problematic usage patterns, I cannot confirm this is a real issue versus tool over-conservatism on ThreadLocal cleanup advice.",
+          "is_true_positive": false,
+          "confidence": 0.45,
+          "category": "OTHER",
+          "issue_signature": "potential thread local storage memory leak with improper removal after use",
+          "developer_explanation": "This warning claims you're not calling remove() on a ThreadLocal-like variable that could cause memory leaks in pooled-thread scenarios like Tomcat. Since I cannot inspect your actual code, the warning is potentially correct if there's no cleanup around this thread-local map access but dismissible as false positive without proper try-finally blocks or explicit removal calls elsewhere.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 2765,
+            "output_tokens": 205
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 4103,
+          "latency_s": 9.482
+        }
+      ],
+      "original_finding_index": 71
+    },
+    {
+      "finding_id": 17,
+      "type": "java:S2119",
+      "sourcefile": "KeystoreGenerator.java",
+      "start_line": "59",
+      "message": "Save and re-use this \"Random\".",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The tool's recommendation to save and reuse the 'Random' object directly follows Java documentation guidance advising singleton usage of cryptographic random generators (SecureRandom) to avoid performance degradation from repeated initialization overhead; this pattern is recognized as a valid anti-pattern in security-sensitive code paths where availability impacts are relevant, making the claim materially correct for standard implementations absent specific architectural exceptions not visible here.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "PERFORMANCE",
+          "issue_signature": "unoptimized use of secure random instances repeatedly without reuse pattern",
+          "developer_explanation": "Your current code creates a new SecureRandom instance for each request instead of reusing one single initialized object across your service lifecycle; repeated initialization adds unnecessary latency and consumes excessive entropy resources which can degrade response times under load, so instantiate once at startup or use an application-scoped pool as recommended by Oracle documentation.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 12532,
+            "output_tokens": 202
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 52369,
+          "latency_s": 103.383
+        }
+      ],
+      "original_finding_index": 75
+    },
+    {
+      "finding_id": 18,
+      "type": "java:S2095",
+      "sourcefile": "AbstractForkedChild.java",
+      "start_line": "177",
+      "message": "Use try-with-resources or close this \"FileInputStream\" in a \"finally\" clause.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly states that a FileInputStream needs try-with-resources or closing in finally clause per standard resource management practice; this claim represents a legitimate concern given the tool's detection of missing cleanup mechanisms within its scope.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "CORRECTNESS",
+          "issue_signature": "unclosed fileInputStream requiring proper resource cleanup",
+          "developer_explanation": "An open FileInputStream without explicit closure can exhaust system resources when files remain inaccessible even after processing completes. This prevents your application from handling additional requests under load and may enable denial-of-service scenarios if attackers cause excessive handle consumption. Use try-with-resources to ensure automatic closing at method exit, eliminating manual finally clause requirements.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 11241,
+            "output_tokens": 167
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 49444,
+          "latency_s": 100.901
+        }
+      ],
+      "original_finding_index": 76
+    },
+    {
+      "finding_id": 19,
+      "type": "java:S2259",
+      "sourcefile": "NamingEntryUtil.java",
+      "start_line": "98",
+      "message": "A \"NullPointerException\" could be thrown; \"scopeName\" is nullable here.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "Without access to the actual source code at line 98 of NamingEntryUtil.java, I cannot verify whether scopeName is genuinely nullable or if initialization guarantees prevent NPE in practice. The tool's claim that 'scopeName is nullable here' requires checking object lifecycle patterns and null guards preceding this point.",
+          "is_true_positive": true,
+          "confidence": 0.6,
+          "category": "CORRECTNESS",
+          "issue_signature": "potential null pointer dereference on scopeName field",
+          "developer_explanation": "A NullPointerException may occur if code reads or modifies a nullable object without explicit safeguards before this line exists at runtime. Since static analysis cannot see all initialization paths in your project, you should verify that every execution path leading here ensures scopeName is non-null - either through proper constructor validation or defensive checks like optional null coalescing operations.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 3173,
+            "output_tokens": 192
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 6310,
+          "latency_s": 15.315
+        }
+      ],
+      "original_finding_index": 84
+    },
+    {
+      "finding_id": 20,
+      "type": "java:S5164",
+      "sourcefile": "DefaultIdentityService.java",
+      "start_line": "56",
+      "message": "Use \"remove()\" instead of \"set(null)\".",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning claims using 'set(null)' is problematic and suggests replacing it with 'remove()'. Without source code I cannot verify the exact context where this appears (Set vs Map usage), but S5164's existence indicates a real semantic issue in standard Java collection patterns. The rule tags mention 'leak' and 'performance', suggesting storing null values can cause resource leaks when removal was intended instead of replacement - an actual correctness concern.",
+          "is_true_positive": true,
+          "confidence": 0.75,
+          "category": "CORRECTNESS",
+          "issue_signature": "using set with null value to attempt deletion from collection",
+          "developer_explanation": "When you call set() on a collection that already contains an element and pass null, it replaces the existing entry rather than removing it. If your intent was to delete something from the structure without adding anything, this code will leak resources or produce incorrect behavior because the operation achieves what you didn't intend.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 3130,
+            "output_tokens": 216
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 5926,
+          "latency_s": 15.267
+        }
+      ],
+      "original_finding_index": 99
+    },
+    {
+      "finding_id": 21,
+      "type": "java:S2259",
+      "sourcefile": "MultiAuthenticator.java",
+      "start_line": "160",
+      "message": "A \"NullPointerException\" could be thrown; \"authenticator\" is nullable here.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "This warning claims an object named 'authenticator' can be null at line 160 and may cause NullPointerException when dereferenced. Without viewing the source to confirm there are no @NonNull annotations, explicit initialization before this point, or other mitigations that would suppress such alerts, I must rely on standard SAST tool accuracy for java:S2259 which typically correctly identifies actual null-pointer risks.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "CORRECTNESS",
+          "issue_signature": "potential nullable variable dereference without null check before usage",
+          "developer_explanation": "The tool correctly identifies that 'authenticator' may be null when accessed at line 160 in this location. To fix this, add a non-null assertion like Objects.requireNonNull(authenticator) or ensure the object is guaranteed initialized through design patterns such as constructor injection.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 2970,
+            "output_tokens": 203
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 5049,
+          "latency_s": 13.265
+        }
+      ],
+      "original_finding_index": 100
+    },
+    {
+      "finding_id": 22,
+      "type": "java:S2445",
+      "sourcefile": "MultiAuthenticator.java",
+      "start_line": "372",
+      "message": "\"session\" is a method parameter, and should not be used for synchronization.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning claims that a method parameter 'session' is being used for synchronization in synchronized blocks or methods, which SonarQube rule S2445 flags as unsafe per documented concurrency guidance.",
+          "is_true_positive": true,
+          "confidence": 0.9,
+          "category": "CONCURRENCY",
+          "issue_signature": "parameter object used for synchronization locking in concurrent code path",
+          "developer_explanation": "Using a method parameter as a lock object is dangerous because external callers may reuse that same reference elsewhere or allow other threads to use it with different expectations, leading to subtle re-entrancy bugs. This pattern can corrupt thread-safety guarantees and cause unexpected behavior under concurrency.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 2794,
+            "output_tokens": 160
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 4474,
+          "latency_s": 9.985
+        }
+      ],
+      "original_finding_index": 101
+    },
+    {
+      "finding_id": 23,
+      "type": "java:S2142",
+      "sourcefile": "AbstractConnector.java",
+      "start_line": "706",
+      "message": "Either re-interrupt this method or rethrow the \"InterruptedException\" that can be caught here.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The tool flags catching InterruptedException without rethrow or proper state restoration, which is a recognized threading anti-pattern in Java per standard concurrency documentation and exception handling guidelines. Without inspecting the actual catch block code I cannot confirm whether it intentionally clears interrupt flags before continuing elsewhere; based solely on rule semantics this represents valid multi-threading concern that matters for thread coordination reliability.",
+          "is_true_positive": true,
+          "confidence": 0.75,
+          "category": "CONCURRENCY",
+          "issue_signature": "interrupted exception caught without rethrow or state reset after catch",
+          "developer_explanation": "When catching an InterruptedException you must either propagate the exception up your call stack OR explicitly clear the interrupt status flag before proceeding. Swallowing it silently can prevent threads from responding properly to cancellation signals and cause indefinite blocking in concurrent code paths.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 8709,
+            "output_tokens": 187
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 38159,
+          "latency_s": 66.609
+        }
+      ],
+      "original_finding_index": 107
+    },
+    {
+      "finding_id": 24,
+      "type": "java:S2142",
+      "sourcefile": "LocalConnector.java",
+      "start_line": "286",
+      "message": "Either re-interrupt this method or rethrow the \"InterruptedException\" that can be caught here.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The SonarQube rule java:S2142 specifically targets InterruptedException handling where neither re-throw nor Thread.currentThread().interrupt() occurs in the catch block. Without source code I cannot verify whether interrupt status was restored or exception propagated, but this is a recognized concurrency correctness issue in multi-threaded Java applications.",
+          "is_true_positive": false,
+          "confidence": 0.65,
+          "category": "CONCURRENCY",
+          "issue_signature": "InterruptedException caught without restoration or propagation",
+          "developer_explanation": "This warning flags that InterruptedException was caught but neither its interrupt status nor the exception itself was preserved in a standard way (by calling Thread.currentThread().interrupt() before returning normally, or by rethrowing). Without seeing your actual code I cannot confirm whether you do restore it elsewhere; if so this is false positive. If not restored then multi-threaded callers may see InterruptedException as silent and deadlock.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 2463,
+            "output_tokens": 204
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2523,
+          "latency_s": 7.283
+        }
+      ],
+      "original_finding_index": 114
+    },
+    {
+      "finding_id": 25,
+      "type": "java:S2142",
+      "sourcefile": "Server.java",
+      "start_line": "713",
+      "message": "Either re-interrupt this method or rethrow the \"InterruptedException\" that can be caught here.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning claims that an InterruptedException is caught without either re-signaling the interrupt status via Thread.currentThread().interrupt() or rethrowing it, which would break cancellation/coordination semantics in concurrent code.",
+          "is_true_positive": true,
+          "confidence": 0.75,
+          "category": "CONCURRENCY",
+          "issue_signature": "InterruptedException swallowed without interrupt status propagation",
+          "developer_explanation": "When catching InterruptedException, you must preserve the interruption state for other threads to know they should also shut down or retry differently. If you swallow it silently here, waiting/running threads elsewhere may not recognize this was cancelled and continue indefinitely, potentially causing resource leaks.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 2641,
+            "output_tokens": 154
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3719,
+          "latency_s": 8.317
+        }
+      ],
+      "original_finding_index": 119
+    },
+    {
+      "finding_id": 26,
+      "type": "java:S5164",
+      "sourcefile": "ContextHandler.java",
+      "start_line": "82",
+      "message": "Call \"remove()\" on \"CURRENT_CONTEXT\".",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning claims CURRENT_CONTEXT needs a remove() call to prevent leaks or resource exhaustion patterns that S5164 is designed to detect. Without code visibility, I cannot verify if removal happens elsewhere implicitly (e.g., via try-finally), but SonarQube typically only flags these issues when it detects actual lifecycle violations based on its analysis heuristics.",
+          "is_true_positive": true,
+          "confidence": 0.75,
+          "category": "PERFORMANCE",
+          "issue_signature": "unreleased contextual object requiring cleanup",
+          "developer_explanation": "This warning indicates your context is being created but may not be properly cleaned up in all execution paths. If resources are allocated within this context without explicit removal, they could accumulate over time causing memory leaks or resource exhaustion. You should ensure remove() is called whenever the context lifecycle ends.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 3151,
+            "output_tokens": 191
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 6137,
+          "latency_s": 13.573
+        }
+      ],
+      "original_finding_index": 121
+    },
+    {
+      "finding_id": 27,
+      "type": "java:S2095",
+      "sourcefile": "ErrorHandler.java",
+      "start_line": "255",
+      "message": "Use try-with-resources or close this \"ByteBufferOutputStream\" in a \"finally\" clause.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The SonarQube rule java:S2095 detects unmanaged resources (like OutputStream instances) that lack proper cleanup via try-with-resources or finally blocks. ByteBufferOutputStream is a stream-based resource requiring explicit close() to release underlying buffer memory and file descriptors, making this claim about improper lifecycle management plausible per standard Java conventions.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "PERFORMANCE",
+          "issue_signature": "unmanaged output stream resource leak",
+          "developer_explanation": "This code creates a ByteBufferOutputStream that could exhaust system resources like file handles or buffer memory if not properly closed before garbage collection runs the cleanup path. To fix this, wrap it in try-with-resources statement which automatically calls close(), preventing potential application crashes under high load from accumulating unclosed streams.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 2638,
+            "output_tokens": 186
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3515,
+          "latency_s": 8.644
+        }
+      ],
+      "original_finding_index": 123
+    },
+    {
+      "finding_id": 28,
+      "type": "java:S2095",
+      "sourcefile": "ErrorHandler.java",
+      "start_line": "256",
+      "message": "Use try-with-resources or close this \"PrintWriter\" in a \"finally\" clause.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The SonarQube S2095 rule specifically flags unclosed stream resources (PrintWriter), which is a well-documented vulnerability pattern that can lead to resource exhaustion and denial-of-service conditions via file descriptor leaks.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "PERFORMANCE",
+          "issue_signature": "uninitialized stream not properly closed in finally block or try-with-resources",
+          "developer_explanation": "The code has a PrintWriter that is created but never automatically closed using Java's try-with-resources pattern. This allows file descriptors to leak during each invocation, which can eventually exhaust system resources and cause application instability. Add either 'try (var out = new PrintWriter(...)) { ... }' or move the close() call into a finally block.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 2724,
+            "output_tokens": 182
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 4043,
+          "latency_s": 9.292
+        }
+      ],
+      "original_finding_index": 124
+    },
+    {
+      "finding_id": 29,
+      "type": "java:S2177",
+      "sourcefile": "StateTrackingHandler.java",
+      "start_line": "626",
+      "message": "Rename this method; there is a \"private\" method in the parent class with the same name.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The tool warns about shadowing a parent class's 'private' method, but since Java does not allow inheriting or overriding `private` methods due to visibility restrictions anyway, this pattern creates no functional conflict.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "method name shadows inherited private member",
+          "developer_explanation": "This warning can be dismissed because shadowing an inherited `private` method doesn't actually hide any functionality from callers due to Java's access control rules; renaming it would not improve safety, logic or maintainability in this context.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 14389,
+            "output_tokens": 151
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 58999,
+          "latency_s": 125.391
+        }
+      ],
+      "original_finding_index": 128
+    },
+    {
+      "finding_id": 30,
+      "type": "java:S2583",
+      "sourcefile": "HttpChannelState.java",
+      "start_line": "596",
+      "message": "Change this condition so that it does not always evaluate to \"false\"",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning claims a condition always evaluates to 'false' based on symbolic execution, which SonarQube's S2583 rule uses to detect unreachable branches or dead code paths that will never execute at runtime.",
+          "is_true_positive": true,
+          "confidence": 0.75,
+          "category": "CORRECTNESS",
+          "issue_signature": "unreachable conditional branch due to always-false condition",
+          "developer_explanation": "This warning indicates a boolean expression that will never be satisfied given the code's type system and logical constraints as analyzed by the tool. This means any code following such an if-block is unreachable dead code, wasting resources with checks or blocks that can never execute. Reviewing this condition typically shows either an impossible guard (like checking a constant value against another) indicating stale logic needing cleanup.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 2752,
+            "output_tokens": 187
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 4264,
+          "latency_s": 9.767
+        }
+      ],
+      "original_finding_index": 133
+    },
+    {
+      "finding_id": 31,
+      "type": "java:S2142",
+      "sourcefile": "HttpConnection.java",
+      "start_line": "1068",
+      "message": "Either re-interrupt this method or rethrow the \"InterruptedException\" that can be caught here.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that either re-interrupt or propagate the exception must occur upon catching it, which is a strict requirement in Java concurrency code to preserve interruption signals between threads. This claim aligns with established multi-threaded best practices where swallowing an InterruptedException without restoring its status breaks cooperative cancellation controls and can lead to incorrect thread termination behavior.",
+          "is_true_positive": true,
+          "confidence": 1.0,
+          "category": "CONCURRENCY",
+          "issue_signature": "caught interruption exception without flag restoration or propagation",
+          "developer_explanation": "This warning flags catching an InterruptedException while failing to re-propagate it via a throw statement or reset the interrupt status using Thread.currentThread().interrupt() before continuing. If you intend for your thread to continue execution, ensure you call currentThread().interrupt(); so that other waiting code can correctly detect cancellation requests and terminate gracefully as intended by another calling context.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 15734,
+            "output_tokens": 199
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 70221,
+          "latency_s": 125.355
+        }
+      ],
+      "original_finding_index": 139
+    },
+    {
+      "finding_id": 32,
+      "type": "java:S2095",
+      "sourcefile": "JDBCSessionDataStore.java",
+      "start_line": "328",
+      "message": "Use try-with-resources or close this \"PreparedStatement\" in a \"finally\" clause.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The tool flags an unclosed PreparedStatement resource based on static analysis of JDBCSessionDataStore.java line 328. Without seeing source, I cannot verify if try-with-resources or close() in finally actually exists nearby - the tool's analyzer has already detected this pattern as problematic. This rule specifically targets resource leaks that can exhaust connection pools and cause denial-of-service conditions.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "OTHER",
+          "issue_signature": "jdbc preparedstatement not closed properly causing potential leak",
+          "developer_explanation": "This PreparedStatement appears to be created or used without proper cleanup using try-with-resources or a close() call in finally. Unclosed database connections can exhaust your connection pool and cause denial of service under load. You should wrap the resource declaration with try-with-resources which automatically closes it when done, ensuring no leak.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 2677,
+            "output_tokens": 199
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3541,
+          "latency_s": 8.445
+        }
+      ],
+      "original_finding_index": 143
+    },
+    {
+      "finding_id": 33,
+      "type": "java:S2095",
+      "sourcefile": "JDBCSessionDataStore.java",
+      "start_line": "347",
+      "message": "Use try-with-resources or close this \"PreparedStatement\" in a \"finally\" clause.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "Without access to source code I cannot verify whether there's actually an unclosed resource or legitimate cleanup elsewhere; however SonarQube S2095 reliably detects actual JDBC resource leaks, and the rule fires when resources truly remain open after use",
+          "is_true_positive": true,
+          "confidence": 0.7,
+          "category": "PERFORMANCE",
+          "issue_signature": "preparedstatement not closed with try-with-resources or finally block",
+          "developer_explanation": "An unclosed PreparedStatement can leak database connections over time as your application runs longer, eventually exhausting connection pools and causing performance degradation or denial of service. Fix this by wrapping the resource in a try-with-resources statement which automatically closes it when execution completes normally or via exception.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 2579,
+            "output_tokens": 169
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3005,
+          "latency_s": 7.167
+        }
+      ],
+      "original_finding_index": 144
+    },
+    {
+      "finding_id": 34,
+      "type": "java:S2095",
+      "sourcefile": "JDBCSessionDataStore.java",
+      "start_line": "370",
+      "message": "Use try-with-resources or close this \"PreparedStatement\" in a \"finally\" clause.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning flags a PreparedStatement not being closed properly via try-with-resources or finally clause per rule java:S2095, which detects unclosed resources that can lead to connection pool exhaustion and potential denial-of-service in production systems where JDBC connections accumulate over time.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "PERFORMANCE",
+          "issue_signature": "unclosed jdbc statement causing resource leak risk for pooled connections",
+          "developer_explanation": "This PreparedStatement needs to be explicitly closed after use to return the database connection back to its pool. Without proper cleanup via try-with-resources or a finally block, each query will keep holding onto resources that should be released immediately. If many such unclosed statements accumulate over time in production applications under load this can exhaust available connections causing application failures and potential denial-of-service through resource starvation.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 3822,
+            "output_tokens": 194
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 9866,
+          "latency_s": 17.946
+        }
+      ],
+      "original_finding_index": 145
+    },
+    {
+      "finding_id": 35,
+      "type": "java:S2095",
+      "sourcefile": "JDBCSessionDataStore.java",
+      "start_line": "394",
+      "message": "Use try-with-resources or close this \"PreparedStatement\" in a \"finally\" clause.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The SonarQube rule S2095 specifically checks for JDBC resources (like PreparedStatement) not being properly closed via try-with-resources or finally clause to prevent resource leaks and denial-of-service conditions. Since no source code is visible, I must assume the tool's detection of an unclosed PreparedStatement on lines 394–398 represents actual analysis findings rather than spurious matches; such rule-based patterns typically identify genuine structural issues in Java JDBC handling.",
+          "is_true_positive": true,
+          "confidence": 0.75,
+          "category": "PERFORMANCE",
+          "issue_signature": "jdbc resource not closed with try-with-resources or finally clause",
+          "developer_explanation": "Your PreparedStatement at lines 394-398 is not being automatically cleaned up when it falls out of scope. Unclosed JDBC connections and result sets can exhaust database connection pools, causing applications to hang under load even if the logic works correctly in normal scenarios. Wrap this code block with try-with-resources or ensure close() is called in a finally clause before moving on.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 2865,
+            "output_tokens": 237
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 4992,
+          "latency_s": 10.189
+        }
+      ],
+      "original_finding_index": 146
+    },
+    {
+      "finding_id": 36,
+      "type": "java:S2095",
+      "sourcefile": "JDBCSessionDataStore.java",
+      "start_line": "414",
+      "message": "Use try-with-resources or close this \"PreparedStatement\" in a \"finally\" clause.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The SonarQube S2095 rule specifically flags unmanaged database connections that could leak under high load, and this is a legitimate concern for JDBC resources like PreparedStatement objects without being able to verify whether they are properly closed elsewhere in context.",
+          "is_true_positive": true,
+          "confidence": 0.6,
+          "category": "SECURITY",
+          "issue_signature": "unmanaged database connection resource leak via unclosed preparedstatement object",
+          "developer_explanation": "This warning indicates a PreparedStatement may not be properly closed after use, which can exhaust your database connection pool and degrade system performance under load. Use try-with-resources syntax on the statement declaration or ensure close() is called in a finally block to guarantee cleanup.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 2727,
+            "output_tokens": 167
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3921,
+          "latency_s": 9.787
+        }
+      ],
+      "original_finding_index": 147
+    },
+    {
+      "finding_id": 37,
+      "type": "java:S2095",
+      "sourcefile": "JDBCSessionDataStore.java",
+      "start_line": "440",
+      "message": "Use try-with-resources or close this \"PreparedStatement\" in a \"finally\" clause.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning message claims an unclosed PreparedStatement must be closed or managed via try-with-resources to prevent resource leaks and potential connection exhaustion without source code evidence of framework-based automatic management.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "jdbc preparedstatement not closed properly",
+          "developer_explanation": "This warning indicates a resource leak where a database connection is potentially left open after the PreparedStatement execution. If you do not use try-with-resources or ensure closing within finally blocks across all code paths, your application can exhaust its JDBC pool leading to service denial and poor stability. Refactor this section to declare an AutoCloseable (e.g., Statement) in 'try' with a matching 'catch', or explicitly close it using resources() pattern.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 9154,
+            "output_tokens": 187
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 34557,
+          "latency_s": 64.947
+        }
+      ],
+      "original_finding_index": 148
+    },
+    {
+      "finding_id": 38,
+      "type": "java:S2095",
+      "sourcefile": "JDBCSessionDataStore.java",
+      "start_line": "459",
+      "message": "Use try-with-resources or close this \"PreparedStatement\" in a \"finally\" clause.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning claims there's an unmanaged PreparedStatement that may leak resources on error paths, which matches a well-documented issue pattern for this specific SonarQube rule targeting JDBC connection pool exhaustion risks. Without source code visibility I cannot definitively verify every cleanup path exists, but the tool's detection of S2095 typically reflects actual control flow analysis showing missing exception-safety in resource lifecycle.",
+          "is_true_positive": true,
+          "confidence": 0.8,
+          "category": "SECURITY",
+          "issue_signature": "jdbc statement not properly closed causing resource leak",
+          "developer_explanation": "This PreparedStatement needs to be explicitly closed after use to prevent connection leaks that can exhaust your database pool over time. Either wrap it in a try-with-resources block or ensure close() is called unconditionally (e.g., with an explicit finally clause). Connection exhaustion from this pattern can cause denial-of-service for other applications sharing the same datasource.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 3328,
+            "output_tokens": 210
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 6909,
+          "latency_s": 14.055
+        }
+      ],
+      "original_finding_index": 149
+    },
+    {
+      "finding_id": 39,
+      "type": "java:S2095",
+      "sourcefile": "JDBCSessionDataStore.java",
+      "start_line": "475",
+      "message": "Use try-with-resources or close this \"PreparedStatement\" in a \"finally\" clause.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly flags an unclosed PreparedStatement resource leak detected by static analysis. This indicates a potential database connection exhaustion vulnerability consistent with the denial-of-service tag provided in metadata.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "SECURITY",
+          "issue_signature": "unhandled prepared statement resource closure",
+          "developer_explanation": "This code creates a JDBC PreparedStatement that is not automatically cleaned up using try-with-resources or closed in every execution path (such as finally blocks). This can lead to database connection pool exhaustion, potentially causing service outages. To fix this, wrap the statement preparation and usage logic inside a try-with-resources block so resources are released properly even when exceptions occur.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 10454,
+            "output_tokens": 166
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 40463,
+          "latency_s": 76.596
+        }
+      ],
+      "original_finding_index": 150
+    },
+    {
+      "finding_id": 40,
+      "type": "java:S2142",
+      "sourcefile": "ManagedSession.java",
+      "start_line": "564",
+      "message": "Either re-interrupt this method or rethrow the \"InterruptedException\" that can be caught here.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning claims an InterruptedException was caught without rethrowing it or calling Thread.currentThread().interrupt() to preserve cancellation state, which violates standard Java concurrency contract and causes threads to miss termination requests in multi-threaded execution.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CONCURRENCY",
+          "issue_signature": "suppressing interrupt status without rethrow or reset",
+          "developer_explanation": "You caught an InterruptedException but neither propagated it nor restored the thread's interrupted state by calling Thread.currentThread().interrupt(). This prevents other threads from detecting that a shutdown signal was sent, potentially leaving resources uncleaned when graceful cancellation is attempted.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 7553,
+            "output_tokens": 156
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 28735,
+          "latency_s": 50.293
+        }
+      ],
+      "original_finding_index": 151
+    },
+    {
+      "finding_id": 41,
+      "type": "java:S2095",
+      "sourcefile": "UnixDomainServerConnector.java",
+      "start_line": "250",
+      "message": "Use try-with-resources or close this \"ServerSocketChannel\" in a \"finally\" clause.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The SonarQube rule S2095 flags a ServerSocketChannel created without using try-with-resources or an explicit close in finally.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "SECURITY",
+          "issue_signature": "server socket channel left unclosed after creation",
+          "developer_explanation": "You are creating a ServerSocketChannel but not guaranteeing it will be closed when the method finishes, which can leave operating system sockets open and exhaust resources. Since Java does not release these file descriptors via garbage collection, an unclosed channel consumes server resources and may cause denial-of-service under load.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 17221,
+            "output_tokens": 152
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 75191,
+          "latency_s": 137.889
+        }
+      ],
+      "original_finding_index": 154
+    },
+    {
+      "finding_id": 42,
+      "type": "java:S2142",
+      "sourcefile": "Blocker.java",
+      "start_line": "134",
+      "message": "Either re-interrupt this method or rethrow the \"InterruptedException\" that can be caught here.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning claims InterruptedException is caught but neither re-interrupted nor rethrown, which loses thread's interrupt flag and could cause indefinite blocking if subsequent code checks Thread.currentThread().isInterrupted() to wait for shutdown signals. Since the tool explicitly identifies this pattern in the analyzed method (evidence of actual exception catching context), I must treat this as claiming a real problem exists.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CONCURRENCY",
+          "issue_signature": "interrupted exception not re-thrown without restoration",
+          "developer_explanation": "When catching InterruptedException from sleep/wait operations, you must either call Thread.currentThread().interrupt() to restore the interrupt flag or let it propagate. Without doing so, interrupted threads lose their shutdown signal and may block forever in other synchronization points that check isInterrupted(). This breaks cooperative cancellation patterns essential for safe thread termination.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 2699,
+            "output_tokens": 202
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 4093,
+          "latency_s": 8.701
+        }
+      ],
+      "original_finding_index": 156
+    },
+    {
+      "finding_id": 43,
+      "type": "java:S2142",
+      "sourcefile": "Blocker.java",
+      "start_line": "216",
+      "message": "Either re-interrupt this method or rethrow the \"InterruptedException\" that can be caught here.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning addresses InterruptedException handling where the exception is caught but neither rethrown nor does it signal interruption to caller threads before returning normally, which can break expected cancellation semantics in concurrent programs. Without source code I cannot verify if legitimate patterns like graceful shutdown without propagation are used here. This rule targets a well-documented concurrency best practice with real correctness implications.",
+          "is_true_positive": true,
+          "confidence": 0.75,
+          "category": "CONCURRENCY",
+          "issue_signature": "interrupted exception swallowed without re-interruption",
+          "developer_explanation": "When catching InterruptedException in a method that may be interrupted for shutdown cancellation, you must either re-throw the exception or call Thread.interrupt() again before returning normally. Otherwise threads expecting interruption will continue running instead of terminating cleanly, potentially causing resource leaks and deadlocks.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 2856,
+            "output_tokens": 189
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 5061,
+          "latency_s": 9.716
+        }
+      ],
+      "original_finding_index": 158
+    },
+    {
+      "finding_id": 44,
+      "type": "java:S2142",
+      "sourcefile": "Blocker.java",
+      "start_line": "289",
+      "message": "Either re-interrupt this method or rethrow the \"InterruptedException\" that can be caught here.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning flags catching InterruptedException without either clearing the interrupt flag or rethrowing it—a well-established Java anti-pattern for concurrent code that can cause threads to lose cancellation signals and block indefinitely.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CONCURRENCY",
+          "issue_signature": "interrupted exception caught without clearing interrupt status or rethrowing",
+          "developer_explanation": "When you catch an InterruptedException in multi-threaded code, the thread must either clear its interrupted state using Thread.currentThread().interrupt() OR propagate it outward. Simply swallowing it silently causes other waiting threads to lose their cancellation signals and may deadlock your application under certain conditions.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 2524,
+            "output_tokens": 158
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3023,
+          "latency_s": 6.655
+        }
+      ],
+      "original_finding_index": 160
+    },
+    {
+      "finding_id": 45,
+      "type": "java:S2142",
+      "sourcefile": "Blocker.java",
+      "start_line": "513",
+      "message": "Either re-interrupt this method or rethrow the \"InterruptedException\" that can be caught here.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The SonarQube warning (java:S2142) claims an InterruptedException was caught without proper handling - either re-interrupting with Thread.currentThread().interrupt() or propagating via throw. This rule addresses a real concurrency correctness concern where suppression of interruption signals can cause threads to continue executing after they should stop.",
+          "is_true_positive": true,
+          "confidence": 0.75,
+          "category": "CONCURRENCY",
+          "issue_signature": "interrupted exception not properly re-thrown or interrupted thread resumed inside catch block where suppression of interrupt status occurs",
+          "developer_explanation": "When catching InterruptedException from threads that sleep, wait on locks, or similar blocking operations, you must either pass the interruption signal forward with Thread.currentThread().interrupt() before returning or let it propagate. Simply swallowing this exception without re-interrupting leaves your thread in a state where interrupt signals can be ignored silently, potentially causing hangs when callers expect cancellation to work.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 3669,
+            "output_tokens": 213
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 8932,
+          "latency_s": 16.807
+        }
+      ],
+      "original_finding_index": 163
+    },
+    {
+      "finding_id": 46,
+      "type": "java:S3551",
+      "sourcefile": "ByteArrayOutputStream2.java",
+      "start_line": "63",
+      "message": "Make this method \"synchronized\" to match the parent class implementation.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning claims a method should be synchronized to match parent class implementation, which directly addresses a real thread-safety contract issue where callers relying on synchronization semantics would have their expectations broken if the overridden subclass doesn't maintain that guarantee.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CONCURRENCY",
+          "issue_signature": "unsynchronized override of synchronized parent method breaks thread safety contract",
+          "developer_explanation": "If you're overriding a public/protected instance method from a superclass without keeping it synchronized (or making the class itself effectively single-threaded via other means), callers accessing shared mutable state through this subclass may encounter race conditions. This violates the expected synchronization semantics that clients relying on your API's documented thread-safety guarantees would expect.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 2613,
+            "output_tokens": 178
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3578,
+          "latency_s": 7.688
+        }
+      ],
+      "original_finding_index": 167
+    },
+    {
+      "finding_id": 47,
+      "type": "java:S2142",
+      "sourcefile": "ExceptionUtil.java",
+      "start_line": "520",
+      "message": "Either re-interrupt this method or rethrow the \"InterruptedException\" that can be caught here.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning addresses InterruptedException propagation or re-interruption, which is a standard concurrency correctness concern about maintaining thread interrupt status after catching interruption exceptions without proper restoration.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "CONCURRENCY",
+          "issue_signature": "interrupted exception caught without restoring or rethrowing",
+          "developer_explanation": "When an InterruptedException is caught in a thread method that uses sleep/wait/join, failing to restore the interrupt status (by calling Thread.currentThread().interrupt() or re-throwing) can cause that code path to become un-interruptable from elsewhere. This prevents other threads' interruption signals from propagating correctly, which may block clean shutdown. You should either propagate the exception through a wrapper check or explicitly re-insert an interrupted flag after performing any required cleanup.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 2746,
+            "output_tokens": 190
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 4206,
+          "latency_s": 8.782
+        }
+      ],
+      "original_finding_index": 173
+    },
+    {
+      "finding_id": 48,
+      "type": "java:S2142",
+      "sourcefile": "FutureCallback.java",
+      "start_line": "156",
+      "message": "Either re-interrupt this method or rethrow the \"InterruptedException\" that can be caught here.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning reports an issue with InterruptedException handling where the exception can be caught without either preserving the interrupted state by calling Thread.currentThread().interrupt() or rethrowing it. The rule java:S2142 specifically targets this anti-pattern which loses important thread cancellation information in concurrent code.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "CONCURRENCY",
+          "issue_signature": "interrupted exception swallowed without restoring interrupt state or rethrowing it",
+          "developer_explanation": "When catching InterruptedException in a threaded context, you must either call Thread.currentThread().interrupt() to restore the interrupted status after handling it locally, OR propagate it upward. Otherwise, other threads that might later check isInterrupted() won't detect cancellation requests made during this execution path.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 2958,
+            "output_tokens": 181
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 5178,
+          "latency_s": 10.48
+        }
+      ],
+      "original_finding_index": 175
+    },
+    {
+      "finding_id": 49,
+      "type": "java:S2142",
+      "sourcefile": "SharedBlockingCallback.java",
+      "start_line": "231",
+      "message": "Either re-interrupt this method or rethrow the \"InterruptedException\" that can be caught here.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly states the code fails to either re-interrupt or rethrow the exception as required by best practices.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CONCURRENCY",
+          "issue_signature": "InterruptedException caught and interruption status lost",
+          "developer_explanation": "This code catches an InterruptedException without restoring the interrupt flag or propagating it as a RuntimeException. Failing to do so prevents other threads from detecting cancellation requests, potentially causing indefinite waits during shutdown; fix by either re-throwing `InterruptedException` (wrapped in runtime exception) or calling `Thread.currentThread().interrupt()` before continuing execution.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 11004,
+            "output_tokens": 152
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 46726,
+          "latency_s": 80.491
+        }
+      ],
+      "original_finding_index": 179
+    },
+    {
+      "finding_id": 50,
+      "type": "java:S2095",
+      "sourcefile": "FileSystemPool.java",
+      "start_line": "118",
+      "message": "Use try-with-resources or close this \"FileSystem\" in a \"finally\" clause.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning flags a potential resource leak on FileSystem objects using try-with-resources or finally block, which SonarQube's S2095 rule detects as actual resource management issues when the specified disposal pattern is absent from static analysis view.",
+          "is_true_positive": true,
+          "confidence": 0.6,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "resource leak without proper cleanup pattern",
+          "developer_explanation": "This warning indicates a FileSystem object may not be properly closed in all code paths, which could exhaust system resources over time and lead to issues like denial-of-service. The tool recommends wrapping the resource creation/closure within try-with-resources or adding explicit close() calls in a finally block where needed.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 5812,
+            "output_tokens": 169
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 19406,
+          "latency_s": 35.31
+        }
+      ],
+      "original_finding_index": 182
+    },
+    {
+      "finding_id": 51,
+      "type": "java:S4973",
+      "sourcefile": "Credential.java",
+      "start_line": "107",
+      "message": "Strings and Boxed types should be compared using \"equals()\".",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning claims string/boxed type comparisons are done via '==' instead of '.equals()', matching a well-known Java pitfall. Without code, I'm relying on SonarQube's S4973 rule behavior where this pattern almost always indicates actual bugs rather than intended identity checks.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "CORRECTNESS",
+          "issue_signature": "string comparison with equals instead of reference equality",
+          "developer_explanation": "The flagged line compares a String or boxed type using '==' which checks object identity rather than content equality in Java's usual usage for Strings. This can lead to logic errors when developers expect string value matching but get unexpected false negatives due to JVM caching behavior. Replace the '==' comparison with '.equals()' (or use Objects.equals()) at this location to ensure you're comparing values as intended.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 3684,
+            "output_tokens": 202
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 8463,
+          "latency_s": 17.123
+        }
+      ],
+      "original_finding_index": 185
+    },
+    {
+      "finding_id": 52,
+      "type": "java:S4973",
+      "sourcefile": "SniX509ExtendedKeyManager.java",
+      "start_line": "162",
+      "message": "Strings and Boxed types should be compared using \"equals()\".",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning claims that comparisons between strings and boxed types use the '==' operator rather than '.equals()', which asserts a potential logical error where reference equality is checked instead of content equality; this aligns with standard Java correctness rules for object comparison unless identity checks are explicitly intended. Without source code to verify singleton references or literals, we rely on the rule's semantic purpose indicating a risk of incorrect logic results.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "comparison using identity operator instead of value check",
+          "developer_explanation": "Comparing Strings or boxed types (like Integer) with '==' checks if they are the exact same object in memory rather than having equal content. This can cause your program to return false when it should be true, such as comparing user input strings that have not been interned. You should replace these comparisons with '.equals()' or use a value-based equality check.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 6154,
+            "output_tokens": 218
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 19449,
+          "latency_s": 38.566
+        }
+      ],
+      "original_finding_index": 191
+    },
+    {
+      "finding_id": 53,
+      "type": "java:S2142",
+      "sourcefile": "QueuedThreadPool.java",
+      "start_line": "354",
+      "message": "Either re-interrupt this method or rethrow the \"InterruptedException\" that can be caught here.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning invokes SonarQube rule S2142 which asserts that catching an InterruptedException in a blocking context must either restore the interrupt flag or rethrow it to preserve thread signaling contracts for cooperative cancellation.",
+          "is_true_positive": true,
+          "confidence": 0.9,
+          "category": "CONCURRENCY",
+          "issue_signature": "caught interrupted exception without status restoration propagation",
+          "developer_explanation": "Ignoring an InterruptedException inside a worker task in a thread pool typically causes the interrupt signal from the shutdown or cancellation request to be lost. If you do not restore the flag, subsequent checks using isInterrupted() will incorrectly return false, potentially preventing proper cleanup and causing threads to hang indefinitely during graceful termination.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 6937,
+            "output_tokens": 165
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 25376,
+          "latency_s": 45.288
+        }
+      ],
+      "original_finding_index": 195
+    },
+    {
+      "finding_id": 54,
+      "type": "java:S2095",
+      "sourcefile": "ExtensionStack.java",
+      "start_line": "139",
+      "message": "Use try-with-resources or close this \"Extension\" in a \"finally\" clause.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning claims an 'Extension' resource isn't properly closed using try-with-resources or a finally clause, which is java:S2095's documented detection pattern for AutoCloseable resources requiring explicit lifecycle management without source visibility I cannot verify whether Extension implements Closeable or holds actual underlying resources to leak.",
+          "is_true_positive": true,
+          "confidence": 0.75,
+          "category": "CORRECTNESS",
+          "issue_signature": "resource acquired but not closed properly in finally block using try-with-resources pattern for automatic cleanup after acquisition and usage completes successfully regardless of exceptions thrown during normal operation lifecycle management flow execution sequence.",
+          "developer_explanation": "This warning flags that an Extension object holds resources (like file handles, network connections, or memory) that need explicit cleanup when done with. Without proper closure in try-with-resources or a finally clause, these underlying system resources could leak across all code paths including after exceptions occur. Fix this by either using the statement resource directly inside parentheses for automatic closing or explicitly calling close() within a finally block to ensure consistent cleanup.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 4633,
+            "output_tokens": 236
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 14521,
+          "latency_s": 25.622
+        }
+      ],
+      "original_finding_index": 206
+    },
+    {
+      "finding_id": 55,
+      "type": "java:S1143",
+      "sourcefile": "WebSocketConnection.java",
+      "start_line": "583",
+      "message": "Remove this throw statement from this finally block.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "SonarQube rule S1143 flags throw statements inside finally blocks as problematic because they can mask or suppress exceptions thrown in the try/catch portion of a catch-all block, which changes program semantics and violates expected exception handling flow.",
+          "is_true_positive": true,
+          "confidence": 0.65,
+          "category": "CORRECTNESS",
+          "issue_signature": "throw statement masking exceptions inside finally block",
+          "developer_explanation": "The warning flags that throwing an exception from a try-finally's cleanup section can accidentally hide or replace the original error condition thrown in your catch handler. This makes debugging difficult because callers receive unexpected exceptions and lose visibility into what actually failed.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 3592,
+            "output_tokens": 160
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 8906,
+          "latency_s": 16.035
+        }
+      ],
+      "original_finding_index": 207
+    },
+    {
+      "finding_id": 56,
+      "type": "java:S2259",
+      "sourcefile": "XmlConfiguration.java",
+      "start_line": "2036",
+      "message": "A \"NullPointerException\" could be thrown; \"envBuilder\" is nullable here.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "Without source code available to verify the exact control flow, I cannot confirm whether envBuilder is actually nulled or guarded at this location. However, SonarQube's S2259 rule uses symbolic execution and has proven reliable in practice for catching real NullPointerException vulnerabilities where null values reach dereference points without proper guards.",
+          "is_true_positive": true,
+          "confidence": 0.7,
+          "category": "CORRECTNESS",
+          "issue_signature": "nullable object used before non-null assertion or guard check",
+          "developer_explanation": "This warning indicates that envBuilder might be null when accessed at line 2036 in XmlConfiguration.java without proper initialization checks. You should verify whether this variable is guaranteed to have a value by this point - either through explicit initialization, validation before use, or adding an early return/exception for the null case.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 2968,
+            "output_tokens": 195
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 5154,
+          "latency_s": 10.867
+        }
+      ],
+      "original_finding_index": 220
+    },
+    {
+      "finding_id": 57,
+      "type": "java:S2583",
+      "sourcefile": "XmlParser.java",
+      "start_line": "165",
+      "message": "Change this condition so that it does not always evaluate to \"true\"",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The rule java:S2583 flags conditions that statically appear to always evaluate true (e.g., non-null checks where nullability isn't strictly enforced by the tool's type model). Without source code visibility into method contracts or input validation logic, such claims are frequently false positives because they assume reachability guarantees from API calls and dynamic data flows that SAST tools often cannot accurately track in complex parsing contexts.",
+          "is_true_positive": false,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "boolean condition always evaluates to true",
+          "developer_explanation": "This warning suggests the code contains a redundant boolean check that is perceived as always evaluating to true by the tool. In typical XML parsing logic involving external inputs or API calls, this often occurs due to limitations in how static analysis tracks contract-based guarantees (like non-null return types). Since you cannot verify dynamic input flow without inspecting the file, and such patterns are common sources of noise for these specific rules, it is safer to treat as a false positive unless explicit constants cause the issue.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 9618,
+            "output_tokens": 243
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 35051,
+          "latency_s": 69.572
+        }
+      ],
+      "original_finding_index": 221
+    },
+    {
+      "finding_id": 58,
+      "type": "java:S2068",
+      "sourcefile": "JDBCLoginModule.java",
+      "start_line": "55",
+      "message": "'Password' detected in this expression, review this potentially hard-coded password.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning is from SonarQube rule java:S2068 which specifically detects hard-coded credentials in code. Without viewing the source, we must trust that when this SAST alert fires it means credential material matching its pattern was detected per tool's design intent for such security rules.",
+          "is_true_positive": true,
+          "confidence": 0.75,
+          "category": "SECURITY",
+          "issue_signature": "hardcoded secret embedded as string literal",
+          "developer_explanation": "This alert indicates credentials may be stored directly in your source code instead of reading from secure configuration or environment variables at runtime. Hard-coded secrets pose a security risk because they can be accidentally committed to version control and exposed publicly.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 5113,
+            "output_tokens": 165
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 16088,
+          "latency_s": 29.361
+        }
+      ],
+      "original_finding_index": 222
+    },
+    {
+      "finding_id": 59,
+      "type": "java:S2755",
+      "sourcefile": "XmlParser.java",
+      "start_line": "113",
+      "message": "Disable access to external entities in XML parsing.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "This is SonarQube rule S2755 warning about external entity access during XML parsing (XXE vulnerability risk). Without source code, it's impossible to verify if the parser actually processes untrusted input or uses an API that can be configured securely by default. However, XXE warnings on user-controlled XML are generally material security issues when exploitable inputs exist.",
+          "is_true_positive": true,
+          "confidence": 0.65,
+          "category": "SECURITY",
+          "issue_signature": "xml external entity injection vulnerability via unsafe parser configuration",
+          "developer_explanation": "This warning indicates XML parsing code that could be vulnerable to XXE attacks where attackers might read local files or make server-side requests through crafted input. If you parse content from users, third parties, or untrusted sources without disabling DTDs and external entities, an attacker could exploit this flaw. Configure your DocumentBuilderFactory/SAXParserFactory to disable external-general-entities, external-parameter Entities, and DOCTYPE declarations before parsing any potentially untrusted XML.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 2864,
+            "output_tokens": 230
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 4838,
+          "latency_s": 10.289
+        }
+      ],
+      "original_finding_index": 223
+    },
+    {
+      "finding_id": 60,
+      "type": "java:S2178",
+      "sourcefile": "RequestListeners.java",
+      "start_line": "43",
+      "message": "Correct this \"|\" to \"||\" and extract the right operand to a variable if it should always be evaluated.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning indicates a misuse of the bitwise OR operator (`|`) where short-circuiting logical OR (`||`) should be used, which affects execution order and can lead to unintended side effects or exceptions in boolean expressions; this pattern is consistently treated as an anti-pattern that changes semantics rather than just style.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "using bitwise-or-instead-of-logical-operator",
+          "developer_explanation": "You are using the bitwise OR operator (`|`) for boolean logic when you should use logical OR (`||`). The difference matters because `|` evaluates both operands regardless of their values, while `||` stops after the first true result to avoid unnecessary work or exceptions (like NPEs) in cases where side effects were intended to be skipped.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 10250,
+            "output_tokens": 197
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 37838,
+          "latency_s": 74.553
+        }
+      ],
+      "original_finding_index": 224
+    },
+    {
+      "finding_id": 61,
+      "type": "java:S2178",
+      "sourcefile": "RequestListeners.java",
+      "start_line": "45",
+      "message": "Correct this \"|\" to \"||\" and extract the right operand to a variable if it should always be evaluated.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The tool claims that using the bitwise operator (|) instead of the logical one (||) in boolean contexts can lead to unintended side effects or incorrect evaluation order, which is a recognized correctness concern in Java because standard conditionals rely on short-circuiting for safety and efficiency. This pattern often indicates a developer misconception about operator behavior where both sides might be evaluated unnecessarily, potentially triggering unwanted logic or exceptions when not intended.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "boolean expression using bitwise operators instead of logical ones",
+          "developer_explanation": "This warning suggests that you are evaluating the right-hand side of your condition even when it might not be necessary for the logic result (e.g., a second validation check running regardless of the first). This is typically unintended in conditional checks and can lead to wasted performance, unexpected state changes, or bypassing null-safety. To fix this safely without breaking intended behavior, ensure you only run side-effectful code when needed by using short-circuit operators like ||.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 16423,
+            "output_tokens": 242
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 65320,
+          "latency_s": 131.141
+        }
+      ],
+      "original_finding_index": 226
+    },
+    {
+      "finding_id": 62,
+      "type": "java:S2178",
+      "sourcefile": "RequestListeners.java",
+      "start_line": "56",
+      "message": "Correct this \"|\" to \"||\" and extract the right operand to a variable if it should always be evaluated.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The tool asserts that a bitwise OR ('|') operator was used where logical operators ('||'/'&&') are expected in conditional logic to prevent unintended side effects, which aligns with standard Java correctness principles for boolean conditions; without source code contradicting this behavior (like intentional bitmask checks), the claim is accepted.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "bitwise operator used where logical should be used in boolean condition",
+          "developer_explanation": "Using bitwise OR ('|') with conditions that look like booleans can cause both branches to execute even if the first fails, leading to unintended side effects. Unless you specifically need parallel evaluation (rare for logic checks), replace it with Logical OR ('||'). This change ensures your code behaves as intended and only runs necessary operations.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 12115,
+            "output_tokens": 197
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 43324,
+          "latency_s": 90.892
+        }
+      ],
+      "original_finding_index": 231
+    },
+    {
+      "finding_id": 63,
+      "type": "java:S2178",
+      "sourcefile": "RequestListeners.java",
+      "start_line": "59",
+      "message": "Correct this \"|\" to \"||\" and extract the right operand to a variable if it should always be evaluated.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The tool flags the use of a bitwise operator ('|') in place of logical OR, which changes short-circuit behavior by forcing evaluation of both operands regardless of control flow needs for conditionals. In Java standard practice (and implied developer intent), this can lead to unintended side effects or exceptions if the right operand contains logic that should be skipped when conditions are met via '||'. Without source code confirming specific non-short-circuiting atomicity requirements, treating operator misuse on booleans as an issue is a correct assessment of flow control correctness.",
+          "is_true_positive": true,
+          "confidence": 0.9,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "bitwise or used instead of logical or in boolean conditionals",
+          "developer_explanation": "Using the bitwise OR operator on booleans can cause both expressions to evaluate even if the first one is true (unlike standard short-circuit logic). If you intended to skip evaluating part of your code based on a result here, changing this prevents unintended side effects or unnecessary work. Use logical operators ('||', '&&') unless explicitly handling atomic state checks that require non-short circuiting.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 9541,
+            "output_tokens": 256
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 34080,
+          "latency_s": 68.54
+        }
+      ],
+      "original_finding_index": 234
+    },
+    {
+      "finding_id": 64,
+      "type": "java:S3516",
+      "sourcefile": "HttpConnection.java",
+      "start_line": "345",
+      "message": "Refactor this method to not always return the same value.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning from SonarQube rule java:S3516 claims a method always returns the same value, flagged via symbolic execution at BLOCKER severity. Without inspecting actual code to verify whether multiple branches truly converge without differing side effects or observable behavior differences before returning is accurate, but the tool's use of symbolic-execution indicates it proved rather than pattern-matched this claim.",
+          "is_true_positive": true,
+          "confidence": 0.65,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "method always returns same value regardless of branches",
+          "developer_explanation": "This warning indicates your method has multiple execution paths that all return identical values without producing different observable side effects or state changes. While the returned result is technically correct, this suggests unnecessary conditional logic and potential dead code paths that reduce maintainability by keeping more complex branching than needed. Consider simplifying control flow to remove branches that have no behavioral impact on output.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 3251,
+            "output_tokens": 213
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 7177,
+          "latency_s": 13.604
+        }
+      ],
+      "original_finding_index": 236
+    },
+    {
+      "finding_id": 65,
+      "type": "java:S2178",
+      "sourcefile": "ResponseListeners.java",
+      "start_line": "367",
+      "message": "Correct this \"|\" to \"||\" and extract the right operand to a variable if it should always be evaluated.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning claims there should be '||' instead of '|' for logical OR operations, which affects whether code uses bitwise or boolean operators with different short-circuit evaluation semantics - this can cause real bugs where the second operand is evaluated when it shouldn't be, potentially triggering exceptions. The rule specifically targets operator misuse that changes program behavior rather than just style.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "CORRECTNESS",
+          "issue_signature": "bitwise or used instead of logical short-circuiting operator",
+          "developer_explanation": "This is flagged because the code uses bitwise OR (|) where it should use logical OR (||). In Java these have different semantics: | always evaluates both sides while || stops after finding a true value. If your second condition accesses an object or performs side effects, using | could trigger exceptions when you didn't expect them. Change to || unless intentionally needing both conditions evaluated.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 3019,
+            "output_tokens": 215
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 4992,
+          "latency_s": 11.418
+        }
+      ],
+      "original_finding_index": 239
+    },
+    {
+      "finding_id": 66,
+      "type": "java:S2178",
+      "sourcefile": "ResponseListeners.java",
+      "start_line": "369",
+      "message": "Correct this \"|\" to \"||\" and extract the right operand to a variable if it should always be evaluated.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning claims a bitwise OR operator (|) is used where logical short-circuiting should occur, suggesting potential correctness or maintainability issues due to side effects in operand evaluation order.",
+          "is_true_positive": false,
+          "confidence": 0.45,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "bitwise operator used for boolean conditions instead of short-circuiting logical or",
+          "developer_explanation": "This warning flags using single pipe (|) instead of double pipe (||). However, without seeing the actual code we cannot confirm whether side effects in evaluating both operands would matter. If either condition has no meaningful side effects and always safe evaluation order doesn't need enforcement here, this could be safely dismissed as an overly conservative style suggestion rather than a correctness issue.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 3703,
+            "output_tokens": 182
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 8573,
+          "latency_s": 16.99
+        }
+      ],
+      "original_finding_index": 241
+    },
+    {
+      "finding_id": 67,
+      "type": "java:S2178",
+      "sourcefile": "ResponseListeners.java",
+      "start_line": "377",
+      "message": "Correct this \"|\" to \"||\" and extract the right operand to a variable if it should always be evaluated.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "Rule S2178 specifically targets using bitwise OR (|) instead of logical OR (||), which can cause unintended behavior due to different short-circuit semantics or side effect implications without code inspection, this is a recognized correctness issue. The warning claim about operator choice and operand extraction directly relates to real behavioral differences that affect program logic.",
+          "is_true_positive": true,
+          "confidence": 0.75,
+          "category": "CORRECTNESS",
+          "issue_signature": "using bitwise or instead of logical or in conditionals",
+          "developer_explanation": "This warning flags potential operator misuse where the single pipe might be intended for masking but behaves like a short-circuiting conditional check. In Java, | evaluates both sides while || stops early and has different semantics - this can lead to bugs if conditions aren't properly structured or side effects execute unexpectedly.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 3334,
+            "output_tokens": 194
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 6797,
+          "latency_s": 13.955
+        }
+      ],
+      "original_finding_index": 243
+    },
+    {
+      "finding_id": 68,
+      "type": "java:S2178",
+      "sourcefile": "ResponseListeners.java",
+      "start_line": "379",
+      "message": "Correct this \"|\" to \"||\" and extract the right operand to a variable if it should always be evaluated.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The S2178 rule warns against using bitwise OR (|) instead of logical short-circuit OR (||), which can lead to NullPointerExceptions or unintended side effects when evaluating expressions with potentially null operands. Without seeing the actual code, I cannot verify whether the right operand should always be evaluated or if there's a specific security reason for both-side evaluation required here.",
+          "is_true_positive": true,
+          "confidence": 0.75,
+          "category": "CORRECTNESS",
+          "issue_signature": "bitwise operator used instead of logical OR",
+          "developer_explanation": "This warning flags using the pipe character (|) where it should be a double-pipe (||). Using | evaluates both sides regardless of condition results, while || stops after the first true value. This matters because if either side can throw exceptions or null pointers, using | could crash your application even when one check would have prevented that.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 2736,
+            "output_tokens": 208
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3776,
+          "latency_s": 8.959
+        }
+      ],
+      "original_finding_index": 245
+    },
+    {
+      "finding_id": 69,
+      "type": "java:S2178",
+      "sourcefile": "ResponseListeners.java",
+      "start_line": "381",
+      "message": "Correct this \"|\" to \"||\" and extract the right operand to a variable if it should always be evaluated.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning claims using '|' (bitwise OR) instead of '||' (logical OR) causes unintended always-evaluation issues in boolean expressions. Without code inspection, I cannot verify if this pattern is legitimate bitwise operations on non-boolean types or actual logical operator misuse affecting program behavior.",
+          "is_true_positive": true,
+          "confidence": 0.65,
+          "category": "CORRECTNESS",
+          "issue_signature": "bitwise or used instead of logical or for boolean logic",
+          "developer_explanation": "When using '|' with boolean values in Java, both operands always evaluate regardless of the first result's value. If you intended short-circuit evaluation (like checking a condition before accessing another), this changes behavior and can cause side effects to execute when they shouldn't. Change it to '||' for logical OR semantics where only one operand evaluates based on context.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 3027,
+            "output_tokens": 196
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 5376,
+          "latency_s": 11.306
+        }
+      ],
+      "original_finding_index": 247
+    },
+    {
+      "finding_id": 70,
+      "type": "java:S2178",
+      "sourcefile": "ResponseListeners.java",
+      "start_line": "382",
+      "message": "Correct this \"|\" to \"||\" and extract the right operand to a variable if it should always be evaluated.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The S2178 rule typically flags potential issues where bitwise OR (|) is used instead of logical OR (||), or where short-circuit evaluation could cause incorrect side effects to be skipped. Without seeing source code, this warning likely represents a legitimate concern about operator choice and short-circuit behavior that could affect correctness under certain execution paths.",
+          "is_true_positive": true,
+          "confidence": 0.5,
+          "category": "CORRECTNESS",
+          "issue_signature": "using bitwise or instead of logical with side effects",
+          "developer_explanation": "This warning likely indicates you're using the wrong operator (bitwise | vs logical ||) in a condition where short-circuit evaluation could skip important code. If one operand has side effects that should always execute regardless of the other's value, changing to '||' won't fix it—instead extract that right-hand expression into its own variable first.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 2457,
+            "output_tokens": 205
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2346,
+          "latency_s": 6.515
+        }
+      ],
+      "original_finding_index": 248
+    },
+    {
+      "finding_id": 71,
+      "type": "java:S3516",
+      "sourcefile": "HTTP2Session.java",
+      "start_line": "2217",
+      "message": "Refactor this method to not always return the same value.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning claims a method always returns the same value, but without viewing the source code to verify whether internal logic or side effects actually vary by input, I cannot confirm this claim is correct for the specific implementation.",
+          "is_true_positive": false,
+          "confidence": 0.45,
+          "category": "CORRECTNESS",
+          "issue_signature": "method that always returns same value should use constant",
+          "developer_explanation": "This warning indicates a method might be overly simplified by always returning the same result regardless of input parameters or conditions. Without seeing your actual code to verify whether different branches, exception handling paths, or side effects could vary behavior based on inputs, this finding may stem from an incomplete static analysis that doesn't account for all execution contexts in which the method operates.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 2918,
+            "output_tokens": 178
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 5082,
+          "latency_s": 10.274
+        }
+      ],
+      "original_finding_index": 252
+    },
+    {
+      "finding_id": 72,
+      "type": "java:S3516",
+      "sourcefile": "HTTP2Stream.java",
+      "start_line": "746",
+      "message": "Refactor this method to not always return the same value.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that a method in an HTTP2 stream implementation always returns the same value across its logical branches; without source code to confirm valid singleton or stateless design patterns, this claim indicates a correctness issue where input data or protocol conditions are not affecting return behavior as intended.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "method returns constant value regardless of execution path",
+          "developer_explanation": "This warning suggests that your method ignores its inputs or logical branches to produce a single response in all cases. For HTTP2 stream handling methods where state typically varies based on headers, errors, or completion status, returning the same value consistently usually means you are failing to distinguish between success and failure states correctly.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 10628,
+            "output_tokens": 180
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 40614,
+          "latency_s": 77.999
+        }
+      ],
+      "original_finding_index": 253
+    },
+    {
+      "finding_id": 73,
+      "type": "java:S3516",
+      "sourcefile": "HTTP3Session.java",
+      "start_line": "516",
+      "message": "Refactor this method to not always return the same value.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly claims the method always returns an identical value regardless of execution path or inputs; without source code context to verify if this is a valid stateless getter, treating it as ignoring parameters constitutes a logic defect violating expected behavior for functional methods.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "CORRECTNESS",
+          "issue_signature": "method ignoring inputs and always returning constant value",
+          "developer_explanation": "Your method currently produces the same result regardless of conditions or arguments provided; this likely means you are not calculating a dynamic response based on external data. Refactoring to incorporate input influence will prevent incorrect assumptions about system state at runtime.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 10133,
+            "output_tokens": 159
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 37692,
+          "latency_s": 73.099
+        }
+      ],
+      "original_finding_index": 255
+    },
+    {
+      "finding_id": 74,
+      "type": "java:S1845",
+      "sourcefile": "BundleMetadata.java",
+      "start_line": "32",
+      "message": "Rename field \"bundle\" to prevent any misunderstanding/clash with field \"BUNDLE\".",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly flags a potential ambiguity or clash between field names differing only by capitalization (`bundle` vs `BUNDLE`). While Java treats these as distinct identifiers technically, this naming pattern creates cognitive load and violates common readability conventions to avoid logical confusion in reading logic flow. This aligns with maintainability standards where consistent casing prevents misunderstandings about constants versus instances.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "inconsistent field naming causing potential confusion between identifiers differing only by case sensitivity which violates clarity standards and reduces code maintainability for future developers who may treat the names as semantically equivalent.",
+          "developer_explanation": "Your static analysis tool is correctly identifying that using similar words in different cases (`bundle` vs `BUNDLE`) can confuse readers into thinking they are aliases. To avoid accidental misuse or misunderstanding of your configuration versus instance data, please standardize these identifiers to distinct roots.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 8508,
+            "output_tokens": 218
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 30273,
+          "latency_s": 59.202
+        }
+      ],
+      "original_finding_index": 257
+    },
+    {
+      "finding_id": 75,
+      "type": "java:S1845",
+      "sourcefile": "FutureCallback.java",
+      "start_line": "29",
+      "message": "Rename field \"SUCCEEDED\" to prevent any misunderstanding/clash with method \"succeeded\".",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning claims there is a confusion between field 'SUCCEEDED' (uppercase) and method 'succeeded' (lowercase), which SonarQube's S1845 rule flags as code smell about name readability. While Java allows fields and methods with similar names in different namespaces without functional issues, this naming pattern creates genuine maintainability concerns when readers quickly scan code and may misinterpret what each entity represents or think they refer to the same concept.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "similar names between field and method causing confusion",
+          "developer_explanation": "Your code has a boolean or similar variable named SUCCEEDED alongside a method called succeeded(). This naming similarity makes the code harder to read because developers might incorrectly think one is an alias for another. Consider renaming either element (e.g., keep both lowercase: 'succeeded' and 'isSucceeded()' ) so it's immediately clear which represents state versus operation.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 2999,
+            "output_tokens": 230
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 5404,
+          "latency_s": 11.433
+        }
+      ],
+      "original_finding_index": 259
+    },
+    {
+      "finding_id": 76,
+      "type": "java:S1845",
+      "sourcefile": "JavaVersion.java",
+      "start_line": "59",
+      "message": "Rename field \"version\" to prevent any misunderstanding/clash with field \"VERSION\".",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning claims 'VERSION' and 'version' would clash or cause misunderstanding, but in standard Java these differ by case which makes them distinct valid identifiers—no actual collision occurs without additional context like framework interactions I cannot verify.",
+          "is_true_positive": false,
+          "confidence": 0.65,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "case-sensitive field name confusion risk",
+          "developer_explanation": "Having both version and VERSION as separate identifiers is valid in Java since they differ by case. The warning assumes potential confusion without evidence that these fields interact with something context-insensitive (like a framework generating code from names). Without seeing how the project uses this or what surrounds them, dismissing this alert seems reasonable unless there's an actual documented reason both must coexist.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 2837,
+            "output_tokens": 181
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 4747,
+          "latency_s": 9.642
+        }
+      ],
+      "original_finding_index": 260
+    },
+    {
+      "finding_id": 77,
+      "type": "java:S1845",
+      "sourcefile": "Promise.java",
+      "start_line": "233",
+      "message": "Rename method \"noop\" to prevent any misunderstanding/clash with field \"NOOP\" defined in interface \"org.eclipse.jetty.util.thread.Invocable\".",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning claims there is a naming conflict between method noop and Invocable interface's NOOP field that could cause confusion. Since S1845 specifically targets Jetty-naming conventions where such conflicts matter for code clarity, this appears to be legitimately flagged as maintainability concern despite not being able to verify exact line contents.",
+          "is_true_positive": true,
+          "confidence": 0.75,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "method name clashes with existing interface constant",
+          "developer_explanation": "Your method named 'noop' could be confused with Jetty's framework field NOOP from the Invocable interface. Even though Java allows them to coexist, having similar names reduces code clarity and may cause future maintainers to wonder if they're related or if you made an oversight. Consider renaming your noop() method to something less ambiguous like handleOperation(). This makes the codebase easier to understand and navigate.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 5840,
+            "output_tokens": 214
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 19071,
+          "latency_s": 35.637
+        }
+      ],
+      "original_finding_index": 261
+    },
+    {
+      "finding_id": 78,
+      "type": "java:S1845",
+      "sourcefile": "RolloverFileOutputStream.java",
+      "start_line": "398",
+      "message": "Rename method \"rollOver\" to prevent any misunderstanding/clash with method \"rollover\".",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "I cannot verify whether both rollOver and rollover methods actually exist in the codebase or cause real confusion without seeing the source file content. The warning claims these two similarly-named method variants exist, which would typically indicate a genuine maintainability concern per S1845's intent of preventing developer mistakes from inconsistent casing conventions.",
+          "is_true_positive": true,
+          "confidence": 0.6,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "inconsistent method naming with similar spelling variations",
+          "developer_explanation": "The static analysis tool detected two methods in your codebase that differ only by casing (rollOver vs rollover). This violates Java camelCase conventions and creates real maintainability risk—developers may accidentally override or confuse these when reading the API. Consider renaming one method to use consistent lowercase spelling throughout while ensuring no callers are broken.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 2697,
+            "output_tokens": 196
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3614,
+          "latency_s": 8.616
+        }
+      ],
+      "original_finding_index": 262
+    },
+    {
+      "finding_id": 79,
+      "type": "java:S3014",
+      "sourcefile": "QueuedThreadPool.java",
+      "start_line": "162",
+      "message": "Remove this use of \"ThreadGroup\". Prefer the use of \"ThreadPoolExecutor\".",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning flags 'ThreadGroup' usage and recommends ThreadPoolExecutor, which aligns with known resource management risks like unbounded thread creation that can lead to Denial-of-Service attacks (resource exhaustion), a valid security concern especially given the BLOCKER severity and CERT tag in metadata. While ThreadGroups are legacy patterns primarily for lifecycle maintainability claims, potential DoS via unlimited threads classifies this as SECURITY.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "SECURITY",
+          "issue_signature": "legacy threadgroup usage implies resource exhaustion risk",
+          "developer_explanation": "Using ThreadGroup directly is considered risky because it lacks the built-in bounds and lifecycle controls of ThreadPoolExecutor. An attacker could potentially exhaust system resources (threads) if this pattern allows unbounded creation, leading to a Denial-of-Service vulnerability or compliance failure.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 8976,
+            "output_tokens": 197
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 33906,
+          "latency_s": 63.232
+        }
+      ],
+      "original_finding_index": 268
+    },
+    {
+      "finding_id": 80,
+      "type": "java:S3014",
+      "sourcefile": "ScheduledExecutorScheduler.java",
+      "start_line": "83",
+      "message": "Remove this use of \"ThreadGroup\". Prefer the use of \"ThreadPoolExecutor\".",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly recommends replacing a deprecated concurrency primitive ('ThreadGroup') with the standard 'ThreadPoolExecutor', which implies improved lifecycle management and resource safety; this aligns with SonarQube's own classification as code smell indicating outdated design, so without specific context of why ThreadGroup is needed for isolation rather than execution logic it stands as a true positive on maintainability.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "prefer executor service over deprecated thread groups",
+          "developer_explanation": "You are using 'ThreadGroup' to manage threads in a scheduled scheduler context which is considered outdated; modern Java applications should use an ExecutorService (ThreadPoolExecutor) for better control over task queuing, shutdown hooks, and resource pooling. Switching this will improve maintainability by preventing potential thread leaks or issues during application lifecycle management.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 6357,
+            "output_tokens": 204
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 21220,
+          "latency_s": 40.294
+        }
+      ],
+      "original_finding_index": 272
+    },
+    {
+      "finding_id": 81,
+      "type": "java:S1845",
+      "sourcefile": "MessageInputStream.java",
+      "start_line": "51",
+      "message": "Rename field \"closed\" to prevent any misunderstanding/clash with field \"CLOSED\".",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning claims there could be confusion between lowercase 'closed' and uppercase 'CLOSED' field names in this scope without any source code to verify whether such ambiguity actually exists or if both symbols are genuinely accessible together.",
+          "is_true_positive": false,
+          "confidence": 0.75,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "naming convention causing potential confusion between lowercase field and uppercase constant",
+          "developer_explanation": "This warning flags a potential naming inconsistency that could confuse developers reading the codebase later. However without seeing whether there is actually an uppercase CLOSED constant/field accessible from this scope, we cannot confirm real ambiguity exists here.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 2836,
+            "output_tokens": 156
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 4495,
+          "latency_s": 9.476
+        }
+      ],
+      "original_finding_index": 274
+    },
+    {
+      "finding_id": 82,
+      "type": "java:S3776",
+      "sourcefile": "MutableHttpFields.java",
+      "start_line": "431",
+      "message": "Refactor this method to reduce its Cognitive Complexity from 16 to the 15 allowed.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning claims a method exceeds SonarQube's configured cognitive complexity threshold (16 vs 15 allowed). This is based on static analysis of control flow structures like branches and nesting depth that impact code maintainability and readability.",
+          "is_true_positive": true,
+          "confidence": 0.75,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "method cognitive complexity exceeds threshold limit",
+          "developer_explanation": "This method has too many conditional branches or nested control flows to comfortably read and maintain in a single pass. High cognitive complexity increases the risk of bugs during future modifications because developers lose track of all execution paths. Consider extracting sub-loops into separate methods, consolidating related conditions with early returns, or simplifying decision logic.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 3257,
+            "output_tokens": 175
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 6998,
+          "latency_s": 13.105
+        }
+      ],
+      "original_finding_index": 400
+    },
+    {
+      "finding_id": 83,
+      "type": "java:S3776",
+      "sourcefile": "HttpSenderOverHTTP3.java",
+      "start_line": "57",
+      "message": "Refactor this method to reduce its Cognitive Complexity from 39 to the 15 allowed.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning asserts a calculated cognitive complexity value exceeds defined limits, which reflects an actual property of the method's control flow structure reported by static analysis tools. High nesting or branching inherent to complex logic increases maintenance costs regardless of whether functional bugs are currently present.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "method with excessive cognitive complexity",
+          "developer_explanation": "This warning indicates your method contains deep nesting or branching logic that makes the code harder to read, understand, and test reliably over time.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 6857,
+            "output_tokens": 140
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 23051,
+          "latency_s": 43.978
+        }
+      ],
+      "original_finding_index": 485
+    },
+    {
+      "finding_id": 84,
+      "type": "java:S2696",
+      "sourcefile": "DefaultFileLocatorHelper.java",
+      "start_line": "152",
+      "message": "Make the enclosing method \"static\" or remove this set.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning indicates a potential concurrency issue with mutable collections, which is only raised by SonarQube when it detects unsafe access patterns for instance fields that could be shared across threads without proper synchronization or locking.",
+          "is_true_positive": true,
+          "confidence": 0.9,
+          "category": "CONCURRENCY",
+          "issue_signature": "mutable collection used without proper synchronization",
+          "developer_explanation": "This warning flags a potential thread-safety problem where mutable collections are accessed or modified in an instance context that could be shared across threads. To fix it, ensure the field is immutable (final) and only synchronized access patterns exist if multiple threads can reach this code.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 10749,
+            "output_tokens": 156
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 41022,
+          "latency_s": 78.699
+        }
+      ],
+      "original_finding_index": 616
+    },
+    {
+      "finding_id": 85,
+      "type": "java:S3776",
+      "sourcefile": "HttpChannelState.java",
+      "start_line": "1338",
+      "message": "Refactor this method to reduce its Cognitive Complexity from 37 to the 15 allowed.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "This warning claims a specific measured property (cognitive complexity of 37 exceeding 15) based on static analysis, which is the kind of concrete metric that does exist in code and can be accurately calculated. Cognitive complexity beyond reasonable thresholds directly impacts maintainability by making methods harder to understand, test, and modify safely.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "method cognitive complexity exceeds allowed threshold",
+          "developer_explanation": "Your method is too complex to maintain comfortably. High branching depth makes it hard for developers to follow the logic and increases risk of introducing bugs during changes. Consider extracting smaller helper methods or simplifying conditionals before they become deeply nested.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 2805,
+            "output_tokens": 175
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 4202,
+          "latency_s": 9.347
+        }
+      ],
+      "original_finding_index": 785
+    },
+    {
+      "finding_id": 86,
+      "type": "java:S1948",
+      "sourcefile": "HttpConnection.java",
+      "start_line": "1049",
+      "message": "Make non-static \"_complete\" transient or serializable.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning flags a non-transient field in an HTTP connection class with CWE tags, which standardly implies risks of state leakage or resource inconsistency upon deserialization regardless of specific code contents.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "SECURITY",
+          "issue_signature": "non-static instance field needs transient declaration during serialization",
+          "developer_explanation": "The static analysis tool correctly identifies that serializing the `_complete` field in an HTTP connection object can cause issues with resource persistence or data integrity when objects are restored. You should mark this field as `transient` to ensure state is not deserialized across session boundaries.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 7532,
+            "output_tokens": 156
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 26181,
+          "latency_s": 49.923
+        }
+      ],
+      "original_finding_index": 791
+    },
+    {
+      "finding_id": 87,
+      "type": "java:S1948",
+      "sourcefile": "UnreadableSessionDataException.java",
+      "start_line": "26",
+      "message": "Make non-static \"_sessionContext\" transient or serializable.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning claims a non-static field should be transient or serializable when the class supports Java serialization - this is about preventing NotSerializableException at runtime and potential security issues with sensitive data leaking through object graphs during deserialization attacks.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "SECURITY",
+          "issue_signature": "instance field requires transient or custom serialization implementation",
+          "developer_explanation": "This field could be inadvertently serialized when it contains sensitive session data that should stay scoped to the current request cycle. Without marking it as transient, any object graph containing this context would carry persistent credentials/identifiers across deserialization boundaries where attackers might craft exploits.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 3438,
+            "output_tokens": 160
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 7778,
+          "latency_s": 14.577
+        }
+      ],
+      "original_finding_index": 829
+    },
+    {
+      "finding_id": 88,
+      "type": "java:S1192",
+      "sourcefile": "AsyncJSON.java",
+      "start_line": "673",
+      "message": "Define a constant instead of duplicating this literal \"invalid 'false' literal\" 3 times.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "This warning claims three instances of a string literal (described as 'invalid false literal') should be replaced with a constant instead, which is SonarQube's S1192 rule about code smell from duplicating literals in the same scope. The tool identifies pattern matching for repeated values that could benefit from being factored into named constants.",
+          "is_true_positive": true,
+          "confidence": 0.75,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "duplicated string literals should be extracted to constant",
+          "developer_explanation": "You have the same value written three times as a literal in your codebase. Extracting this into a named constant would make future changes simpler and improve overall clarity. While not strictly incorrect, keeping identical duplicates scattered makes maintenance more difficult than consolidating them.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 2735,
+            "output_tokens": 188
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3965,
+          "latency_s": 8.746
+        }
+      ],
+      "original_finding_index": 841
+    },
+    {
+      "finding_id": 89,
+      "type": "java:S3776",
+      "sourcefile": "AsyncJSON.java",
+      "start_line": "1298",
+      "message": "Refactor this method to reduce its Cognitive Complexity from 19 to the 15 allowed.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning flags a Cognitive Complexity value of 19 exceeding the configured threshold of 15, which SonarQube reports as a CODE_SMELL (maintainability concern). Without source code to verify structural complexity calculations or contextual factors that might mitigate concerns, cognitive complexity warnings generally reflect real maintainability issues since they measure decision points and nesting that directly impact readability.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "high cognitive complexity exceeds threshold limit",
+          "developer_explanation": "This warning indicates your method has too many decision points and nesting levels (loops, conditionals), which makes it harder to understand, test, and modify safely. Consider extracting sub-methods or restructuring logic flow so each logical responsibility lives in its own focused piece of code.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 2523,
+            "output_tokens": 192
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2918,
+          "latency_s": 6.919
+        }
+      ],
+      "original_finding_index": 844
+    },
+    {
+      "finding_id": 90,
+      "type": "java:S3776",
+      "sourcefile": "Utf8StringBuilder.java",
+      "start_line": "351",
+      "message": "Refactor this method to reduce its Cognitive Complexity from 27 to the 15 allowed.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "This warning claims cognitive complexity has exceeded the configured threshold, which is a measurable code metric calculated objectively by SonarQube's algorithm. Cognitive complexity directly correlates with human mental load when reading and modifying logic flows, making it a legitimate maintainability concern in software engineering standards regardless of current business acceptance. The tool reports an objective measurement that exceeds quality thresholds used to identify hard-to-understand methods.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "high cognitive complexity exceeds threshold limit",
+          "developer_explanation": "This method has too many nested conditionals and branches for a reader to comfortably track all possible execution paths during code review or modification tasks. High mental load increases the risk of introducing bugs when updating logic in future changes since developers lose context easily without simplifying control flow structures. Consider breaking complex conditional chains into smaller, purpose-specific helper functions that handle individual decision points separately.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 4252,
+            "output_tokens": 215
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 11965,
+          "latency_s": 21.919
+        }
+      ],
+      "original_finding_index": 934
+    },
+    {
+      "finding_id": 91,
+      "type": "java:S1192",
+      "sourcefile": "AttributeNormalizer.java",
+      "start_line": "328",
+      "message": "Define a constant instead of duplicating this literal \"${%s}\" 3 times.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning claims there are three duplicated literals in AttributeNormalizer.java that should be consolidated into a constant. This is a legitimate code smell issue even without source inspection—the DRY principle makes this a valid maintainability concern where updating the value requires changing it in multiple locations.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "duplicate string literals should be constants",
+          "developer_explanation": "You have three places using the same literal value in your code instead of defining it once as a constant. This makes future changes harder because you'd need to find and update multiple locations whenever this value needs adjustment. Consolidating into a single constant reduces the risk of inconsistencies if someone forgets one location.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 2576,
+            "output_tokens": 178
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3184,
+          "latency_s": 7.385
+        }
+      ],
+      "original_finding_index": 946
+    },
+    {
+      "finding_id": 92,
+      "type": "java:S115",
+      "sourcefile": "X509.java",
+      "start_line": "44",
+      "message": "Rename this constant name to match the regular expression '^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$'.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly identifies that an identifier fails to adhere to the uppercase regex required for constant names according to Java conventions, which impacts code consistency and maintainability despite not affecting runtime correctness.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "constant identifier fails java upper case convention",
+          "developer_explanation": "This warning indicates that your static field uses a naming style (e.g., camelCase or lowerCamel) instead of the standard uppercase pattern with underscores. Updating this name ensures consistency across your codebase and aligns with Java best practices for constants defined in documentation.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 7967,
+            "output_tokens": 154
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 29072,
+          "latency_s": 57.211
+        }
+      ],
+      "original_finding_index": 976
+    },
+    {
+      "finding_id": 93,
+      "type": "java:S3776",
+      "sourcefile": "WebSocketCoreSession.java",
+      "start_line": "653",
+      "message": "Refactor this method to reduce its Cognitive Complexity from 20 to the 15 allowed.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The tool claims this method exceeds SonarQube's cognitive complexity threshold of 15 (currently at 20), which is a code smell indicating hard-to-maintain logic that may be incorrect when I cannot inspect the actual implementation to verify whether these nested conditions genuinely create excessive decision paths.",
+          "is_true_positive": false,
+          "confidence": 0.6,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "cognitive complexity exceeds configured threshold without code context visible in this run",
+          "developer_explanation": "This warning flags excessive cognitive load in a single method, but I cannot verify from the message alone whether these conditions are genuinely problematic or can be reasonably refactored. Since I lack source code to confirm there's actually complex nesting or convoluted logic here that needs addressing, treat this as potentially dismissible - it may represent false positives about structure where behavior is correct and readable.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 2607,
+            "output_tokens": 206
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3182,
+          "latency_s": 8.596
+        }
+      ],
+      "original_finding_index": 1004
+    },
+    {
+      "finding_id": 94,
+      "type": "java:S1186",
+      "sourcefile": "XmlConfiguration.java",
+      "start_line": "425",
+      "message": "Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning flags an @Override method that has no implementation body with no documented justification - which is generally problematic since overridden methods should either be implemented or explicitly marked as intentionally not applicable.",
+          "is_true_positive": false,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "empty method declaration without documentation",
+          "developer_explanation": "This warning appears when a derived class overrides an abstract or non-abstract parent method but provides no implementation and offers no explanation for this choice. It's usually problematic, but in legitimate cases like bridge methods, platform-specific implementations where stub behavior is intentional across different environments, or deprecation markers before removal - these don't need fixing if the design decision is sound.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 2511,
+            "output_tokens": 171
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3142,
+          "latency_s": 7.352
+        }
+      ],
+      "original_finding_index": 1028
+    },
+    {
+      "finding_id": 95,
+      "type": "java:S1181",
+      "sourcefile": "ByteRange.java",
+      "start_line": "155",
+      "message": "Catch Exception instead of Throwable.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning S1181 claims improper exception handling by suggesting to catch Exception instead of Throwable (or vice versa depending on implementation context). Without viewing the source code, I cannot verify if this pattern is legitimate here - though Java best practices generally recommend avoiding overly broad exceptions. The tool's claim about catching too broadly vs specifically represents a common real issue in error-handling quality.",
+          "is_true_positive": true,
+          "confidence": 0.75,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "catching overly broad exception types instead of specific ones",
+          "developer_explanation": "This warning suggests your code is catching exceptions too broadly rather than being specific about what errors you're handling. Catching Throwable or Exception indiscriminately makes debugging harder since stack traces won't reveal the actual problem, and can mask issues from deeper in your call chain. You should catch only exception types that make sense for that particular context and handle each one appropriately with clear recovery logic.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 4383,
+            "output_tokens": 220
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 13437,
+          "latency_s": 25.463
+        }
+      ],
+      "original_finding_index": 1299
+    },
+    {
+      "finding_id": 96,
+      "type": "java:S1181",
+      "sourcefile": "SslConnection.java",
+      "start_line": "1523",
+      "message": "Catch Exception instead of Throwable.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning flags code using catch(Throwable) pattern, which SonarQube S1181 identifies as a common anti-pattern because it can suppress Errors and lose meaningful stack traces in production debugging scenarios.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "catching throwable instead of specific exception types",
+          "developer_explanation": "This warning indicates you're catching Throwable which will suppress fatal errors like OutOfMemoryError and StackOverflowError from propagating properly. The catch block loses the original stack trace, making production debugging extremely difficult since you cannot distinguish between expected exceptions and unrecoverable JVM-level problems.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 2583,
+            "output_tokens": 162
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3266,
+          "latency_s": 8.277
+        }
+      ],
+      "original_finding_index": 1910
+    },
+    {
+      "finding_id": 97,
+      "type": "java:S3358",
+      "sourcefile": "Attributes.java",
+      "start_line": "673",
+      "message": "Extract this nested ternary operation into an independent statement.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "This SonarQube rule java:S3358 specifically flags deeply or unnecessarily nested ternary operators that reduce code clarity and understandability without providing any benefit over extracted conditional statements.",
+          "is_true_positive": true,
+          "confidence": 0.92,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "nested ternary operator making code harder to read",
+          "developer_explanation": "SonarQube is warning that a nested conditional expression in your code should be simplified into separate statements for better readability and maintainability. This doesn't affect functionality but will make the logic easier to understand during future development or review.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 2812,
+            "output_tokens": 150
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 4230,
+          "latency_s": 10.114
+        }
+      ],
+      "original_finding_index": 2631
+    },
+    {
+      "finding_id": 98,
+      "type": "java:S1168",
+      "sourcefile": "StringUtil.java",
+      "start_line": "916",
+      "message": "Return an empty array instead of null.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly recommends replacing null returns with empty arrays or collections as part of standard Java defensive programming to prevent NullPointerExceptions and simplify contract handling; without source context showing valid Nullable annotations (which we must assume absent per the 'judge from info alone' constraint), this code smell represents a maintainability issue regarding API robustness.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "returning null instead of empty array instance preferred",
+          "developer_explanation": "Your code currently returns `null` from this method that could return arrays or collections, which is a common practice known as returning an 'empty' result only implicitly via null. While valid in some contracts, it makes the API harder to maintain and can lead to runtime crashes if callers forget checks. Switching to an empty array or collection (like `new T[]{}`) improves safety without changing logic.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 9227,
+            "output_tokens": 212
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 33933,
+          "latency_s": 73.377
+        }
+      ],
+      "original_finding_index": 2766
+    },
+    {
+      "finding_id": 99,
+      "type": "java:S1121",
+      "sourcefile": "MessageInputStream.java",
+      "start_line": "272",
+      "message": "Extract the assignment out of this expression.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning java:S1121 claims an expression contains nested assignment operations making it difficult to read and maintain. Without seeing the source code, I must rely on general knowledge that this rule typically flags valid readability concerns where complex expressions like `x = method() + x` hide simple assignments inside larger calculations.",
+          "is_true_positive": true,
+          "confidence": 0.75,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "nested assignment in expression reduces code readability",
+          "developer_explanation": "This pattern makes your code harder to understand because an assignment is hidden inside a larger calculation rather than being separated into clear steps. Consider refactoring by extracting the intermediate value or using a separate statement so readers can follow what's happening without mentally parsing nested operations.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 2544,
+            "output_tokens": 178
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2819,
+          "latency_s": 7.921
+        }
+      ],
+      "original_finding_index": 3085
+    },
+    {
+      "finding_id": 100,
+      "type": "java:S131",
+      "sourcefile": "ServletPathSpec.java",
+      "start_line": "440",
+      "message": "Complete cases by adding the missing enum constants or add a default case to this switch.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning flags an incomplete switch statement where not all enum constants are handled, which SonarQube considers a maintainability anti-pattern because it makes code brittle when new values are added later. Without seeing source code to confirm intentional exclusions or external handling of missing cases, I must assume the tool's pattern-matching is identifying a real issue about exhaustiveness requirements.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "incomplete switch statement on enum type missing default case or coverage for all constants",
+          "developer_explanation": "Your code has a switch statement that doesn't handle all possible values of the enum variable used there. If someone adds a new constant to this enum in the future, unhandled cases would fall through silently without any warning or handling logic. To fix it: either update every case label for each known value plus add a default clause catching unexpected enums (or document why specific values are intentionally excluded).",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 2627,
+            "output_tokens": 224
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3276,
+          "latency_s": 9.005
+        }
+      ],
+      "original_finding_index": 346
+    },
+    {
+      "finding_id": 101,
+      "type": "java:S2447",
+      "sourcefile": "IncludeExcludeSet.java",
+      "start_line": "215",
+      "message": "Null is returned but a \"Boolean\" is expected.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning claims null is returned when Boolean is expected, which means callers expecting non-null boolean objects could receive NullPointerExceptions or incorrect behavior if they assume a definite true/false result. This pattern of using null as a sentinel instead of Optional<Boolean> or explicit defaults represents an actual correctness issue where code relies on assumptions that can fail.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "null returned when non-null boolean expected",
+          "developer_explanation": "This warning claims null is incorrectly used instead of Optional<Boolean> or a proper default value for Boolean fields/methods. However without seeing the actual code, this alarm could be false if: (1) you're intentionally using primitive boolean where an explicit true/false exists, or (2) callers are expected to handle null appropriately via Optional semantics first.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 2509,
+            "output_tokens": 198
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2726,
+          "latency_s": 7.673
+        }
+      ],
+      "original_finding_index": 811
+    },
+    {
+      "finding_id": 102,
+      "type": "java:S2157",
+      "sourcefile": "LazyList.java",
+      "start_line": "57",
+      "message": "Add a \"clone()\" method to this class.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "This warning indicates that a class implements Cloneable but lacks custom clone() logic so it uses Java’s default shallow copy which can leak shared mutable state and cause incorrect behavior when clones are used.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "missing custom clone implementation for Cloneable interface",
+          "developer_explanation": "Your class currently relies on the default shallow cloning behavior which copies references instead of creating independent objects. If mutable fields are shared between cloned instances this can lead to data corruption or unexpected side effects when one instance is modified. Override the clone() method with a deep‑copy implementation that creates new instances for all mutable fields.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 6619,
+            "output_tokens": 166
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 23231,
+          "latency_s": 49.195
+        }
+      ],
+      "original_finding_index": 817
+    },
+    {
+      "finding_id": 103,
+      "type": "java:S1452",
+      "sourcefile": "PathCollators.java",
+      "start_line": "54",
+      "message": "Remove usage of generic wildcard type.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning claims there is a 'usage of generic wildcard type' that should be removed per rule S1452 without providing code context to verify the actual pattern or intent behind its use. Since I cannot inspect whether unbounded wildcards (`List<?>`) are being used where they cause API contract problems versus legitimate cases (covariant returns, capture conversion), this claim is unverifiable and likely represents a false positive for many genuine wildcard usages.",
+          "is_true_positive": false,
+          "confidence": 0.65,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "removal of generic wildcard usage in favor of bounded types",
+          "developer_explanation": "This warning appears when the tool detects an unbounded wildcard like List<?> at a method parameter or return type position that it thinks could be more specific. This alarm can often be dismissed because many legitimate uses exist for wildcards, such as accepting any list subtype without specifying element details or returning results from unknown types via covariant returns.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 2933,
+            "output_tokens": 225
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 4964,
+          "latency_s": 12.845
+        }
+      ],
+      "original_finding_index": 875
+    },
+    {
+      "finding_id": 104,
+      "type": "java:S5843",
+      "sourcefile": "AuthenticationProtocolHandler.java",
+      "start_line": "44",
+      "message": "Simplify this regular expression to reduce its complexity from 35 to the 20 allowed.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning from SonarQube claims there is a regular expression with complexity score exceeding JVM limits, which could cause stack overflow errors or severe performance issues due to deep backtracking. Since this rule flags actual structural problems that match real Java runtime limitations (regex recursion depth constraints), the claim about problematic code presence appears material.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "CORRECTNESS",
+          "issue_signature": "regular expression with excessive backtracking risk",
+          "developer_explanation": "A complex regex pattern here could cause the application to hang or crash when processing certain input due to deep recursive matching that exhausts call stack resources. This violates Java's implicit limitations on regular expression complexity and should be refactored using simpler alternatives, non-capturing groups strategically placed, or iterative replacements instead of nested backtracking-heavy patterns.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 2876,
+            "output_tokens": 196
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 4781,
+          "latency_s": 11.476
+        }
+      ],
+      "original_finding_index": 1003
+    },
+    {
+      "finding_id": 105,
+      "type": "java:S1871",
+      "sourcefile": "HttpDateTime.java",
+      "start_line": "178",
+      "message": "This branch's code block is the same as the block for the branch on line 174.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning claims duplicate code blocks exist across different branches (comparing lines 178-180 to line 174). Without source code, I must trust the tool's structural analysis for detecting syntactic duplication - SAST tools typically only flag genuine identical execution paths in branching logic. This represents a real maintainability concern about duplicated conditional behavior that could introduce bugs if one branch diverges without updating both.",
+          "is_true_positive": true,
+          "confidence": 0.75,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "duplicate code across control flow branches",
+          "developer_explanation": "Your conditional logic has duplicate execution blocks in different branch paths that should be consolidated or clearly separated by purpose. Having identical code reachability points makes it harder to maintain - if the business rule changes, you must update multiple locations which increases bug risk and reduces clarity.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 3304,
+            "output_tokens": 201
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 6669,
+          "latency_s": 15.028
+        }
+      ],
+      "original_finding_index": 1247
+    },
+    {
+      "finding_id": 106,
+      "type": "java:S1700",
+      "sourcefile": "MultiPartByteRanges.java",
+      "start_line": "261",
+      "message": "Rename field \"parser\"",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning claims only 'Rename field parser' which is a naming/style recommendation rather than an actual bug or security issue. Without seeing the code context to understand whether 'parser' truly misrepresents what this field holds, I cannot confirm if better naming would genuinely improve clarity without changing semantics.",
+          "is_true_positive": false,
+          "confidence": 0.6,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "field name too generic for its purpose",
+          "developer_explanation": "This warning suggests renaming a field named 'parser' to something more specific. Since you cannot see the actual usage context, it's possible this naming is appropriate and accurately describes what that object does at runtime. Dismissable without review unless your team has explicit style rules requiring more descriptive names.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 2681,
+            "output_tokens": 180
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3646,
+          "latency_s": 9.282
+        }
+      ],
+      "original_finding_index": 1338
+    },
+    {
+      "finding_id": 107,
+      "type": "java:S5261",
+      "sourcefile": "ServletPathSpec.java",
+      "start_line": "182",
+      "message": "Add explicit curly braces to avoid dangling else.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning claims there is a dangling else pattern that could cause confusing control flow, which would be flagged by SonarQube only if braces are missing around an if statement's body when followed by another conditional. Without seeing source code to verify whether the brace situation actually creates ambiguity or confusion risk here, I cannot fully confirm this claim materialized in practice.",
+          "is_true_positive": false,
+          "confidence": 0.45,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "missing curly braces to avoid dangling else pattern",
+          "developer_explanation": "This warning recommends adding explicit braces around if statements for better readability and clarity in nested conditionals. Without reviewing the actual code structure at line 182, I cannot confirm whether this issue genuinely exists or is a false alarm from the analyzer. To assess properly, examine if an else clause could unexpectedly pair with a nearby rather than intended conditional.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 3486,
+            "output_tokens": 206
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 7852,
+          "latency_s": 16.952
+        }
+      ],
+      "original_finding_index": 1392
+    },
+    {
+      "finding_id": 108,
+      "type": "java:S6126",
+      "sourcefile": "PrefaceFrame.java",
+      "start_line": "33",
+      "message": "Replace this String concatenation with Text block.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning S6126 recommends using Java Text Blocks instead of String concatenation for multi-line strings, which is a legitimate code quality recommendation when applicable. Since I cannot verify the actual pattern at lines 33-36 without source code, but this rule typically detects patterns that would genuinely benefit from modern syntax (not just any + operator), and given it's specifically about string literal formatting rather than correctness issues.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "use text blocks instead of concatenated strings",
+          "developer_explanation": "SonarQube is recommending you modernize your string handling by using Java Text Blocks if possible. When writing multi-line literals with many line continuations and concatenation operators, this pattern becomes hard to read and maintain over time.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 2533,
+            "output_tokens": 196
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2779,
+          "latency_s": 7.992
+        }
+      ],
+      "original_finding_index": 1477
+    },
+    {
+      "finding_id": 109,
+      "type": "java:S1172",
+      "sourcefile": "HeaderGenerator.java",
+      "start_line": "48",
+      "message": "Remove this unused method parameter \"capacity\".",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning claims a method parameter 'capacity' was never used within its scope, which SonarQube's data flow analysis typically validates by checking identifier occurrences after declaration. Without seeing the code, I assume static analysis correctly determined no references exist to this parameter in Java source semantics.",
+          "is_true_positive": true,
+          "confidence": 0.9,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "unused method parameter reduces readability",
+          "developer_explanation": "This unused parameter makes your API signature harder to understand than necessary and suggests either incomplete design or documentation misalignment. Removing it will clarify what parameters actually influence behavior while preserving correctness.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 3183,
+            "output_tokens": 153
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 6321,
+          "latency_s": 13.672
+        }
+      ],
+      "original_finding_index": 1479
+    },
+    {
+      "finding_id": 110,
+      "type": "java:S1119",
+      "sourcefile": "WriteFlusher.java",
+      "start_line": "343",
+      "message": "Refactor the code to remove this label and the need for it.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning claims an unnecessary label exists that can be removed, but without seeing the source code at line 343 I cannot verify whether the label serves a legitimate control flow purpose or is genuinely unused. SAST tools frequently flag labels/break constructs as 'unused' when they actually serve semantic purposes like breaking from nested case statements early in switch logic.",
+          "is_true_positive": false,
+          "confidence": 0.35,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "unnecessary control flow label flagged by static analyzer",
+          "developer_explanation": "This warning suggests removing a 'label' that the tool considers unnecessary. Without viewing the actual code at this location, we cannot confirm if this break/switch construct serves an important purpose in early-exiting from nested case logic or similar scenarios. These warnings often represent false positives since labels can have legitimate semantic value even when not immediately obvious to automated analyzers.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 3801,
+            "output_tokens": 209
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 9072,
+          "latency_s": 20.157
+        }
+      ],
+      "original_finding_index": 1738
+    },
+    {
+      "finding_id": 111,
+      "type": "java:S127",
+      "sourcefile": "WriteThroughWriter.java",
+      "start_line": "249",
+      "message": "Refactor the code in order to not assign to this loop counter from within the loop body.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning claims assigning to a loop counter from within the loop body is problematic. Without seeing actual source code, I cannot verify if this pattern causes issues here or represents an intentional design choice (like deliberate element skipping). The rule exists because such patterns commonly cause bugs like off-by-one errors when collection sizes change during iteration, making it generally correct to flag.",
+          "is_true_positive": true,
+          "confidence": 0.75,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "loop counter modified from within loop body",
+          "developer_explanation": "Modifying a loop iteration variable inside the loop can cause confusing control flow and unexpected behavior if the collection is also being mutated during iteration. This makes code harder to reason about and may introduce subtle bugs when items are added or removed mid-loop. Refactoring so that iteration state changes come from one controlled source improves clarity and reduces error potential.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 2637,
+            "output_tokens": 203
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3603,
+          "latency_s": 8.917
+        }
+      ],
+      "original_finding_index": 1743
+    },
+    {
+      "finding_id": 112,
+      "type": "java:S3011",
+      "sourcefile": "DefaultFileLocatorHelper.java",
+      "start_line": "153",
+      "message": "This accessibility update should be removed.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning references accessibility update handling in JavaFX/Swing contexts, which S3011 typically flags around improper @Override annotations or unnecessary accessibility API usage on accessible classes. Without source code to verify whether actual problematic patterns exist versus legitimate implementation choices, I cannot confirm the tool's claim about an 'accessibility update that should be removed' is materially correct for this specific location.",
+          "is_true_positive": false,
+          "confidence": 0.65,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "unnecessary accessibility annotation removal suggestion",
+          "developer_explanation": "This warning suggests removing an accessibility-related code element without visible evidence of actual impact on user experience or compliance requirements. Since we cannot inspect the implementation context, many such warnings represent false positives where standard coding practices already provide adequate accessibility handling without requiring tool-suggested changes.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 2904,
+            "output_tokens": 192
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 5196,
+          "latency_s": 11.217
+        }
+      ],
+      "original_finding_index": 1955
+    },
+    {
+      "finding_id": 113,
+      "type": "java:S5738",
+      "sourcefile": "Server.java",
+      "start_line": "904",
+      "message": "Remove this call to a deprecated class, it has been marked for removal.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states the call uses an API marked for removal, indicating reliance on a non-public class scheduled to break in future Java updates which constitutes a valid maintainability risk without needing source code inspection because official deprecation with explicit removal marking means actual incompatibility is imminent. The tags and rule semantics confirm this points to genuine forward compatibility concern rather than cosmetic styling or irrelevant advice.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "use of deprecated method flagged for future removal",
+          "developer_explanation": "You are calling a class marked by Oracle as obsolete that will be removed from future Java releases. Continuing to use it risks your application breaking unexpectedly once the JDK updates drop support; migrate away now using stable public APIs instead.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 10338,
+            "output_tokens": 184
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 39963,
+          "latency_s": 85.985
+        }
+      ],
+      "original_finding_index": 2258
+    },
+    {
+      "finding_id": 114,
+      "type": "java:S112",
+      "sourcefile": "SessionDataMap.java",
+      "start_line": "58",
+      "message": "Replace generic exceptions with specific library exceptions or a custom exception.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning claims generic exceptions should be replaced with more specific types for better error classification and API contract clarity. Without seeing source code to verify if Exception is being thrown vs caught, or whether this uses proper unchecked RuntimeException conventions, I must judge from typical S112 usage patterns where the rule's claim about exception specificity represents valid software engineering practice that improves maintainability.",
+          "is_true_positive": false,
+          "confidence": 0.55,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "throwing generic exceptions instead of specific ones",
+          "developer_explanation": "This warning suggests using more exception types than the base Exception class for better clarity about what can fail and why this matters downstream callers needing appropriate handling. However, without seeing your code to verify if you're legitimately throwing RuntimeException for programming errors or whether the API contract already documents failure conditions clearly enough, we cannot confirm a real issue exists here.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 3836,
+            "output_tokens": 206
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 10665,
+          "latency_s": 21.446
+        }
+      ],
+      "original_finding_index": 2457
+    },
+    {
+      "finding_id": 115,
+      "type": "java:S3824",
+      "sourcefile": "TopologicalSort.java",
+      "start_line": "57",
+      "message": "Replace this \"Map.get()\" and condition with a call to \"Map.computeIfAbsent()\".",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning recommends replacing a Map.get() + condition pattern with computeIfAbsent(), which is SonarQube rule S3824 targeting Java code style recommendations. Without source visibility I cannot confirm the exact pattern exists, but this represents a legitimate maintainability improvement suggesting modern Java idioms without changing observable behavior for standard Maps.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "prefer map compute if absent over get and put pattern",
+          "developer_explanation": "This warning suggests using Map.computeIfAbsent() instead of a manual null-check followed by conditional assignment when populating maps with default values. The change is purely stylistic - it makes your code more concise and follows modern Java best practices without altering functionality for standard HashMap implementations.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 3021,
+            "output_tokens": 188
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 5449,
+          "latency_s": 12.968
+        }
+      ],
+      "original_finding_index": 2693
+    },
+    {
+      "finding_id": 116,
+      "type": "java:S108",
+      "sourcefile": "TypeUtil.java",
+      "start_line": "622",
+      "message": "Remove this block of code, fill it in, or add a comment explaining why it is empty.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning claims an empty method exists that should either be implemented, removed, or explained with a comment. Without source code to verify if it's intentionally deferred work (e.g., documented TODO) versus forgotten implementation, I must judge the tool's claim based on standard S108 behavior where unexplained emptiness in concrete methods represents a maintainability concern.",
+          "is_true_positive": true,
+          "confidence": 0.75,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "empty method without implementation or explanation",
+          "developer_explanation": "This warning flags an empty (no-op) method that needs attention. Either add the missing logic to prevent future bugs when callers expect behavior, delete it if unnecessary, or document in a comment why leaving it blank is intentional and safe for now.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 2785,
+            "output_tokens": 185
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 4451,
+          "latency_s": 10.622
+        }
+      ],
+      "original_finding_index": 2703
+    },
+    {
+      "finding_id": 117,
+      "type": "java:S1144",
+      "sourcefile": "SecurityUtils.java",
+      "start_line": "233",
+      "message": "Remove this unused private \"callableToPrivilegedAction\" method.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly states this is an unused private method per static analysis tags. For private methods with no known callers detected by SAST tools like SonarQube, claiming 'unused' status represents actual dead code that contributes to maintenance burden rather than a correctness or security issue.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "private method with no callers detected by static analysis tool",
+          "developer_explanation": "This unused private method adds unnecessary code to the class that can never be executed during normal runtime. Removing it reduces noise in your source tree and makes the file easier for future developers to navigate without dead methods cluttering visibility.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 2702,
+            "output_tokens": 167
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3928,
+          "latency_s": 9.685
+        }
+      ],
+      "original_finding_index": 2869
+    },
+    {
+      "finding_id": 118,
+      "type": "java:S6204",
+      "sourcefile": "JettyClientUpgradeRequest.java",
+      "start_line": "52",
+      "message": "Replace this usage of 'Stream.collect(Collectors.toList())' with 'Stream.toList()' and ensure that the list is unmodified.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning recommends replacing Stream.collect(Collectors.toList()) with Stream.toList() for Java 16+, which are functionally equivalent from a behavioral standpoint - both collect into an ArrayList internally. Since no incorrect code behavior is claimed, and the tool only suggests preferring newer APIs rather than fixing correctness or security issues, this represents maintainability guidance about modernization.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "prefer toList instead of Collectors toList",
+          "developer_explanation": "This warning suggests updating from the older collect(Collectors.toList()) pattern to use Stream.toList() which was introduced in Java 16. Functionally both approaches behave identically and produce the same results - this is a code modernization suggestion rather than an actual bug or correctness issue.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 2488,
+            "output_tokens": 191
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2560,
+          "latency_s": 7.642
+        }
+      ],
+      "original_finding_index": 3055
+    },
+    {
+      "finding_id": 119,
+      "type": "xml:S1134",
+      "sourcefile": "pom.xml",
+      "start_line": "54",
+      "message": "Take the required action to fix the issue indicated by this \"FIXME\" comment.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The SonarQube rule xml:S1134 flags FIXME comments in pom.xml that indicate unresolved issues or incomplete work needing attention later. Without viewing the source, I must judge based on static analysis norms: such markers typically represent unfinished tasks rather than legitimate temporary placeholders when flagged by quality tools.",
+          "is_true_positive": true,
+          "confidence": 0.75,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "unresolved FIXME comment indicating incomplete work",
+          "developer_explanation": "This warning flags a TODO/FIXME marker in your pom.xml that indicates unfinished or deferred work has not been properly addressed yet. Leaving such markers without eventual resolution can accumulate technical debt and confuse future developers who may waste time investigating what needs completion versus intentional placeholders. Review the FIXME at line 54 to either complete the pending action, document why it remains open with a timeline for revisit, or remove inappropriate marker tags entirely.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 3258,
+            "output_tokens": 210
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 7023,
+          "latency_s": 15.567
+        }
+      ],
+      "original_finding_index": 3102
+    }
+  ]
+}

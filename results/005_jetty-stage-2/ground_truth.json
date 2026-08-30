@@ -1,0 +1,624 @@
+{
+  "dataset": "jetty-core-minus-coreapp-start",
+  "schema_version": 1,
+  "created_at": "2026-08-15",
+  "run": "005_jetty-stage-2",
+  "ground_truth_scope": "warning_level_report_snapshot",
+  "labeling_method": "manual_author_review",
+  "key_fields": [
+    "tool",
+    "sourcefile",
+    "start_line",
+    "type",
+    "column"
+  ],
+  "reports": {
+    "error-prone": 20,
+    "spotbugs": 20,
+    "sonarqube": 20
+  },
+  "total_findings": 60,
+  "labeled_findings": 60,
+  "findings": [
+    {
+      "finding_id": "error-prone:AbstractForkedChild.java:154:StringSplitter:48",
+      "tool": "error-prone",
+      "sourcefile": "AbstractForkedChild.java",
+      "start_line": "154",
+      "type": "StringSplitter",
+      "column": "48",
+      "message": "String.split(String) has surprising behavior",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "error-prone:AbstractSessionDataStore.java:298:NarrowCalculation:65",
+      "tool": "error-prone",
+      "sourcefile": "AbstractSessionDataStore.java",
+      "start_line": "298",
+      "type": "NarrowCalculation",
+      "column": "65",
+      "message": "This product of integers could overflow before being implicitly cast to a long.",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "error-prone:ArrayByteBufferPool.java:811:UnusedMethod:14",
+      "tool": "error-prone",
+      "sourcefile": "ArrayByteBufferPool.java",
+      "start_line": "811",
+      "type": "UnusedMethod",
+      "column": "14",
+      "message": "Method 'remove' is never used.",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "error-prone:Blocker.java:422:LockNotBeforeTry:27",
+      "tool": "error-prone",
+      "sourcefile": "Blocker.java",
+      "start_line": "422",
+      "type": "LockNotBeforeTry",
+      "column": "27",
+      "message": "Prefer locking *immediately* before the try block which releases the lock to avoid the possibility of any intermediate statements throwing.",
+      "is_true_positive": false
+    },
+    {
+      "finding_id": "error-prone:ByteArrayEndPoint.java:59:UnnecessaryLambda:28",
+      "tool": "error-prone",
+      "sourcefile": "ByteArrayEndPoint.java",
+      "start_line": "59",
+      "type": "UnnecessaryLambda",
+      "column": "28",
+      "message": "Returning a lambda from a helper method or saving it in a constant is unnecessary; prefer to implement the functional interface method directly and use a method reference instead.",
+      "is_true_positive": false
+    },
+    {
+      "finding_id": "error-prone:ByteArrayEndPoint.java:475:BadInstanceof:24",
+      "tool": "error-prone",
+      "sourcefile": "ByteArrayEndPoint.java",
+      "start_line": "475",
+      "type": "BadInstanceof",
+      "column": "24",
+      "message": "`_buffer` is an instance of RetainableByteBuffer.DynamicCapacity which is a subtype of RetainableByteBuffer.DynamicCapacity, so this is equivalent to a null check.",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "error-prone:DeploymentScanner.java:1389:EqualsGetClass:24",
+      "tool": "error-prone",
+      "sourcefile": "DeploymentScanner.java",
+      "start_line": "1389",
+      "type": "EqualsGetClass",
+      "column": "24",
+      "message": "Prefer instanceof to getClass when implementing Object#equals.",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "error-prone:Frame.java:407:SuperCallToObjectMethod:52",
+      "tool": "error-prone",
+      "sourcefile": "Frame.java",
+      "start_line": "407",
+      "type": "SuperCallToObjectMethod",
+      "column": "52",
+      "message": "`super.hashCode()` is equivalent to `System.identityHashCode(this)` here",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "error-prone:Generator.java:50:EnumOrdinal:76",
+      "tool": "error-prone",
+      "sourcefile": "Generator.java",
+      "start_line": "50",
+      "type": "EnumOrdinal",
+      "column": "76",
+      "message": "You should almost never invoke the Enum.ordinal() method.",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "error-prone:HTTP2StreamEndPoint.java:558:InconsistentCapitalization:62",
+      "tool": "error-prone",
+      "sourcefile": "HTTP2StreamEndPoint.java",
+      "start_line": "558",
+      "type": "InconsistentCapitalization",
+      "column": "62",
+      "message": "Found the field 'endpoint' with the same name as the parameter 'endPoint' but with different capitalization.",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "error-prone:HeaderBlockParser.java:53:MalformedInlineTag:15",
+      "tool": "error-prone",
+      "sourcefile": "HeaderBlockParser.java",
+      "start_line": "53",
+      "type": "MalformedInlineTag",
+      "column": "15",
+      "message": "The correct syntax to open this inline tag is {@code.",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "error-prone:HttpException.java:83:JavaLangClash:5",
+      "tool": "error-prone",
+      "sourcefile": "HttpException.java",
+      "start_line": "83",
+      "type": "JavaLangClash",
+      "column": "5",
+      "message": "org.eclipse.jetty.http.HttpException.RuntimeException clashes with java.lang.RuntimeException",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "error-prone:JettyLoggerFactory.java:235:CatchAndPrintStackTrace:17",
+      "tool": "error-prone",
+      "sourcefile": "JettyLoggerFactory.java",
+      "start_line": "235",
+      "type": "CatchAndPrintStackTrace",
+      "column": "17",
+      "message": "Logging or rethrowing exceptions should usually be preferred to catching and calling printStackTrace",
+      "is_true_positive": false
+    },
+    {
+      "finding_id": "error-prone:ManagedSelector.java:474:JavaTimeDefaultTimeZone:92",
+      "tool": "error-prone",
+      "sourcefile": "ManagedSelector.java",
+      "start_line": "474",
+      "type": "JavaTimeDefaultTimeZone",
+      "column": "92",
+      "message": "ZonedDateTime.now() is not allowed because it silently uses the system default time-zone. You must pass an explicit time-zone (e.g., ZoneId.of(\"America/Los_Angeles\")) to this method.",
+      "is_true_positive": false
+    },
+    {
+      "finding_id": "error-prone:MetaDataBuilder.java:238:AnnotateFormatMethod:20",
+      "tool": "error-prone",
+      "sourcefile": "MetaDataBuilder.java",
+      "start_line": "238",
+      "type": "AnnotateFormatMethod",
+      "column": "20",
+      "message": "This method uses a pair of parameters as a format string and its arguments, but the enclosing method wasn't annotated @FormatMethod. Doing so gives compile-time rather than run-time protection against malformed format strings.",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "error-prone:NamingEntryUtil.java:86:EmptyCatch:9",
+      "tool": "error-prone",
+      "sourcefile": "NamingEntryUtil.java",
+      "start_line": "86",
+      "type": "EmptyCatch",
+      "column": "9",
+      "message": "Caught exceptions should not be ignored",
+      "is_true_positive": false
+    },
+    {
+      "finding_id": "error-prone:PerMessageDeflateExtension.java:60:NonCanonicalType:25",
+      "tool": "error-prone",
+      "sourcefile": "PerMessageDeflateExtension.java",
+      "start_line": "60",
+      "type": "NonCanonicalType",
+      "column": "25",
+      "message": "The type `CompressionPool.Entry` was referred to by the non-canonical name `InflaterPool.Entry`. This may be misleading.",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "error-prone:QuicException.java:81:OverrideThrowableToString:19",
+      "tool": "error-prone",
+      "sourcefile": "QuicException.java",
+      "start_line": "81",
+      "type": "OverrideThrowableToString",
+      "column": "19",
+      "message": "To return a custom message with a Throwable class, one should override getMessage() instead of toString().",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "error-prone:Response.java:566:InlineMeSuggester:17",
+      "tool": "error-prone",
+      "sourcefile": "Response.java",
+      "start_line": "566",
+      "type": "InlineMeSuggester",
+      "column": "17",
+      "message": "This deprecated API looks inlineable. If you'd like the body of the API to be automatically inlined to its callers, please annotate it with @InlineMe. NOTE: the suggested fix makes the method final if it was not already.",
+      "is_true_positive": false
+    },
+    {
+      "finding_id": "error-prone:WriteFlusher.java:250:ClassCanBeStatic:13",
+      "tool": "error-prone",
+      "sourcefile": "WriteFlusher.java",
+      "start_line": "250",
+      "type": "ClassCanBeStatic",
+      "column": "13",
+      "message": "Inner class is non-static but does not reference enclosing class",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "sonarqube:AuthenticationProtocolHandler.java:44:java:S5843:",
+      "tool": "sonarqube",
+      "sourcefile": "AuthenticationProtocolHandler.java",
+      "start_line": "44",
+      "type": "java:S5843",
+      "column": "",
+      "message": "Simplify this regular expression to reduce its complexity from 35 to the 20 allowed.",
+      "is_true_positive": false
+    },
+    {
+      "finding_id": "sonarqube:DefaultFileLocatorHelper.java:153:java:S3011:",
+      "tool": "sonarqube",
+      "sourcefile": "DefaultFileLocatorHelper.java",
+      "start_line": "153",
+      "type": "java:S3011",
+      "column": "",
+      "message": "This accessibility update should be removed.",
+      "is_true_positive": false
+    },
+    {
+      "finding_id": "sonarqube:HeaderGenerator.java:48:java:S1172:",
+      "tool": "sonarqube",
+      "sourcefile": "HeaderGenerator.java",
+      "start_line": "48",
+      "type": "java:S1172",
+      "column": "",
+      "message": "Remove this unused method parameter \"capacity\".",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "sonarqube:HttpDateTime.java:178:java:S1871:",
+      "tool": "sonarqube",
+      "sourcefile": "HttpDateTime.java",
+      "start_line": "178",
+      "type": "java:S1871",
+      "column": "",
+      "message": "This branch's code block is the same as the block for the branch on line 174.",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "sonarqube:IncludeExcludeSet.java:215:java:S2447:",
+      "tool": "sonarqube",
+      "sourcefile": "IncludeExcludeSet.java",
+      "start_line": "215",
+      "type": "java:S2447",
+      "column": "",
+      "message": "Null is returned but a \"Boolean\" is expected.",
+      "is_true_positive": false
+    },
+    {
+      "finding_id": "sonarqube:JettyClientUpgradeRequest.java:52:java:S6204:",
+      "tool": "sonarqube",
+      "sourcefile": "JettyClientUpgradeRequest.java",
+      "start_line": "52",
+      "type": "java:S6204",
+      "column": "",
+      "message": "Replace this usage of 'Stream.collect(Collectors.toList())' with 'Stream.toList()' and ensure that the list is unmodified.",
+      "is_true_positive": false
+    },
+    {
+      "finding_id": "sonarqube:LazyList.java:57:java:S2157:",
+      "tool": "sonarqube",
+      "sourcefile": "LazyList.java",
+      "start_line": "57",
+      "type": "java:S2157",
+      "column": "",
+      "message": "Add a \"clone()\" method to this class.",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "sonarqube:MultiPartByteRanges.java:261:java:S1700:",
+      "tool": "sonarqube",
+      "sourcefile": "MultiPartByteRanges.java",
+      "start_line": "261",
+      "type": "java:S1700",
+      "column": "",
+      "message": "Rename field \"parser\"",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "sonarqube:PathCollators.java:54:java:S1452:",
+      "tool": "sonarqube",
+      "sourcefile": "PathCollators.java",
+      "start_line": "54",
+      "type": "java:S1452",
+      "column": "",
+      "message": "Remove usage of generic wildcard type.",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "sonarqube:PrefaceFrame.java:33:java:S6126:",
+      "tool": "sonarqube",
+      "sourcefile": "PrefaceFrame.java",
+      "start_line": "33",
+      "type": "java:S6126",
+      "column": "",
+      "message": "Replace this String concatenation with Text block.",
+      "is_true_positive": false
+    },
+    {
+      "finding_id": "sonarqube:SecurityUtils.java:233:java:S1144:",
+      "tool": "sonarqube",
+      "sourcefile": "SecurityUtils.java",
+      "start_line": "233",
+      "type": "java:S1144",
+      "column": "",
+      "message": "Remove this unused private \"callableToPrivilegedAction\" method.",
+      "is_true_positive": false
+    },
+    {
+      "finding_id": "sonarqube:Server.java:904:java:S5738:",
+      "tool": "sonarqube",
+      "sourcefile": "Server.java",
+      "start_line": "904",
+      "type": "java:S5738",
+      "column": "",
+      "message": "Remove this call to a deprecated class, it has been marked for removal.",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "sonarqube:ServletPathSpec.java:182:java:S5261:",
+      "tool": "sonarqube",
+      "sourcefile": "ServletPathSpec.java",
+      "start_line": "182",
+      "type": "java:S5261",
+      "column": "",
+      "message": "Add explicit curly braces to avoid dangling else.",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "sonarqube:ServletPathSpec.java:440:java:S131:",
+      "tool": "sonarqube",
+      "sourcefile": "ServletPathSpec.java",
+      "start_line": "440",
+      "type": "java:S131",
+      "column": "",
+      "message": "Complete cases by adding the missing enum constants or add a default case to this switch.",
+      "is_true_positive": false
+    },
+    {
+      "finding_id": "sonarqube:SessionDataMap.java:58:java:S112:",
+      "tool": "sonarqube",
+      "sourcefile": "SessionDataMap.java",
+      "start_line": "58",
+      "type": "java:S112",
+      "column": "",
+      "message": "Replace generic exceptions with specific library exceptions or a custom exception.",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "sonarqube:TopologicalSort.java:57:java:S3824:",
+      "tool": "sonarqube",
+      "sourcefile": "TopologicalSort.java",
+      "start_line": "57",
+      "type": "java:S3824",
+      "column": "",
+      "message": "Replace this \"Map.get()\" and condition with a call to \"Map.computeIfAbsent()\".",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "sonarqube:TypeUtil.java:622:java:S108:",
+      "tool": "sonarqube",
+      "sourcefile": "TypeUtil.java",
+      "start_line": "622",
+      "type": "java:S108",
+      "column": "",
+      "message": "Remove this block of code, fill it in, or add a comment explaining why it is empty.",
+      "is_true_positive": false
+    },
+    {
+      "finding_id": "sonarqube:WriteFlusher.java:343:java:S1119:",
+      "tool": "sonarqube",
+      "sourcefile": "WriteFlusher.java",
+      "start_line": "343",
+      "type": "java:S1119",
+      "column": "",
+      "message": "Refactor the code to remove this label and the need for it.",
+      "is_true_positive": false
+    },
+    {
+      "finding_id": "sonarqube:WriteThroughWriter.java:249:java:S127:",
+      "tool": "sonarqube",
+      "sourcefile": "WriteThroughWriter.java",
+      "start_line": "249",
+      "type": "java:S127",
+      "column": "",
+      "message": "Refactor the code in order to not assign to this loop counter from within the loop body.",
+      "is_true_positive": false
+    },
+    {
+      "finding_id": "sonarqube:pom.xml:54:xml:S1134:",
+      "tool": "sonarqube",
+      "sourcefile": "pom.xml",
+      "start_line": "54",
+      "type": "xml:S1134",
+      "column": "",
+      "message": "Take the required action to fix the issue indicated by this \"FIXME\" comment.",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "spotbugs:AbstractForkedChild.java:177:OS_OPEN_STREAM:",
+      "tool": "spotbugs",
+      "sourcefile": "AbstractForkedChild.java",
+      "start_line": "177",
+      "type": "OS_OPEN_STREAM",
+      "column": "",
+      "message": "Method may fail to close stream",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "spotbugs:Blocker.java:449:UL_UNRELEASED_LOCK_EXCEPTION_PATH:",
+      "tool": "spotbugs",
+      "sourcefile": "Blocker.java",
+      "start_line": "449",
+      "type": "UL_UNRELEASED_LOCK_EXCEPTION_PATH",
+      "column": "",
+      "message": "Method does not release lock on all exception paths",
+      "is_true_positive": false
+    },
+    {
+      "finding_id": "spotbugs:BlockingArrayQueue.java:919:IT_NO_SUCH_ELEMENT:",
+      "tool": "spotbugs",
+      "sourcefile": "BlockingArrayQueue.java",
+      "start_line": "919",
+      "type": "IT_NO_SUCH_ELEMENT",
+      "column": "",
+      "message": "Iterator next() method cannot throw NoSuchElementException",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "spotbugs:DefaultSessionIdManager.java:356:DMI_RANDOM_USED_ONLY_ONCE:",
+      "tool": "spotbugs",
+      "sourcefile": "DefaultSessionIdManager.java",
+      "start_line": "356",
+      "type": "DMI_RANDOM_USED_ONLY_ONCE",
+      "column": "",
+      "message": "Random object created and used only once",
+      "is_true_positive": false
+    },
+    {
+      "finding_id": "spotbugs:ExceptionUtil.java:304:NM_CLASS_NOT_EXCEPTION:",
+      "tool": "spotbugs",
+      "sourcefile": "ExceptionUtil.java",
+      "start_line": "304",
+      "type": "NM_CLASS_NOT_EXCEPTION",
+      "column": "",
+      "message": "Class is not derived from an Exception, even though it is named as such",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "spotbugs:Http3Fields.java:37:MS_PKGPROTECT:",
+      "tool": "spotbugs",
+      "sourcefile": "Http3Fields.java",
+      "start_line": "37",
+      "type": "MS_PKGPROTECT",
+      "column": "",
+      "message": "Field should be package protected",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "spotbugs:HttpCookie.java:869:ES_COMPARING_PARAMETER_STRING_WITH_EQ:",
+      "tool": "spotbugs",
+      "sourcefile": "HttpCookie.java",
+      "start_line": "869",
+      "type": "ES_COMPARING_PARAMETER_STRING_WITH_EQ",
+      "column": "",
+      "message": "Comparison of String parameter using == or !=",
+      "is_true_positive": false
+    },
+    {
+      "finding_id": "spotbugs:HttpParser.java:1366:AT_NONATOMIC_OPERATIONS_ON_SHARED_VARIABLE:",
+      "tool": "spotbugs",
+      "sourcefile": "HttpParser.java",
+      "start_line": "1366",
+      "type": "AT_NONATOMIC_OPERATIONS_ON_SHARED_VARIABLE",
+      "column": "",
+      "message": "Operation on shared variable is not atomic",
+      "is_true_positive": false
+    },
+    {
+      "finding_id": "spotbugs:HttpTester.java:636:VA_FORMAT_STRING_USES_NEWLINE:",
+      "tool": "spotbugs",
+      "sourcefile": "HttpTester.java",
+      "start_line": "636",
+      "type": "VA_FORMAT_STRING_USES_NEWLINE",
+      "column": "",
+      "message": "Format string should use %n rather than \\n",
+      "is_true_positive": false
+    },
+    {
+      "finding_id": "spotbugs:InitialContextFactory.java:34:NM_SAME_SIMPLE_NAME_AS_INTERFACE:",
+      "tool": "spotbugs",
+      "sourcefile": "InitialContextFactory.java",
+      "start_line": "34",
+      "type": "NM_SAME_SIMPLE_NAME_AS_INTERFACE",
+      "column": "",
+      "message": "Class names shouldn't shadow simple name of implemented interface",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "spotbugs:JettyHttpExchange.java:96:EQ_CHECK_FOR_OPERAND_NOT_COMPATIBLE_WITH_THIS:",
+      "tool": "spotbugs",
+      "sourcefile": "JettyHttpExchange.java",
+      "start_line": "96",
+      "type": "EQ_CHECK_FOR_OPERAND_NOT_COMPATIBLE_WITH_THIS",
+      "column": "",
+      "message": "Equals checks for incompatible operand",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "spotbugs:JettyHttpServerProvider.java:36:EI_EXPOSE_STATIC_REP2:",
+      "tool": "spotbugs",
+      "sourcefile": "JettyHttpServerProvider.java",
+      "start_line": "36",
+      "type": "EI_EXPOSE_STATIC_REP2",
+      "column": "",
+      "message": "May expose internal static state by storing a mutable object into a static field",
+      "is_true_positive": false
+    },
+    {
+      "finding_id": "spotbugs:JettyLoggerConfiguration.java:79:NP_BOOLEAN_RETURN_NULL:",
+      "tool": "spotbugs",
+      "sourcefile": "JettyLoggerConfiguration.java",
+      "start_line": "79",
+      "type": "NP_BOOLEAN_RETURN_NULL",
+      "column": "",
+      "message": "Method with Boolean return type returns explicit null",
+      "is_true_positive": false
+    },
+    {
+      "finding_id": "spotbugs:LazyList.java:60:CN_IDIOM:",
+      "tool": "spotbugs",
+      "sourcefile": "LazyList.java",
+      "start_line": "60",
+      "type": "CN_IDIOM",
+      "column": "",
+      "message": "Class implements Cloneable but does not define or use clone method",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "spotbugs:MavenServerConnector.java:39:MS_SHOULD_BE_FINAL:",
+      "tool": "spotbugs",
+      "sourcefile": "MavenServerConnector.java",
+      "start_line": "39",
+      "type": "MS_SHOULD_BE_FINAL",
+      "column": "",
+      "message": "Field isn't final but should be",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "spotbugs:QuotedQualityCSV.java:335:RV_NEGATING_RESULT_OF_COMPARETO:",
+      "tool": "spotbugs",
+      "sourcefile": "QuotedQualityCSV.java",
+      "start_line": "335",
+      "type": "RV_NEGATING_RESULT_OF_COMPARETO",
+      "column": "",
+      "message": "Negating the result of compareTo()/compare()",
+      "is_true_positive": false
+    },
+    {
+      "finding_id": "spotbugs:SelectiveJarResource.java:52:MS_MUTABLE_COLLECTION_PKGPROTECT:",
+      "tool": "spotbugs",
+      "sourcefile": "SelectiveJarResource.java",
+      "start_line": "52",
+      "type": "MS_MUTABLE_COLLECTION_PKGPROTECT",
+      "column": "",
+      "message": "Field is a mutable collection which should be package protected",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "spotbugs:ShutdownService.java:348:DM_EXIT:",
+      "tool": "spotbugs",
+      "sourcefile": "ShutdownService.java",
+      "start_line": "348",
+      "type": "DM_EXIT",
+      "column": "",
+      "message": "Method invokes System.exit(...)",
+      "is_true_positive": false
+    },
+    {
+      "finding_id": "spotbugs:TopologicalSort.java:183:SE_COMPARATOR_SHOULD_BE_SERIALIZABLE:",
+      "tool": "spotbugs",
+      "sourcefile": "TopologicalSort.java",
+      "start_line": "183",
+      "type": "SE_COMPARATOR_SHOULD_BE_SERIALIZABLE",
+      "column": "",
+      "message": "Comparator doesn't implement Serializable",
+      "is_true_positive": false
+    },
+    {
+      "finding_id": "spotbugs:WebAppClassLoader.java:333:PERM_SUPER_NOT_CALLED_IN_GETPERMISSIONS:",
+      "tool": "spotbugs",
+      "sourcefile": "WebAppClassLoader.java",
+      "start_line": "333",
+      "type": "PERM_SUPER_NOT_CALLED_IN_GETPERMISSIONS",
+      "column": "",
+      "message": "Custom class loader does not call its superclass's getPermissions()",
+      "is_true_positive": true
+    }
+  ]
+}

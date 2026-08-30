@@ -1,0 +1,64 @@
+[[1;34mINFO[m] Scanning for projects...
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m-----------------------< [0;36morg.example:sample_app[0;1m >-----------------------[m
+[[1;34mINFO[m] [1mBuilding sample_app 1.0-SNAPSHOT[m
+[[1;34mINFO[m] [1m--------------------------------[ jar ]---------------------------------[m
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-clean-plugin:2.5:clean[m [1m(default-clean)[m @ [36msample_app[0;1m ---[m
+[[1;34mINFO[m] Deleting java-errors-benchmark/target
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-resources-plugin:2.6:resources[m [1m(default-resources)[m @ [36msample_app[0;1m ---[m
+[[1;34mINFO[m] Using 'UTF-8' encoding to copy filtered resources.
+[[1;34mINFO[m] skip non existing resourceDirectory java-errors-benchmark/src/main/resources
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-compiler-plugin:3.11.0:compile[m [1m(default-compile)[m @ [36msample_app[0;1m ---[m
+[[1;34mINFO[m] Changes detected - recompiling the module! :source
+[[1;34mINFO[m] Compiling 30 source files with javac [debug target 21] to target/classes
+[[1;33mWARNING[m] java-errors-benchmark/src/main/java/app/PersonMatcher.java:[28,24] [EqualsGetClass] Prefer instanceof to getClass when implementing Object#equals.
+    (see https://errorprone.info/bugpattern/EqualsGetClass)
+  Did you mean 'if (!(obj instanceof Person)) {'?
+[[1;33mWARNING[m] java-errors-benchmark/src/main/java/app/TextAssembler.java:[5,28] [StringBuilderInitWithChar] StringBuilder does not have a char constructor; this invokes the int constructor.
+    (see https://errorprone.info/bugpattern/StringBuilderInitWithChar)
+  Did you mean 'StringBuilder sb = new StringBuilder("a");'?
+[[1;33mWARNING[m] java-errors-benchmark/src/main/java/app/ValueProcessor.java:[11,13] [DeadException] Exception created but not thrown
+    (see https://errorprone.info/bugpattern/DeadException)
+  Did you mean 'throw new IllegalArgumentException("Value is negative");'?
+[[1;33mWARNING[m] java-errors-benchmark/src/main/java/app/DiscountCalculator.java:[6,11] [NarrowingCompoundAssignment] Compound assignments from double to int hide lossy casts
+    (see https://errorprone.info/bugpattern/NarrowingCompoundAssignment)
+  Did you mean 'c = (int) (c * 0.33);'?
+[[1;33mWARNING[m] java-errors-benchmark/src/main/java/app/NumberComparison.java:[7,33] [BoxedPrimitiveEquality] Comparison using reference equality instead of value equality. Reference equality of boxed primitive types is usually not useful, as they are value objects, and it is bug-prone, as instances are cached for some values but not others.
+    (see https://errorprone.info/bugpattern/BoxedPrimitiveEquality)
+  Did you mean 'System.out.println(num1.equals(num2));'?
+[[1;33mWARNING[m] java-errors-benchmark/src/main/java/app/NumberComparison.java:[7,33] [ReferenceEquality] Comparison using reference equality instead of value equality
+    (see https://errorprone.info/bugpattern/ReferenceEquality)
+  Did you mean 'System.out.println(num1.equals(num2));'?
+[[1;33mWARNING[m] java-errors-benchmark/src/main/java/app/TypeNameFormatter.java:[10,49] [StringCaseLocaleUsage] Specify a `Locale` when calling `String#to{Lower,Upper}Case`. (Note: there are multiple suggested fixes; the third may be most appropriate if you're dealing with ASCII Strings.)
+    (see https://errorprone.info/bugpattern/StringCaseLocaleUsage)
+  Did you mean 'typesUpper[0] = types[0].toUpperCase(Locale.ROOT);' or 'typesUpper[0] = types[0].toUpperCase(Locale.getDefault());' or 'typesUpper[0] = Ascii.toUpperCase(types[0]);'?
+[[1;33mWARNING[m] java-errors-benchmark/src/main/java/app/PersonRegistry.java:[21,24] [EqualsHashCode] Classes that override equals should also override hashCode.
+    (see https://errorprone.info/bugpattern/EqualsHashCode)
+[[1;33mWARNING[m] java-errors-benchmark/src/main/java/app/PersonRegistry.java:[21,24] [EqualsGetClass] Prefer instanceof to getClass when implementing Object#equals.
+    (see https://errorprone.info/bugpattern/EqualsGetClass)
+  Did you mean 'if (!(obj instanceof Person)) {'?
+[[1;33mWARNING[m] java-errors-benchmark/src/main/java/app/PersonRegistry.java:[29,52] [SelfEquals] Testing an object for equality with itself will always be true.
+    (see https://errorprone.info/bugpattern/SelfEquals)
+  Did you mean 'return age == person.age && name.equals(person.name);'?
+[[1;33mWARNING[m] java-errors-benchmark/src/main/java/app/ValueReporter.java:[10,13] [UnusedVariable] This assignment to the local variable 'x' is never read.
+    (see https://errorprone.info/bugpattern/UnusedVariable)
+  Did you mean to remove this line?
+[[1;33mWARNING[m] java-errors-benchmark/src/main/java/app/TextTrimmer.java:[6,20] [ReturnValueIgnored] Return value of 'substring' must be used
+    (see https://errorprone.info/bugpattern/ReturnValueIgnored)
+  Did you mean 's = s.substring(3);' or to remove this line?
+[[1;33mWARNING[m] java-errors-benchmark/src/main/java/app/PersonRanking.java:[18,20] [MissingOverride] compareTo implements method in Comparable; expected @Override
+    (see https://errorprone.info/bugpattern/MissingOverride)
+  Did you mean '@Override public int compareTo(Person obj) {'?
+[[1;33mWARNING[m] java-errors-benchmark/src/main/java/app/ItemAppender.java:[12,25] [ModifyCollectionInEnhancedForLoop] Modifying a collection while iterating over it in a loop may cause a ConcurrentModificationException to be thrown or lead to undefined behavior.
+    (see https://errorprone.info/bugpattern/ModifyCollectionInEnhancedForLoop)
+[[1;33mWARNING[m] java-errors-benchmark/src/main/java/app/MenuHandler.java:[13,13] [FallThrough] Execution may fall through from the previous case; add a `// fall through` comment before this line if it was deliberate
+    (see https://errorprone.info/bugpattern/FallThrough)
+[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
+[[1;34mINFO[m] [1;32mBUILD SUCCESS[m
+[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
+[[1;34mINFO[m] Total time:  1.722 s
+[[1;34mINFO[m] Finished at: 2026-08-09T17:41:34+02:00
+[[1;34mINFO[m] [1m------------------------------------------------------------------------[m

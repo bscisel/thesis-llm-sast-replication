@@ -1,0 +1,20 @@
+tool;rule;findings;true_positive_share;accuracy_lowest;accuracy_highest
+Error Prone;FutureReturnValueIgnored;17;0,00;0,118;0,882
+Error Prone;MissingCasesInEnumSwitch;12;0,00;0,167;1,000
+Error Prone;MissingSummary;12;1,00;0,750;1,000
+Error Prone;IntLongMath;10;0,60;0,700;0,900
+Error Prone;OperatorPrecedence;10;1,00;0,000;1,000
+Error Prone;ReferenceEquality;10;0,10;0,800;0,900
+Error Prone;SameNameButDifferent;10;1,00;0,300;1,000
+Error Prone;MissingOverride;8;1,00;0,750;1,000
+SonarQube;java:S2095;21;0,10;0,619;0,952
+SonarQube;java:S2142;16;0,38;0,375;0,625
+SonarQube;java:S2178;10;0,00;1,000;1,000
+SonarQube;java:S1845;6;0,67;0,333;0,833
+SonarQube;java:S2259;6;0,50;0,667;1,000
+SonarQube;java:S3776;6;0,33;0,333;0,333
+SpotBugs;AT_STALE_THREAD_WRITE_OF_PRIMITIVE;25;0,24;0,440;0,600
+SpotBugs;CT_CONSTRUCTOR_THROW;25;0,00;0,400;1,000
+SpotBugs;AT_NONATOMIC_64BIT_PRIMITIVE;7;0,14;0,429;0,857
+SpotBugs;EI_EXPOSE_REP2;6;0,00;0,333;1,000
+SpotBugs;SIC_INNER_SHOULD_BE_STATIC;6;1,00;1,000;1,000

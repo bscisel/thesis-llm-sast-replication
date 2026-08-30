@@ -1,0 +1,9 @@
+model;accuracy_360_findings;accuracy_198_mapped
+Claude Opus 5;0,903;0,919
+Claude Sonnet 5;0,897;0,879
+GPT-5.6 Terra;0,847;0,843
+GPT-5.6 Luna;0,847;0,823
+gpt-oss-120b;0,786;0,793
+gpt-oss-20b;0,761;0,702
+Qwen3.5 9B;0,739;0,747
+tool label mapped mechanically;;0,758
