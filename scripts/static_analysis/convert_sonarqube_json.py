@@ -141,7 +141,7 @@ def convert(input_path: str, output_path: str) -> None:
 
     filtered_total = sum(filtered_reasons.values())
     print(
-        f"Przekształcono {len(findings)} ostrzeżeń -> {output_path}"
+        f"Converted {len(findings)} warnings -> {output_path}"
         f" (filtered out {filtered_total})"
     )
 

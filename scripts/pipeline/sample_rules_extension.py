@@ -104,20 +104,20 @@ def _sample_tool(
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="Tworzy katalog results/<przebieg>/ z jednym ostrzeżeniem na regułę nieobecną we wskazanym przebiegu."
+        description="Creates a results/<run>/ directory with one warning per rule absent from the given run."
     )
-    parser.add_argument("--source-run", required=True, type=Path, help="Numer albo katalog przebiegu z surowymi ostrzeżeniami.")
-    parser.add_argument("--exclude-run", required=True, type=Path, help="Przebieg, którego reguły są wyłączone z losowania.")
-    parser.add_argument("--rules-per-tool", type=int, default=20, help="Ile nowych reguł losujemy z każdego narzędzia.")
-    parser.add_argument("--output-run", type=Path, help="Katalog wynikowy; domyślnie kolejny wolny numer.")
-    parser.add_argument("--seed", type=int, default=20260810, help="Ziarno generatora, żeby losowanie dało się powtórzyć.")
+    parser.add_argument("--source-run", required=True, type=Path, help="Run number or directory holding the raw warnings.")
+    parser.add_argument("--exclude-run", required=True, type=Path, help="Run whose rules are excluded from the draw.")
+    parser.add_argument("--rules-per-tool", type=int, default=20, help="How many new rules to draw from each tool.")
+    parser.add_argument("--output-run", type=Path, help="Output directory; the next free number by default.")
+    parser.add_argument("--seed", type=int, default=20260810, help="Generator seed, so the draw can be repeated.")
     args = parser.parse_args()
 
     source_run = sf._resolve_run_dir(args.source_run)
     exclude_run = sf._resolve_run_dir(args.exclude_run)
     output_run = sf._resolve_run_dir(args.output_run) if args.output_run else sf._next_run_dir()
     if output_run.exists():
-        raise SystemExit(f"Katalog wynikowy już istnieje: {output_run}")
+        raise SystemExit(f"Output directory already exists: {output_run}")
 
     source_processed = source_run / "static_analysis" / "processed"
     output_processed = output_run / "static_analysis" / "processed"
@@ -175,7 +175,7 @@ def main() -> None:
         },
     )
 
-    print(f"Próbę zapisano w: {output_run}")
+    print(f"Sample written to: {output_run}")
     for tool, summary in summaries.items():
         print(f"\n{tool}: {summary['sampled_findings']} findings, 1 per rule "
               f"(new rules available: {summary['eligible_new_rules']})")

@@ -196,7 +196,7 @@ def main() -> None:
         "--cluster-by",
         choices=("plan", "rule", "stratum", "file", "none"),
         default="plan",
-        help="jednostka losowania bootstrapu; przy próbie łączonej użyj 'rule'",
+        help="bootstrap sampling unit; use 'rule' for the merged sample",
     )
     args = parser.parse_args()
 

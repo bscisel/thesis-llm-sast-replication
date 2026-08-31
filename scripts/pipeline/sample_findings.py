@@ -218,18 +218,18 @@ def _sample_report(
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="Tworzy katalog results/<przebieg>/ z próbą warstwową ostrzeżeń dla każdego narzędzia."
+        description="Creates a results/<run>/ directory with a stratified sample of warnings for each tool."
     )
-    parser.add_argument("--source-run", required=True, type=Path, help="Numer albo katalog przebiegu, z którego losujemy.")
-    parser.add_argument("--output-run", type=Path, help="Katalog wynikowy; domyślnie kolejny wolny numer.")
-    parser.add_argument("--seed", type=int, default=20260503, help="Ziarno generatora, żeby losowanie dało się powtórzyć.")
-    parser.add_argument("--exclude-test-sources", action=argparse.BooleanOptionalAction, default=True, help="Wyklucza ostrzeżenia z kodu testowego przed losowaniem (domyślnie tak).")
+    parser.add_argument("--source-run", required=True, type=Path, help="Run number or directory to draw from.")
+    parser.add_argument("--output-run", type=Path, help="Output directory; the next free number by default.")
+    parser.add_argument("--seed", type=int, default=20260503, help="Generator seed, so the draw can be repeated.")
+    parser.add_argument("--exclude-test-sources", action=argparse.BooleanOptionalAction, default=True, help="Excludes warnings from test code before drawing (default yes).")
     args = parser.parse_args()
 
     source_run = _resolve_run_dir(args.source_run)
     output_run = _resolve_run_dir(args.output_run) if args.output_run else _next_run_dir()
     if output_run.exists():
-        raise SystemExit(f"Katalog wynikowy już istnieje: {output_run}")
+        raise SystemExit(f"Output directory already exists: {output_run}")
 
     source_processed = source_run / "static_analysis" / "processed"
     output_processed = output_run / "static_analysis" / "processed"
@@ -283,7 +283,7 @@ def main() -> None:
         },
     )
 
-    print(f"Próbę zapisano w: {output_run}")
+    print(f"Sample written to: {output_run}")
     for tool, summary in summaries.items():
         print(f"\n{tool}: {summary['sampled_findings']}/{summary['source_total_findings']}")
         for s in summary["strata"]:

@@ -86,7 +86,7 @@ def _scopes(dataset: Any, split_by_context: bool) -> list[tuple[str, list[Findin
         grouped: dict[str, list[Finding]] = defaultdict(list)
         for finding in dataset.findings:
             grouped[context_kind(finding, dataset.source_root)].append(finding)
-        for kind in ("pełny plik", "wycinek", "brak kontekstu"):
+        for kind in ("full file", "excerpt", "no context"):
             if grouped.get(kind):
                 scopes.append((kind, grouped[kind]))
     return scopes
@@ -185,7 +185,7 @@ def _fmt(value: Any) -> str:
 
 
 def _print_table(rows: list[dict[str, Any]]) -> None:
-    headers = ["narzędzie", "podejście", "n", "TP", "FP", "FN", "TN", "precision [CI]", "recall [CI]", "F1 [CI]", "red. FP", "utracone TP"]
+    headers = ["tool", "approach", "n", "TP", "FP", "FN", "TN", "precision [CI]", "recall [CI]", "F1 [CI]", "FP red.", "lost TP"]
     print(" | ".join(headers))
     print(" | ".join("-" * len(header) for header in headers))
     for row in rows:
@@ -216,7 +216,7 @@ def main() -> None:
     parser.add_argument(
         "--include-partial",
         action="store_true",
-        help="policz też modele bez kompletu werdyktów (domyślnie pomijane, bo zawężają wspólną próbę)",
+        help="include models without a complete set of verdicts (skipped by default, they narrow the shared sample)",
     )
     parser.add_argument("--iterations", type=int, default=DEFAULT_ITERATIONS)
     parser.add_argument("--seed", type=int, default=DEFAULT_SEED)
@@ -224,12 +224,12 @@ def main() -> None:
         "--cluster-by",
         choices=("plan", "rule", "file", "none"),
         default="plan",
-        help="plan = klastrowanie po regule, dla Error Prone losowanie w warstwach",
+        help="plan = cluster by rule, stratified draw for Error Prone",
     )
     parser.add_argument(
         "--no-context-split",
         action="store_true",
-        help="pomiń wiersze w podziale na ostrzeżenia z pełnym plikiem i z wycinkiem",
+        help="skip the rows split into warnings shown with a full file and with an excerpt",
     )
     parser.add_argument("--output-dir", type=Path)
     args = parser.parse_args()
@@ -237,8 +237,8 @@ def main() -> None:
     dataset = load_dataset(args.run_dir, include_partial=args.include_partial)
     if dataset.partial_models:
         for model, count in dataset.partial_models.items():
-            stan = "policzony" if args.include_partial else "POMINIĘTY"
-            print(f"UWAGA: {model} ma {count}/{len(dataset.findings)} werdyktów — {stan}.")
+            stan = "counted" if args.include_partial else "SKIPPED"
+            print(f"WARNING: {model} has {count}/{len(dataset.findings)} verdicts - {stan}.")
     scheme: dict[str, str] | str
     scheme = "rule" if args.cluster_by == "plan" else args.cluster_by
     if args.cluster_by == "plan":

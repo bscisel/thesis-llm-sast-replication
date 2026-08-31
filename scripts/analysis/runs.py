@@ -25,7 +25,7 @@ def _latest_run_dir(project_root: Path) -> Path:
     pattern = re.compile(r"^[0-9]+_.+$")
     runs = [path for path in (project_root / "results").iterdir() if path.is_dir() and pattern.match(path.name)]
     if not runs:
-        print(f"Nie znaleziono katalogów przebiegów w {project_root / 'results'}.", file=sys.stderr)
+        print(f"No run directories found in {project_root / 'results'}.", file=sys.stderr)
         sys.exit(1)
     return sorted(runs, key=lambda path: int(path.name.split("_", 1)[0]))[-1]
 
@@ -62,7 +62,7 @@ def _resolve_run_dir(project_root: Path, value: Path | None) -> Path:
         run_id = f"{int(value.parts[0]):03d}"
         matches = sorted((project_root / "results").glob(f"{run_id}_*"), key=lambda path: int(path.name.split("_", 1)[0]))
         if not matches:
-            print(f"Nie znaleziono przebiegu o numerze: {value}", file=sys.stderr)
+            print(f"No run found with number: {value}", file=sys.stderr)
             sys.exit(1)
         return matches[-1]
     if value.parts and value.parts[0] == "results":
@@ -110,7 +110,7 @@ def find_run_dir(spec: int | str | Path, project_root: Path = ROOT) -> Path:
     if text.isdigit():
         matches = sorted((project_root / "results").glob(f"{int(text):03d}_*"))
         if not matches:
-            print(f"Nie znaleziono przebiegu o numerze: {text}", file=sys.stderr)
+            print(f"No run found with number: {text}", file=sys.stderr)
             sys.exit(1)
         return matches[-1]
     path = Path(text)

@@ -138,7 +138,7 @@ def fetch_all_issues(base_url: str, user: str, password: str, project_key: str) 
                 )
                 if sev_total > API_RESULT_LIMIT:
                     print(
-                        f"  UWAGA: {issue_type}/{severity} ma {sev_total} ostrzeżeń, "
+                        f"  WARNING: {issue_type}/{severity} has {sev_total} warnings, "
                         f"still exceeds {API_RESULT_LIMIT}. Only first {API_RESULT_LIMIT} fetched.",
                         file=sys.stderr,
                     )

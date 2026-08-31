@@ -23,7 +23,7 @@ def mcnemar_exact(b: int, c: int) -> dict[str, Any]:
         "discordant": n,
         "p_value": float(p_value) if p_value is not None else None,
         "odds_ratio": odds_ratio,
-        "test": "dokładny test McNemara (dwustronny, rozkład dwumianowy)",
+        "test": "exact McNemar test (two-sided, binomial distribution)",
     }
 
 
@@ -94,7 +94,7 @@ def signflip_mde(
         "net_discordance": int(mass),
         "power_target": power,
         "alpha": alpha,
-        "note": "nawet przy pełnej jednokierunkowości niezgody moc nie osiąga progu",
+        "note": "even with fully one-sided discordance the power stays below the threshold",
     }
 
 
@@ -115,7 +115,7 @@ def mcnemar_cluster_signflip(
             "clusters_with_discordance": 0,
             "statistic": 0.0,
             "p_value": 1.0,
-            "test": "sign-flip na poziomie klastra (reguła SAST)",
+            "test": "cluster-level sign-flip (SAST rule)",
         }
 
     observed = float(abs(values.sum()))
@@ -130,7 +130,7 @@ def mcnemar_cluster_signflip(
         "statistic": observed,
         "p_value": p_value,
         "permutations": permutations,
-        "test": "sign-flip na poziomie klastra (reguła SAST)",
+        "test": "cluster-level sign-flip (SAST rule)",
     }
 
 

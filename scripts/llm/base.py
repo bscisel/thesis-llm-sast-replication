@@ -110,7 +110,7 @@ def _resolve_java_path(
         return None
     if len(matches) > 1:
         logger.warning(
-            "Plik '%s' dopasowano po samej nazwie (%d kandydatów, ścieżka z raportu %r); "
+            "Resolved '%s' by file name alone (%d candidates, reported path %r); "
             "using %s.",
             sourcefile,
             len(matches),
@@ -268,7 +268,7 @@ def _assert_same_prompts(
     recorded = {key: existing_output.get(key) for key in prompts}
     if any(value is not None for value in recorded.values()) and recorded != prompts:
         raise ValueError(
-            f"Odmowa dopisania powtórzeń do {output_path}: dotychczasowe wyniki powstały "
+            f"Refusing to append runs to {output_path}: the existing results were "
             f"produced with a different prompt ({recorded}) than the current one "
             f"({prompts})."
         )
@@ -286,7 +286,7 @@ def _load_partial(path: Path, prompts: dict[str, Any]) -> dict[int, dict[str, An
                 record = json.loads(line)
             except json.JSONDecodeError:
                 logger.warning(
-                    "Pominięto nieczytelny wiersz %d w %s (zapis przerwany w trakcie).",
+                    "Ignoring unreadable line %d in %s (interrupted mid-write).",
                     number,
                     path.name,
                 )
@@ -295,7 +295,7 @@ def _load_partial(path: Path, prompts: dict[str, Any]) -> dict[int, dict[str, An
                 recorded = {key: record.get(key) for key in prompts}
                 if recorded != prompts:
                     raise ValueError(
-                        f"Odmowa wznowienia {path}: plik powstał z innym "
+                        f"Refusing to resume {path}: it was produced with a different "
                         f"prompt ({recorded}) than the current one ({prompts}). "
                         f"Delete the file to start over."
                     )
@@ -308,7 +308,7 @@ def _load_partial(path: Path, prompts: dict[str, Any]) -> dict[int, dict[str, An
             runs = record.get("runs") or []
             if any(run.get("error") == "api_error" for run in runs):
                 logger.warning(
-                    "Ostrzeżenie %d w %s ma nieudane wywołanie API — zostanie powtórzone.",
+                    "Finding %d in %s has a failed API call - it will be redone.",
                     finding_id,
                     path.name,
                 )
@@ -327,12 +327,12 @@ def _assert_context_usable(
     listing = "\n  ".join(degenerate[:10])
     if share > MAX_DEGENERATE_CONTEXT_SHARE:
         raise RuntimeError(
-            f"{len(degenerate)}/{total} ostrzeżeń w {findings_path} nie ma użytecznego "
+            f"{len(degenerate)}/{total} findings in {findings_path} have no usable "
             f"source context ({share:.0%} > {MAX_DEGENERATE_CONTEXT_SHARE:.0%}). "
             f"Check --source-root and the report paths. First cases:\n  {listing}"
         )
     logger.warning(
-        "%d/%d ostrzeżeń nie ma użytecznego wycinka kodu:\n  %s",
+        "%d/%d findings have no usable source context:\n  %s",
         len(degenerate),
         total,
         listing,
@@ -424,7 +424,7 @@ class LLMAnalyzer(ABC):
         all_findings = data.get("findings", [])
         if limit is not None:
             all_findings = all_findings[:limit]
-            logger.info("Ograniczenie do pierwszych %d ostrzeżeń.", len(all_findings))
+            logger.info("Limiting to the first %d finding(s).", len(all_findings))
 
         prepared: list[tuple[int, dict[str, Any], str, str]] = []
         degenerate: list[str] = []
@@ -465,7 +465,7 @@ class LLMAnalyzer(ABC):
                 completed = _load_partial(partial_path, prompts)
                 prepared = [job for job in prepared if job[0] not in completed]
                 logger.info(
-                    "Wznowienie: %d ostrzeżeń gotowych, %d zostało.",
+                    "Resuming: %d finding(s) already done, %d left.",
                     len(completed),
                     len(prepared),
                 )
@@ -504,7 +504,7 @@ class LLMAnalyzer(ABC):
         done = 0
         if self.concurrency > 1:
             logger.info(
-                "Przetwarzanie %d ostrzeżeń w %d równoległych wątkach.",
+                "Processing %d finding(s) with %d concurrent workers.",
                 len(prepared),
                 self.concurrency,
             )
@@ -512,12 +512,12 @@ class LLMAnalyzer(ABC):
                 for item in pool.map(process, prepared):
                     results.append(item)
                     done += 1
-                    logger.info("Ostrzeżenie %d/%d przetworzone.", done, len(prepared))
+                    logger.info("Finding %d/%d processed.", done, len(prepared))
         else:
             for job in prepared:
                 results.append(process(job))
                 done += 1
-                logger.info("Ostrzeżenie %d/%d przetworzone.", done, len(prepared))
+                logger.info("Finding %d/%d processed.", done, len(prepared))
 
         results.extend(completed.values())
         results.sort(key=lambda item: item["finding_id"])
@@ -613,7 +613,7 @@ class LLMAnalyzer(ABC):
                     runs.append(parsed)
                 else:
                     logger.warning(
-                        "Powtórzenie %d: nie udało się odczytać JSON-a. Surowa odpowiedź: %.200s",
+                        "Run %d: could not parse JSON response. Raw: %.200s",
                         run_num,
                         raw,
                     )
@@ -624,7 +624,7 @@ class LLMAnalyzer(ABC):
                 fatal = self.is_fatal_error(exc)
                 if fatal is not None:
                     raise FatalAPIError(fatal) from exc
-                logger.warning("Powtórzenie %d: wywołanie API nie powiodło się: %s", run_num, exc)
+                logger.warning("Run %d: API call failed: %s", run_num, exc)
                 runs.append(
                     {
                         "run": run_num,

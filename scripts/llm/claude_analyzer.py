@@ -37,7 +37,7 @@ class ClaudeAnalyzer(LLMAnalyzer):
         self._model = model
         if self.temperature is not None:
             logger.warning(
-                "%s nie przyjmuje parametru temperature; pominięto LLM_TEMPERATURE=%s "
+                "%s does not accept a temperature parameter; ignoring LLM_TEMPERATURE=%s "
                 "and using the model default.",
                 model,
                 self.temperature,

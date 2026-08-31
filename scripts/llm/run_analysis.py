@@ -46,7 +46,7 @@ def _load_env() -> None:
     if env_file.exists():
         load_dotenv(env_file)
     else:
-        logger.warning("Nie znaleziono .env w %s — brane są zmienne środowiskowe.", env_file)
+        logger.warning("No .env found in %s - using the environment variables.", env_file)
 
 
 def _resolve_num_runs(cli_value: int | None) -> int:
@@ -95,7 +95,7 @@ def _load_run_info(run_dir: Path) -> dict:
     try:
         return json.loads(path.read_text(encoding="utf-8"))
     except json.JSONDecodeError:
-        logger.warning("Nie udało się odczytać metadanych przebiegu: %s", path)
+        logger.warning("Could not read the run metadata: %s", path)
         return {}
 
 
@@ -120,7 +120,7 @@ def _resolve_system_prompt(cli_value: str | None, run_dir: Path) -> str:
         return variant
 
     logger.error(
-        "Nie da się wyprowadzić wariantu promptu systemowego z target_project.key=%r w %s. "
+        "Cannot derive the system prompt variant from target_project.key=%r in %s. "
         "Pass --system-prompt explicitly.",
         target.get("key"),
         run_dir / "run_info.json",
@@ -138,12 +138,12 @@ def _resolve_source_root(cli_value: str | None, run_dir: Path) -> Path:
         value = os.getenv("SOURCE_ROOT")
     if not value:
         logger.error(
-            "Nie ustawiono katalogu źródeł. Podaj --source-root, ustaw SOURCE_ROOT albo użyj przebiegu z target_project.directory w run_info.json."
+            "No source directory set. Pass --source-root, set SOURCE_ROOT, or use a run whose run_info.json carries target_project.directory."
         )
         sys.exit(1)
     path = Path(value)
     if not path.exists():
-        logger.error("Katalog źródeł nie istnieje: %s", path)
+        logger.error("Source directory does not exist: %s", path)
         sys.exit(1)
     return path
 
@@ -158,7 +158,7 @@ def _build_analyzer(model: str, shared_kwargs: dict, dry_run: bool = False) -> L
             claude_model = os.getenv("ANTHROPIC_MODEL_SONNET", "claude-sonnet-5")
         base_url = os.getenv("ANTHROPIC_BASE_URL", "").strip() or None
         if not api_key and not base_url and not dry_run:
-            logger.error("Ustaw ANTHROPIC_API_KEY albo ANTHROPIC_BASE_URL dla własnego punktu końcowego.")
+            logger.error("Set ANTHROPIC_API_KEY, or ANTHROPIC_BASE_URL for a custom endpoint.")
             sys.exit(1)
         return ClaudeAnalyzer(
             api_key=api_key or "unused",
@@ -214,7 +214,7 @@ def _latest_run_dir(project_root: Path) -> Path:
     pattern = re.compile(r"^[0-9]+_\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}$")
     runs = [path for path in (project_root / "results").iterdir() if path.is_dir() and pattern.match(path.name)]
     if not runs:
-        logger.error("Nie znaleziono katalogów przebiegów w %s.", project_root / "results")
+        logger.error("No run directories found in %s.", project_root / "results")
         sys.exit(1)
     return sorted(runs, key=lambda path: int(path.name.split("_", 1)[0]))[-1]
 
@@ -247,36 +247,36 @@ def _resolve_run_dir(project_root: Path, cli_value: str | None) -> Path:
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="Uruchamia postprocessing raportów statycznej analizy wybranym modelem."
+        description="Runs post-processing of static analysis reports with the chosen model."
     )
     parser.add_argument(
         "--model",
         choices=MODELS + ["all"],
         required=True,
-        help="Model do użycia ('all' = wszystkie siedem).",
+        help="Model to use ('all' = all seven).",
     )
     parser.add_argument(
         "--tool",
         choices=TOOLS + ["all"],
         required=True,
-        help="Raport którego narzędzia przetworzyć ('all' = wszystkie trzy).",
+        help="Which tool report to process ('all' = all three).",
     )
     parser.add_argument(
         "--source-root",
         metavar="PATH",
-        help="Katalog źródeł Javy; ma pierwszeństwo przed run_info i SOURCE_ROOT.",
+        help="Java source directory; takes precedence over run_info and SOURCE_ROOT.",
     )
     parser.add_argument(
         "--num-runs",
         type=int,
         metavar="N",
-        help="Liczba powtórzeń na ostrzeżenie; ma pierwszeństwo przed LLM_NUM_RUNS, domyślnie 3.",
+        help="Repetitions per warning; takes precedence over LLM_NUM_RUNS, default 3.",
     )
     parser.add_argument(
         "--concurrency",
         type=int,
         metavar="N",
-        help="Ile ostrzeżeń przetwarzanych równolegle. Domyślnie zależnie od modelu; "
+        help="How many warnings to process in parallel. Model-dependent by default; "
              "model lokalny dzieli jedną kartę, więc dostaje mniej. Ma pierwszeństwo "
              "przed LLM_CONCURRENCY_<MODEL>.",
     )
@@ -284,18 +284,18 @@ def main() -> None:
         "--limit",
         type=int,
         metavar="N",
-        help="Przetwarza tylko pierwszych N ostrzeżeń z narzędzia (do prób).",
+        help="Process only the first N warnings of a tool (for trials).",
     )
     parser.add_argument(
         "--dry-run",
         action="store_true",
-        help="Wypisuje prompty na ekran, bez żadnego wywołania API.",
+        help="Print the prompts and make no API call at all.",
     )
     output_group = parser.add_mutually_exclusive_group()
     output_group.add_argument(
         "--append-runs",
         action="store_true",
-        help="Dopisuje powtórzenia do istniejących plików zamiast je zastępować.",
+        help="Append repetitions to the existing files instead of replacing them.",
     )
     output_group.add_argument(
         "--overwrite",
@@ -305,12 +305,12 @@ def main() -> None:
     parser.add_argument(
         "--run-dir",
         metavar="PATH",
-        help="Numer albo katalog przebiegu. Domyślnie RUN_DIR albo najnowszy przebieg.",
+        help="Run number or directory. Defaults to RUN_DIR or the latest run.",
     )
     parser.add_argument(
         "--system-prompt",
         choices=["benchmark", "jetty"],
-        help="Wariant promptu systemowego; pominięty wyprowadzany jest z projektu przebiegu.",
+        help="System prompt variant; derived from the run project when omitted.",
     )
     parser.add_argument(
         "--bez-kodu",
@@ -351,13 +351,13 @@ def main() -> None:
 
     if args.bez_kodu:
         logger.warning(
-            "WARIANT B3: fragment zrodla NIE bedzie wstawiany do promptu. "
+            "B3 VARIANT: the source excerpt will NOT be inserted into the prompt. "
             "Metryki z tego przebiegu nie sa porownywalne z glownym inaczej "
             "niz jako ablacja (H6)."
         )
 
     if args.dry_run:
-        logger.info("PRÓBA NA SUCHO — żadne wywołanie API nie zostanie wykonane.")
+        logger.info("DRY RUN - no API call will be made.")
     logger.info("Katalog przebiegu: %s", run_dir)
 
     if not args.dry_run and not args.append_runs and not args.overwrite:
@@ -369,7 +369,7 @@ def main() -> None:
         ]
         if existing_outputs:
             logger.error(
-                "Odmowa startu: %d plików wynikowych już istnieje. "
+                "Refusing to start: %d output files already exist. "
                 "Use --append-runs to add more runs or --overwrite to replace them.",
                 len(existing_outputs),
             )
@@ -385,12 +385,12 @@ def main() -> None:
         for tool in tools:
             findings_path = processed_dir / TOOL_FILENAMES[tool]
             if not findings_path.exists():
-                logger.warning("Nie znaleziono pliku z ostrzeżeniami, pomijam: %s", findings_path)
+                logger.warning("No findings file, skipping: %s", findings_path)
                 continue
 
             output_path = llm_dir / model / f"{tool}.json"
             logger.info(
-                "Model: %s | Narzędzie: %s | Powtórzeń: %s | Równolegle: %d | Źródła: %s",
+                "Model: %s | Tool: %s | Repetitions: %s | Parallel: %d | Sources: %s",
                 model,
                 tool,
                 num_runs if not args.dry_run else "dry-run",

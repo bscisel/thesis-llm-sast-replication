@@ -21,6 +21,13 @@ from analysis.runs import find_run_dir as _find_run_dir
 @lru_cache(maxsize=None)
 def find_run_dir(spec):
     return _find_run_dir(spec)
+def _pricing_path() -> Path:
+    for candidate in (ROOT / "docs" / "methodology" / "model-pricing.json", ROOT / "model-pricing.json"):
+        if candidate.exists():
+            return candidate
+    return ROOT / "model-pricing.json"
+
+
 OUTPUT = ROOT / "tables"
 
 MODELS = [
@@ -59,7 +66,7 @@ def write(name: str, header: list[str], rows: list[list]) -> None:
 
 
 def table_6_1() -> None:
-    pricing = read_json(ROOT / "model-pricing.json")
+    pricing = read_json(_pricing_path())
     described = {
         "claude": ("Anthropic", "closed", "high", "vendor API"),
         "sonnet": ("Anthropic", "closed", "medium", "vendor API"),

@@ -26,7 +26,7 @@ from analysis.tests import (
 
 def h4(dataset: Dataset, iterations: int, seed: int) -> dict[str, Any]:
     if dataset.source_root is None or not dataset.source_root.exists():
-        return {"available": False, "reason": f"brak katalogu źródeł: {dataset.source_root}"}
+        return {"available": False, "reason": f"no source directory: {dataset.source_root}"}
 
     groundings: dict[tuple, Grounding] = {
         finding.key: build_grounding(finding, dataset.source_root) for finding in dataset.findings

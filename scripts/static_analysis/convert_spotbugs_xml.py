@@ -164,7 +164,7 @@ def main():
         print(json.dumps(result, indent=2))
 
     except Exception as e:
-        print(f"BŁĄD: {e}", file=sys.stderr)
+        print(f"ERROR: {e}", file=sys.stderr)
         sys.exit(1)
 
 

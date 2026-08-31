@@ -15,9 +15,9 @@
     "seed": 20260803
   },
   "baselines": {
-    "B0": "wszystkie ostrzeżenia zachowane",
-    "B1": "wszystkie ostrzeżenia odrzucone",
-    "B2": "error-prone: narzędzie podaje sugerowaną poprawkę; sonarqube: brak użytecznych metadanych (degeneruje do B0); spotbugs: brak użytecznych metadanych (degeneruje do B0)"
+    "B0": "all warnings kept",
+    "B1": "all warnings rejected",
+    "B2": "error-prone: the tool supplies a suggested fix; sonarqube: no usable metadata (degenerates to B0); spotbugs: no usable metadata (degenerates to B0)"
   },
   "b2_candidates": {
     "error-prone": [
@@ -37,7 +37,7 @@
         "lost_tp_share": 0.0
       },
       {
-        "predicate": "narzędzie podaje sugerowaną poprawkę",
+        "predicate": "the tool supplies a suggested fix",
         "tp": 49,
         "fp": 30,
         "fn": 5,
@@ -434,7 +434,7 @@
     {
       "tool": "spotbugs",
       "approach": "B0",
-      "label": "wszystkie ostrzeżenia zachowane",
+      "label": "all warnings kept",
       "n": 100,
       "tp": 27,
       "fp": 73,
@@ -468,7 +468,7 @@
     {
       "tool": "spotbugs",
       "approach": "B1",
-      "label": "wszystkie ostrzeżenia odrzucone",
+      "label": "all warnings rejected",
       "n": 100,
       "tp": 0,
       "fp": 0,
@@ -502,7 +502,7 @@
     {
       "tool": "spotbugs",
       "approach": "B2",
-      "label": "error-prone: narzędzie podaje sugerowaną poprawkę; sonarqube: brak użytecznych metadanych (degeneruje do B0); spotbugs: brak użytecznych metadanych (degeneruje do B0)",
+      "label": "error-prone: the tool supplies a suggested fix; sonarqube: no usable metadata (degenerates to B0); spotbugs: no usable metadata (degenerates to B0)",
       "n": 100,
       "tp": 27,
       "fp": 73,
@@ -774,7 +774,7 @@
     {
       "tool": "error-prone",
       "approach": "B0",
-      "label": "wszystkie ostrzeżenia zachowane",
+      "label": "all warnings kept",
       "n": 100,
       "tp": 54,
       "fp": 46,
@@ -808,7 +808,7 @@
     {
       "tool": "error-prone",
       "approach": "B1",
-      "label": "wszystkie ostrzeżenia odrzucone",
+      "label": "all warnings rejected",
       "n": 100,
       "tp": 0,
       "fp": 0,
@@ -842,7 +842,7 @@
     {
       "tool": "error-prone",
       "approach": "B2",
-      "label": "error-prone: narzędzie podaje sugerowaną poprawkę; sonarqube: brak użytecznych metadanych (degeneruje do B0); spotbugs: brak użytecznych metadanych (degeneruje do B0)",
+      "label": "error-prone: the tool supplies a suggested fix; sonarqube: no usable metadata (degenerates to B0); spotbugs: no usable metadata (degenerates to B0)",
       "n": 100,
       "tp": 49,
       "fp": 30,
@@ -1114,7 +1114,7 @@
     {
       "tool": "sonarqube",
       "approach": "B0",
-      "label": "wszystkie ostrzeżenia zachowane",
+      "label": "all warnings kept",
       "n": 100,
       "tp": 29,
       "fp": 71,
@@ -1148,7 +1148,7 @@
     {
       "tool": "sonarqube",
       "approach": "B1",
-      "label": "wszystkie ostrzeżenia odrzucone",
+      "label": "all warnings rejected",
       "n": 100,
       "tp": 0,
       "fp": 0,
@@ -1182,7 +1182,7 @@
     {
       "tool": "sonarqube",
       "approach": "B2",
-      "label": "error-prone: narzędzie podaje sugerowaną poprawkę; sonarqube: brak użytecznych metadanych (degeneruje do B0); spotbugs: brak użytecznych metadanych (degeneruje do B0)",
+      "label": "error-prone: the tool supplies a suggested fix; sonarqube: no usable metadata (degenerates to B0); spotbugs: no usable metadata (degenerates to B0)",
       "n": 100,
       "tp": 29,
       "fp": 71,
@@ -1454,7 +1454,7 @@
     {
       "tool": "wszystkie",
       "approach": "B0",
-      "label": "wszystkie ostrzeżenia zachowane",
+      "label": "all warnings kept",
       "n": 300,
       "tp": 110,
       "fp": 190,
@@ -1488,7 +1488,7 @@
     {
       "tool": "wszystkie",
       "approach": "B1",
-      "label": "wszystkie ostrzeżenia odrzucone",
+      "label": "all warnings rejected",
       "n": 300,
       "tp": 0,
       "fp": 0,
@@ -1522,7 +1522,7 @@
     {
       "tool": "wszystkie",
       "approach": "B2",
-      "label": "error-prone: narzędzie podaje sugerowaną poprawkę; sonarqube: brak użytecznych metadanych (degeneruje do B0); spotbugs: brak użytecznych metadanych (degeneruje do B0)",
+      "label": "error-prone: the tool supplies a suggested fix; sonarqube: no usable metadata (degenerates to B0); spotbugs: no usable metadata (degenerates to B0)",
       "n": 300,
       "tp": 105,
       "fp": 174,
@@ -1792,9 +1792,9 @@
       "recall_wilson_high": 0.9983934246956784
     },
     {
-      "tool": "pełny plik",
+      "tool": "full file",
       "approach": "B0",
-      "label": "wszystkie ostrzeżenia zachowane",
+      "label": "all warnings kept",
       "n": 72,
       "tp": 36,
       "fp": 36,
@@ -1826,9 +1826,9 @@
       "recall_wilson_high": 1.0
     },
     {
-      "tool": "pełny plik",
+      "tool": "full file",
       "approach": "B1",
-      "label": "wszystkie ostrzeżenia odrzucone",
+      "label": "all warnings rejected",
       "n": 72,
       "tp": 0,
       "fp": 0,
@@ -1860,9 +1860,9 @@
       "recall_wilson_high": 0.09641862859446367
     },
     {
-      "tool": "pełny plik",
+      "tool": "full file",
       "approach": "B2",
-      "label": "error-prone: narzędzie podaje sugerowaną poprawkę; sonarqube: brak użytecznych metadanych (degeneruje do B0); spotbugs: brak użytecznych metadanych (degeneruje do B0)",
+      "label": "error-prone: the tool supplies a suggested fix; sonarqube: no usable metadata (degenerates to B0); spotbugs: no usable metadata (degenerates to B0)",
       "n": 72,
       "tp": 33,
       "fp": 33,
@@ -1894,7 +1894,7 @@
       "recall_wilson_high": 0.9712513886640066
     },
     {
-      "tool": "pełny plik",
+      "tool": "full file",
       "approach": "claude-opus-5",
       "label": "postprocessing LLM (claude)",
       "n": 72,
@@ -1928,7 +1928,7 @@
       "recall_wilson_high": 1.0
     },
     {
-      "tool": "pełny plik",
+      "tool": "full file",
       "approach": "gpt-5.6-terra",
       "label": "postprocessing LLM (gpt)",
       "n": 72,
@@ -1962,7 +1962,7 @@
       "recall_wilson_high": 0.9950795928601897
     },
     {
-      "tool": "pełny plik",
+      "tool": "full file",
       "approach": "qwen3.5:9b",
       "label": "postprocessing LLM (qwen)",
       "n": 72,
@@ -1996,7 +1996,7 @@
       "recall_wilson_high": 0.75215126934629
     },
     {
-      "tool": "pełny plik",
+      "tool": "full file",
       "approach": "openai/gpt-oss-120b",
       "label": "postprocessing LLM (oss)",
       "n": 72,
@@ -2030,7 +2030,7 @@
       "recall_wilson_high": 0.9212955240498188
     },
     {
-      "tool": "pełny plik",
+      "tool": "full file",
       "approach": "gpt-5.6-luna",
       "label": "postprocessing LLM (luna)",
       "n": 72,
@@ -2064,7 +2064,7 @@
       "recall_wilson_high": 0.9950795928601897
     },
     {
-      "tool": "pełny plik",
+      "tool": "full file",
       "approach": "openai/gpt-oss-20b",
       "label": "postprocessing LLM (oss20)",
       "n": 72,
@@ -2098,7 +2098,7 @@
       "recall_wilson_high": 0.9212955240498188
     },
     {
-      "tool": "pełny plik",
+      "tool": "full file",
       "approach": "claude-sonnet-5",
       "label": "postprocessing LLM (sonnet)",
       "n": 72,
@@ -2132,9 +2132,9 @@
       "recall_wilson_high": 0.9950795928601897
     },
     {
-      "tool": "wycinek",
+      "tool": "excerpt",
       "approach": "B0",
-      "label": "wszystkie ostrzeżenia zachowane",
+      "label": "all warnings kept",
       "n": 228,
       "tp": 74,
       "fp": 154,
@@ -2166,9 +2166,9 @@
       "recall_wilson_high": 1.0
     },
     {
-      "tool": "wycinek",
+      "tool": "excerpt",
       "approach": "B1",
-      "label": "wszystkie ostrzeżenia odrzucone",
+      "label": "all warnings rejected",
       "n": 228,
       "tp": 0,
       "fp": 0,
@@ -2200,9 +2200,9 @@
       "recall_wilson_high": 0.04934977939638607
     },
     {
-      "tool": "wycinek",
+      "tool": "excerpt",
       "approach": "B2",
-      "label": "error-prone: narzędzie podaje sugerowaną poprawkę; sonarqube: brak użytecznych metadanych (degeneruje do B0); spotbugs: brak użytecznych metadanych (degeneruje do B0)",
+      "label": "error-prone: the tool supplies a suggested fix; sonarqube: no usable metadata (degenerates to B0); spotbugs: no usable metadata (degenerates to B0)",
       "n": 228,
       "tp": 72,
       "fp": 141,
@@ -2234,7 +2234,7 @@
       "recall_wilson_high": 0.9925566473617328
     },
     {
-      "tool": "wycinek",
+      "tool": "excerpt",
       "approach": "claude-opus-5",
       "label": "postprocessing LLM (claude)",
       "n": 228,
@@ -2268,7 +2268,7 @@
       "recall_wilson_high": 1.0
     },
     {
-      "tool": "wycinek",
+      "tool": "excerpt",
       "approach": "gpt-5.6-terra",
       "label": "postprocessing LLM (gpt)",
       "n": 228,
@@ -2302,7 +2302,7 @@
       "recall_wilson_high": 0.9787809878271253
     },
     {
-      "tool": "wycinek",
+      "tool": "excerpt",
       "approach": "qwen3.5:9b",
       "label": "postprocessing LLM (qwen)",
       "n": 228,
@@ -2336,7 +2336,7 @@
       "recall_wilson_high": 0.7713592509223566
     },
     {
-      "tool": "wycinek",
+      "tool": "excerpt",
       "approach": "openai/gpt-oss-120b",
       "label": "postprocessing LLM (oss)",
       "n": 228,
@@ -2370,7 +2370,7 @@
       "recall_wilson_high": 0.9976105365965432
     },
     {
-      "tool": "wycinek",
+      "tool": "excerpt",
       "approach": "gpt-5.6-luna",
       "label": "postprocessing LLM (luna)",
       "n": 228,
@@ -2404,7 +2404,7 @@
       "recall_wilson_high": 0.9976105365965432
     },
     {
-      "tool": "wycinek",
+      "tool": "excerpt",
       "approach": "openai/gpt-oss-20b",
       "label": "postprocessing LLM (oss20)",
       "n": 228,
@@ -2438,7 +2438,7 @@
       "recall_wilson_high": 0.8402350215921953
     },
     {
-      "tool": "wycinek",
+      "tool": "excerpt",
       "approach": "claude-sonnet-5",
       "label": "postprocessing LLM (sonnet)",
       "n": 228,

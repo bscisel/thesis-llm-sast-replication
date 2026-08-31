@@ -63,10 +63,10 @@ def h6(dataset_main, dataset_ablation, repetition: int = 0, seed: int = 20260803
 def main():
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--main-run", type=int, default=6, help="run z przebiegiem głównym (domyślnie 6)")
-    ap.add_argument("--ablation-run", type=int, default=7, help="run z wariantem B3 (domyślnie 7)")
-    ap.add_argument("--repetition", type=int, default=0, help="który powtórzenie przebiegu głównego (0-2)")
-    ap.add_argument("--json", type=Path, help="zapisz wynik także jako JSON")
+    ap.add_argument("--main-run", type=int, default=6, help="run holding the main pass (default 6)")
+    ap.add_argument("--ablation-run", type=int, default=7, help="run holding the B3 variant (default 7)")
+    ap.add_argument("--repetition", type=int, default=0, help="which repetition of the main pass (0-2)")
+    ap.add_argument("--json", type=Path, help="also write the result as JSON")
     ap.add_argument("--seed", type=int, default=20260803, help="ziarno permutacji sign-flip")
     args = ap.parse_args()
 
@@ -80,14 +80,14 @@ def main():
     result["glowny"] = Path(find_run_dir(args.main_run)).name
     result["ablacja"] = Path(find_run_dir(args.ablation_run)).name
     if result["brakujace_modele"]:
-        print(f"UWAGA: w wariancie B3 brak modeli: {', '.join(result['brakujace_modele'])}\n")
+        print(f"WARNING: models missing from the B3 variant: {', '.join(result['brakujace_modele'])}\n")
     if not result["modele"]:
-        raise SystemExit("brak wspólnych modeli — czy przebieg bez kodu się zakończył?")
+        raise SystemExit("no models in common - did the run without code finish?")
 
-    print(f"H6 — wkład kontekstu kodu   (przebieg {args.repetition + 1} przebiegu głównego "
+    print(f"H6 - contribution of the code context   (repetition {args.repetition + 1} of the main pass "
           f"wobec jedynego przebiegu B3)\n")
-    print(f"{'model':<22}{'z kodem':>9}{'bez kodu':>10}{'różnica':>9}"
-          f"{'p (dokł.)':>11}{'p (klastr)':>12}{'n':>6}")
+    print(f"{'model':<22}{'with code':>11}{'no code':>9}{'difference':>12}"
+          f"{'p (exact)':>11}{'p (cluster)':>12}{'n':>6}")
     for m, v in result["modele"].items():
         print(f"{m:<22}{v['z_kodem']:>9.3f}{v['bez_kodu']:>10.3f}{v['roznica']:>+9.3f}"
               f"{v['mcnemar']['p_value']:>11.4g}{v['mcnemar_cluster']['p_value']:>12.4g}{v['n']:>6}")
@@ -99,7 +99,7 @@ def main():
             d = v["per_tool"].get(t)
             kom.append(f"{d['z_kodem'] - d['bez_kodu']:>+13.3f}" if d else f"{'—':>13}")
         print(f"{m:<22}" + "".join(kom))
-    print("\nWartości dodatnie: kod pomaga. Ujemne: model bez kodu wypada lepiej.")
+    print("\nPositive values: the code helps. Negative: the model does better without it.")
 
     print(f"\n{'model':<22}{'zachowanych z kodem':>21}{'bez kodu':>11}")
     for m, v in result["modele"].items():

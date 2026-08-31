@@ -103,8 +103,8 @@ def _as_raw(finding: Finding) -> dict[str, Any]:
 def context_kind(finding: Finding, source_root: Path) -> str:
     context = _build_code_context(finding.raw or _as_raw(finding), source_root)
     if context.startswith("("):
-        return "brak kontekstu"
-    return "pełny plik" if "complete file" in context.splitlines()[0] else "wycinek"
+        return "no context"
+    return "full file" if "complete file" in context.splitlines()[0] else "excerpt"
 
 
 def mentions(text: str, identifiers: frozenset[str]) -> set[str]:

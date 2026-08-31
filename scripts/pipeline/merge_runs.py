@@ -159,7 +159,7 @@ def _merge_llm(sources: list[Path], out: Path) -> dict[str, int]:
                     prompts = current
                 elif prompts != current:
                     raise SystemExit(
-                        f"Różne prompty dla {model}/{tool_file}: {prompts} wobec {current}. "
+                        f"Different prompts for {model}/{tool_file}: {prompts} versus {current}. "
                         "Scalanie takich wynikow dawaloby metryki z dwoch roznych pytan."
                     )
                 if merged is None:
@@ -169,7 +169,7 @@ def _merge_llm(sources: list[Path], out: Path) -> dict[str, int]:
                 continue
             if present != len(sources):
                 raise SystemExit(
-                    f"{model}/{tool_file} istnieje w {present} z {len(sources)} przebiegów — "
+                    f"{model}/{tool_file} exists in {present} of {len(sources)} runs - "
                     "scalanie niepelnego modelu ucialoby porownania parami."
                 )
             for position, entry in enumerate(findings):
@@ -183,7 +183,7 @@ def _merge_llm(sources: list[Path], out: Path) -> dict[str, int]:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Scala runy w jeden katalog wynikowy.")
-    parser.add_argument("--runs", required=True, help="numery albo sciezki po przecinku, np. 3,5")
+    parser.add_argument("--runs", required=True, help="numbers or paths, comma separated, e.g. 3,5")
     parser.add_argument("--output-run", default=None, help="nazwa katalogu wynikowego (domyslnie kolejny numer)")
     parser.add_argument("--force", action="store_true", help="nadpisz istniejacy katalog wynikowy")
     args = parser.parse_args()

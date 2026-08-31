@@ -48,17 +48,17 @@ def main():
 
     dom = lambda txt, f: score_text(txt, gr[f.key])["grounded"]
 
-    print("== ILE NAZW Z KODU NARZĘDZIE PODAJE SAMO ==")
-    print("Tekst narzędzia trafia do polecenia, więc te nazwy model dostaje bez czytania kodu.")
-    print(f"{'narzędzie':<14}{'nazw na ostrzeżenie':>22}{'n':>6}")
+    print("== HOW MANY CODE NAMES THE TOOL SUPPLIES BY ITSELF ==")
+    print("The tool text goes into the prompt, so the model gets these names without reading the code.")
+    print(f"{'tool':<14}{'names per warning':>22}{'n':>6}")
     for tool in sorted({f.tool for f in uzyteczne}):
         sub = [f for f in uzyteczne if f.tool == tool]
         srednia = sum(len(gr[f.key].message_identifiers) for f in sub) / len(sub)
         print(f"{tool:<14}{srednia:>22.2f}{len(sub):>6}")
     print()
-    print("== H4 W ROZBICIU NA NARZĘDZIE ==")
-    print("Agregat zaciera różnicę: przy SpotBugs punktu odniesienia nie przewyższa żaden model.")
-    print(f"{'narzędzie':<14}{'komunikat':>10}{'modele min':>12}{'modele maks':>13}{'n':>6}")
+    print("== H4 BROKEN DOWN BY TOOL ==")
+    print("The aggregate hides the difference: with SpotBugs no model beats the baseline.")
+    print(f"{'tool':<14}{'message':>10}{'models min':>12}{'models max':>13}{'n':>6}")
     for tool in sorted({f.tool for f in uzyteczne}):
         sub = [f for f in uzyteczne if f.tool == tool]
         u = udzial_modeli(sub, dom)
@@ -89,19 +89,19 @@ def main():
                     lm += 1
         return mod / lm, kom / lk
 
-    print("\n== WARIANTY TOKENIZACJI (próg 4 znaki) ==")
-    print(f"{'wariant':<40}{'modele':>9}{'komunikat':>11}{'przepaść':>10}")
+    print("\n== TOKENISATION VARIANTS (threshold 4 characters) ==")
+    print(f"{'variant':<40}{'models':>9}{'message':>11}{'gap':>10}")
     for name, (uk, fl) in {
-        "przyjęty (bez komentarzy, z filtrem)": (True, True),
-        "bez komentarzy, bez filtru": (True, False),
-        "z komentarzami, z filtrem": (False, True),
-        "każde słowo (bez obu)": (False, False),
+        "adopted (no comments, with filter)": (True, True),
+        "no comments, no filter": (True, False),
+        "with comments, with filter": (False, True),
+        "every word (neither)": (False, False),
     }.items():
         a, b = przepasc(uk, fl)
         print(f"{name:<40}{a:>9.3f}{b:>11.3f}{a - b:>10.3f}")
 
-    print("\n== WRAŻLIWOŚĆ NA PRÓG DŁUGOŚCI ==")
-    print(f"{'próg':>6}{'modele':>9}{'komunikat':>11}{'przepaść':>10}")
+    print("\n== SENSITIVITY TO THE LENGTH THRESHOLD ==")
+    print(f"{'threshold':>10}{'models':>9}{'message':>11}{'gap':>10}")
     for minlen in (2, 3, 4, 5):
         a, b = przepasc(True, True, minlen)
         print(f"{minlen:>6}{a:>9.3f}{b:>11.3f}{a - b:>10.3f}")
@@ -111,8 +111,8 @@ def main():
     for f in uzyteczne:
         code = window[f.key][0]
         truncated += code.count("*/") > code.count("/*")
-    print(f"\n== WYCINKI Z BLOKIEM KOMENTARZA OTWARTYM PRZED POCZATKIEM ==")
-    print(f"{truncated} z {len(uzyteczne)} — czyszczenie ich nie wykrywa")
+    print(f"\n== EXCERPTS WITH A COMMENT BLOCK OPENED BEFORE THEIR START ==")
+    print(f"{truncated} of {len(uzyteczne)} - the stripping does not detect these")
 
     def rangi(x):
         s = sorted(range(len(x)), key=lambda i: x[i])
@@ -152,7 +152,7 @@ def main():
             wyn[m] = sum(sumy) / len(sumy) if sumy else float("nan")
         return wyn
 
-    print("\n== CZY MIARA PORZADKUJE MODELE ==")
+    print("\n== DOES THE MEASURE RANK THE MODELS ==")
     reasoning_hits = hits("reasonings")
     explanation_hits = hits("explanations")
     length = {}
@@ -163,10 +163,10 @@ def main():
     na100 = {m: reasoning_hits[m] / length[m] * 100 for m in ds.models}
     position = {column: {m: i + 1 for i, m in enumerate(sorted(ds.models, key=lambda m: -d[m]))}
            for column, d in (("przyjeta", reasoning_hits), ("na100", na100))}
-    print(f"{'model':22}{'przyjęta':>10}{'na 100 zn.':>12}{'wyjaśnienie':>13}{'dł. znaków':>12}")
+    print(f"{'model':22}{'adopted':>10}{'per 100 ch.':>13}{'explanation':>13}{'characters':>12}")
     for m in sorted(ds.models, key=lambda m: -reasoning_hits[m]):
         print(f"{m:22}{reasoning_hits[m]:>10.3f}{na100[m]:>12.4f}{explanation_hits[m]:>13.3f}{length[m]:>12.0f}")
-    print("\n  pozycja w uporządkowaniu (przyjęta -> na 100 znaków):")
+    print("\n  rank (adopted -> per 100 characters):")
     for m in sorted(ds.models, key=lambda m: position["przyjeta"][m]):
         print(f"    {m:22} {position['przyjeta'][m]} -> {position['na100'][m]}")
 
@@ -186,24 +186,24 @@ def main():
         "korelacja_rang_przyjeta_wobec_na100": spearman(
             [reasoning_hits[m] for m in ds.models], [na100[m] for m in ds.models]),
     }, ensure_ascii=False, indent=2) + "\n")
-    print(f"\nZapisano: {wyjscie}")
+    print(f"\nWritten: {wyjscie}")
 
-    print("\n== SAM KOMUNIKAT WOBEC KOMUNIKATU Z OPISEM ==")
-    print("Punktem odniesienia H4 jest message+description. Rozbicie pokazuje, ze przewaga")
-    print("SpotBugs siedzi w polu description, nie w samym message.")
-    print(f"{'narzedzie':<14}{'sam message':>13}{'message+opis':>14}{'n':>6}")
+    print("\n== MESSAGE ALONE VERSUS MESSAGE WITH DESCRIPTION ==")
+    print("The H4 baseline is message+description. The split shows that the SpotBugs")
+    print("advantage sits in the description field, not in the message alone.")
+    print(f"{'tool':<14}{'message only':>14}{'message+descr.':>16}{'n':>6}")
     for tool in sorted({f.tool for f in uzyteczne}):
         pod = [f for f in uzyteczne if f.tool == tool]
         sam = sum(bool(dom(f.message or "", f)) for f in pod) / len(pod)
         oba = udzial_komunikatu(pod, dom)
         print(f"{tool:<14}{sam:>13.3f}{oba:>14.3f}{len(pod):>6}")
 
-    print("\n== POJEDYNCZY PRZEBIEG WOBEC SKLEJKI TRZECH ==")
-    print("Wskaznik liczy sie z jednego przebiegu, bo tekst narzedzia tez jest jeden. Wiersz")
-    print("'sklejka trzech' pokazuje, ile przewagi dokłada sama długość tekstu.")
+    print("\n== A SINGLE REPETITION VERSUS THREE JOINED ==")
+    print("The measure is computed from one repetition, because the tool text is also one. The")
+    print("'three joined' row shows how much of the edge comes from text length alone.")
     komunikat = udzial_komunikatu(uzyteczne, dom)
-    for label, wybierz in (("pierwszy przebieg", lambda d: d.reasonings[:1]),
-                              ("sklejka trzech", lambda d: d.reasonings)):
+    for label, wybierz in (("first repetition", lambda d: d.reasonings[:1]),
+                              ("three joined", lambda d: d.reasonings)):
         wart = []
         for m in ds.models:
             t = c = 0
@@ -215,7 +215,7 @@ def main():
                 t += bool(dom(" ".join(wybierz(d)), f))
             if c:
                 wart.append(t / c)
-        print(f"  {label:<20} modele {min(wart):.3f}-{max(wart):.3f}"
+        print(f"  {label:<20} models {min(wart):.3f}-{max(wart):.3f}"
               f"   komunikat {komunikat:.3f}   przepasc srednia {sum(wart)/len(wart) - komunikat:.3f}")
 
     return 0

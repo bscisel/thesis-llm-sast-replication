@@ -26,7 +26,7 @@ class GPTAnalyzer(LLMAnalyzer):
         self._model = model
         if self.temperature is not None:
             logger.warning(
-                "%s przyjmuje wyłącznie własną domyślną temperaturę; pominięto "
+                "%s accepts only its own default temperature; ignoring "
                 "LLM_TEMPERATURE=%s.",
                 model,
                 self.temperature,

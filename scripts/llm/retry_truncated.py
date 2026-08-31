@@ -25,11 +25,11 @@ logger = logging.getLogger(__name__)
 
 def _failure_kind(run: dict[str, Any]) -> str | None:
     if str(run.get("stop_reason") or "") in TRUNCATION_REASONS:
-        return "ucięty"
+        return "truncated"
     if run.get("error") == "api_error":
-        return "błąd API"
+        return "api error"
     if run.get("error") == "parse_failed" and not str(run.get("raw") or "").strip():
-        return "pusta odpowiedź"
+        return "empty response"
     return None
 
 
@@ -50,7 +50,7 @@ def main() -> None:
     parser.add_argument("--run-dir")
     parser.add_argument("--source-root")
     parser.add_argument("--max-attempts", type=int, default=3)
-    parser.add_argument("--dry-run", action="store_true", help="Wypisuje tylko to, co zostałoby powtórzone.")
+    parser.add_argument("--dry-run", action="store_true", help="Print only what would be retried.")
     parser.add_argument(
         "--bez-kodu",
         action="store_true",
@@ -87,14 +87,14 @@ def main() -> None:
     ):
         if data.get(key) != digest:
             logger.error(
-                "Prompt zmienił się od czasu przebiegu (%s: %s w pliku, %s teraz). Odmowa powtórzenia.",
+                "The prompt changed since the run (%s: %s on file, %s now). Refusing to retry.",
                 key,
                 data.get(key),
                 digest,
             )
             sys.exit(1)
 
-    logger.info("%d nieudanych powtórzeń w %s:", len(slots), result_path.name)
+    logger.info("%d failed repetitions in %s:", len(slots), result_path.name)
     for f_idx, r_idx, kind in slots:
         finding = data["findings"][f_idx]
         logger.info(
@@ -118,7 +118,7 @@ def main() -> None:
         f"{result_path.stem}.przed_powtorka_{datetime.now(timezone.utc):%Y-%m-%d_%H-%M-%S}.json"
     )
     if backup.exists():
-        logger.error("Kopia %s już istnieje. Odmowa nadpisania.", backup.name)
+        logger.error("Backup %s already exists. Refusing to overwrite.", backup.name)
         sys.exit(1)
     shutil.copy2(result_path, backup)
     logger.info("Backup: %s", backup.name)
@@ -134,7 +134,7 @@ def main() -> None:
             source.get("type"),
         ) != (finding.get("sourcefile"), finding.get("start_line"), finding.get("type")):
             logger.error(
-                "Ostrzeżenie %s nie zgadza się z %s na tej pozycji — pominięte.",
+                "Finding %s does not match %s at this position - skipped.",
                 finding_id,
                 findings_path.name,
             )
@@ -158,11 +158,11 @@ def main() -> None:
                 finding["runs"][r_idx] = result
                 repaired += 1
                 logger.info(
-                    "Ostrzeżenie %s, powtórzenie %s naprawione za %d podejściem.", finding_id, run_number, attempt
+                    "Finding %s, repetition %s fixed on attempt %d.", finding_id, run_number, attempt
                 )
                 break
             logger.warning(
-                "Ostrzeżenie %s, powtórzenie %s, podejście %d: stop_reason=%s błąd=%s — ponawiam.",
+                "Finding %s, repetition %s, attempt %d: stop_reason=%s error=%s - retrying.",
                 finding_id,
                 run_number,
                 attempt,
@@ -172,7 +172,7 @@ def main() -> None:
         else:
             failed += 1
             logger.error(
-                "Ostrzeżenie %s, powtórzenie %s nadal nieudane po %d podejściach — zostaje jako brak danych.",
+                "Finding %s, repetition %s still failing after %d attempts - left as missing data.",
                 finding_id,
                 run_number,
                 args.max_attempts,
@@ -196,7 +196,7 @@ def main() -> None:
     tmp = result_path.with_name(result_path.name + ".tmp")
     tmp.write_text(json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8")
     os.replace(tmp, result_path)
-    logger.info("Naprawiono %d/%d; %d zostaje jako brak danych.", repaired, len(slots), failed)
+    logger.info("Repaired %d/%d; %d left as missing data.", repaired, len(slots), failed)
 
 
 if __name__ == "__main__":

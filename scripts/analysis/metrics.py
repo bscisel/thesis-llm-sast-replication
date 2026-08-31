@@ -112,9 +112,9 @@ def model_predictor(model: str) -> Predictor:
 
 def baseline_predictor(name: str, findings: Sequence[Finding]) -> tuple[Predictor, str]:
     if name == "B0":
-        return (lambda finding: True), "wszystkie ostrzeżenia zachowane"
+        return (lambda finding: True), "all warnings kept"
     if name == "B1":
-        return (lambda finding: False), "wszystkie ostrzeżenia odrzucone"
+        return (lambda finding: False), "all warnings rejected"
     if name == "B2":
         return _fit_metadata_heuristic(findings)
     raise ValueError(f"unknown baseline: {name}")
@@ -156,7 +156,7 @@ def _metadata_candidates(tool: str) -> list[tuple[str, Predictor]]:
         )
         return candidates
     if tool == "error-prone":
-        return [("narzędzie podaje sugerowaną poprawkę", lambda f: bool(f.metadata.get("suggestion")))]
+        return [("the tool supplies a suggested fix", lambda f: bool(f.metadata.get("suggestion")))]
     return []
 
 
@@ -175,7 +175,7 @@ def _fit_metadata_heuristic(findings: Sequence[Finding]) -> tuple[Predictor, str
         subset = [finding for finding in findings if finding.tool == tool]
         candidates = _metadata_candidates(tool)
         best_predictor: Predictor = lambda finding: True
-        best_label = "brak użytecznych metadanych (degeneruje do B0)"
+        best_label = "no usable metadata (degenerates to B0)"
         best_f1 = confusion((f.label, True) for f in subset).f1 or 0.0
         for label, predictor in candidates:
             score = confusion((f.label, predictor(f)) for f in subset).f1

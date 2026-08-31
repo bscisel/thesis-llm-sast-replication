@@ -50,8 +50,8 @@ def policz(directory: Path) -> dict:
 
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument("--runs", default="4,6,7", help="numery katalogów runów po przecinku")
-    ap.add_argument("--target-run", type=int, default=6, help="run, w którego analysis/ zapisać wynik")
+    ap.add_argument("--runs", default="4,6,7", help="run directory numbers, comma separated")
+    ap.add_argument("--target-run", type=int, default=6, help="run whose analysis/ the result is written to")
     args = ap.parse_args()
 
     numery = [int(n) for n in args.runs.split(",")]
@@ -80,12 +80,12 @@ def main() -> None:
 
     print(cel)
     for entry in results:
-        print(f"\n{entry['run']}: {entry['powtorzone']} powtórek na {entry['przebiegi']} przebiegów "
+        print(f"\n{entry['run']}: {entry['powtorzone']} retries across {entry['przebiegi']} repetitions "
               f"({entry['udzial']:.3%})")
         for model, stats in entry["per_model"].items():
             if stats["powtorzone"]:
                 print(f"   {model:<10} {stats['powtorzone']:>3} z {stats['przebiegi']}")
-    print(f"\nŁĄCZNIE: {powtorzone} powtórek na {repetitions} przebiegów "
+    print(f"\nTOTAL: {powtorzone} retries across {repetitions} repetitions "
           f"({powtorzone / repetitions:.3%})")
     print(f"powody pierwotnego niepowodzenia: {dict(powody)}")
 

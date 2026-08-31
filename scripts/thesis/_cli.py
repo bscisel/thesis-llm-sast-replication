@@ -22,21 +22,21 @@ def parser(doc: str) -> argparse.ArgumentParser:
     p.add_argument(
         "--include-partial",
         action="store_true",
-        help="policz też modele bez kompletu werdyktów (domyślnie pomijane, bo zawężają wspólną próbę)",
+        help="include models without a complete set of verdicts (skipped by default, they narrow the shared sample)",
     )
     p.add_argument("--iterations", type=int, default=DEFAULT_ITERATIONS)
     p.add_argument("--seed", type=int, default=DEFAULT_SEED)
     p.add_argument(
         "--pricing",
         type=Path,
-        help='JSON z cenami katalogowymi: {"claude": {"input": 15.0, "output": 75.0}, ...} USD za 1 mln tokenów',
+        help='JSON with list prices: {"claude": {"input": 15.0, "output": 75.0}, ...} USD per 1M tokens',
     )
     p.add_argument(
         "--cluster-by",
         choices=("plan", "rule", "stratum", "file", "none"),
         default="plan",
         help=(
-            "jednostka losowania bootstrapu; 'plan' bierze schemat per narzędzie z dataset.RESAMPLING_SCHEME. "
+            "bootstrap sampling unit; 'plan' takes the per-tool scheme from dataset.RESAMPLING_SCHEME. "
             "Dla próby łączonej użyj 'rule' — warstwy Error Prone nie przenoszą się między etapami doboru."
         ),
     )
@@ -47,8 +47,8 @@ def parser(doc: str) -> argparse.ArgumentParser:
 def dataset_from(args: argparse.Namespace) -> Dataset:
     dataset = load_dataset(args.run_dir, include_partial=args.include_partial)
     for model, count in (dataset.partial_models or {}).items():
-        stan = "policzony" if args.include_partial else "POMINIĘTY"
-        print(f"UWAGA: {model} ma {count}/{len(dataset.findings)} werdyktów — {stan}.")
+        stan = "counted" if args.include_partial else "SKIPPED"
+        print(f"WARNING: {model} has {count}/{len(dataset.findings)} verdicts - {stan}.")
     return dataset
 
 

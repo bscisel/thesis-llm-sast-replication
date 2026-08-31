@@ -12,7 +12,7 @@
         "discordant": 54,
         "p_value": 1.38433549734529e-07,
         "odds_ratio": 5.75,
-        "test": "dokładny test McNemara (dwustronny, rozkład dwumianowy)"
+        "test": "exact McNemar test (two-sided, binomial distribution)"
       },
       "mcnemar_cluster": {
         "b": 46,
@@ -21,7 +21,7 @@
         "statistic": 38.0,
         "p_value": 0.004599770011499425,
         "permutations": 20000,
-        "test": "sign-flip na poziomie klastra (reguła SAST)"
+        "test": "cluster-level sign-flip (SAST rule)"
       },
       "per_tool": {
         "error-prone": {
@@ -54,7 +54,7 @@
         "discordant": 91,
         "p_value": 1.0476614334104999e-11,
         "odds_ratio": 5.5,
-        "test": "dokładny test McNemara (dwustronny, rozkład dwumianowy)"
+        "test": "exact McNemar test (two-sided, binomial distribution)"
       },
       "mcnemar_cluster": {
         "b": 77,
@@ -63,7 +63,7 @@
         "statistic": 63.0,
         "p_value": 0.00014999250037498125,
         "permutations": 20000,
-        "test": "sign-flip na poziomie klastra (reguła SAST)"
+        "test": "cluster-level sign-flip (SAST rule)"
       },
       "per_tool": {
         "error-prone": {
@@ -96,7 +96,7 @@
         "discordant": 105,
         "p_value": 1.5854524913510498e-18,
         "odds_ratio": 9.5,
-        "test": "dokładny test McNemara (dwustronny, rozkład dwumianowy)"
+        "test": "exact McNemar test (two-sided, binomial distribution)"
       },
       "mcnemar_cluster": {
         "b": 95,
@@ -105,7 +105,7 @@
         "statistic": 85.0,
         "p_value": 4.999750012499375e-05,
         "permutations": 20000,
-        "test": "sign-flip na poziomie klastra (reguła SAST)"
+        "test": "cluster-level sign-flip (SAST rule)"
       },
       "per_tool": {
         "error-prone": {
@@ -138,7 +138,7 @@
         "discordant": 115,
         "p_value": 3.240204200619261e-12,
         "odds_ratio": 4.476190476190476,
-        "test": "dokładny test McNemara (dwustronny, rozkład dwumianowy)"
+        "test": "exact McNemar test (two-sided, binomial distribution)"
       },
       "mcnemar_cluster": {
         "b": 94,
@@ -147,7 +147,7 @@
         "statistic": 73.0,
         "p_value": 0.00034998250087495624,
         "permutations": 20000,
-        "test": "sign-flip na poziomie klastra (reguła SAST)"
+        "test": "cluster-level sign-flip (SAST rule)"
       },
       "per_tool": {
         "error-prone": {
@@ -180,7 +180,7 @@
         "discordant": 143,
         "p_value": 2.2533836638015286e-09,
         "odds_ratio": 2.9722222222222223,
-        "test": "dokładny test McNemara (dwustronny, rozkład dwumianowy)"
+        "test": "exact McNemar test (two-sided, binomial distribution)"
       },
       "mcnemar_cluster": {
         "b": 107,
@@ -189,7 +189,7 @@
         "statistic": 71.0,
         "p_value": 0.005649717514124294,
         "permutations": 20000,
-        "test": "sign-flip na poziomie klastra (reguła SAST)"
+        "test": "cluster-level sign-flip (SAST rule)"
       },
       "per_tool": {
         "error-prone": {
@@ -222,7 +222,7 @@
         "discordant": 174,
         "p_value": 4.7788627962880454e-08,
         "odds_ratio": 2.411764705882353,
-        "test": "dokładny test McNemara (dwustronny, rozkład dwumianowy)"
+        "test": "exact McNemar test (two-sided, binomial distribution)"
       },
       "mcnemar_cluster": {
         "b": 123,
@@ -231,7 +231,7 @@
         "statistic": 72.0,
         "p_value": 0.0012499375031248437,
         "permutations": 20000,
-        "test": "sign-flip na poziomie klastra (reguła SAST)"
+        "test": "cluster-level sign-flip (SAST rule)"
       },
       "per_tool": {
         "error-prone": {
@@ -264,7 +264,7 @@
         "discordant": 66,
         "p_value": 2.3834933267526115e-11,
         "odds_ratio": 8.428571428571429,
-        "test": "dokładny test McNemara (dwustronny, rozkład dwumianowy)"
+        "test": "exact McNemar test (two-sided, binomial distribution)"
       },
       "mcnemar_cluster": {
         "b": 59,
@@ -273,7 +273,7 @@
         "statistic": 52.0,
         "p_value": 4.999750012499375e-05,
         "permutations": 20000,
-        "test": "sign-flip na poziomie klastra (reguła SAST)"
+        "test": "cluster-level sign-flip (SAST rule)"
       },
       "per_tool": {
         "error-prone": {

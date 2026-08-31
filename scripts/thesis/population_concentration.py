@@ -45,8 +45,8 @@ def policz(zrodlo: Path, target: Path, top_count: int) -> dict:
         zapisane = expected[tool]["source_total_findings"]
         if len(findings) != zapisane:
             raise SystemExit(
-                f"{name}: filtry dają {len(findings)} ostrzeżeń, a sample_info.json mówi "
-                f"o {zapisane} — filtry populacji się rozjechały"
+                f"{name}: the filters yield {len(findings)} warnings while sample_info.json says "
+                f"{zapisane} - the population filters have drifted apart"
             )
 
         licznosci = collections.Counter(f["type"] for f in findings)
@@ -125,13 +125,13 @@ def main() -> None:
 
     print(path)
     for data in result["tools"].values():
-        print(f"\n{data['name']}: {data['population']} ostrzeżeń, {data['distinct_rules']} reguł")
+        print(f"\n{data['name']}: {data['population']} warnings, {data['distinct_rules']} rules")
         for r in data["top_rules"]:
             print(f"  {r['population']:>5} ({r['population_share']:5.1%})  {r['rule']:<38}"
-                  f" proporcjonalnie {r['proportional_draw']:5.1f}, w próbie {r['in_sample']}")
+                  f" proportional {r['proportional_draw']:5.1f}, in sample {r['in_sample']}")
 
     d, s = result["dominant"], result["s116_underscore"]
-    print(f"\njava:S116 z podkreśleniem: {s['leading_underscore']} z {s['total']} ({s['share']:.1%})")
+    print(f"\njava:S116 with a leading underscore: {s['leading_underscore']} of {s['total']} ({s['share']:.1%})")
     print(f"najliczniejsze wzorce ({', '.join(d['rules'])}):")
     print(f"  proporcjonalnie {d['proportional_count']:.0f} z {d['sample_size']} "
           f"({d['proportional_share']:.1%}), faktycznie {d['actual_count']} ({d['actual_share']:.1%})")

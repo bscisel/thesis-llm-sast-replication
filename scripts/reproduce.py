@@ -17,7 +17,13 @@ import time
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-PRICING = ROOT / "model-pricing.json"
+def _pricing_path() -> Path:
+    for candidate in (ROOT / "docs" / "methodology" / "model-pricing.json", ROOT / "model-pricing.json"):
+        if candidate.exists():
+            return candidate
+    return ROOT / "model-pricing.json"
+
+PRICING = _pricing_path()
 
 # Run 003 keeps the default resampling scheme: its Error Prone strata are real and
 # do not carry across sampling stages, so the merged sample must cluster by rule instead.
@@ -38,7 +44,7 @@ STEPS: list[tuple[str, list[str]]] = [
     ("unanimity gate, run 005", ["thesis/h3_consistency_gate.py", "--run-dir", "5", "--cluster-by", "rule"]),
     ("unanimity gate, run 006", ["thesis/h3_consistency_gate.py", "--run-dir", "6", "--cluster-by", "rule"]),
     ("code context, run 007", ["thesis/h6_code_context.py", "--main-run", "6", "--ablation-run", "7",
-                               "--json", "results/007_jetty-no-code/analysis/h6.json"]),
+                               "--json", str(next(iter(sorted(ROOT.glob("results/007_*")))) / "analysis" / "h6.json")]),
     ("grounding diagnostics", ["thesis/grounding_diagnostics.py", "--run-dir", "6"]),
     ("retry scale", ["thesis/retry_scale.py"]),
     ("thesis tables", ["thesis/thesis_tables.py"]),

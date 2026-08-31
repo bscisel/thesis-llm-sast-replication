@@ -169,7 +169,7 @@ def main():
     try:
         warnings = parse_error_prone_output(output_file)
     except Exception as e:
-        print(f"Błąd przetwarzania pliku: {e}", file=sys.stderr)
+        print(f"Error processing the file: {e}", file=sys.stderr)
         sys.exit(1)
 
     result = {

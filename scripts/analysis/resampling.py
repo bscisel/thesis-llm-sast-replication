@@ -67,8 +67,8 @@ class Resampler:
         if sorted(sorted(v) for v in groups.values()) == sorted(sorted(v) for v in rules.values()):
             return
         raise ValueError(
-            f"{tool}: schemat 'stratum' zakłada, że warstwy pokrywają się z regułami, "
-            f"a jest {len(groups)} warstw wobec {len(rules)} reguł. Użyj --cluster-by rule."
+            f"{tool}: the 'stratum' scheme assumes the strata coincide with the rules, "
+            f"but there are {len(groups)} strata against {len(rules)} rules. Use --cluster-by rule."
         )
 
     def draw(self) -> np.ndarray:
@@ -82,6 +82,31 @@ class Resampler:
             return np.array([], dtype=int)
         return np.concatenate(parts)
 
+
+    def interval(
+        self,
+        statistic: Callable[[np.ndarray], float | None],
+        iterations: int = DEFAULT_ITERATIONS,
+        alpha: float = 0.05,
+    ) -> dict[str, Any]:
+        point = statistic(np.arange(len(self.findings)))
+        samples: list[float] = []
+        for _ in range(iterations):
+            value = statistic(self.draw())
+            if value is not None:
+                samples.append(value)
+        if not samples:
+            return {"point": point, "ci_low": None, "ci_high": None, "iterations": 0}
+        ordered = np.sort(np.array(samples))
+        low = float(np.quantile(ordered, alpha / 2))
+        high = float(np.quantile(ordered, 1 - alpha / 2))
+        return {
+            "point": point,
+            "ci_low": low,
+            "ci_high": high,
+            "iterations": len(samples),
+            "se": float(np.std(ordered, ddof=1)) if len(ordered) > 1 else None,
+        }
 
     def intervals(
         self,

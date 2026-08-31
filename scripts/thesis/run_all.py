@@ -27,9 +27,9 @@ from thesis.h6_code_context import h6 as _h6
 def main() -> None:
     ap = cli.parser(__doc__)
     ap.add_argument("--ablation-run", type=int, default=None,
-                    help="numer runu z wariantem B3; bez niego rodzina Holma nie obejmuje H6")
+                    help="run number holding the B3 variant; without it the Holm family excludes H6")
     ap.add_argument("--main-repetition", type=int, default=0,
-                    help="który powtórzenie przebiegu głównego wchodzi do porównania H6 (0-2)")
+                    help="which repetition of the main pass enters the H6 comparison (0-2)")
     args = ap.parse_args()
     dataset = cli.dataset_from(args)
     scheme = cli.apply_scheme(args, [m_h1, m_h2, m_h3, m_grounding, m_h5])
