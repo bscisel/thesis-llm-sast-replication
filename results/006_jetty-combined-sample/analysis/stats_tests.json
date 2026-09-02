@@ -1041,34 +1041,34 @@
       },
       "sonarqube": {
         "claude-opus-5": {
-          "f1": 0.6551724137931034,
+          "f1": 0.6666666666666666,
           "f1_baseline_b0": 0.4905660377358491,
-          "delta_f1": 0.1646063760572543,
+          "delta_f1": 0.17610062893081752,
           "delta_f1_ci": [
-            0.03895117444984158,
-            0.30397030616969145
+            0.05368703993291899,
+            0.3135370218309072
           ],
-          "lost_tp": 1,
-          "lost_tp_share": 0.02564102564102564,
+          "lost_tp": 0,
+          "lost_tp_share": 0.0,
           "lost_tp_share_ci": [
             0.0,
-            0.09375
+            0.0
           ],
           "supported": true
         },
         "gpt-5.6-terra": {
-          "f1": 0.6238532110091742,
+          "f1": 0.6363636363636364,
           "f1_baseline_b0": 0.4905660377358491,
-          "delta_f1": 0.13328717327332512,
+          "delta_f1": 0.14579759862778724,
           "delta_f1_ci": [
-            0.04427336898527171,
-            0.2286565751693334
+            0.06177119176305018,
+            0.2417449561031174
           ],
-          "lost_tp": 5,
-          "lost_tp_share": 0.1282051282051282,
+          "lost_tp": 4,
+          "lost_tp_share": 0.10256410256410256,
           "lost_tp_share_ci": [
-            0.03333333333333333,
-            0.24324324324324326
+            0.023809523809523808,
+            0.20512820512820512
           ],
           "supported": true
         },
@@ -1089,100 +1089,100 @@
           "supported": false
         },
         "openai/gpt-oss-120b": {
-          "f1": 0.6491228070175438,
+          "f1": 0.6608695652173913,
           "f1_baseline_b0": 0.4905660377358491,
-          "delta_f1": 0.15855676928169465,
+          "delta_f1": 0.17030352748154215,
           "delta_f1_ci": [
-            0.04448456935947682,
-            0.2802924995455876
-          ],
-          "lost_tp": 2,
-          "lost_tp_share": 0.05128205128205128,
-          "lost_tp_share_ci": [
-            0.0,
-            0.13793103448275862
-          ],
-          "supported": true
-        },
-        "gpt-5.6-luna": {
-          "f1": 0.631578947368421,
-          "f1_baseline_b0": 0.4905660377358491,
-          "delta_f1": 0.1410129096325719,
-          "delta_f1_ci": [
-            0.015148368390981978,
-            0.2702537150180191
-          ],
-          "lost_tp": 3,
-          "lost_tp_share": 0.07692307692307693,
-          "lost_tp_share_ci": [
-            0.0,
-            0.18518518518518517
-          ],
-          "supported": true
-        },
-        "openai/gpt-oss-20b": {
-          "f1": 0.6078431372549019,
-          "f1_baseline_b0": 0.4905660377358491,
-          "delta_f1": 0.1172770995190528,
-          "delta_f1_ci": [
-            -0.03191781188707573,
-            0.2529588429274375
-          ],
-          "lost_tp": 8,
-          "lost_tp_share": 0.20512820512820512,
-          "lost_tp_share_ci": [
-            0.08333333333333333,
-            0.3870967741935484
-          ],
-          "supported": false
-        },
-        "claude-sonnet-5": {
-          "f1": 0.6386554621848739,
-          "f1_baseline_b0": 0.4905660377358491,
-          "delta_f1": 0.1480894244490248,
-          "delta_f1_ci": [
-            0.023366910982492176,
-            0.28463134861616834
+            0.05788712068639195,
+            0.2919500813188438
           ],
           "lost_tp": 1,
           "lost_tp_share": 0.02564102564102564,
           "lost_tp_share_ci": [
             0.0,
-            0.09375
+            0.08695652173913043
+          ],
+          "supported": true
+        },
+        "gpt-5.6-luna": {
+          "f1": 0.6434782608695652,
+          "f1_baseline_b0": 0.4905660377358491,
+          "delta_f1": 0.15291222313371605,
+          "delta_f1_ci": [
+            0.03002186866125761,
+            0.2814466521205179
+          ],
+          "lost_tp": 2,
+          "lost_tp_share": 0.05128205128205128,
+          "lost_tp_share_ci": [
+            0.0,
+            0.1388888888888889
+          ],
+          "supported": true
+        },
+        "openai/gpt-oss-20b": {
+          "f1": 0.6213592233009708,
+          "f1_baseline_b0": 0.4905660377358491,
+          "delta_f1": 0.1307931855651217,
+          "delta_f1_ci": [
+            -0.011965182838711516,
+            0.26555605846366054
+          ],
+          "lost_tp": 7,
+          "lost_tp_share": 0.1794871794871795,
+          "lost_tp_share_ci": [
+            0.06521739130434782,
+            0.3448607427055698
+          ],
+          "supported": false
+        },
+        "claude-sonnet-5": {
+          "f1": 0.65,
+          "f1_baseline_b0": 0.4905660377358491,
+          "delta_f1": 0.1594339622641509,
+          "delta_f1_ci": [
+            0.03809523809523818,
+            0.2945797964769301
+          ],
+          "lost_tp": 0,
+          "lost_tp_share": 0.0,
+          "lost_tp_share_ci": [
+            0.0,
+            0.0
           ],
           "supported": true
         }
       },
       "wszystkie": {
         "claude-opus-5": {
-          "f1": 0.7546174142480211,
+          "f1": 0.7578947368421053,
           "f1_baseline_b0": 0.5714285714285715,
-          "delta_f1": 0.18318884281944958,
+          "delta_f1": 0.18646616541353378,
           "delta_f1_ci": [
-            0.11410572359890117,
-            0.2598067721634147
+            0.11661260717141987,
+            0.2633184292684535
           ],
-          "lost_tp": 1,
-          "lost_tp_share": 0.006944444444444444,
+          "lost_tp": 0,
+          "lost_tp_share": 0.0,
           "lost_tp_share_ci": [
             0.0,
-            0.02459016393442623
+            0.0
           ],
           "supported": true
         },
         "gpt-5.6-terra": {
-          "f1": 0.7661971830985915,
+          "f1": 0.7696629213483146,
           "f1_baseline_b0": 0.5714285714285715,
-          "delta_f1": 0.19476861167002002,
+          "delta_f1": 0.1982343499197431,
           "delta_f1_ci": [
-            0.12784621330192814,
-            0.27561301611124733
+            0.13067216874955923,
+            0.2789531011203422
           ],
-          "lost_tp": 8,
-          "lost_tp_share": 0.05555555555555555,
+          "lost_tp": 7,
+          "lost_tp_share": 0.04861111111111111,
           "lost_tp_share_ci": [
-            0.021897810218978103,
-            0.10204081632653061
+            0.01694915254237288,
+            0.09183966690124322
           ],
           "supported": true
         },
@@ -1203,66 +1203,66 @@
           "supported": false
         },
         "openai/gpt-oss-120b": {
-          "f1": 0.736842105263158,
+          "f1": 0.7403314917127072,
           "f1_baseline_b0": 0.5714285714285715,
-          "delta_f1": 0.16541353383458646,
+          "delta_f1": 0.16890292028413567,
           "delta_f1_ci": [
-            0.08234791304931209,
-            0.24489641165118625
+            0.08546410994680378,
+            0.24843593489631308
           ],
-          "lost_tp": 11,
-          "lost_tp_share": 0.0763888888888889,
+          "lost_tp": 10,
+          "lost_tp_share": 0.06944444444444445,
           "lost_tp_share_ci": [
-            0.020829741379310346,
-            0.1509433962264151
+            0.01574495570866142,
+            0.14285714285714285
           ],
           "supported": true
         },
         "gpt-5.6-luna": {
-          "f1": 0.7161125319693094,
+          "f1": 0.7193877551020408,
           "f1_baseline_b0": 0.5714285714285715,
-          "delta_f1": 0.14468396054073784,
+          "delta_f1": 0.14795918367346927,
           "delta_f1_ci": [
-            0.09040715267817975,
-            0.20638378029198692
+            0.09359613752726259,
+            0.20962468314927318
           ],
-          "lost_tp": 4,
-          "lost_tp_share": 0.027777777777777776,
+          "lost_tp": 3,
+          "lost_tp_share": 0.020833333333333332,
           "lost_tp_share_ci": [
-            0.00625,
-            0.056910569105691054
+            0.0,
+            0.045454545454545456
           ],
           "supported": true
         },
         "openai/gpt-oss-20b": {
-          "f1": 0.7039473684210527,
+          "f1": 0.7081967213114755,
           "f1_baseline_b0": 0.5714285714285715,
-          "delta_f1": 0.13251879699248115,
+          "delta_f1": 0.13676814988290398,
           "delta_f1_ci": [
-            -0.008335443820327219,
-            0.26098856021099165
+            -0.0036247678190520394,
+            0.2667630467943359
           ],
-          "lost_tp": 37,
-          "lost_tp_share": 0.2569444444444444,
+          "lost_tp": 36,
+          "lost_tp_share": 0.25,
           "lost_tp_share_ci": [
-            0.13007926829268293,
-            0.4074133050247699
+            0.12280701754385964,
+            0.4
           ],
           "supported": false
         },
         "claude-sonnet-5": {
-          "f1": 0.7454068241469816,
+          "f1": 0.7486910994764399,
           "f1_baseline_b0": 0.5714285714285715,
-          "delta_f1": 0.17397825271841005,
+          "delta_f1": 0.17726252804786835,
           "delta_f1_ci": [
-            0.09770837640797911,
-            0.2603625288500392
+            0.10093406411084759,
+            0.2637967400132376
           ],
-          "lost_tp": 2,
-          "lost_tp_share": 0.013888888888888888,
+          "lost_tp": 1,
+          "lost_tp_share": 0.006944444444444444,
           "lost_tp_share_ci": [
             0.0,
-            0.03731517645417768
+            0.024
           ],
           "supported": true
         }
@@ -2663,27 +2663,27 @@
     "sonarqube": {
       "n": 120,
       "accuracy": {
-        "claude-opus-5": 0.6666666666666666,
-        "gpt-5.6-terra": 0.6583333333333333,
+        "claude-opus-5": 0.675,
+        "gpt-5.6-terra": 0.6666666666666666,
         "qwen3.5:9b": 0.6416666666666667,
-        "openai/gpt-oss-120b": 0.6666666666666666,
-        "gpt-5.6-luna": 0.65,
-        "openai/gpt-oss-20b": 0.6666666666666666,
-        "claude-sonnet-5": 0.6416666666666667
+        "openai/gpt-oss-120b": 0.675,
+        "gpt-5.6-luna": 0.6583333333333333,
+        "openai/gpt-oss-20b": 0.675,
+        "claude-sonnet-5": 0.65
       },
       "cochran_q": {
-        "q": 0.8602150537634409,
+        "q": 1.1702127659574468,
         "df": 6,
-        "p_value": 0.9903611033721111,
+        "p_value": 0.9783304251940111,
         "test": "Q Cochrana",
-        "p_value_cluster": 0.9982500874956253,
+        "p_value_cluster": 0.9945502724863757,
         "permutations": 20000,
         "clusters": 49
       },
       "pairwise": {
         "claude-opus-5 vs gpt-5.6-terra": {
-          "accuracy_first": 0.6666666666666666,
-          "accuracy_second": 0.6583333333333333,
+          "accuracy_first": 0.675,
+          "accuracy_second": 0.6666666666666666,
           "mcnemar_exact": {
             "b": 12,
             "c": 11,
@@ -2714,40 +2714,40 @@
           "p_value_holm": 1.0
         },
         "claude-opus-5 vs qwen3.5:9b": {
-          "accuracy_first": 0.6666666666666666,
+          "accuracy_first": 0.675,
           "accuracy_second": 0.6416666666666667,
           "mcnemar_exact": {
-            "b": 25,
+            "b": 26,
             "c": 22,
-            "discordant": 47,
-            "p_value": 0.7708669945730263,
-            "odds_ratio": 1.1363636363636365,
+            "discordant": 48,
+            "p_value": 0.6654658120766188,
+            "odds_ratio": 1.1818181818181819,
             "test": "exact McNemar test (two-sided, binomial distribution)"
           },
           "mcnemar_cluster": {
-            "b": 25,
+            "b": 26,
             "c": 22,
-            "clusters_with_discordance": 29,
-            "statistic": 3.0,
-            "p_value": 0.8291585420728964,
+            "clusters_with_discordance": 30,
+            "statistic": 4.0,
+            "p_value": 0.7482625868706565,
             "permutations": 20000,
             "test": "cluster-level sign-flip (SAST rule)"
           },
           "mde": {
             "available": true,
-            "mde_accuracy": 0.18525000000000003,
-            "attained_power": 0.80225,
-            "critical_value": 17.0,
-            "clusters_with_discordance": 29,
-            "net_discordance": 39,
+            "mde_accuracy": 0.19666666666666663,
+            "attained_power": 0.81775,
+            "critical_value": 18.0,
+            "clusters_with_discordance": 30,
+            "net_discordance": 40,
             "power_target": 0.8,
             "alpha": 0.05
           },
           "p_value_holm": 1.0
         },
         "claude-opus-5 vs openai/gpt-oss-120b": {
-          "accuracy_first": 0.6666666666666666,
-          "accuracy_second": 0.6666666666666666,
+          "accuracy_first": 0.675,
+          "accuracy_second": 0.675,
           "mcnemar_exact": {
             "b": 7,
             "c": 7,
@@ -2778,8 +2778,8 @@
           "p_value_holm": 1.0
         },
         "claude-opus-5 vs gpt-5.6-luna": {
-          "accuracy_first": 0.6666666666666666,
-          "accuracy_second": 0.65,
+          "accuracy_first": 0.675,
+          "accuracy_second": 0.6583333333333333,
           "mcnemar_exact": {
             "b": 6,
             "c": 4,
@@ -2810,8 +2810,8 @@
           "p_value_holm": 1.0
         },
         "claude-opus-5 vs openai/gpt-oss-20b": {
-          "accuracy_first": 0.6666666666666666,
-          "accuracy_second": 0.6666666666666666,
+          "accuracy_first": 0.675,
+          "accuracy_second": 0.675,
           "mcnemar_exact": {
             "b": 12,
             "c": 12,
@@ -2842,8 +2842,8 @@
           "p_value_holm": 1.0
         },
         "claude-opus-5 vs claude-sonnet-5": {
-          "accuracy_first": 0.6666666666666666,
-          "accuracy_second": 0.6416666666666667,
+          "accuracy_first": 0.675,
+          "accuracy_second": 0.65,
           "mcnemar_exact": {
             "b": 4,
             "c": 1,
@@ -2874,40 +2874,40 @@
           "p_value_holm": 1.0
         },
         "gpt-5.6-terra vs qwen3.5:9b": {
-          "accuracy_first": 0.6583333333333333,
+          "accuracy_first": 0.6666666666666666,
           "accuracy_second": 0.6416666666666667,
           "mcnemar_exact": {
-            "b": 24,
+            "b": 25,
             "c": 22,
-            "discordant": 46,
-            "p_value": 0.8829959121223965,
-            "odds_ratio": 1.0909090909090908,
+            "discordant": 47,
+            "p_value": 0.7708669945730263,
+            "odds_ratio": 1.1363636363636365,
             "test": "exact McNemar test (two-sided, binomial distribution)"
           },
           "mcnemar_cluster": {
-            "b": 24,
+            "b": 25,
             "c": 22,
-            "clusters_with_discordance": 24,
-            "statistic": 2.0,
-            "p_value": 0.8684065796710164,
+            "clusters_with_discordance": 25,
+            "statistic": 3.0,
+            "p_value": 0.7506624668766562,
             "permutations": 20000,
             "test": "cluster-level sign-flip (SAST rule)"
           },
           "mde": {
             "available": true,
-            "mde_accuracy": 0.12833333333333335,
-            "attained_power": 0.80675,
-            "critical_value": 12.0,
-            "clusters_with_discordance": 24,
-            "net_discordance": 28,
+            "mde_accuracy": 0.12083333333333333,
+            "attained_power": 0.80925,
+            "critical_value": 11.0,
+            "clusters_with_discordance": 25,
+            "net_discordance": 29,
             "power_target": 0.8,
             "alpha": 0.05
           },
           "p_value_holm": 1.0
         },
         "gpt-5.6-terra vs openai/gpt-oss-120b": {
-          "accuracy_first": 0.6583333333333333,
-          "accuracy_second": 0.6666666666666666,
+          "accuracy_first": 0.6666666666666666,
+          "accuracy_second": 0.675,
           "mcnemar_exact": {
             "b": 11,
             "c": 12,
@@ -2938,8 +2938,8 @@
           "p_value_holm": 1.0
         },
         "gpt-5.6-terra vs gpt-5.6-luna": {
-          "accuracy_first": 0.6583333333333333,
-          "accuracy_second": 0.65,
+          "accuracy_first": 0.6666666666666666,
+          "accuracy_second": 0.6583333333333333,
           "mcnemar_exact": {
             "b": 12,
             "c": 11,
@@ -2970,8 +2970,8 @@
           "p_value_holm": 1.0
         },
         "gpt-5.6-terra vs openai/gpt-oss-20b": {
-          "accuracy_first": 0.6583333333333333,
-          "accuracy_second": 0.6666666666666666,
+          "accuracy_first": 0.6666666666666666,
+          "accuracy_second": 0.675,
           "mcnemar_exact": {
             "b": 16,
             "c": 17,
@@ -3002,8 +3002,8 @@
           "p_value_holm": 1.0
         },
         "gpt-5.6-terra vs claude-sonnet-5": {
-          "accuracy_first": 0.6583333333333333,
-          "accuracy_second": 0.6416666666666667,
+          "accuracy_first": 0.6666666666666666,
+          "accuracy_second": 0.65,
           "mcnemar_exact": {
             "b": 13,
             "c": 11,
@@ -3035,31 +3035,31 @@
         },
         "qwen3.5:9b vs openai/gpt-oss-120b": {
           "accuracy_first": 0.6416666666666667,
-          "accuracy_second": 0.6666666666666666,
+          "accuracy_second": 0.675,
           "mcnemar_exact": {
             "b": 21,
-            "c": 24,
-            "discordant": 45,
-            "p_value": 0.765991824244793,
-            "odds_ratio": 0.875,
+            "c": 25,
+            "discordant": 46,
+            "p_value": 0.6587380770236564,
+            "odds_ratio": 0.84,
             "test": "exact McNemar test (two-sided, binomial distribution)"
           },
           "mcnemar_cluster": {
             "b": 21,
-            "c": 24,
-            "clusters_with_discordance": 25,
-            "statistic": 3.0,
-            "p_value": 0.8108594570271487,
+            "c": 25,
+            "clusters_with_discordance": 26,
+            "statistic": 4.0,
+            "p_value": 0.7186140692965352,
             "permutations": 20000,
             "test": "cluster-level sign-flip (SAST rule)"
           },
           "mde": {
             "available": true,
-            "mde_accuracy": 0.16224999999999995,
-            "attained_power": 0.809,
-            "critical_value": 15.0,
-            "clusters_with_discordance": 25,
-            "net_discordance": 33,
+            "mde_accuracy": 0.17,
+            "attained_power": 0.80075,
+            "critical_value": 16.0,
+            "clusters_with_discordance": 26,
+            "net_discordance": 34,
             "power_target": 0.8,
             "alpha": 0.05
           },
@@ -3067,31 +3067,31 @@
         },
         "qwen3.5:9b vs gpt-5.6-luna": {
           "accuracy_first": 0.6416666666666667,
-          "accuracy_second": 0.65,
+          "accuracy_second": 0.6583333333333333,
           "mcnemar_exact": {
             "b": 23,
-            "c": 24,
-            "discordant": 47,
-            "p_value": 1.0,
-            "odds_ratio": 0.9583333333333334,
+            "c": 25,
+            "discordant": 48,
+            "p_value": 0.8854334972865135,
+            "odds_ratio": 0.92,
             "test": "exact McNemar test (two-sided, binomial distribution)"
           },
           "mcnemar_cluster": {
             "b": 23,
-            "c": 24,
-            "clusters_with_discordance": 26,
-            "statistic": 1.0,
-            "p_value": 1.0,
+            "c": 25,
+            "clusters_with_discordance": 27,
+            "statistic": 2.0,
+            "p_value": 0.9069546522673866,
             "permutations": 20000,
             "test": "cluster-level sign-flip (SAST rule)"
           },
           "mde": {
             "available": true,
-            "mde_accuracy": 0.16625000000000004,
-            "attained_power": 0.81425,
-            "critical_value": 15.0,
-            "clusters_with_discordance": 26,
-            "net_discordance": 35,
+            "mde_accuracy": 0.17400000000000002,
+            "attained_power": 0.81,
+            "critical_value": 16.0,
+            "clusters_with_discordance": 27,
+            "net_discordance": 36,
             "power_target": 0.8,
             "alpha": 0.05
           },
@@ -3099,31 +3099,31 @@
         },
         "qwen3.5:9b vs openai/gpt-oss-20b": {
           "accuracy_first": 0.6416666666666667,
-          "accuracy_second": 0.6666666666666666,
+          "accuracy_second": 0.675,
           "mcnemar_exact": {
             "b": 19,
-            "c": 22,
-            "discordant": 41,
-            "p_value": 0.755228657504631,
-            "odds_ratio": 0.8636363636363636,
+            "c": 23,
+            "discordant": 42,
+            "p_value": 0.6439689563703723,
+            "odds_ratio": 0.8260869565217391,
             "test": "exact McNemar test (two-sided, binomial distribution)"
           },
           "mcnemar_cluster": {
             "b": 19,
-            "c": 22,
-            "clusters_with_discordance": 21,
-            "statistic": 3.0,
-            "p_value": 0.7783110844457777,
+            "c": 23,
+            "clusters_with_discordance": 22,
+            "statistic": 4.0,
+            "p_value": 0.6731163441827909,
             "permutations": 20000,
             "test": "cluster-level sign-flip (SAST rule)"
           },
           "mde": {
             "available": true,
-            "mde_accuracy": 0.13724999999999996,
-            "attained_power": 0.80325,
-            "critical_value": 13.0,
-            "clusters_with_discordance": 21,
-            "net_discordance": 27,
+            "mde_accuracy": 0.14699999999999996,
+            "attained_power": 0.8185,
+            "critical_value": 14.0,
+            "clusters_with_discordance": 22,
+            "net_discordance": 28,
             "power_target": 0.8,
             "alpha": 0.05
           },
@@ -3131,39 +3131,39 @@
         },
         "qwen3.5:9b vs claude-sonnet-5": {
           "accuracy_first": 0.6416666666666667,
-          "accuracy_second": 0.6416666666666667,
+          "accuracy_second": 0.65,
           "mcnemar_exact": {
             "b": 25,
-            "c": 25,
-            "discordant": 50,
+            "c": 26,
+            "discordant": 51,
             "p_value": 1.0,
-            "odds_ratio": 1.0,
+            "odds_ratio": 0.9615384615384616,
             "test": "exact McNemar test (two-sided, binomial distribution)"
           },
           "mcnemar_cluster": {
             "b": 25,
-            "c": 25,
-            "clusters_with_discordance": 31,
-            "statistic": 0.0,
+            "c": 26,
+            "clusters_with_discordance": 32,
+            "statistic": 1.0,
             "p_value": 1.0,
             "permutations": 20000,
             "test": "cluster-level sign-flip (SAST rule)"
           },
           "mde": {
             "available": true,
-            "mde_accuracy": 0.1766666666666667,
-            "attained_power": 0.80425,
-            "critical_value": 16.0,
-            "clusters_with_discordance": 31,
-            "net_discordance": 40,
+            "mde_accuracy": 0.18791666666666668,
+            "attained_power": 0.80525,
+            "critical_value": 17.0,
+            "clusters_with_discordance": 32,
+            "net_discordance": 41,
             "power_target": 0.8,
             "alpha": 0.05
           },
           "p_value_holm": 1.0
         },
         "openai/gpt-oss-120b vs gpt-5.6-luna": {
-          "accuracy_first": 0.6666666666666666,
-          "accuracy_second": 0.65,
+          "accuracy_first": 0.675,
+          "accuracy_second": 0.6583333333333333,
           "mcnemar_exact": {
             "b": 8,
             "c": 6,
@@ -3194,8 +3194,8 @@
           "p_value_holm": 1.0
         },
         "openai/gpt-oss-120b vs openai/gpt-oss-20b": {
-          "accuracy_first": 0.6666666666666666,
-          "accuracy_second": 0.6666666666666666,
+          "accuracy_first": 0.675,
+          "accuracy_second": 0.675,
           "mcnemar_exact": {
             "b": 12,
             "c": 12,
@@ -3226,8 +3226,8 @@
           "p_value_holm": 1.0
         },
         "openai/gpt-oss-120b vs claude-sonnet-5": {
-          "accuracy_first": 0.6666666666666666,
-          "accuracy_second": 0.6416666666666667,
+          "accuracy_first": 0.675,
+          "accuracy_second": 0.65,
           "mcnemar_exact": {
             "b": 8,
             "c": 5,
@@ -3258,8 +3258,8 @@
           "p_value_holm": 1.0
         },
         "gpt-5.6-luna vs openai/gpt-oss-20b": {
-          "accuracy_first": 0.65,
-          "accuracy_second": 0.6666666666666666,
+          "accuracy_first": 0.6583333333333333,
+          "accuracy_second": 0.675,
           "mcnemar_exact": {
             "b": 10,
             "c": 12,
@@ -3290,8 +3290,8 @@
           "p_value_holm": 1.0
         },
         "gpt-5.6-luna vs claude-sonnet-5": {
-          "accuracy_first": 0.65,
-          "accuracy_second": 0.6416666666666667,
+          "accuracy_first": 0.6583333333333333,
+          "accuracy_second": 0.65,
           "mcnemar_exact": {
             "b": 4,
             "c": 3,
@@ -3322,8 +3322,8 @@
           "p_value_holm": 1.0
         },
         "openai/gpt-oss-20b vs claude-sonnet-5": {
-          "accuracy_first": 0.6666666666666666,
-          "accuracy_second": 0.6416666666666667,
+          "accuracy_first": 0.675,
+          "accuracy_second": 0.65,
           "mcnemar_exact": {
             "b": 13,
             "c": 10,
@@ -3358,27 +3358,27 @@
     "wszystkie": {
       "n": 360,
       "accuracy": {
-        "claude-opus-5": 0.7416666666666667,
-        "gpt-5.6-terra": 0.7694444444444445,
+        "claude-opus-5": 0.7444444444444445,
+        "gpt-5.6-terra": 0.7722222222222223,
         "qwen3.5:9b": 0.6888888888888889,
-        "openai/gpt-oss-120b": 0.7361111111111112,
-        "gpt-5.6-luna": 0.6916666666666667,
-        "openai/gpt-oss-20b": 0.75,
-        "claude-sonnet-5": 0.7305555555555555
+        "openai/gpt-oss-120b": 0.7388888888888889,
+        "gpt-5.6-luna": 0.6944444444444444,
+        "openai/gpt-oss-20b": 0.7527777777777778,
+        "claude-sonnet-5": 0.7333333333333333
       },
       "cochran_q": {
-        "q": 16.914218566392478,
+        "q": 17.59953161592506,
         "df": 6,
-        "p_value": 0.00960372805388112,
+        "p_value": 0.007314935762132154,
         "test": "Q Cochrana",
-        "p_value_cluster": 0.5854707264636768,
+        "p_value_cluster": 0.5571221438928053,
         "permutations": 20000,
         "clusters": 123
       },
       "pairwise": {
         "claude-opus-5 vs gpt-5.6-terra": {
-          "accuracy_first": 0.7416666666666667,
-          "accuracy_second": 0.7694444444444445,
+          "accuracy_first": 0.7444444444444445,
+          "accuracy_second": 0.7722222222222223,
           "mcnemar_exact": {
             "b": 20,
             "c": 30,
@@ -3409,40 +3409,40 @@
           "p_value_holm": 1.0
         },
         "claude-opus-5 vs qwen3.5:9b": {
-          "accuracy_first": 0.7416666666666667,
+          "accuracy_first": 0.7444444444444445,
           "accuracy_second": 0.6888888888888889,
           "mcnemar_exact": {
-            "b": 70,
+            "b": 71,
             "c": 51,
-            "discordant": 121,
-            "p_value": 0.10136765353309242,
-            "odds_ratio": 1.3725490196078431,
+            "discordant": 122,
+            "p_value": 0.0849806458268532,
+            "odds_ratio": 1.392156862745098,
             "test": "exact McNemar test (two-sided, binomial distribution)"
           },
           "mcnemar_cluster": {
-            "b": 70,
+            "b": 71,
             "c": 51,
-            "clusters_with_discordance": 65,
-            "statistic": 19.0,
-            "p_value": 0.33648317584120796,
+            "clusters_with_discordance": 66,
+            "statistic": 20.0,
+            "p_value": 0.3109844507774611,
             "permutations": 20000,
             "test": "cluster-level sign-flip (SAST rule)"
           },
           "mde": {
             "available": true,
-            "mde_accuracy": 0.13375,
-            "attained_power": 0.8075,
-            "critical_value": 35.0,
-            "clusters_with_discordance": 65,
-            "net_discordance": 107,
+            "mde_accuracy": 0.13799999999999998,
+            "attained_power": 0.82125,
+            "critical_value": 36.0,
+            "clusters_with_discordance": 66,
+            "net_discordance": 108,
             "power_target": 0.8,
             "alpha": 0.05
           },
           "p_value_holm": 1.0
         },
         "claude-opus-5 vs openai/gpt-oss-120b": {
-          "accuracy_first": 0.7416666666666667,
-          "accuracy_second": 0.7361111111111112,
+          "accuracy_first": 0.7444444444444445,
+          "accuracy_second": 0.7388888888888889,
           "mcnemar_exact": {
             "b": 35,
             "c": 33,
@@ -3473,8 +3473,8 @@
           "p_value_holm": 1.0
         },
         "claude-opus-5 vs gpt-5.6-luna": {
-          "accuracy_first": 0.7416666666666667,
-          "accuracy_second": 0.6916666666666667,
+          "accuracy_first": 0.7444444444444445,
+          "accuracy_second": 0.6944444444444444,
           "mcnemar_exact": {
             "b": 33,
             "c": 15,
@@ -3505,8 +3505,8 @@
           "p_value_holm": 1.0
         },
         "claude-opus-5 vs openai/gpt-oss-20b": {
-          "accuracy_first": 0.7416666666666667,
-          "accuracy_second": 0.75,
+          "accuracy_first": 0.7444444444444445,
+          "accuracy_second": 0.7527777777777778,
           "mcnemar_exact": {
             "b": 44,
             "c": 47,
@@ -3537,8 +3537,8 @@
           "p_value_holm": 1.0
         },
         "claude-opus-5 vs claude-sonnet-5": {
-          "accuracy_first": 0.7416666666666667,
-          "accuracy_second": 0.7305555555555555,
+          "accuracy_first": 0.7444444444444445,
+          "accuracy_second": 0.7333333333333333,
           "mcnemar_exact": {
             "b": 14,
             "c": 10,
@@ -3569,40 +3569,40 @@
           "p_value_holm": 1.0
         },
         "gpt-5.6-terra vs qwen3.5:9b": {
-          "accuracy_first": 0.7694444444444445,
+          "accuracy_first": 0.7722222222222223,
           "accuracy_second": 0.6888888888888889,
           "mcnemar_exact": {
-            "b": 69,
+            "b": 70,
             "c": 40,
-            "discordant": 109,
-            "p_value": 0.0070407508355076484,
-            "odds_ratio": 1.725,
+            "discordant": 110,
+            "p_value": 0.005447429511444476,
+            "odds_ratio": 1.75,
             "test": "exact McNemar test (two-sided, binomial distribution)"
           },
           "mcnemar_cluster": {
-            "b": 69,
+            "b": 70,
             "c": 40,
-            "clusters_with_discordance": 57,
-            "statistic": 29.0,
-            "p_value": 0.0663966801659917,
+            "clusters_with_discordance": 58,
+            "statistic": 30.0,
+            "p_value": 0.05624718764061797,
             "permutations": 20000,
             "test": "cluster-level sign-flip (SAST rule)"
           },
           "mde": {
             "available": true,
-            "mde_accuracy": 0.11066666666666666,
-            "attained_power": 0.8035,
-            "critical_value": 29.0,
-            "clusters_with_discordance": 57,
-            "net_discordance": 83,
+            "mde_accuracy": 0.11433333333333333,
+            "attained_power": 0.81525,
+            "critical_value": 30.0,
+            "clusters_with_discordance": 58,
+            "net_discordance": 84,
             "power_target": 0.8,
             "alpha": 0.05
           },
           "p_value_holm": 1.0
         },
         "gpt-5.6-terra vs openai/gpt-oss-120b": {
-          "accuracy_first": 0.7694444444444445,
-          "accuracy_second": 0.7361111111111112,
+          "accuracy_first": 0.7722222222222223,
+          "accuracy_second": 0.7388888888888889,
           "mcnemar_exact": {
             "b": 42,
             "c": 30,
@@ -3633,8 +3633,8 @@
           "p_value_holm": 1.0
         },
         "gpt-5.6-terra vs gpt-5.6-luna": {
-          "accuracy_first": 0.7694444444444445,
-          "accuracy_second": 0.6916666666666667,
+          "accuracy_first": 0.7722222222222223,
+          "accuracy_second": 0.6944444444444444,
           "mcnemar_exact": {
             "b": 46,
             "c": 18,
@@ -3665,8 +3665,8 @@
           "p_value_holm": 1.0
         },
         "gpt-5.6-terra vs openai/gpt-oss-20b": {
-          "accuracy_first": 0.7694444444444445,
-          "accuracy_second": 0.75,
+          "accuracy_first": 0.7722222222222223,
+          "accuracy_second": 0.7527777777777778,
           "mcnemar_exact": {
             "b": 48,
             "c": 41,
@@ -3697,8 +3697,8 @@
           "p_value_holm": 1.0
         },
         "gpt-5.6-terra vs claude-sonnet-5": {
-          "accuracy_first": 0.7694444444444445,
-          "accuracy_second": 0.7305555555555555,
+          "accuracy_first": 0.7722222222222223,
+          "accuracy_second": 0.7333333333333333,
           "mcnemar_exact": {
             "b": 32,
             "c": 18,
@@ -3730,31 +3730,31 @@
         },
         "qwen3.5:9b vs openai/gpt-oss-120b": {
           "accuracy_first": 0.6888888888888889,
-          "accuracy_second": 0.7361111111111112,
+          "accuracy_second": 0.7388888888888889,
           "mcnemar_exact": {
             "b": 47,
-            "c": 64,
-            "discordant": 111,
-            "p_value": 0.1284754320857598,
-            "odds_ratio": 0.734375,
+            "c": 65,
+            "discordant": 112,
+            "p_value": 0.10778227965475419,
+            "odds_ratio": 0.7230769230769231,
             "test": "exact McNemar test (two-sided, binomial distribution)"
           },
           "mcnemar_cluster": {
             "b": 47,
-            "c": 64,
-            "clusters_with_discordance": 61,
-            "statistic": 17.0,
-            "p_value": 0.2694365281735913,
+            "c": 65,
+            "clusters_with_discordance": 62,
+            "statistic": 18.0,
+            "p_value": 0.2382380880955952,
             "permutations": 20000,
             "test": "cluster-level sign-flip (SAST rule)"
           },
           "mde": {
             "available": true,
-            "mde_accuracy": 0.1112222222222222,
-            "attained_power": 0.81525,
-            "critical_value": 29.0,
-            "clusters_with_discordance": 61,
-            "net_discordance": 91,
+            "mde_accuracy": 0.10733333333333331,
+            "attained_power": 0.8035,
+            "critical_value": 28.0,
+            "clusters_with_discordance": 62,
+            "net_discordance": 92,
             "power_target": 0.8,
             "alpha": 0.05
           },
@@ -3762,31 +3762,31 @@
         },
         "qwen3.5:9b vs gpt-5.6-luna": {
           "accuracy_first": 0.6888888888888889,
-          "accuracy_second": 0.6916666666666667,
+          "accuracy_second": 0.6944444444444444,
           "mcnemar_exact": {
             "b": 69,
-            "c": 70,
-            "discordant": 139,
-            "p_value": 1.0,
-            "odds_ratio": 0.9857142857142858,
+            "c": 71,
+            "discordant": 140,
+            "p_value": 0.9326867554513667,
+            "odds_ratio": 0.971830985915493,
             "test": "exact McNemar test (two-sided, binomial distribution)"
           },
           "mcnemar_cluster": {
             "b": 69,
-            "c": 70,
-            "clusters_with_discordance": 65,
-            "statistic": 1.0,
-            "p_value": 1.0,
+            "c": 71,
+            "clusters_with_discordance": 66,
+            "statistic": 2.0,
+            "p_value": 0.9688515574221289,
             "permutations": 20000,
             "test": "cluster-level sign-flip (SAST rule)"
           },
           "mde": {
             "available": true,
-            "mde_accuracy": 0.17225000000000001,
-            "attained_power": 0.8175,
-            "critical_value": 45.0,
-            "clusters_with_discordance": 65,
-            "net_discordance": 117,
+            "mde_accuracy": 0.17044444444444445,
+            "attained_power": 0.81825,
+            "critical_value": 44.0,
+            "clusters_with_discordance": 66,
+            "net_discordance": 118,
             "power_target": 0.8,
             "alpha": 0.05
           },
@@ -3794,31 +3794,31 @@
         },
         "qwen3.5:9b vs openai/gpt-oss-20b": {
           "accuracy_first": 0.6888888888888889,
-          "accuracy_second": 0.75,
+          "accuracy_second": 0.7527777777777778,
           "mcnemar_exact": {
             "b": 38,
-            "c": 60,
-            "discordant": 98,
-            "p_value": 0.03336002889694201,
-            "odds_ratio": 0.6333333333333333,
+            "c": 61,
+            "discordant": 99,
+            "p_value": 0.026525106848394424,
+            "odds_ratio": 0.6229508196721312,
             "test": "exact McNemar test (two-sided, binomial distribution)"
           },
           "mcnemar_cluster": {
             "b": 38,
-            "c": 60,
-            "clusters_with_discordance": 54,
-            "statistic": 22.0,
-            "p_value": 0.07479626018699065,
+            "c": 61,
+            "clusters_with_discordance": 55,
+            "statistic": 23.0,
+            "p_value": 0.06334683265836707,
             "permutations": 20000,
             "test": "cluster-level sign-flip (SAST rule)"
           },
           "mde": {
             "available": true,
-            "mde_accuracy": 0.09044444444444442,
-            "attained_power": 0.821,
-            "critical_value": 24.0,
-            "clusters_with_discordance": 54,
-            "net_discordance": 74,
+            "mde_accuracy": 0.08749999999999998,
+            "attained_power": 0.8075,
+            "critical_value": 23.0,
+            "clusters_with_discordance": 55,
+            "net_discordance": 75,
             "power_target": 0.8,
             "alpha": 0.05
           },
@@ -3826,39 +3826,39 @@
         },
         "qwen3.5:9b vs claude-sonnet-5": {
           "accuracy_first": 0.6888888888888889,
-          "accuracy_second": 0.7305555555555555,
+          "accuracy_second": 0.7333333333333333,
           "mcnemar_exact": {
             "b": 52,
-            "c": 67,
-            "discordant": 119,
-            "p_value": 0.19915839818564512,
-            "odds_ratio": 0.7761194029850746,
+            "c": 68,
+            "discordant": 120,
+            "p_value": 0.17064521313035158,
+            "odds_ratio": 0.7647058823529411,
             "test": "exact McNemar test (two-sided, binomial distribution)"
           },
           "mcnemar_cluster": {
             "b": 52,
-            "c": 67,
-            "clusters_with_discordance": 67,
-            "statistic": 15.0,
-            "p_value": 0.4576271186440678,
+            "c": 68,
+            "clusters_with_discordance": 68,
+            "statistic": 16.0,
+            "p_value": 0.43647817609119544,
             "permutations": 20000,
             "test": "cluster-level sign-flip (SAST rule)"
           },
           "mde": {
             "available": true,
-            "mde_accuracy": 0.13416666666666666,
-            "attained_power": 0.8095,
-            "critical_value": 35.0,
-            "clusters_with_discordance": 67,
-            "net_discordance": 105,
+            "mde_accuracy": 0.13544444444444445,
+            "attained_power": 0.8055,
+            "critical_value": 36.0,
+            "clusters_with_discordance": 68,
+            "net_discordance": 106,
             "power_target": 0.8,
             "alpha": 0.05
           },
           "p_value_holm": 1.0
         },
         "openai/gpt-oss-120b vs gpt-5.6-luna": {
-          "accuracy_first": 0.7361111111111112,
-          "accuracy_second": 0.6916666666666667,
+          "accuracy_first": 0.7388888888888889,
+          "accuracy_second": 0.6944444444444444,
           "mcnemar_exact": {
             "b": 44,
             "c": 28,
@@ -3889,8 +3889,8 @@
           "p_value_holm": 1.0
         },
         "openai/gpt-oss-120b vs openai/gpt-oss-20b": {
-          "accuracy_first": 0.7361111111111112,
-          "accuracy_second": 0.75,
+          "accuracy_first": 0.7388888888888889,
+          "accuracy_second": 0.7527777777777778,
           "mcnemar_exact": {
             "b": 34,
             "c": 39,
@@ -3921,8 +3921,8 @@
           "p_value_holm": 1.0
         },
         "openai/gpt-oss-120b vs claude-sonnet-5": {
-          "accuracy_first": 0.7361111111111112,
-          "accuracy_second": 0.7305555555555555,
+          "accuracy_first": 0.7388888888888889,
+          "accuracy_second": 0.7333333333333333,
           "mcnemar_exact": {
             "b": 32,
             "c": 30,
@@ -3953,8 +3953,8 @@
           "p_value_holm": 1.0
         },
         "gpt-5.6-luna vs openai/gpt-oss-20b": {
-          "accuracy_first": 0.6916666666666667,
-          "accuracy_second": 0.75,
+          "accuracy_first": 0.6944444444444444,
+          "accuracy_second": 0.7527777777777778,
           "mcnemar_exact": {
             "b": 41,
             "c": 62,
@@ -3985,8 +3985,8 @@
           "p_value_holm": 1.0
         },
         "gpt-5.6-luna vs claude-sonnet-5": {
-          "accuracy_first": 0.6916666666666667,
-          "accuracy_second": 0.7305555555555555,
+          "accuracy_first": 0.6944444444444444,
+          "accuracy_second": 0.7333333333333333,
           "mcnemar_exact": {
             "b": 15,
             "c": 29,
@@ -4017,8 +4017,8 @@
           "p_value_holm": 1.0
         },
         "openai/gpt-oss-20b vs claude-sonnet-5": {
-          "accuracy_first": 0.75,
-          "accuracy_second": 0.7305555555555555,
+          "accuracy_first": 0.7527777777777778,
+          "accuracy_second": 0.7333333333333333,
           "mcnemar_exact": {
             "b": 51,
             "c": 44,
@@ -4880,22 +4880,22 @@
           0.8783783783783784,
           0.9680021276595744
         ],
-        "fleiss_kappa": 0.891638795986622,
+        "fleiss_kappa": 0.8905072488256564,
         "fleiss_kappa_ci": [
-          0.7558803819719498,
-          0.951060026574732
+          0.7436867004930082,
+          0.9502348376001392
         ],
         "accuracy_spread": {
           "findings": 120,
           "dropped_incomplete": 0,
           "runs": 3,
           "accuracy_per_run": [
-            0.65,
-            0.675,
-            0.6833333333333333
+            0.6583333333333333,
+            0.6833333333333333,
+            0.6916666666666667
           ],
-          "min": 0.65,
-          "max": 0.6833333333333333,
+          "min": 0.6583333333333333,
+          "max": 0.6916666666666667,
           "spread": 0.033333333333333326
         }
       },
@@ -4910,23 +4910,23 @@
           0.7222222222222222,
           0.8888888888888888
         ],
-        "fleiss_kappa": 0.7453703703703703,
+        "fleiss_kappa": 0.7435150102011076,
         "fleiss_kappa_ci": [
-          0.5999788516158171,
-          0.8404256960861568
+          0.5943321691717293,
+          0.8391322455775961
         ],
         "accuracy_spread": {
           "findings": 120,
           "dropped_incomplete": 0,
           "runs": 3,
           "accuracy_per_run": [
-            0.6333333333333333,
-            0.6333333333333333,
-            0.6416666666666667
+            0.6416666666666667,
+            0.6416666666666667,
+            0.65
           ],
-          "min": 0.6333333333333333,
-          "max": 0.6416666666666667,
-          "spread": 0.008333333333333415
+          "min": 0.6416666666666667,
+          "max": 0.65,
+          "spread": 0.008333333333333304
         }
       },
       "qwen3.5:9b": {
@@ -4970,22 +4970,22 @@
           0.7928571428571428,
           0.9532710280373832
         ],
-        "fleiss_kappa": 0.8193979933110367,
+        "fleiss_kappa": 0.817512081376094,
         "fleiss_kappa_ci": [
-          0.6907994606679636,
-          0.916626315061845
+          0.6810577078827261,
+          0.9148366416307899
         ],
         "accuracy_spread": {
           "findings": 120,
           "dropped_incomplete": 0,
           "runs": 3,
           "accuracy_per_run": [
+            0.6666666666666666,
             0.6583333333333333,
-            0.65,
-            0.65
+            0.6583333333333333
           ],
-          "min": 0.65,
-          "max": 0.6583333333333333,
+          "min": 0.6583333333333333,
+          "max": 0.6666666666666666,
           "spread": 0.008333333333333304
         }
       },
@@ -5000,23 +5000,23 @@
           0.7652173913043478,
           0.9375
         ],
-        "fleiss_kappa": 0.8023000387646984,
+        "fleiss_kappa": 0.8007747648035417,
         "fleiss_kappa_ci": [
-          0.6078179989944699,
-          0.910110835958084
+          0.595210009422338,
+          0.9092954528099062
         ],
         "accuracy_spread": {
           "findings": 120,
           "dropped_incomplete": 0,
           "runs": 3,
           "accuracy_per_run": [
-            0.6916666666666667,
-            0.6333333333333333,
-            0.6333333333333333
+            0.7,
+            0.6416666666666667,
+            0.6416666666666667
           ],
-          "min": 0.6333333333333333,
-          "max": 0.6916666666666667,
-          "spread": 0.05833333333333335
+          "min": 0.6416666666666667,
+          "max": 0.7,
+          "spread": 0.05833333333333324
         }
       },
       "openai/gpt-oss-20b": {
@@ -5030,22 +5030,22 @@
           0.6071428571428571,
           0.7964085104128027
         ],
-        "fleiss_kappa": 0.621275410749095,
+        "fleiss_kappa": 0.6205357142857143,
         "fleiss_kappa_ci": [
-          0.43532898933089653,
-          0.7221671188441655
+          0.43001320089431166,
+          0.7224860268896597
         ],
         "accuracy_spread": {
           "findings": 120,
           "dropped_incomplete": 0,
           "runs": 3,
           "accuracy_per_run": [
-            0.6166666666666667,
-            0.6583333333333333,
-            0.6416666666666667
+            0.625,
+            0.6666666666666666,
+            0.65
           ],
-          "min": 0.6166666666666667,
-          "max": 0.6583333333333333,
+          "min": 0.625,
+          "max": 0.6666666666666666,
           "spread": 0.04166666666666663
         }
       },
@@ -5060,22 +5060,22 @@
           0.8,
           0.9333333333333333
         ],
-        "fleiss_kappa": 0.8031711317659925,
+        "fleiss_kappa": 0.8008229883467619,
         "fleiss_kappa_ci": [
-          0.6060279989413311,
-          0.8952776054395432
+          0.5786068386325672,
+          0.893603046991481
         ],
         "accuracy_spread": {
           "findings": 120,
           "dropped_incomplete": 0,
           "runs": 3,
           "accuracy_per_run": [
+            0.6333333333333333,
             0.625,
-            0.6166666666666667,
-            0.65
+            0.6583333333333333
           ],
-          "min": 0.6166666666666667,
-          "max": 0.65,
+          "min": 0.625,
+          "max": 0.6583333333333333,
           "spread": 0.033333333333333326
         }
       },
@@ -5288,22 +5288,22 @@
           0.9008032662750958,
           0.956989247311828
         ],
-        "fleiss_kappa": 0.8984962406015036,
+        "fleiss_kappa": 0.8981251249853789,
         "fleiss_kappa_ci": [
-          0.845966343677091,
-          0.9363331547793808
+          0.8452588235485685,
+          0.9359584331721014
         ],
         "accuracy_spread": {
           "findings": 360,
           "dropped_incomplete": 0,
           "runs": 3,
           "accuracy_per_run": [
-            0.725,
-            0.7583333333333333,
-            0.7388888888888889
+            0.7277777777777777,
+            0.7611111111111111,
+            0.7416666666666667
           ],
-          "min": 0.725,
-          "max": 0.7583333333333333,
+          "min": 0.7277777777777777,
+          "max": 0.7611111111111111,
           "spread": 0.033333333333333326
         }
       },
@@ -5318,22 +5318,22 @@
           0.8340062701881056,
           0.9076923076923077
         ],
-        "fleiss_kappa": 0.8231971842514533,
+        "fleiss_kappa": 0.8228017862493048,
         "fleiss_kappa_ci": [
-          0.7694539865791622,
-          0.8677040150763125
+          0.768990234234292,
+          0.8672941612638569
         ],
         "accuracy_spread": {
           "findings": 360,
           "dropped_incomplete": 0,
           "runs": 3,
           "accuracy_per_run": [
+            0.7555555555555555,
             0.7527777777777778,
-            0.75,
-            0.7555555555555555
+            0.7583333333333333
           ],
-          "min": 0.75,
-          "max": 0.7555555555555555,
+          "min": 0.7527777777777778,
+          "max": 0.7583333333333333,
           "spread": 0.005555555555555536
         }
       },
@@ -5378,22 +5378,22 @@
           0.8164549318167921,
           0.9034869558117065
         ],
-        "fleiss_kappa": 0.8023000387646984,
+        "fleiss_kappa": 0.8018070533372195,
         "fleiss_kappa_ci": [
-          0.7478351603297997,
-          0.8538965567414886
+          0.7472737586311285,
+          0.8536420343072342
         ],
         "accuracy_spread": {
           "findings": 360,
           "dropped_incomplete": 0,
           "runs": 3,
           "accuracy_per_run": [
-            0.725,
             0.7277777777777777,
-            0.7361111111111112
+            0.7305555555555555,
+            0.7388888888888889
           ],
-          "min": 0.725,
-          "max": 0.7361111111111112,
+          "min": 0.7277777777777777,
+          "max": 0.7388888888888889,
           "spread": 0.011111111111111183
         }
       },
@@ -5408,22 +5408,22 @@
           0.7645629531768465,
           0.9044296467863346
         ],
-        "fleiss_kappa": 0.7566197183098594,
+        "fleiss_kappa": 0.7555569430569433,
         "fleiss_kappa_ci": [
-          0.6409569245412471,
-          0.8517816162451652
+          0.639481055031961,
+          0.8511528227373136
         ],
         "accuracy_spread": {
           "findings": 360,
           "dropped_incomplete": 0,
           "runs": 3,
           "accuracy_per_run": [
-            0.725,
-            0.6805555555555556,
-            0.6805555555555556
+            0.7277777777777777,
+            0.6833333333333333,
+            0.6833333333333333
           ],
-          "min": 0.6805555555555556,
-          "max": 0.725,
+          "min": 0.6833333333333333,
+          "max": 0.7277777777777777,
           "spread": 0.0444444444444444
         }
       },
@@ -5438,23 +5438,23 @@
           0.7037011388119422,
           0.819672131147541
         ],
-        "fleiss_kappa": 0.6857789880241185,
+        "fleiss_kappa": 0.6860668480373106,
         "fleiss_kappa_ci": [
-          0.5981115026625267,
-          0.753970572285111
+          0.5984407866494839,
+          0.7542025766046391
         ],
         "accuracy_spread": {
           "findings": 359,
           "dropped_incomplete": 0,
           "runs": 3,
           "accuracy_per_run": [
-            0.7214484679665738,
-            0.7298050139275766,
-            0.7520891364902507
+            0.724233983286908,
+            0.7325905292479109,
+            0.754874651810585
           ],
-          "min": 0.7214484679665738,
-          "max": 0.7520891364902507,
-          "spread": 0.03064066852367686
+          "min": 0.724233983286908,
+          "max": 0.754874651810585,
+          "spread": 0.030640668523676973
         }
       },
       "claude-sonnet-5": {
@@ -5468,22 +5468,22 @@
           0.8775471107983424,
           0.95
         ],
-        "fleiss_kappa": 0.8774468085106383,
+        "fleiss_kappa": 0.8769819573537452,
         "fleiss_kappa_ci": [
-          0.8058636963821179,
-          0.9269895011220985
+          0.8043403361994342,
+          0.9267231898015524
         ],
         "accuracy_spread": {
           "findings": 360,
           "dropped_incomplete": 0,
           "runs": 3,
           "accuracy_per_run": [
-            0.725,
-            0.725,
-            0.7305555555555555
+            0.7277777777777777,
+            0.7277777777777777,
+            0.7333333333333333
           ],
-          "min": 0.725,
-          "max": 0.7305555555555555,
+          "min": 0.7277777777777777,
+          "max": 0.7333333333333333,
           "spread": 0.005555555555555536
         }
       },
@@ -5688,20 +5688,20 @@
   "H4": {
     "available": true,
     "findings_with_context": 360,
-    "findings_with_full_file": 87,
-    "findings_with_window": 273,
+    "findings_with_full_file": 88,
+    "findings_with_window": 272,
     "H4": {
       "claude-opus-5": {
         "n": 360,
-        "explanation_grounded": 0.36944444444444446,
+        "explanation_grounded": 0.37222222222222223,
         "reasoning_grounded": 0.8333333333333334,
-        "message_grounded": 0.5138888888888888,
-        "grounded_beyond_message": 0.7666666666666667,
-        "grounded_near_flagged_line": 0.65,
-        "mean_identifiers_beyond_message": 1.8777777777777778,
-        "reference_precision": 0.7674045544143583,
-        "unsupported_reference_share": 0.46078431372549017,
-        "scored_for_precision": 306,
+        "message_grounded": 0.5166666666666667,
+        "grounded_beyond_message": 0.7638888888888888,
+        "grounded_near_flagged_line": 0.6472222222222223,
+        "mean_identifiers_beyond_message": 1.875,
+        "reference_precision": 0.7666419463960447,
+        "unsupported_reference_share": 0.46229508196721314,
+        "scored_for_precision": 305,
         "mcnemar_exact": {
           "b": 54,
           "c": 106,
@@ -5720,18 +5720,18 @@
           "test": "cluster-level sign-flip (SAST rule)"
         },
         "reasoning_mcnemar_exact": {
-          "b": 127,
+          "b": 126,
           "c": 12,
-          "discordant": 139,
-          "p_value": 2.108124581703748e-25,
-          "odds_ratio": 10.583333333333334,
+          "discordant": 138,
+          "p_value": 3.855331674762765e-25,
+          "odds_ratio": 10.5,
           "test": "exact McNemar test (two-sided, binomial distribution)"
         },
         "reasoning_mcnemar_cluster": {
-          "b": 127,
+          "b": 126,
           "c": 12,
-          "clusters_with_discordance": 67,
-          "statistic": 115.0,
+          "clusters_with_discordance": 66,
+          "statistic": 114.0,
           "p_value": 4.999750012499375e-05,
           "permutations": 20000,
           "test": "cluster-level sign-flip (SAST rule)"
@@ -5739,15 +5739,15 @@
       },
       "gpt-5.6-terra": {
         "n": 360,
-        "explanation_grounded": 0.2833333333333333,
+        "explanation_grounded": 0.2861111111111111,
         "reasoning_grounded": 0.7194444444444444,
-        "message_grounded": 0.5138888888888888,
-        "grounded_beyond_message": 0.5611111111111111,
-        "grounded_near_flagged_line": 0.48333333333333334,
-        "mean_identifiers_beyond_message": 0.975,
-        "reference_precision": 0.8803100775193797,
-        "unsupported_reference_share": 0.2186046511627907,
-        "scored_for_precision": 215,
+        "message_grounded": 0.5166666666666667,
+        "grounded_beyond_message": 0.5583333333333333,
+        "grounded_near_flagged_line": 0.48055555555555557,
+        "mean_identifiers_beyond_message": 0.9722222222222222,
+        "reference_precision": 0.8797507788161993,
+        "unsupported_reference_share": 0.21962616822429906,
+        "scored_for_precision": 214,
         "mcnemar_exact": {
           "b": 36,
           "c": 119,
@@ -5766,34 +5766,34 @@
           "test": "cluster-level sign-flip (SAST rule)"
         },
         "reasoning_mcnemar_exact": {
-          "b": 106,
+          "b": 105,
           "c": 32,
-          "discordant": 138,
-          "p_value": 1.865139043673374e-10,
-          "odds_ratio": 3.3125,
+          "discordant": 137,
+          "p_value": 2.876303627501573e-10,
+          "odds_ratio": 3.28125,
           "test": "exact McNemar test (two-sided, binomial distribution)"
         },
         "reasoning_mcnemar_cluster": {
-          "b": 106,
+          "b": 105,
           "c": 32,
-          "clusters_with_discordance": 58,
-          "statistic": 74.0,
-          "p_value": 0.0038498075096245186,
+          "clusters_with_discordance": 57,
+          "statistic": 73.0,
+          "p_value": 0.005149742512874356,
           "permutations": 20000,
           "test": "cluster-level sign-flip (SAST rule)"
         }
       },
       "qwen3.5:9b": {
         "n": 360,
-        "explanation_grounded": 0.4861111111111111,
+        "explanation_grounded": 0.4888888888888889,
         "reasoning_grounded": 0.7555555555555555,
-        "message_grounded": 0.5138888888888888,
-        "grounded_beyond_message": 0.5972222222222222,
-        "grounded_near_flagged_line": 0.49166666666666664,
-        "mean_identifiers_beyond_message": 1.0888888888888888,
-        "reference_precision": 0.6731751824817518,
-        "unsupported_reference_share": 0.4854014598540146,
-        "scored_for_precision": 274,
+        "message_grounded": 0.5166666666666667,
+        "grounded_beyond_message": 0.5944444444444444,
+        "grounded_near_flagged_line": 0.4888888888888889,
+        "mean_identifiers_beyond_message": 1.086111111111111,
+        "reference_precision": 0.6738095238095237,
+        "unsupported_reference_share": 0.4835164835164835,
+        "scored_for_precision": 273,
         "mcnemar_exact": {
           "b": 56,
           "c": 66,
@@ -5812,33 +5812,33 @@
           "test": "cluster-level sign-flip (SAST rule)"
         },
         "reasoning_mcnemar_exact": {
-          "b": 105,
+          "b": 104,
           "c": 18,
-          "discordant": 123,
-          "p_value": 3.9641704747498244e-16,
-          "odds_ratio": 5.833333333333333,
+          "discordant": 122,
+          "p_value": 6.780884736177504e-16,
+          "odds_ratio": 5.777777777777778,
           "test": "exact McNemar test (two-sided, binomial distribution)"
         },
         "reasoning_mcnemar_cluster": {
-          "b": 105,
+          "b": 104,
           "c": 18,
-          "clusters_with_discordance": 56,
-          "statistic": 87.0,
-          "p_value": 4.999750012499375e-05,
+          "clusters_with_discordance": 55,
+          "statistic": 86.0,
+          "p_value": 9.99950002499875e-05,
           "permutations": 20000,
           "test": "cluster-level sign-flip (SAST rule)"
         }
       },
       "openai/gpt-oss-120b": {
         "n": 360,
-        "explanation_grounded": 0.5861111111111111,
+        "explanation_grounded": 0.5888888888888889,
         "reasoning_grounded": 0.7611111111111111,
-        "message_grounded": 0.5138888888888888,
-        "grounded_beyond_message": 0.5388888888888889,
-        "grounded_near_flagged_line": 0.4888888888888889,
-        "mean_identifiers_beyond_message": 0.8638888888888889,
-        "reference_precision": 0.8692248062015504,
-        "unsupported_reference_share": 0.17209302325581396,
+        "message_grounded": 0.5166666666666667,
+        "grounded_beyond_message": 0.5361111111111111,
+        "grounded_near_flagged_line": 0.4861111111111111,
+        "mean_identifiers_beyond_message": 0.8611111111111112,
+        "reference_precision": 0.8645736434108526,
+        "unsupported_reference_share": 0.17674418604651163,
         "scored_for_precision": 215,
         "mcnemar_exact": {
           "b": 68,
@@ -5858,18 +5858,18 @@
           "test": "cluster-level sign-flip (SAST rule)"
         },
         "reasoning_mcnemar_exact": {
-          "b": 104,
+          "b": 103,
           "c": 15,
-          "discordant": 119,
-          "p_value": 1.450249679735154e-17,
-          "odds_ratio": 6.933333333333334,
+          "discordant": 118,
+          "p_value": 2.5388391153940443e-17,
+          "odds_ratio": 6.866666666666666,
           "test": "exact McNemar test (two-sided, binomial distribution)"
         },
         "reasoning_mcnemar_cluster": {
-          "b": 104,
+          "b": 103,
           "c": 15,
-          "clusters_with_discordance": 57,
-          "statistic": 89.0,
+          "clusters_with_discordance": 56,
+          "statistic": 88.0,
           "p_value": 4.999750012499375e-05,
           "permutations": 20000,
           "test": "cluster-level sign-flip (SAST rule)"
@@ -5877,15 +5877,15 @@
       },
       "gpt-5.6-luna": {
         "n": 360,
-        "explanation_grounded": 0.38055555555555554,
+        "explanation_grounded": 0.38333333333333336,
         "reasoning_grounded": 0.6611111111111111,
-        "message_grounded": 0.5138888888888888,
-        "grounded_beyond_message": 0.4666666666666667,
-        "grounded_near_flagged_line": 0.40555555555555556,
-        "mean_identifiers_beyond_message": 0.7555555555555555,
-        "reference_precision": 0.8652094717668487,
-        "unsupported_reference_share": 0.20218579234972678,
-        "scored_for_precision": 183,
+        "message_grounded": 0.5166666666666667,
+        "grounded_beyond_message": 0.4638888888888889,
+        "grounded_near_flagged_line": 0.4027777777777778,
+        "mean_identifiers_beyond_message": 0.7527777777777778,
+        "reference_precision": 0.8644688644688644,
+        "unsupported_reference_share": 0.2032967032967033,
+        "scored_for_precision": 182,
         "mcnemar_exact": {
           "b": 52,
           "c": 100,
@@ -5904,34 +5904,34 @@
           "test": "cluster-level sign-flip (SAST rule)"
         },
         "reasoning_mcnemar_exact": {
-          "b": 95,
+          "b": 94,
           "c": 42,
-          "discordant": 137,
-          "p_value": 6.9197843299912535e-06,
-          "odds_ratio": 2.261904761904762,
+          "discordant": 136,
+          "p_value": 9.669159852144027e-06,
+          "odds_ratio": 2.238095238095238,
           "test": "exact McNemar test (two-sided, binomial distribution)"
         },
         "reasoning_mcnemar_cluster": {
-          "b": 95,
+          "b": 94,
           "c": 42,
-          "clusters_with_discordance": 58,
-          "statistic": 53.0,
-          "p_value": 0.06134693265336733,
+          "clusters_with_discordance": 57,
+          "statistic": 52.0,
+          "p_value": 0.0671966401679916,
           "permutations": 20000,
           "test": "cluster-level sign-flip (SAST rule)"
         }
       },
       "openai/gpt-oss-20b": {
         "n": 360,
-        "explanation_grounded": 0.6361111111111111,
-        "reasoning_grounded": 0.7555555555555555,
-        "message_grounded": 0.5138888888888888,
+        "explanation_grounded": 0.6388888888888888,
+        "reasoning_grounded": 0.7583333333333333,
+        "message_grounded": 0.5166666666666667,
         "grounded_beyond_message": 0.55,
         "grounded_near_flagged_line": 0.4861111111111111,
         "mean_identifiers_beyond_message": 0.8472222222222222,
-        "reference_precision": 0.7871959942775393,
-        "unsupported_reference_share": 0.2875536480686695,
-        "scored_for_precision": 233,
+        "reference_precision": 0.7838319088319088,
+        "unsupported_reference_share": 0.2905982905982906,
+        "scored_for_precision": 234,
         "mcnemar_exact": {
           "b": 82,
           "c": 38,
@@ -5971,43 +5971,43 @@
         "n": 360,
         "explanation_grounded": 0.6527777777777778,
         "reasoning_grounded": 0.8583333333333333,
-        "message_grounded": 0.5138888888888888,
-        "grounded_beyond_message": 0.7527777777777778,
-        "grounded_near_flagged_line": 0.6305555555555555,
-        "mean_identifiers_beyond_message": 1.788888888888889,
-        "reference_precision": 0.7359464820376871,
-        "unsupported_reference_share": 0.46905537459283386,
-        "scored_for_precision": 307,
+        "message_grounded": 0.5166666666666667,
+        "grounded_beyond_message": 0.75,
+        "grounded_near_flagged_line": 0.6277777777777778,
+        "mean_identifiers_beyond_message": 1.7861111111111112,
+        "reference_precision": 0.7350835620443462,
+        "unsupported_reference_share": 0.47058823529411764,
+        "scored_for_precision": 306,
         "mcnemar_exact": {
-          "b": 89,
+          "b": 88,
           "c": 39,
-          "discordant": 128,
-          "p_value": 1.1653734361916332e-05,
-          "odds_ratio": 2.282051282051282,
+          "discordant": 127,
+          "p_value": 1.6333804091764795e-05,
+          "odds_ratio": 2.2564102564102564,
           "test": "exact McNemar test (two-sided, binomial distribution)"
         },
         "mcnemar_cluster": {
-          "b": 89,
+          "b": 88,
           "c": 39,
-          "clusters_with_discordance": 57,
-          "statistic": 50.0,
-          "p_value": 0.038898055097245136,
+          "clusters_with_discordance": 56,
+          "statistic": 49.0,
+          "p_value": 0.04284785760711964,
           "permutations": 20000,
           "test": "cluster-level sign-flip (SAST rule)"
         },
         "reasoning_mcnemar_exact": {
-          "b": 129,
+          "b": 128,
           "c": 5,
-          "discordant": 134,
-          "p_value": 3.1876229928981844e-32,
-          "odds_ratio": 25.8,
+          "discordant": 133,
+          "p_value": 6.139234950382772e-32,
+          "odds_ratio": 25.6,
           "test": "exact McNemar test (two-sided, binomial distribution)"
         },
         "reasoning_mcnemar_cluster": {
-          "b": 129,
+          "b": 128,
           "c": 5,
-          "clusters_with_discordance": 62,
-          "statistic": 124.0,
+          "clusters_with_discordance": 61,
+          "statistic": 123.0,
           "p_value": 4.999750012499375e-05,
           "permutations": 20000,
           "test": "cluster-level sign-flip (SAST rule)"
@@ -6018,9 +6018,9 @@
       "paired_findings": 360,
       "findings_with_context": 360,
       "friedman": {
-        "statistic": 362.2644566114161,
+        "statistic": 361.71589543269226,
         "df": 6,
-        "p_value": 3.5894627463406526e-75,
+        "p_value": 4.708027660068585e-75,
         "test": "test Friedmana"
       },
       "pairwise": {
@@ -6053,11 +6053,11 @@
           "p_value_holm": 1.3810876328806846e-28
         },
         "claude-opus-5 vs openai/gpt-oss-20b": {
-          "statistic": 2645.0,
-          "p_value": 6.847958871485089e-27,
-          "pairs": 230,
+          "statistic": 2625.0,
+          "p_value": 9.302239297075228e-27,
+          "pairs": 229,
           "test": "test Wilcoxona dla par",
-          "p_value_holm": 1.3011121855821668e-25
+          "p_value_holm": 1.7674254664442935e-25
         },
         "claude-opus-5 vs claude-sonnet-5": {
           "statistic": 9560.5,
@@ -6085,14 +6085,14 @@
           "p_value": 8.633333345517064e-05,
           "pairs": 142,
           "test": "test Wilcoxona dla par",
-          "p_value_holm": 0.0006906666676413651
+          "p_value_holm": 0.0007275432924788473
         },
         "gpt-5.6-terra vs openai/gpt-oss-20b": {
-          "statistic": 5983.5,
-          "p_value": 0.013370617769721935,
-          "pairs": 173,
+          "statistic": 5940.0,
+          "p_value": 0.015311743798527747,
+          "pairs": 172,
           "test": "test Wilcoxona dla par",
-          "p_value_holm": 0.09359432438805354
+          "p_value_holm": 0.10718220658969423
         },
         "gpt-5.6-terra vs claude-sonnet-5": {
           "statistic": 4251.0,
@@ -6116,11 +6116,11 @@
           "p_value_holm": 2.7326132276330433e-06
         },
         "qwen3.5:9b vs openai/gpt-oss-20b": {
-          "statistic": 6189.0,
-          "p_value": 6.758670836326588e-05,
-          "pairs": 190,
+          "statistic": 6146.5,
+          "p_value": 8.083814360876082e-05,
+          "pairs": 189,
           "test": "test Wilcoxona dla par",
-          "p_value_holm": 0.0006192527384610973
+          "p_value_holm": 0.0007275432924788473
         },
         "qwen3.5:9b vs claude-sonnet-5": {
           "statistic": 5680.0,
@@ -6137,25 +6137,25 @@
           "p_value_holm": 0.337662526385383
         },
         "openai/gpt-oss-120b vs openai/gpt-oss-20b": {
-          "statistic": 3607.5,
-          "p_value": 0.6852109243710706,
-          "pairs": 122,
+          "statistic": 3575.0,
+          "p_value": 0.7421179105727078,
+          "pairs": 121,
           "test": "test Wilcoxona dla par",
-          "p_value_holm": 0.6852109243710706
+          "p_value_holm": 0.7421179105727078
         },
         "openai/gpt-oss-120b vs claude-sonnet-5": {
           "statistic": 2359.0,
           "p_value": 9.438923784805578e-25,
           "pairs": 213,
           "test": "test Wilcoxona dla par",
-          "p_value_holm": 1.5102278055688925e-23
+          "p_value_holm": 1.6046170434169482e-23
         },
         "gpt-5.6-luna vs openai/gpt-oss-20b": {
-          "statistic": 6403.0,
-          "p_value": 0.09252092279725414,
-          "pairs": 172,
+          "statistic": 6292.0,
+          "p_value": 0.08232233376844357,
+          "pairs": 171,
           "test": "test Wilcoxona dla par",
-          "p_value_holm": 0.3700836911890166
+          "p_value_holm": 0.337662526385383
         },
         "gpt-5.6-luna vs claude-sonnet-5": {
           "statistic": 2342.0,
@@ -6165,21 +6165,21 @@
           "p_value_holm": 1.2625629226171604e-25
         },
         "openai/gpt-oss-20b vs claude-sonnet-5": {
-          "statistic": 2084.5,
-          "p_value": 8.227838552054224e-25,
-          "pairs": 207,
+          "statistic": 2067.5,
+          "p_value": 1.1325005103602154e-24,
+          "pairs": 206,
           "test": "test Wilcoxona dla par",
-          "p_value_holm": 1.398732553849218e-23
+          "p_value_holm": 1.8120008165763446e-23
         }
       },
       "mean_identifiers_beyond_message": {
-        "claude-opus-5": 1.8777777777777778,
-        "gpt-5.6-terra": 0.975,
-        "qwen3.5:9b": 1.0888888888888888,
-        "openai/gpt-oss-120b": 0.8638888888888889,
-        "gpt-5.6-luna": 0.7555555555555555,
+        "claude-opus-5": 1.875,
+        "gpt-5.6-terra": 0.9722222222222222,
+        "qwen3.5:9b": 1.086111111111111,
+        "openai/gpt-oss-120b": 0.8611111111111112,
+        "gpt-5.6-luna": 0.7527777777777778,
         "openai/gpt-oss-20b": 0.8472222222222222,
-        "claude-sonnet-5": 1.788888888888889
+        "claude-sonnet-5": 1.7861111111111112
       }
     }
   },
@@ -6188,15 +6188,15 @@
       "claude-opus-5": {
         "findings": 360,
         "runs": 1080,
-        "input_tokens": 5814492,
-        "output_tokens": 1140313,
-        "input_tokens_per_run": 5383.788888888889,
-        "output_tokens_per_run": 1055.8453703703703,
-        "wall_clock_s_per_run": 16.732956481481484,
-        "cache_read_tokens": 1948851,
-        "cache_write_tokens": 24669,
+        "input_tokens": 5805441,
+        "output_tokens": 1139916,
+        "input_tokens_per_run": 5375.408333333334,
+        "output_tokens_per_run": 1055.4777777777779,
+        "wall_clock_s_per_run": 16.729098148148147,
+        "cache_read_tokens": 1946110,
+        "cache_write_tokens": 27410,
         "reported_cost_usd": null,
-        "billable_input_tokens": 5814492,
+        "billable_input_tokens": 5805441,
         "pricing_usd_per_million": {
           "model": "claude-opus-5",
           "input": 5.0,
@@ -6204,22 +6204,22 @@
           "cache_read_multiplier": 0.1,
           "cache_write_multiplier": 1.25
         },
-        "cost_usd_total": 58.70889175,
-        "cost_usd_per_finding": 0.1630802548611111,
-        "cost_usd_per_run": 0.0543600849537037
+        "cost_usd_total": 58.6694725,
+        "cost_usd_per_finding": 0.16297075694444443,
+        "cost_usd_per_run": 0.05432358564814815
       },
       "gpt-5.6-terra": {
         "findings": 360,
         "runs": 1080,
-        "input_tokens": 4973325,
-        "output_tokens": 462860,
-        "input_tokens_per_run": 4604.930555555556,
-        "output_tokens_per_run": 428.5740740740741,
-        "wall_clock_s_per_run": 6.886623148148148,
-        "cache_read_tokens": 1993131,
+        "input_tokens": 4966998,
+        "output_tokens": 463360,
+        "input_tokens_per_run": 4599.072222222222,
+        "output_tokens_per_run": 429.037037037037,
+        "wall_clock_s_per_run": 6.898489814814814,
+        "cache_read_tokens": 1987266,
         "cache_write_tokens": 0,
         "reported_cost_usd": null,
-        "billable_input_tokens": 2980194,
+        "billable_input_tokens": 2979732,
         "pricing_usd_per_million": {
           "model": "gpt-5.6-terra",
           "input": 2.0,
@@ -6227,22 +6227,22 @@
           "cache_read_multiplier": 0.1,
           "cache_write_multiplier": 1.25
         },
-        "cost_usd_total": 11.9133342,
-        "cost_usd_per_finding": 0.033092594999999995,
-        "cost_usd_per_run": 0.011030864999999999
+        "cost_usd_total": 11.917237199999999,
+        "cost_usd_per_finding": 0.033103436666666666,
+        "cost_usd_per_run": 0.011034478888888888
       },
       "qwen3.5:9b": {
         "findings": 360,
         "runs": 1079,
-        "input_tokens": 10505520,
-        "output_tokens": 243589,
-        "input_tokens_per_run": 9736.348470806302,
-        "output_tokens_per_run": 225.75440222428173,
-        "wall_clock_s_per_run": 55.78128915662651,
+        "input_tokens": 10484002,
+        "output_tokens": 243563,
+        "input_tokens_per_run": 9716.40593141798,
+        "output_tokens_per_run": 225.73030583873958,
+        "wall_clock_s_per_run": 56.95581000926784,
         "cache_read_tokens": 0,
         "cache_write_tokens": 0,
         "reported_cost_usd": null,
-        "billable_input_tokens": 10505520,
+        "billable_input_tokens": 10484002,
         "pricing_usd_per_million": {
           "model": "qwen3.5:9b",
           "input": 0.0,
@@ -6257,15 +6257,15 @@
       "openai/gpt-oss-120b": {
         "findings": 360,
         "runs": 1080,
-        "input_tokens": 4930125,
-        "output_tokens": 739786,
-        "input_tokens_per_run": 4564.930555555556,
-        "output_tokens_per_run": 684.987037037037,
-        "wall_clock_s_per_run": 18.372375,
+        "input_tokens": 4923801,
+        "output_tokens": 739845,
+        "input_tokens_per_run": 4559.075,
+        "output_tokens_per_run": 685.0416666666666,
+        "wall_clock_s_per_run": 18.341708333333333,
         "cache_read_tokens": 0,
         "cache_write_tokens": 0,
-        "reported_cost_usd": 0.308178245,
-        "billable_input_tokens": 4930125,
+        "reported_cost_usd": 0.307954287,
+        "billable_input_tokens": 4923801,
         "pricing_usd_per_million": {
           "model": "openai/gpt-oss-120b",
           "input": 0.037,
@@ -6273,22 +6273,22 @@
           "cache_read_multiplier": 1.0,
           "cache_write_multiplier": 0.0
         },
-        "cost_usd_total": 0.308178245,
-        "cost_usd_per_finding": 0.0008560506805555556,
-        "cost_usd_per_run": 0.0002853502268518519
+        "cost_usd_total": 0.30795428700000005,
+        "cost_usd_per_finding": 0.0008554285750000002,
+        "cost_usd_per_run": 0.0002851428583333334
       },
       "gpt-5.6-luna": {
         "findings": 360,
         "runs": 1080,
-        "input_tokens": 4973325,
-        "output_tokens": 626243,
-        "input_tokens_per_run": 4604.930555555556,
-        "output_tokens_per_run": 579.8546296296296,
-        "wall_clock_s_per_run": 6.646582407407408,
-        "cache_read_tokens": 3767059,
+        "input_tokens": 4966998,
+        "output_tokens": 626701,
+        "input_tokens_per_run": 4599.072222222222,
+        "output_tokens_per_run": 580.2787037037037,
+        "wall_clock_s_per_run": 6.6519407407407405,
+        "cache_read_tokens": 3761194,
         "cache_write_tokens": 0,
         "reported_cost_usd": null,
-        "billable_input_tokens": 1206266,
+        "billable_input_tokens": 1205804,
         "pricing_usd_per_million": {
           "model": "gpt-5.6-luna",
           "input": 0.2,
@@ -6296,22 +6296,22 @@
           "cache_read_multiplier": 0.1,
           "cache_write_multiplier": 1.25
         },
-        "cost_usd_total": 1.06808598,
-        "cost_usd_per_finding": 0.0029669055,
-        "cost_usd_per_run": 0.0009889685
+        "cost_usd_total": 1.06842588,
+        "cost_usd_per_finding": 0.0029678496666666666,
+        "cost_usd_per_run": 0.0009892832222222223
       },
       "openai/gpt-oss-20b": {
         "findings": 360,
         "runs": 1079,
-        "input_tokens": 4930125,
-        "output_tokens": 1355763,
-        "input_tokens_per_run": 4569.161260426321,
-        "output_tokens_per_run": 1256.4995366079704,
-        "wall_clock_s_per_run": 15.0804874884152,
+        "input_tokens": 4923801,
+        "output_tokens": 1355407,
+        "input_tokens_per_run": 4563.300278035218,
+        "output_tokens_per_run": 1256.1696014828544,
+        "wall_clock_s_per_run": 15.10162001853568,
         "cache_read_tokens": 0,
         "cache_write_tokens": 0,
-        "reported_cost_usd": 0.33771057,
-        "billable_input_tokens": 4930125,
+        "reported_cost_usd": 0.33747101,
+        "billable_input_tokens": 4923801,
         "pricing_usd_per_million": {
           "model": "openai/gpt-oss-20b",
           "input": 0.03,
@@ -6319,22 +6319,22 @@
           "cache_read_multiplier": 1.0,
           "cache_write_multiplier": 0.0
         },
-        "cost_usd_total": 0.33771057000000004,
-        "cost_usd_per_finding": 0.0009380849166666668,
-        "cost_usd_per_run": 0.0003129847729379055
+        "cost_usd_total": 0.33747101,
+        "cost_usd_per_finding": 0.0009374194722222223,
+        "cost_usd_per_run": 0.00031276275254865616
       },
       "claude-sonnet-5": {
         "findings": 360,
         "runs": 1080,
-        "input_tokens": 4827732,
-        "output_tokens": 1357742,
-        "input_tokens_per_run": 4470.122222222222,
-        "output_tokens_per_run": 1257.1685185185186,
-        "wall_clock_s_per_run": 16.239482407407408,
-        "cache_read_tokens": 2916424,
-        "cache_write_tokens": 43856,
+        "input_tokens": 4818681,
+        "output_tokens": 1357506,
+        "input_tokens_per_run": 4461.741666666667,
+        "output_tokens_per_run": 1256.95,
+        "wall_clock_s_per_run": 16.237915740740743,
+        "cache_read_tokens": 2913683,
+        "cache_write_tokens": 46597,
         "reported_cost_usd": null,
-        "billable_input_tokens": 4827732,
+        "billable_input_tokens": 4818681,
         "pricing_usd_per_million": {
           "model": "claude-sonnet-5",
           "input": 2.0,
@@ -6342,100 +6342,100 @@
           "cache_read_multiplier": 0.1,
           "cache_write_multiplier": 1.25
         },
-        "cost_usd_total": 23.9258088,
-        "cost_usd_per_finding": 0.06646057999999999,
-        "cost_usd_per_run": 0.022153526666666666
+        "cost_usd_total": 23.9116511,
+        "cost_usd_per_finding": 0.06642125305555556,
+        "cost_usd_per_run": 0.022140417685185185
       }
     },
     "ratios": {
       "gpt-5.6-terra": {
         "reference": "claude-opus-5",
-        "f1_ratio": 1.0153452181621196,
+        "f1_ratio": 1.015527465667915,
         "f1_ratio_ci": [
-          0.9551247372146126,
-          1.0790267300628527
+          0.9555336698555041,
+          1.0790470544807764
         ],
         "threshold_met": true,
         "threshold_met_point": true,
         "f1_ratio_per_tool": {
           "spotbugs": 1.0211916461916462,
           "error-prone": 1.0476545048399106,
-          "sonarqube": 0.9521970062771608
+          "sonarqube": 0.9545454545454546
         }
       },
       "qwen3.5:9b": {
         "reference": "claude-opus-5",
-        "f1_ratio": 0.8133831685555823,
+        "f1_ratio": 0.8098659003831418,
         "f1_ratio_ci": [
-          0.7087065353813828,
-          0.9219498023304201
+          0.7057776400219832,
+          0.917357346051335
         ],
         "threshold_met": false,
         "threshold_met_point": true,
         "f1_ratio_per_tool": {
           "spotbugs": 0.877523092712966,
           "error-prone": 0.7969639468690701,
-          "sonarqube": 0.7719298245614035
+          "sonarqube": 0.7586206896551724
         }
       },
       "openai/gpt-oss-120b": {
         "reference": "claude-opus-5",
-        "f1_ratio": 0.9764446080235555,
+        "f1_ratio": 0.9768262737875997,
         "f1_ratio_ci": [
-          0.8981576420255325,
-          1.0760815284541947
+          0.8992244160968352,
+          1.076081820495791
         ],
         "threshold_met": true,
         "threshold_met_point": true,
         "f1_ratio_per_tool": {
           "spotbugs": 0.8796296296296294,
           "error-prone": 1.0486669487939062,
-          "sonarqube": 0.9907663896583563
+          "sonarqube": 0.9913043478260869
         }
       },
       "gpt-5.6-luna": {
         "reference": "claude-opus-5",
-        "f1_ratio": 0.948974299357931,
+        "f1_ratio": 0.9491921768707482,
         "f1_ratio_ci": [
-          0.881833844229144,
-          1.0043095534348743
+          0.8820932951859201,
+          1.0043566254694076
         ],
         "threshold_met": true,
         "threshold_met_point": true,
         "f1_ratio_per_tool": {
           "spotbugs": 0.8407079646017699,
           "error-prone": 1.009325681492109,
-          "sonarqube": 0.96398891966759
+          "sonarqube": 0.9652173913043478
         }
       },
       "openai/gpt-oss-20b": {
         "reference": "claude-opus-5",
-        "f1_ratio": 0.9328533308796467,
+        "f1_ratio": 0.9344262295081968,
         "f1_ratio_ci": [
-          0.7892236862565263,
-          1.0923051242902588
+          0.7905114044994873,
+          1.093380816682311
         ],
         "threshold_met": false,
         "threshold_met_point": true,
         "f1_ratio_per_tool": {
           "spotbugs": 0.9739049394221808,
           "error-prone": 0.9237851662404092,
-          "sonarqube": 0.9277605779153766
+          "sonarqube": 0.9320388349514562
         }
       },
       "claude-sonnet-5": {
         "reference": "claude-opus-5",
-        "f1_ratio": 0.987794357873098,
+        "f1_ratio": 0.9878563118091914,
         "f1_ratio_ci": [
-          0.9535625229206884,
-          1.02419477028348
+          0.9537612722049043,
+          1.0241935483870965
         ],
         "threshold_met": true,
         "threshold_met_point": true,
         "f1_ratio_per_tool": {
           "spotbugs": 0.9833237492811959,
           "error-prone": 1.0,
-          "sonarqube": 0.9747899159663865
+          "sonarqube": 0.9750000000000001
         }
       }
     },
@@ -8271,7 +8271,7 @@
       "gpt-5.6-luna": {
         "findings_with_signature": 360,
         "distinct_signatures": 245,
-        "unanimous_across_runs": 0.25277777777777777,
+        "unanimous_across_runs": 0.25,
         "within_rule_identical_pair_share": 0.3706950532247965,
         "within_rule_close_pair_share": 0.8484658735128365,
         "within_rule_pairs": 1597,
@@ -9189,23 +9189,23 @@
     "modele": {
       "claude": {
         "n": 360,
-        "z_kodem": 0.725,
+        "z_kodem": 0.7277777777777777,
         "bez_kodu": 0.6194444444444445,
-        "roznica": 0.10555555555555551,
+        "roznica": 0.10833333333333328,
         "mcnemar": {
           "b": 46,
-          "c": 8,
-          "discordant": 54,
-          "p_value": 1.38433549734529e-07,
-          "odds_ratio": 5.75,
+          "c": 7,
+          "discordant": 53,
+          "p_value": 4.003196174551249e-08,
+          "odds_ratio": 6.571428571428571,
           "test": "exact McNemar test (two-sided, binomial distribution)"
         },
         "mcnemar_cluster": {
           "b": 46,
-          "c": 8,
-          "clusters_with_discordance": 25,
-          "statistic": 38.0,
-          "p_value": 0.004599770011499425,
+          "c": 7,
+          "clusters_with_discordance": 24,
+          "statistic": 39.0,
+          "p_value": 0.0029498525073746312,
           "permutations": 20000,
           "test": "cluster-level sign-flip (SAST rule)"
         },
@@ -9217,7 +9217,7 @@
           },
           "sonarqube": {
             "n": 120,
-            "z_kodem": 0.65,
+            "z_kodem": 0.6583333333333333,
             "bez_kodu": 0.39166666666666666
           },
           "spotbugs": {
@@ -9226,28 +9226,28 @@
             "bez_kodu": 0.8
           }
         },
-        "zachowanych_z_kodem": 0.6638888888888889,
+        "zachowanych_z_kodem": 0.6666666666666666,
         "zachowanych_bez_kodu": 0.7694444444444445
       },
       "gpt": {
         "n": 360,
-        "z_kodem": 0.7527777777777778,
+        "z_kodem": 0.7555555555555555,
         "bez_kodu": 0.5777777777777777,
-        "roznica": 0.17500000000000004,
+        "roznica": 0.1777777777777778,
         "mcnemar": {
           "b": 77,
-          "c": 14,
-          "discordant": 91,
-          "p_value": 1.0476614334104999e-11,
-          "odds_ratio": 5.5,
+          "c": 13,
+          "discordant": 90,
+          "p_value": 3.175275355987434e-12,
+          "odds_ratio": 5.923076923076923,
           "test": "exact McNemar test (two-sided, binomial distribution)"
         },
         "mcnemar_cluster": {
           "b": 77,
-          "c": 14,
-          "clusters_with_discordance": 41,
-          "statistic": 63.0,
-          "p_value": 0.00014999250037498125,
+          "c": 13,
+          "clusters_with_discordance": 40,
+          "statistic": 64.0,
+          "p_value": 4.999750012499375e-05,
           "permutations": 20000,
           "test": "cluster-level sign-flip (SAST rule)"
         },
@@ -9259,7 +9259,7 @@
           },
           "sonarqube": {
             "n": 120,
-            "z_kodem": 0.6333333333333333,
+            "z_kodem": 0.6416666666666667,
             "bez_kodu": 0.3416666666666667
           },
           "spotbugs": {
@@ -9268,27 +9268,27 @@
             "bez_kodu": 0.7333333333333333
           }
         },
-        "zachowanych_z_kodem": 0.5861111111111111,
+        "zachowanych_z_kodem": 0.5888888888888889,
         "zachowanych_bez_kodu": 0.8222222222222222
       },
       "luna": {
         "n": 360,
-        "z_kodem": 0.725,
+        "z_kodem": 0.7277777777777777,
         "bez_kodu": 0.4888888888888889,
-        "roznica": 0.2361111111111111,
+        "roznica": 0.23888888888888887,
         "mcnemar": {
           "b": 95,
-          "c": 10,
-          "discordant": 105,
-          "p_value": 1.5854524913510498e-18,
-          "odds_ratio": 9.5,
+          "c": 9,
+          "discordant": 104,
+          "p_value": 2.985745088286603e-19,
+          "odds_ratio": 10.555555555555555,
           "test": "exact McNemar test (two-sided, binomial distribution)"
         },
         "mcnemar_cluster": {
           "b": 95,
-          "c": 10,
-          "clusters_with_discordance": 45,
-          "statistic": 85.0,
+          "c": 9,
+          "clusters_with_discordance": 44,
+          "statistic": 86.0,
           "p_value": 4.999750012499375e-05,
           "permutations": 20000,
           "test": "cluster-level sign-flip (SAST rule)"
@@ -9301,7 +9301,7 @@
           },
           "sonarqube": {
             "n": 120,
-            "z_kodem": 0.6916666666666667,
+            "z_kodem": 0.7,
             "bez_kodu": 0.3416666666666667
           },
           "spotbugs": {
@@ -9310,28 +9310,28 @@
             "bez_kodu": 0.5
           }
         },
-        "zachowanych_z_kodem": 0.6527777777777778,
+        "zachowanych_z_kodem": 0.6555555555555556,
         "zachowanych_bez_kodu": 0.9111111111111111
       },
       "oss": {
         "n": 360,
-        "z_kodem": 0.725,
+        "z_kodem": 0.7277777777777777,
         "bez_kodu": 0.5222222222222223,
-        "roznica": 0.20277777777777772,
+        "roznica": 0.2055555555555555,
         "mcnemar": {
           "b": 94,
-          "c": 21,
-          "discordant": 115,
-          "p_value": 3.240204200619261e-12,
-          "odds_ratio": 4.476190476190476,
+          "c": 20,
+          "discordant": 114,
+          "p_value": 1.1680094670975612e-12,
+          "odds_ratio": 4.7,
           "test": "exact McNemar test (two-sided, binomial distribution)"
         },
         "mcnemar_cluster": {
           "b": 94,
-          "c": 21,
-          "clusters_with_discordance": 47,
-          "statistic": 73.0,
-          "p_value": 0.00034998250087495624,
+          "c": 20,
+          "clusters_with_discordance": 46,
+          "statistic": 74.0,
+          "p_value": 0.00024998750062496874,
           "permutations": 20000,
           "test": "cluster-level sign-flip (SAST rule)"
         },
@@ -9343,7 +9343,7 @@
           },
           "sonarqube": {
             "n": 120,
-            "z_kodem": 0.6583333333333333,
+            "z_kodem": 0.6666666666666666,
             "bez_kodu": 0.36666666666666664
           },
           "spotbugs": {
@@ -9352,28 +9352,28 @@
             "bez_kodu": 0.5916666666666667
           }
         },
-        "zachowanych_z_kodem": 0.6138888888888889,
+        "zachowanych_z_kodem": 0.6166666666666667,
         "zachowanych_bez_kodu": 0.8222222222222222
       },
       "oss20": {
         "n": 360,
-        "z_kodem": 0.7222222222222222,
+        "z_kodem": 0.725,
         "bez_kodu": 0.525,
-        "roznica": 0.1972222222222222,
+        "roznica": 0.19999999999999996,
         "mcnemar": {
           "b": 107,
-          "c": 36,
-          "discordant": 143,
-          "p_value": 2.2533836638015286e-09,
-          "odds_ratio": 2.9722222222222223,
+          "c": 35,
+          "discordant": 142,
+          "p_value": 1.119595330625602e-09,
+          "odds_ratio": 3.057142857142857,
           "test": "exact McNemar test (two-sided, binomial distribution)"
         },
         "mcnemar_cluster": {
           "b": 107,
-          "c": 36,
-          "clusters_with_discordance": 66,
-          "statistic": 71.0,
-          "p_value": 0.005649717514124294,
+          "c": 35,
+          "clusters_with_discordance": 65,
+          "statistic": 72.0,
+          "p_value": 0.0050997450127493625,
           "permutations": 20000,
           "test": "cluster-level sign-flip (SAST rule)"
         },
@@ -9385,7 +9385,7 @@
           },
           "sonarqube": {
             "n": 120,
-            "z_kodem": 0.6166666666666667,
+            "z_kodem": 0.625,
             "bez_kodu": 0.4166666666666667
           },
           "spotbugs": {
@@ -9394,7 +9394,7 @@
             "bez_kodu": 0.6416666666666667
           }
         },
-        "zachowanych_z_kodem": 0.46111111111111114,
+        "zachowanych_z_kodem": 0.4638888888888889,
         "zachowanych_bez_kodu": 0.7472222222222222
       },
       "qwen": {
@@ -9441,23 +9441,23 @@
       },
       "sonnet": {
         "n": 360,
-        "z_kodem": 0.725,
+        "z_kodem": 0.7277777777777777,
         "bez_kodu": 0.5805555555555556,
-        "roznica": 0.14444444444444438,
+        "roznica": 0.14722222222222214,
         "mcnemar": {
           "b": 59,
-          "c": 7,
-          "discordant": 66,
-          "p_value": 2.3834933267526115e-11,
-          "odds_ratio": 8.428571428571429,
+          "c": 6,
+          "discordant": 65,
+          "p_value": 4.964650327128616e-12,
+          "odds_ratio": 9.833333333333334,
           "test": "exact McNemar test (two-sided, binomial distribution)"
         },
         "mcnemar_cluster": {
           "b": 59,
-          "c": 7,
-          "clusters_with_discordance": 29,
-          "statistic": 52.0,
-          "p_value": 4.999750012499375e-05,
+          "c": 6,
+          "clusters_with_discordance": 28,
+          "statistic": 53.0,
+          "p_value": 9.99950002499875e-05,
           "permutations": 20000,
           "test": "cluster-level sign-flip (SAST rule)"
         },
@@ -9469,7 +9469,7 @@
           },
           "sonarqube": {
             "n": 120,
-            "z_kodem": 0.625,
+            "z_kodem": 0.6333333333333333,
             "bez_kodu": 0.38333333333333336
           },
           "spotbugs": {
@@ -9478,7 +9478,7 @@
             "bez_kodu": 0.7416666666666667
           }
         },
-        "zachowanych_z_kodem": 0.6638888888888889,
+        "zachowanych_z_kodem": 0.6666666666666666,
         "zachowanych_bez_kodu": 0.8027777777777778
       }
     },
@@ -9494,21 +9494,21 @@
       "H1a/gpt-5.6-luna": 4.999750012499375e-05,
       "H1a/openai/gpt-oss-20b": 4.999750012499375e-05,
       "H1a/claude-sonnet-5": 4.999750012499375e-05,
-      "H2": 0.5854707264636768,
+      "H2": 0.5571221438928053,
       "H4/claude-opus-5": 4.999750012499375e-05,
-      "H4/gpt-5.6-terra": 0.0038498075096245186,
-      "H4/qwen3.5:9b": 4.999750012499375e-05,
+      "H4/gpt-5.6-terra": 0.005149742512874356,
+      "H4/qwen3.5:9b": 9.99950002499875e-05,
       "H4/openai/gpt-oss-120b": 4.999750012499375e-05,
-      "H4/gpt-5.6-luna": 0.06134693265336733,
+      "H4/gpt-5.6-luna": 0.0671966401679916,
       "H4/openai/gpt-oss-20b": 4.999750012499375e-05,
       "H4/claude-sonnet-5": 4.999750012499375e-05,
-      "H6/claude": 0.004599770011499425,
-      "H6/gpt": 0.00014999250037498125,
+      "H6/claude": 0.0029498525073746312,
+      "H6/gpt": 4.999750012499375e-05,
       "H6/luna": 4.999750012499375e-05,
-      "H6/oss": 0.00034998250087495624,
-      "H6/oss20": 0.005649717514124294,
+      "H6/oss": 0.00024998750062496874,
+      "H6/oss20": 0.0050997450127493625,
       "H6/qwen": 0.0012499375031248437,
-      "H6/sonnet": 4.999750012499375e-05
+      "H6/sonnet": 9.99950002499875e-05
     },
     "adjusted": {
       "H1a/claude-opus-5": 0.0010999450027498626,
@@ -9518,19 +9518,19 @@
       "H1a/gpt-5.6-luna": 0.0010999450027498626,
       "H1a/openai/gpt-oss-20b": 0.0010999450027498626,
       "H1a/claude-sonnet-5": 0.0010999450027498626,
-      "H2": 0.5854707264636768,
+      "H2": 0.5571221438928053,
       "H4/claude-opus-5": 0.0010999450027498626,
-      "H4/gpt-5.6-terra": 0.019249037548122593,
+      "H4/gpt-5.6-terra": 0.02039898005099745,
       "H4/qwen3.5:9b": 0.0010999450027498626,
       "H4/openai/gpt-oss-120b": 0.0010999450027498626,
-      "H4/gpt-5.6-luna": 0.12269386530673466,
+      "H4/gpt-5.6-luna": 0.1343932803359832,
       "H4/openai/gpt-oss-20b": 0.0010999450027498626,
       "H4/claude-sonnet-5": 0.0010999450027498626,
-      "H6/claude": 0.019249037548122593,
-      "H6/gpt": 0.00119994000299985,
+      "H6/claude": 0.014749262536873156,
+      "H6/gpt": 0.0010999450027498626,
       "H6/luna": 0.0010999450027498626,
-      "H6/oss": 0.002449877506124694,
-      "H6/oss20": 0.019249037548122593,
+      "H6/oss": 0.0017499125043747813,
+      "H6/oss20": 0.02039898005099745,
       "H6/qwen": 0.007499625018749062,
       "H6/sonnet": 0.0010999450027498626
     },

@@ -3,46 +3,46 @@
   "n_uzytecznych": 360,
   "czy_miara_porzadkuje_modele": {
     "claude": {
-      "nazw_na_tekst": 1.8777777777777778,
-      "nazw_na_100_znakow": 0.2676591700981945,
+      "nazw_na_tekst": 1.875,
+      "nazw_na_100_znakow": 0.26739556717570856,
       "nazw_w_wyjasnieniu_dla_programisty": 0.3888888888888889,
-      "srednia_dlugosc_znakow": 701.5555555555555
+      "srednia_dlugosc_znakow": 701.2083333333334
     },
     "gpt": {
-      "nazw_na_tekst": 0.975,
-      "nazw_na_100_znakow": 0.21560593868437378,
+      "nazw_na_tekst": 0.9722222222222222,
+      "nazw_na_100_znakow": 0.2147239263803681,
       "nazw_w_wyjasnieniu_dla_programisty": 0.275,
-      "srednia_dlugosc_znakow": 452.2138888888889
+      "srednia_dlugosc_znakow": 452.77777777777777
     },
     "qwen": {
-      "nazw_na_tekst": 1.0888888888888888,
-      "nazw_na_100_znakow": 0.26561144839549,
+      "nazw_na_tekst": 1.086111111111111,
+      "nazw_na_100_znakow": 0.2647724040792556,
       "nazw_w_wyjasnieniu_dla_programisty": 0.44722222222222224,
-      "srednia_dlugosc_znakow": 409.9555555555556
+      "srednia_dlugosc_znakow": 410.2055555555556
     },
     "oss": {
-      "nazw_na_tekst": 0.8638888888888889,
-      "nazw_na_100_znakow": 0.3915791594268591,
+      "nazw_na_tekst": 0.8611111111111112,
+      "nazw_na_100_znakow": 0.39060531223224637,
       "nazw_w_wyjasnieniu_dla_programisty": 0.4777777777777778,
-      "srednia_dlugosc_znakow": 220.61666666666667
+      "srednia_dlugosc_znakow": 220.45555555555555
     },
     "luna": {
-      "nazw_na_tekst": 0.7555555555555555,
-      "nazw_na_100_znakow": 0.17841564285386316,
+      "nazw_na_tekst": 0.7527777777777778,
+      "nazw_na_100_znakow": 0.17772589551553625,
       "nazw_w_wyjasnieniu_dla_programisty": 0.3638888888888889,
-      "srednia_dlugosc_znakow": 423.48055555555555
+      "srednia_dlugosc_znakow": 423.56111111111113
     },
     "oss20": {
       "nazw_na_tekst": 0.8472222222222222,
-      "nazw_na_100_znakow": 0.32580944954226443,
+      "nazw_na_100_znakow": 0.32562161700492165,
       "nazw_w_wyjasnieniu_dla_programisty": 0.5805555555555556,
-      "srednia_dlugosc_znakow": 260.0361111111111
+      "srednia_dlugosc_znakow": 260.18611111111113
     },
     "sonnet": {
-      "nazw_na_tekst": 1.788888888888889,
-      "nazw_na_100_znakow": 0.2855078182148668,
-      "nazw_w_wyjasnieniu_dla_programisty": 0.7888888888888889,
-      "srednia_dlugosc_znakow": 626.5638888888889
+      "nazw_na_tekst": 1.7861111111111112,
+      "nazw_na_100_znakow": 0.28525038151684,
+      "nazw_w_wyjasnieniu_dla_programisty": 0.7861111111111111,
+      "srednia_dlugosc_znakow": 626.1555555555556
     }
   },
   "korelacja_rang_przyjeta_wobec_na100": 0.10714285714285714

@@ -17,9 +17,9 @@ from analysis.runs import find_run_dir
 TOOLS = {"spotbugs", "error_prone", "sonarqube"}
 
 
-def policz(directory: Path) -> dict:
+def count_of(directory: Path) -> dict:
     per_model = collections.defaultdict(lambda: {"przebiegi": 0, "powtorzone": 0})
-    powody = collections.Counter()
+    reasons = collections.Counter()
 
     for path in sorted(directory.glob("llm/*/*.json")):
         # Migawki sprzed przebiegu powtórkowego zawyżyłyby i mianownik, i liczbę ponowień.
@@ -33,17 +33,17 @@ def policz(directory: Path) -> dict:
                 if not repetition.get("retry_of_truncated"):
                     continue
                 per_model[model]["powtorzone"] += 1
-                pierwotny = repetition.get("superseded") or {}
-                powody[pierwotny.get("stop_reason") or "nieznany"] += 1
+                original = repetition.get("superseded") or {}
+                reasons[original.get("stop_reason") or "nieznany"] += 1
 
     repetitions = sum(m["przebiegi"] for m in per_model.values())
-    powtorzone = sum(m["powtorzone"] for m in per_model.values())
+    repeated = sum(m["powtorzone"] for m in per_model.values())
     return {
         "run": directory.name,
         "przebiegi": repetitions,
-        "powtorzone": powtorzone,
-        "udzial": powtorzone / repetitions if repetitions else 0.0,
-        "powody_pierwotnego_niepowodzenia": dict(powody),
+        "powtorzone": repeated,
+        "udzial": repeated / repetitions if repetitions else 0.0,
+        "powody_pierwotnego_niepowodzenia": dict(reasons),
         "per_model": {k: dict(v) for k, v in sorted(per_model.items())},
     }
 
@@ -54,40 +54,40 @@ def main() -> None:
     ap.add_argument("--target-run", type=int, default=6, help="run whose analysis/ the result is written to")
     args = ap.parse_args()
 
-    numery = [int(n) for n in args.runs.split(",")]
-    results = [policz(find_run_dir(n)) for n in numery]
+    numbers = [int(n) for n in args.runs.split(",")]
+    results = [count_of(find_run_dir(n)) for n in numbers]
 
     repetitions = sum(entry["przebiegi"] for entry in results)
-    powtorzone = sum(entry["powtorzone"] for entry in results)
-    powody = collections.Counter()
+    repeated = sum(entry["powtorzone"] for entry in results)
+    reasons = collections.Counter()
     for entry in results:
-        powody.update(entry["powody_pierwotnego_niepowodzenia"])
+        reasons.update(entry["powody_pierwotnego_niepowodzenia"])
 
-    raport = {
+    report_text = {
         "runs": results,
         "lacznie": {
             "przebiegi": repetitions,
-            "powtorzone": powtorzone,
-            "udzial": powtorzone / repetitions if repetitions else 0.0,
-            "powody_pierwotnego_niepowodzenia": dict(powody),
+            "powtorzone": repeated,
+            "udzial": repeated / repetitions if repetitions else 0.0,
+            "powody_pierwotnego_niepowodzenia": dict(reasons),
         },
     }
 
     directory = find_run_dir(args.target_run) / "analysis"
     directory.mkdir(exist_ok=True)
-    cel = directory / "retry_scale.json"
-    cel.write_text(json.dumps(raport, indent=2, ensure_ascii=False), encoding="utf-8")
+    target = directory / "retry_scale.json"
+    target.write_text(json.dumps(report_text, indent=2, ensure_ascii=False), encoding="utf-8")
 
-    print(cel)
+    print(target)
     for entry in results:
         print(f"\n{entry['run']}: {entry['powtorzone']} retries across {entry['przebiegi']} repetitions "
               f"({entry['udzial']:.3%})")
         for model, stats in entry["per_model"].items():
             if stats["powtorzone"]:
                 print(f"   {model:<10} {stats['powtorzone']:>3} z {stats['przebiegi']}")
-    print(f"\nTOTAL: {powtorzone} retries across {repetitions} repetitions "
-          f"({powtorzone / repetitions:.3%})")
-    print(f"powody pierwotnego niepowodzenia: {dict(powody)}")
+    print(f"\nTOTAL: {repeated} retries across {repetitions} repetitions "
+          f"({repeated / repetitions:.3%})")
+    print(f"powody pierwotnego niepowodzenia: {dict(reasons)}")
 
 
 if __name__ == "__main__":

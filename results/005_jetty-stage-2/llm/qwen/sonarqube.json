@@ -16,7 +16,7 @@
   "system_prompt_sha256": "b5b634e0a9109c59",
   "user_prompt_sha256": "233249fc03b8f699",
   "timestamp": "2026-08-15T10:25:31.426698+00:00",
-  "updated_at": "2026-08-15T10:25:31.426698+00:00",
+  "updated_at": "2026-08-31T22:08:35.340599+00:00",
   "findings": [
     {
       "finding_id": 0,
@@ -1241,6 +1241,63 @@
       },
       "runs": [
         {
+          "reasoning": "This is a Maven POM.xml configuration file (not executable Java source), where FIXME comments serve as documentation about project structure and migration plans rather than neglected cleanup in runtime logic. The comment explicitly documents an intentional transitional state ('Remove once Servlet API usage is totally removed') that will resolve when the dependency transition occurs, making this legitimate metadata tracking not a code smell.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "todo comment documenting intentional migration state",
+          "developer_explanation": "This warning can be dismissed because FIXME comments in Maven POM.xml files document project configuration and migration intentions rather than neglected runtime logic cleanup. The annotation here serves as legitimate documentation about why certain dependencies exist temporarily until an API removal is complete, which is appropriate for build configuration metadata.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 3737,
+            "output_tokens": 189
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3608,
+          "latency_s": 105.302,
+          "rerun_after_context_fix": true
+        },
+        {
+          "reasoning": "The warning flags a FIXME comment in pom.xml line 54 where the content describes architectural migration goals rather than missing executable code or business logic errors typical of source files.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "pending work indicated by fixme comment",
+          "developer_explanation": "This alarm can be dismissed because comments in pom.xml are intended to document build and dependency management context rather than implement runtime behavior; the note clarifies future architectural planning for Jakarta EE migration within Jetty Core without requiring a code correction.",
+          "run": 2,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 8966,
+            "output_tokens": 145
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 27590,
+          "latency_s": 768.417,
+          "rerun_after_context_fix": true
+        },
+        {
+          "reasoning": "The code snippet is a Maven pom.xml file, which serves as build configuration metadata rather than executable application logic. A FIXME comment here documents future architectural intent (removing Servlet API from `jetty-core`) rather than indicating an unfinished task in production code that affects runtime correctness or security; therefore it does not constitute the actionable issue implied by S134.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "fixme comment indicating unresolved task",
+          "developer_explanation": "You can safely dismiss this warning because FIXME comments in pom.xml files are standard documentation for tracking known architectural debt and migration plans between modules. Unlike source code bugs, a note explaining pending dependency removals does not represent an immediate quality violation or defect requiring instant remediation.",
+          "run": 3,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 7201,
+            "output_tokens": 189
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 19197,
+          "latency_s": 693.671,
+          "rerun_after_context_fix": true
+        }
+      ],
+      "original_finding_index": 3102,
+      "superseded_runs": [
+        {
           "reasoning": "The flagged line contains an <organizationUrl> element within the developer metadata of a Maven POM file, but no 'FIXME' comment pattern (e.g., <!-- FIXME -->) is visible in this location or surrounding code context. This suggests that SonarQube has either mis-parsed the XML structure to detect such comments where none exist as executable source logic.",
           "is_true_positive": false,
           "confidence": 0.85,
@@ -1291,8 +1348,19 @@
           "thinking_chars": 17906,
           "latency_s": 49.678
         }
-      ],
-      "original_finding_index": 3102
+      ]
+    }
+  ],
+  "rerun_history": [
+    {
+      "at": "2026-08-31T22:08:35.340599+00:00",
+      "finding": "xml:S1134 pom.xml:54",
+      "finding_id": 19,
+      "reason": "wycinek zbudowany z glownego pom.xml zamiast jetty-core/pom.xml; poprawka w _resolve_java_path",
+      "repetitions": 3,
+      "source_root": "jetty-core",
+      "paths_relative_to_root": true,
+      "configuration_changed": true
     }
   ]
 }

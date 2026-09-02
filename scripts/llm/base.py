@@ -55,17 +55,17 @@ RESPONSE_SCHEMA: dict[str, Any] = {
 
 
 def _load_template(
-    tool: str, system_prompt_variant: str | None = None, bez_kodu: bool = False
+    tool: str, system_prompt_variant: str | None = None, without_code: bool = False
 ) -> tuple[str, str]:
     """Zwraca szablony promptu systemowego i użytkownika dla danego narzędzia."""
-    sufiks = "_b3" if bez_kodu else ""
-    system_path = _PROMPTS_DIR / f"system_prompt{sufiks}.txt"
+    suffix_text = "_b3" if without_code else ""
+    system_path = _PROMPTS_DIR / f"system_prompt{suffix_text}.txt"
     if system_prompt_variant:
-        variant_path = _PROMPTS_DIR / f"system_prompt_{system_prompt_variant}{sufiks}.txt"
+        variant_path = _PROMPTS_DIR / f"system_prompt_{system_prompt_variant}{suffix_text}.txt"
         if variant_path.exists():
             system_path = variant_path
-    tool_specific_path = _PROMPTS_DIR / f"user_prompt_{tool.replace('-', '_')}{sufiks}.txt"
-    generic_path = _PROMPTS_DIR / f"user_prompt{sufiks}.txt"
+    tool_specific_path = _PROMPTS_DIR / f"user_prompt_{tool.replace('-', '_')}{suffix_text}.txt"
+    generic_path = _PROMPTS_DIR / f"user_prompt{suffix_text}.txt"
 
     system_prompt = system_path.read_text(encoding="utf-8").strip()
 
@@ -78,55 +78,79 @@ def _load_template(
 
 
 def _resolve_java_path(
-    finding: dict[str, Any], source_root: Path, sourcefile: str
+    finding: dict[str, Any],
+    source_root: Path,
+    sourcefile: str,
+    *,
+    paths_relative_to_root: bool = False,
 ) -> Path | None:
     """Odnajduje plik Javy, którego dotyczy ostrzeżenie, w katalogu źródeł."""
     source_path = finding.get("source_path")
 
     if source_path:
-        direct = source_root / source_path
-        if direct.exists():
-            return direct
-
         suffix = source_path.replace("\\", "/")
+        direct = source_root / suffix
         by_suffix = [
             path
             for path in source_root.rglob(sourcefile)
-            if path.as_posix().endswith(suffix)
+            if path.as_posix().endswith("/" + suffix)
         ]
+
+        if direct.exists():
+            if paths_relative_to_root or len(by_suffix) <= 1:
+                return direct
+            # Ścieżki narzędzia bywają względne wobec katalogu skanowania, a nie wobec korzenia
+            # źródeł: SonarQube podaje je względem skanowanego projektu. Trafienie w korzeniu przy
+            # wielu plikach o tej nazwie jest wtedy trafieniem w niewłaściwy plik, więc zamiast
+            # zgadywać, nie pokazujemy kodu.
+            logger.error(
+                "Ambiguous source path '%s': it exists directly under %s but %d files share "
+                "that suffix. The tool's paths are probably relative to a different root; "
+                "pass the scan root and --paths-relative-to-root. No code shown.",
+                source_path,
+                source_root,
+                len(by_suffix),
+            )
+            return None
+
         if len(by_suffix) == 1:
             return by_suffix[0]
         if by_suffix:
-            logger.warning(
-                "Ambiguous source path '%s': %d files match, using %s.",
+            logger.error(
+                "Ambiguous source path '%s': %d files share that suffix under %s. "
+                "Refusing to guess; no code shown.",
                 source_path,
                 len(by_suffix),
-                by_suffix[0],
+                source_root,
             )
-            return by_suffix[0]
+            return None
 
     matches = sorted(source_root.rglob(sourcefile))
     if not matches:
         return None
     if len(matches) > 1:
-        logger.warning(
-            "Resolved '%s' by file name alone (%d candidates, reported path %r); "
-            "using %s.",
+        logger.error(
+            "Resolved '%s' by file name alone and %d candidates match (reported path %r). "
+            "Refusing to guess; no code shown.",
             sourcefile,
             len(matches),
             source_path,
-            matches[0],
         )
+        return None
     return matches[0]
 
 
-def _build_code_context(finding: dict[str, Any], source_root: Path) -> str:
+def _build_code_context(
+    finding: dict[str, Any], source_root: Path, *, paths_relative_to_root: bool = False
+) -> str:
     """Buduje wycinek kodu pokazywany modelowi razem z ostrzeżeniem."""
     sourcefile = finding.get("sourcefile")
     if not sourcefile:
         return "(source file unknown)"
 
-    java_path = _resolve_java_path(finding, source_root, sourcefile)
+    java_path = _resolve_java_path(
+        finding, source_root, sourcefile, paths_relative_to_root=paths_relative_to_root
+    )
     if java_path is None:
         return f"(source file '{sourcefile}' not found under {source_root})"
     try:
@@ -359,11 +383,13 @@ class LLMAnalyzer(ABC):
         num_runs: int = 3,
         temperature: float | None = None,
         concurrency: int = 1,
-        bez_kodu: bool = False,
+        without_code: bool = False,
+        paths_relative_to_root: bool = False,
     ) -> None:
         self.source_root = Path(source_root)
+        self.paths_relative_to_root = paths_relative_to_root
         self.num_runs = num_runs
-        self.bez_kodu = bez_kodu
+        self.without_code = without_code
         self.temperature = temperature
         self.concurrency = max(1, concurrency)
         self._meta_store = threading.local()
@@ -393,7 +419,7 @@ class LLMAnalyzer(ABC):
             data = json.load(f)
 
         tool = data["tool"]
-        system_prompt, user_template = _load_template(tool, system_prompt_variant, self.bez_kodu)
+        system_prompt, user_template = _load_template(tool, system_prompt_variant, self.without_code)
         prompts = {
             "system_prompt_variant": system_prompt_variant,
             "system_prompt_sha256": _digest(system_prompt),
@@ -429,11 +455,14 @@ class LLMAnalyzer(ABC):
         prepared: list[tuple[int, dict[str, Any], str, str]] = []
         degenerate: list[str] = []
         for idx, finding in enumerate(all_findings):
-            if self.bez_kodu:
+            if self.without_code:
                 code_context = "(code fragment intentionally omitted in this run)"
             else:
-                code_context = _build_code_context(finding, self.source_root)
-            if not self.bez_kodu and code_context.startswith("("):
+                code_context = _build_code_context(
+                    finding, self.source_root,
+                    paths_relative_to_root=self.paths_relative_to_root,
+                )
+            if not self.without_code and code_context.startswith("("):
                 degenerate.append(
                     f"#{idx} {finding.get('sourcefile')}:{finding.get('start_line')} "
                     f"→ {code_context}"

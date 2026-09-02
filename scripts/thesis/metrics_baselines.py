@@ -81,11 +81,12 @@ def _scopes(dataset: Any, split_by_context: bool) -> list[tuple[str, list[Findin
     scopes: list[tuple[str, list[Finding]]] = [(tool, dataset.by_tool(tool)) for tool in dataset.tools()]
     scopes.append((ALL_TOOLS, list(dataset.findings)))
     if split_by_context and dataset.source_root and dataset.source_root.exists():
-        from analysis.grounding import context_kind
+        from analysis.grounding import context_kind, tool_roots
 
+        roots = tool_roots(dataset.findings, dataset.source_root)
         grouped: dict[str, list[Finding]] = defaultdict(list)
         for finding in dataset.findings:
-            grouped[context_kind(finding, dataset.source_root)].append(finding)
+            grouped[context_kind(finding, dataset.source_root, roots[finding.tool])].append(finding)
         for kind in ("full file", "excerpt", "no context"):
             if grouped.get(kind):
                 scopes.append((kind, grouped[kind]))
@@ -237,8 +238,8 @@ def main() -> None:
     dataset = load_dataset(args.run_dir, include_partial=args.include_partial)
     if dataset.partial_models:
         for model, count in dataset.partial_models.items():
-            stan = "counted" if args.include_partial else "SKIPPED"
-            print(f"WARNING: {model} has {count}/{len(dataset.findings)} verdicts - {stan}.")
+            state = "counted" if args.include_partial else "SKIPPED"
+            print(f"WARNING: {model} has {count}/{len(dataset.findings)} verdicts - {state}.")
     scheme: dict[str, str] | str
     scheme = "rule" if args.cluster_by == "plan" else args.cluster_by
     if args.cluster_by == "plan":

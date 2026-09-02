@@ -3,23 +3,23 @@
   "modele": {
     "claude": {
       "n": 360,
-      "z_kodem": 0.725,
+      "z_kodem": 0.7277777777777777,
       "bez_kodu": 0.6194444444444445,
-      "roznica": 0.10555555555555551,
+      "roznica": 0.10833333333333328,
       "mcnemar": {
         "b": 46,
-        "c": 8,
-        "discordant": 54,
-        "p_value": 1.38433549734529e-07,
-        "odds_ratio": 5.75,
+        "c": 7,
+        "discordant": 53,
+        "p_value": 4.003196174551249e-08,
+        "odds_ratio": 6.571428571428571,
         "test": "exact McNemar test (two-sided, binomial distribution)"
       },
       "mcnemar_cluster": {
         "b": 46,
-        "c": 8,
-        "clusters_with_discordance": 25,
-        "statistic": 38.0,
-        "p_value": 0.004599770011499425,
+        "c": 7,
+        "clusters_with_discordance": 24,
+        "statistic": 39.0,
+        "p_value": 0.0029498525073746312,
         "permutations": 20000,
         "test": "cluster-level sign-flip (SAST rule)"
       },
@@ -31,7 +31,7 @@
         },
         "sonarqube": {
           "n": 120,
-          "z_kodem": 0.65,
+          "z_kodem": 0.6583333333333333,
           "bez_kodu": 0.39166666666666666
         },
         "spotbugs": {
@@ -40,28 +40,28 @@
           "bez_kodu": 0.8
         }
       },
-      "zachowanych_z_kodem": 0.6638888888888889,
+      "zachowanych_z_kodem": 0.6666666666666666,
       "zachowanych_bez_kodu": 0.7694444444444445
     },
     "gpt": {
       "n": 360,
-      "z_kodem": 0.7527777777777778,
+      "z_kodem": 0.7555555555555555,
       "bez_kodu": 0.5777777777777777,
-      "roznica": 0.17500000000000004,
+      "roznica": 0.1777777777777778,
       "mcnemar": {
         "b": 77,
-        "c": 14,
-        "discordant": 91,
-        "p_value": 1.0476614334104999e-11,
-        "odds_ratio": 5.5,
+        "c": 13,
+        "discordant": 90,
+        "p_value": 3.175275355987434e-12,
+        "odds_ratio": 5.923076923076923,
         "test": "exact McNemar test (two-sided, binomial distribution)"
       },
       "mcnemar_cluster": {
         "b": 77,
-        "c": 14,
-        "clusters_with_discordance": 41,
-        "statistic": 63.0,
-        "p_value": 0.00014999250037498125,
+        "c": 13,
+        "clusters_with_discordance": 40,
+        "statistic": 64.0,
+        "p_value": 4.999750012499375e-05,
         "permutations": 20000,
         "test": "cluster-level sign-flip (SAST rule)"
       },
@@ -73,7 +73,7 @@
         },
         "sonarqube": {
           "n": 120,
-          "z_kodem": 0.6333333333333333,
+          "z_kodem": 0.6416666666666667,
           "bez_kodu": 0.3416666666666667
         },
         "spotbugs": {
@@ -82,27 +82,27 @@
           "bez_kodu": 0.7333333333333333
         }
       },
-      "zachowanych_z_kodem": 0.5861111111111111,
+      "zachowanych_z_kodem": 0.5888888888888889,
       "zachowanych_bez_kodu": 0.8222222222222222
     },
     "luna": {
       "n": 360,
-      "z_kodem": 0.725,
+      "z_kodem": 0.7277777777777777,
       "bez_kodu": 0.4888888888888889,
-      "roznica": 0.2361111111111111,
+      "roznica": 0.23888888888888887,
       "mcnemar": {
         "b": 95,
-        "c": 10,
-        "discordant": 105,
-        "p_value": 1.5854524913510498e-18,
-        "odds_ratio": 9.5,
+        "c": 9,
+        "discordant": 104,
+        "p_value": 2.985745088286603e-19,
+        "odds_ratio": 10.555555555555555,
         "test": "exact McNemar test (two-sided, binomial distribution)"
       },
       "mcnemar_cluster": {
         "b": 95,
-        "c": 10,
-        "clusters_with_discordance": 45,
-        "statistic": 85.0,
+        "c": 9,
+        "clusters_with_discordance": 44,
+        "statistic": 86.0,
         "p_value": 4.999750012499375e-05,
         "permutations": 20000,
         "test": "cluster-level sign-flip (SAST rule)"
@@ -115,7 +115,7 @@
         },
         "sonarqube": {
           "n": 120,
-          "z_kodem": 0.6916666666666667,
+          "z_kodem": 0.7,
           "bez_kodu": 0.3416666666666667
         },
         "spotbugs": {
@@ -124,28 +124,28 @@
           "bez_kodu": 0.5
         }
       },
-      "zachowanych_z_kodem": 0.6527777777777778,
+      "zachowanych_z_kodem": 0.6555555555555556,
       "zachowanych_bez_kodu": 0.9111111111111111
     },
     "oss": {
       "n": 360,
-      "z_kodem": 0.725,
+      "z_kodem": 0.7277777777777777,
       "bez_kodu": 0.5222222222222223,
-      "roznica": 0.20277777777777772,
+      "roznica": 0.2055555555555555,
       "mcnemar": {
         "b": 94,
-        "c": 21,
-        "discordant": 115,
-        "p_value": 3.240204200619261e-12,
-        "odds_ratio": 4.476190476190476,
+        "c": 20,
+        "discordant": 114,
+        "p_value": 1.1680094670975612e-12,
+        "odds_ratio": 4.7,
         "test": "exact McNemar test (two-sided, binomial distribution)"
       },
       "mcnemar_cluster": {
         "b": 94,
-        "c": 21,
-        "clusters_with_discordance": 47,
-        "statistic": 73.0,
-        "p_value": 0.00034998250087495624,
+        "c": 20,
+        "clusters_with_discordance": 46,
+        "statistic": 74.0,
+        "p_value": 0.00024998750062496874,
         "permutations": 20000,
         "test": "cluster-level sign-flip (SAST rule)"
       },
@@ -157,7 +157,7 @@
         },
         "sonarqube": {
           "n": 120,
-          "z_kodem": 0.6583333333333333,
+          "z_kodem": 0.6666666666666666,
           "bez_kodu": 0.36666666666666664
         },
         "spotbugs": {
@@ -166,28 +166,28 @@
           "bez_kodu": 0.5916666666666667
         }
       },
-      "zachowanych_z_kodem": 0.6138888888888889,
+      "zachowanych_z_kodem": 0.6166666666666667,
       "zachowanych_bez_kodu": 0.8222222222222222
     },
     "oss20": {
       "n": 360,
-      "z_kodem": 0.7222222222222222,
+      "z_kodem": 0.725,
       "bez_kodu": 0.525,
-      "roznica": 0.1972222222222222,
+      "roznica": 0.19999999999999996,
       "mcnemar": {
         "b": 107,
-        "c": 36,
-        "discordant": 143,
-        "p_value": 2.2533836638015286e-09,
-        "odds_ratio": 2.9722222222222223,
+        "c": 35,
+        "discordant": 142,
+        "p_value": 1.119595330625602e-09,
+        "odds_ratio": 3.057142857142857,
         "test": "exact McNemar test (two-sided, binomial distribution)"
       },
       "mcnemar_cluster": {
         "b": 107,
-        "c": 36,
-        "clusters_with_discordance": 66,
-        "statistic": 71.0,
-        "p_value": 0.005649717514124294,
+        "c": 35,
+        "clusters_with_discordance": 65,
+        "statistic": 72.0,
+        "p_value": 0.0050997450127493625,
         "permutations": 20000,
         "test": "cluster-level sign-flip (SAST rule)"
       },
@@ -199,7 +199,7 @@
         },
         "sonarqube": {
           "n": 120,
-          "z_kodem": 0.6166666666666667,
+          "z_kodem": 0.625,
           "bez_kodu": 0.4166666666666667
         },
         "spotbugs": {
@@ -208,7 +208,7 @@
           "bez_kodu": 0.6416666666666667
         }
       },
-      "zachowanych_z_kodem": 0.46111111111111114,
+      "zachowanych_z_kodem": 0.4638888888888889,
       "zachowanych_bez_kodu": 0.7472222222222222
     },
     "qwen": {
@@ -255,23 +255,23 @@
     },
     "sonnet": {
       "n": 360,
-      "z_kodem": 0.725,
+      "z_kodem": 0.7277777777777777,
       "bez_kodu": 0.5805555555555556,
-      "roznica": 0.14444444444444438,
+      "roznica": 0.14722222222222214,
       "mcnemar": {
         "b": 59,
-        "c": 7,
-        "discordant": 66,
-        "p_value": 2.3834933267526115e-11,
-        "odds_ratio": 8.428571428571429,
+        "c": 6,
+        "discordant": 65,
+        "p_value": 4.964650327128616e-12,
+        "odds_ratio": 9.833333333333334,
         "test": "exact McNemar test (two-sided, binomial distribution)"
       },
       "mcnemar_cluster": {
         "b": 59,
-        "c": 7,
-        "clusters_with_discordance": 29,
-        "statistic": 52.0,
-        "p_value": 4.999750012499375e-05,
+        "c": 6,
+        "clusters_with_discordance": 28,
+        "statistic": 53.0,
+        "p_value": 9.99950002499875e-05,
         "permutations": 20000,
         "test": "cluster-level sign-flip (SAST rule)"
       },
@@ -283,7 +283,7 @@
         },
         "sonarqube": {
           "n": 120,
-          "z_kodem": 0.625,
+          "z_kodem": 0.6333333333333333,
           "bez_kodu": 0.38333333333333336
         },
         "spotbugs": {
@@ -292,7 +292,7 @@
           "bez_kodu": 0.7416666666666667
         }
       },
-      "zachowanych_z_kodem": 0.6638888888888889,
+      "zachowanych_z_kodem": 0.6666666666666666,
       "zachowanych_bez_kodu": 0.8027777777777778
     }
   },

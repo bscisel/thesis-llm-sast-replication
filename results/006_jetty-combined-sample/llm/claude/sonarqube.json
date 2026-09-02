@@ -7994,6 +7994,66 @@
       },
       "runs": [
         {
+          "reasoning": "Line 54 literally contains an XML comment beginning with \"FIXME:\", flagging pending work (removing the Servlet API dependency management once Servlet API usage is gone from jetty-core). The rule's claim — that a FIXME comment marking unresolved work exists here — is factually correct for the shown code. This is a genuine, if low-impact, maintainability marker rather than a misdetection.",
+          "is_true_positive": true,
+          "confidence": 0.9,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "unresolved fixme comment marking pending work",
+          "developer_explanation": "This build file contains a FIXME comment noting that the Servlet API dependency management entry should be removed once the Servlet API is no longer used in jetty-core. Such markers indicate known incomplete work that can silently linger; either complete the cleanup and delete both the comment and the dependency block, or track it in an issue tracker and reword the comment so it isn't an open FIXME.",
+          "run": 1,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 1839,
+            "output_tokens": 324,
+            "cache_creation_input_tokens": 2741,
+            "cache_read_input_tokens": 0
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 7.437,
+          "rerun_after_context_fix": true
+        },
+        {
+          "reasoning": "Line 54 literally contains an XML comment beginning with \"FIXME\", flagging a temporary dependency management entry that should be removed once Servlet API usage is gone from jetty-core. The rule's claim — that a FIXME marker indicating unfinished/pending work is present at this location — is factually correct for the shown code. Whether the team chooses to act on it is a matter of priority, not of the warning's correctness; the code behaves as intended, so this is a maintainability/technical-debt marker.",
+          "is_true_positive": true,
+          "confidence": 0.92,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "unresolved fixme comment marking pending work",
+          "developer_explanation": "This build file contains a FIXME note saying the Servlet API dependency management block should be deleted once Servlet API usage is fully removed from the core modules. It is an accurate record of outstanding work: as long as it stays, the temporary dependency remains and the note may silently become stale. Either complete the removal and delete both the comment and the dependencyManagement block, or track the work in your issue tracker and reference it here.",
+          "run": 2,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 1839,
+            "output_tokens": 438,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 7.388,
+          "rerun_after_context_fix": true
+        },
+        {
+          "reasoning": "Line 54 literally contains an XML comment beginning with \"FIXME\", flagging a temporary dependency management entry that must be removed once Servlet API usage is dropped from jetty-core. The tool's claim — that there is a FIXME marker indicating deferred, incomplete work — is materially correct for the shown line. Whether the team chooses to act now is a matter of effort and priority, not of the claim's accuracy.",
+          "is_true_positive": true,
+          "confidence": 0.92,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "unresolved FIXME comment marking deferred work",
+          "developer_explanation": "This build file carries a FIXME note saying the pinned Servlet API dependency management block should be removed once jetty-core no longer uses the Servlet API. Such markers record known technical debt that tends to linger unnoticed; either finish the removal of the Servlet API usage and delete the block, or convert the note into a tracked issue so it is not silently forgotten.",
+          "run": 3,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 1839,
+            "output_tokens": 385,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 6.398,
+          "rerun_after_context_fix": true
+        }
+      ],
+      "original_finding_index": 3102,
+      "superseded_runs": [
+        {
           "reasoning": "The flagged line 54 is `<organizationUrl>https://webtide.com</organizationUrl>` inside a `<developer>` block, which contains no \"FIXME\" comment or any comment at all; in fact no FIXME appears anywhere in the 204 shown lines. The rule's claim is that this location holds an unresolved FIXME marker, and that claim is materially wrong for the code shown. A FIXME could exist elsewhere in the remaining ~2800 unseen lines, but the warning points at this specific line, where the property it reports is plainly absent.",
           "is_true_positive": false,
           "confidence": 0.83,
@@ -8047,8 +8107,7 @@
           "stop_reason": "end_turn",
           "latency_s": 9.088
         }
-      ],
-      "original_finding_index": 3102
+      ]
     }
   ],
   "merged_from": [

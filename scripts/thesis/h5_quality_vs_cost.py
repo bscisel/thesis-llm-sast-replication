@@ -51,16 +51,16 @@ def h5(dataset: Dataset, iterations: int, seed: int, pricing: dict[str, Any] | N
         prices = (pricing or {}).get(model)
         if prices:
             # Odczyt z pamięci podręcznej: u Anthropic rozłączny z wejściem, u OpenAI jego podzbiór, więc odejmowany.
-            pelne = input_tokens - cached_within
+            full_items = input_tokens - cached_within
             cost = (
-                pelne / 1e6 * prices["input"]
+                full_items / 1e6 * prices["input"]
                 + (cache_read + cached_within) / 1e6 * prices["input"]
                 * prices.get("cache_read_multiplier", 0.0)
                 + cache_write / 1e6 * prices["input"]
                 * prices.get("cache_write_multiplier", 0.0)
                 + output_tokens / 1e6 * prices["output"]
             )
-            entry["billable_input_tokens"] = pelne
+            entry["billable_input_tokens"] = full_items
             entry["pricing_usd_per_million"] = prices
             entry["cost_usd_total"] = cost
             entry["cost_usd_per_finding"] = cost / len(decisions) if decisions else None

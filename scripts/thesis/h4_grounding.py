@@ -12,7 +12,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import numpy as np
 
 from analysis.dataset import Dataset
-from analysis.grounding import Grounding, build_grounding, reference_precision, score_text
+from analysis.grounding import (Grounding, build_grounding, tool_roots,
+                                reference_precision, score_text)
 from analysis.tests import (
     discordance,
     friedman,
@@ -28,8 +29,10 @@ def h4(dataset: Dataset, iterations: int, seed: int) -> dict[str, Any]:
     if dataset.source_root is None or not dataset.source_root.exists():
         return {"available": False, "reason": f"no source directory: {dataset.source_root}"}
 
+    roots = tool_roots(dataset.findings, dataset.source_root)
     groundings: dict[tuple, Grounding] = {
-        finding.key: build_grounding(finding, dataset.source_root) for finding in dataset.findings
+        finding.key: build_grounding(finding, dataset.source_root, roots[finding.tool])
+        for finding in dataset.findings
     }
     usable = [finding for finding in dataset.findings if groundings[finding.key].context_available]
 

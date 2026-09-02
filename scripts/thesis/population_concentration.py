@@ -7,18 +7,23 @@ import collections
 import glob
 import json
 import re
+import sys
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+from analysis.runs import find_run_dir
+
 NAMES = {"spotbugs": "SpotBugs", "error_prone": "Error Prone", "sonarqube": "SonarQube"}
-MODUL_WYKLUCZONY = "jetty-ee-test-resources"
+EXCLUDED_MODULE = "jetty-ee-test-resources"
 
 
-def _populacja(zrodlo: Path, tool: str) -> list[dict]:
-    path = zrodlo / "static_analysis" / "processed" / f"{tool}.json"
+def _populacja(source_name: Path, tool: str) -> list[dict]:
+    path = source_name / "static_analysis" / "processed" / f"{tool}.json"
     findings = json.loads(path.read_text(encoding="utf-8"))["findings"]
     return [
         f for f in findings
-        if f.get("source_set") != "test" and MODUL_WYKLUCZONY not in (f.get("source_path") or "")
+        if f.get("source_set") != "test" and EXCLUDED_MODULE not in (f.get("source_path") or "")
     ]
 
 
@@ -34,77 +39,77 @@ def _tool_key(tool: str) -> str:
     return "error-prone" if tool == "error_prone" else tool
 
 
-def policz(zrodlo: Path, target: Path, top_count: int) -> dict:
+def count_of(source_name: Path, target: Path, top_count: int) -> dict:
     expected = json.loads((target / "sample_info.json").read_text(encoding="utf-8"))["tools"]
-    w_probie = _sample(target)
-    result = {"source_run": zrodlo.name, "sample_run": target.name, "tools": {}}
+    in_sample = _sample(target)
+    result = {"source_run": source_name.name, "sample_run": target.name, "tools": {}}
 
     for tool, name in NAMES.items():
-        findings = _populacja(zrodlo, tool)
+        findings = _populacja(source_name, tool)
         key = _tool_key(tool)
-        zapisane = expected[tool]["source_total_findings"]
-        if len(findings) != zapisane:
+        saved = expected[tool]["source_total_findings"]
+        if len(findings) != saved:
             raise SystemExit(
                 f"{name}: the filters yield {len(findings)} warnings while sample_info.json says "
-                f"{zapisane} - the population filters have drifted apart"
+                f"{saved} - the population filters have drifted apart"
             )
 
-        licznosci = collections.Counter(f["type"] for f in findings)
-        pobrano = expected[tool]["sampled_findings"]
-        czolowe = []
-        for rule, n in licznosci.most_common(top_count):
-            czolowe.append({
+        counts = collections.Counter(f["type"] for f in findings)
+        downloaded = expected[tool]["sampled_findings"]
+        leading = []
+        for rule, n in counts.most_common(top_count):
+            leading.append({
                 "rule": rule,
                 "population": n,
                 "population_share": n / len(findings),
-                "proportional_draw": n / len(findings) * pobrano,
-                "in_sample": w_probie[(key, rule)],
+                "proportional_draw": n / len(findings) * downloaded,
+                "in_sample": in_sample[(key, rule)],
                 "example_message": next(f["message"] for f in findings if f["type"] == rule),
             })
 
         result["tools"][tool] = {
             "name": name,
             "population": len(findings),
-            "distinct_rules": len(licznosci),
-            "sampled": pobrano,
-            "top_rules": czolowe,
+            "distinct_rules": len(counts),
+            "sampled": downloaded,
+            "top_rules": leading,
         }
 
     result["dominant"] = _dominant(result)
-    result["s116_underscore"] = _s116_podkreslenie(zrodlo)
+    result["s116_underscore"] = _s116_podkreslenie(source_name)
     return result
 
 
 def _dominant(result: dict) -> dict:
     """Najliczniejszy wzorzec każdego narzędzia, zsumowany po trzech narzędziach."""
-    wybrane, proporcjonalnie, faktycznie, pobrano = [], 0.0, 0, 0
+    selected, proportional, actual_value, downloaded = [], 0.0, 0, 0
     for data in result["tools"].values():
-        czolo = data["top_rules"][0]
-        rules = [czolo]
-        if czolo["rule"] == "EI_EXPOSE_REP2":
+        head = data["top_rules"][0]
+        rules = [head]
+        if head["rule"] == "EI_EXPOSE_REP2":
             rules += [r for r in data["top_rules"] if r["rule"] == "EI_EXPOSE_REP"]
         for r in rules:
-            wybrane.append(r["rule"])
-            proporcjonalnie += r["proportional_draw"]
-            faktycznie += r["in_sample"]
-        pobrano += data["sampled"]
+            selected.append(r["rule"])
+            proportional += r["proportional_draw"]
+            actual_value += r["in_sample"]
+        downloaded += data["sampled"]
     return {
-        "rules": wybrane,
-        "proportional_count": proporcjonalnie,
-        "proportional_share": proporcjonalnie / pobrano,
-        "actual_count": faktycznie,
-        "actual_share": faktycznie / pobrano,
-        "sample_size": pobrano,
+        "rules": selected,
+        "proportional_count": proportional,
+        "proportional_share": proportional / downloaded,
+        "actual_count": actual_value,
+        "actual_share": actual_value / downloaded,
+        "sample_size": downloaded,
     }
 
 
-def _s116_podkreslenie(zrodlo: Path) -> dict:
-    findings = [f for f in _populacja(zrodlo, "sonarqube") if f["type"] == "java:S116"]
-    podkreslenie = [f for f in findings if re.search(r'Rename this field "_', f.get("message", ""))]
+def _s116_podkreslenie(source_name: Path) -> dict:
+    findings = [f for f in _populacja(source_name, "sonarqube") if f["type"] == "java:S116"]
+    underscore = [f for f in findings if re.search(r'Rename this field "_', f.get("message", ""))]
     return {
         "total": len(findings),
-        "leading_underscore": len(podkreslenie),
-        "share": len(podkreslenie) / len(findings) if findings else 0.0,
+        "leading_underscore": len(underscore),
+        "share": len(underscore) / len(findings) if findings else 0.0,
     }
 
 
@@ -115,8 +120,8 @@ def main() -> None:
     ap.add_argument("--top", type=int, default=5)
     args = ap.parse_args()
 
-    zrodlo, target = find_run_dir(args.source_run), find_run_dir(args.sample_run)
-    result = policz(zrodlo, target, args.top)
+    source_name, target = find_run_dir(args.source_run), find_run_dir(args.sample_run)
+    result = count_of(source_name, target, args.top)
 
     directory = target / "analysis"
     directory.mkdir(exist_ok=True)

@@ -151,19 +151,27 @@ def table_7_04() -> None:
 def table_7_05() -> None:
     """Grounding per tool; recomputed here because no result file stores it."""
     from analysis.dataset import load_dataset
-    from analysis.grounding import build_grounding, score_text
+    from analysis.grounding import (build_grounding, tool_roots, score_text,
+                                    _looks_like_identifier, _tokens)
 
     dataset = load_dataset(str(find_run_dir("006")))
     if dataset.source_root is None or not dataset.source_root.exists():
         print("  table-7-05: skipped, Jetty sources not available")
         return
-    grounding = {f.key: build_grounding(f, dataset.source_root) for f in dataset.findings}
+    roots = tool_roots(dataset.findings, dataset.source_root)
+    grounding = {f.key: build_grounding(f, dataset.source_root, roots[f.tool])
+                 for f in dataset.findings}
     rows = []
     for tool, label in TOOLS:
         findings = [f for f in dataset.findings
                     if f.tool == tool and grounding[f.key].context_available]
-        tool_text = [score_text(f"{f.message} {f.description}", grounding[f.key])["grounded"]
-                     for f in findings]
+        texts = [f"{f.message} {f.description}" for f in findings]
+        scored_texts = [score_text(text, grounding[f.key])
+                        for text, f in zip(texts, findings)]
+        tool_text = [s["grounded"] for s in scored_texts]
+        names_written = [sum(1 for token in _tokens(text) if _looks_like_identifier(token))
+                         for text in texts]
+        names_from_excerpt = [s["hits"] for s in scored_texts]
         model_scores, beyond_scores = [], []
         for _, _, short in MODELS:
             hits, beyond = [], []
@@ -179,11 +187,14 @@ def table_7_05() -> None:
                 beyond_scores.append(sum(beyond) / len(beyond))
         rows.append([
             label, num(sum(tool_text) / len(tool_text)),
+            num(sum(names_written) / len(names_written)),
+            num(sum(names_from_excerpt) / len(names_from_excerpt)),
             num(min(model_scores)), num(max(model_scores)),
             num(min(beyond_scores)), num(max(beyond_scores)),
         ])
     write("table-7-05-grounding-per-tool.csv",
-          ["tool", "tool_text", "models_min", "models_max",
+          ["tool", "tool_text", "names_written_by_tool", "names_from_excerpt",
+           "models_min", "models_max",
            "beyond_tool_text_min", "beyond_tool_text_max"], rows)
 
 

@@ -20,7 +20,7 @@
   "system_prompt_sha256": "b5b634e0a9109c59",
   "user_prompt_sha256": "233249fc03b8f699",
   "timestamp": "2026-08-15T09:01:18.044468+00:00",
-  "updated_at": "2026-08-15T09:01:18.044468+00:00",
+  "updated_at": "2026-08-31T21:41:41.169524+00:00",
   "findings": [
     {
       "finding_id": 0,
@@ -1477,6 +1477,75 @@
       },
       "runs": [
         {
+          "reasoning": "The code contains a FIXME comment in the pom.xml, which SonarQube correctly flags as a maintainability issue that should be addressed. The comment clearly indicates remaining work that needs to be completed before final release.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "fixme comment left in configuration",
+          "developer_explanation": "A FIXME comment remains in the pom.xml, signaling that the removal of Servlet API usage is scheduled, not yet completed. Leave the comment only until the work is finished, then delete it or turn it into a proper issue. This practice avoids accidental use of unfinished code.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2921,
+            "output_tokens": 1193,
+            "reasoning_tokens": 1239,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00025465
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 4952,
+          "latency_s": 18.035,
+          "rerun_after_context_fix": true
+        },
+        {
+          "reasoning": "The snippet contains an XML comment with a \"FIXME\" tag, which SonarQube flags as a code smell because it indicates pending work or a reminder to change the code later.",
+          "is_true_positive": true,
+          "confidence": 0.9,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "fixme comment present",
+          "developer_explanation": "There is a FIXME comment in the pom.xml telling you to remove Servlet API usage once it is fully removed. This is a maintainability issue: keep such comments in a separate issue tracker or, when the TODO is complete, delete the comment to keep the file clean.",
+          "run": 2,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2921,
+            "output_tokens": 1033,
+            "reasoning_tokens": 1009,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00023225
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 4020,
+          "latency_s": 14.323,
+          "rerun_after_context_fix": true
+        },
+        {
+          "reasoning": "The flagged line contains an XML comment with the text \"FIXME\", which SonarQube’s xml:S1134 rule is designed to catch as an issue that should be addressed. The rule’s claim is purely about maintaining code quality, not a functional bug. The presence of this FIXME comment therefore matches the warning’s intent, making it a valid code‑smell highlight.",
+          "is_true_positive": true,
+          "confidence": 0.9,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "fixme comment remains",
+          "developer_explanation": "The notice tells you that a FIXME comment is still in pom.xml. This comment signals unfinished work or a planned change that should eventually be resolved. Remove or replace the FIXME after the servlet‑API removal is complete to keep the project clean.",
+          "run": 3,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2921,
+            "output_tokens": 1226,
+            "reasoning_tokens": 1210,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00025927
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 4816,
+          "latency_s": 18.555,
+          "rerun_after_context_fix": true
+        }
+      ],
+      "original_finding_index": 3102,
+      "superseded_runs": [
+        {
           "reasoning": "The pom.xml snippet shows no 'FIXME' text, yet the tool flagged line 54; the rule S1134 triggers on a FIXME comment in XML. Since there is none, the warning is a false alarm.",
           "is_true_positive": false,
           "confidence": 0.95,
@@ -1539,8 +1608,19 @@
           "thinking_chars": 4589,
           "latency_s": 9.348
         }
-      ],
-      "original_finding_index": 3102
+      ]
+    }
+  ],
+  "rerun_history": [
+    {
+      "at": "2026-08-31T21:41:41.169524+00:00",
+      "finding": "xml:S1134 pom.xml:54",
+      "finding_id": 19,
+      "reason": "wycinek zbudowany z glownego pom.xml zamiast jetty-core/pom.xml; poprawka w _resolve_java_path",
+      "repetitions": 3,
+      "source_root": "jetty-core",
+      "paths_relative_to_root": true,
+      "configuration_changed": true
     }
   ]
 }

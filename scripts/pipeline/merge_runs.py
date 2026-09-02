@@ -102,10 +102,10 @@ def _merge_ground_truth(sources: list[Path], out: Path) -> int:
     merged["labeled_findings"] = sum(1 for f in findings if f.get("is_true_positive") is not None)
     merged.pop("created_at", None)
     merged["merged_at"] = _teraz()
-    liczniki: dict[str, int] = {}
-    for wpis in findings:
-        liczniki[wpis["tool"]] = liczniki.get(wpis["tool"], 0) + 1
-    merged["reports"] = liczniki
+    counters: dict[str, int] = {}
+    for entry_line in findings:
+        counters[entry_line["tool"]] = counters.get(entry_line["tool"], 0) + 1
+    merged["reports"] = counters
     _write(out / "ground_truth.json", merged)
     return len(findings)
 
@@ -181,6 +181,32 @@ def _merge_llm(sources: list[Path], out: Path) -> dict[str, int]:
     return counts
 
 
+def keep_unmerged_files(snapshot: Path, out: Path, produced: set[str]) -> list[Path]:
+    """Wklada z powrotem to, czego scalanie nie produkuje — takze z wnetrza llm/ i static_analysis/."""
+    kept: list[Path] = []
+    for item in sorted(snapshot.iterdir()):
+        if item.name not in produced:
+            target = out / item.name
+            if item.is_dir():
+                shutil.copytree(item, target, dirs_exist_ok=True)
+            else:
+                shutil.copy2(item, target)
+            kept.append(target)
+            continue
+        if not item.is_dir():
+            continue
+        for old_file in sorted(item.rglob("*")):
+            if old_file.is_dir():
+                continue
+            target = out / old_file.relative_to(snapshot)
+            if target.exists():
+                continue
+            target.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(old_file, target)
+            kept.append(target)
+    return kept
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Scala runy w jeden katalog wynikowy.")
     parser.add_argument("--runs", required=True, help="numbers or paths, comma separated, e.g. 3,5")
@@ -193,10 +219,16 @@ def main() -> int:
         raise SystemExit("Podaj co najmniej dwa runy.")
 
     out = _next_run_dir(args.output_run)
+    kept: list[Path] = []
+    snapshot: Path | None = None
     if out.exists():
         if not args.force:
             raise SystemExit(f"{out} juz istnieje — uzyj --force.")
-        shutil.rmtree(out)
+        # Scalanie odtwarza run ze zrodel, wiec wszystko, czego samo nie produkuje — reczne
+        # kodowania, raporty z lektury, przeliczone analizy — przepadloby razem z katalogiem.
+        # Stary katalog idzie wiec na bok, a pliki spoza listy produkowanej wracaja po scaleniu.
+        snapshot = out.with_name(f"{out.name}.przed_scaleniem_{datetime.now():%Y-%m-%d_%H-%M-%S}")
+        out.rename(snapshot)
     out.mkdir(parents=True)
 
     print(f"Scalam: {', '.join(run.name for run in sources)}")
@@ -246,10 +278,63 @@ def main() -> int:
         },
     )
 
+    if snapshot is not None:
+        produced = {
+            "sample_info.json",
+            "run_info.json",
+            "ground_truth.json",
+            "category_ground_truth.json",
+            "static_analysis",
+            "llm",
+        }
+        kept = keep_unmerged_files(snapshot, out, produced)
+
+        # Poprawki naniesione po scaleniu zylyby wylacznie w runie wyjsciowym, wiec scalanie
+        # ze zrodel cofneloby je bez sladu. Nie nadpisujemy ich w ciszy: rozjazd trafia na ekran,
+        # a poprzedni plik zostaje obok do porownania.
+        for name in ("category_ground_truth.json", "run_info.json", "ground_truth.json"):
+            old_file = snapshot / name
+            if not old_file.exists():
+                continue
+            old_item, new_item = _load(old_file), _load(out / name)
+            if name == "run_info.json":
+                extra_items = {k: v for k, v in old_item.items() if k not in new_item}
+                if extra_items:
+                    new_item.update(extra_items)
+                    _write(out / name, new_item)
+                    print(f"  {name}: przeniesiono z poprzedniej wersji {', '.join(sorted(extra_items))}")
+                continue
+            entry_key = "rules" if name == "category_ground_truth.json" else "findings"
+            old_entries, new_entries = old_item.get(entry_key), new_item.get(entry_key)
+            if isinstance(old_entries, dict):
+                differing = [k for k in old_entries if old_entries[k] != (new_entries or {}).get(k)]
+            else:
+                # ground_truth.json trzyma etykiety w liscie, a nie pod kluczem — porownanie idzie
+                # po identyfikatorze findingu, bo kolejnosc po scaleniu nie musi byc ta sama.
+                po_id = {w.get("finding_id"): w for w in (new_entries or [])}
+                differing = [
+                    w.get("finding_id")
+                    for w in (old_entries or [])
+                    if w != po_id.get(w.get("finding_id"))
+                ]
+            if differing:
+                copy_path = out / f"{Path(name).stem}.przed_scaleniem.json"
+                shutil.copy2(old_file, copy_path)
+                print(
+                    f"  UWAGA {name}: {len(differing)} wpisow rozni sie od poprzedniej wersji tego runu "
+                    f"({', '.join(differing[:5])}{', ...' if len(differing) > 5 else ''}). "
+                    f"Poprawki naniesione po poprzednim scaleniu NIE przenosza sie ze zrodel — "
+                    f"poprzedni plik zostawiono jako {copy_path.name}."
+                )
+
     print(f"  static_analysis: {static_counts}")
     print(f"  ground_truth: {gt_count} findingow")
     print(f"  kategorie: {cat_count} regul")
     print(f"  llm: {len(llm_counts)} plikow, {sum(llm_counts.values())} rekordow")
+    if kept:
+        print(f"  zachowane spoza scalania: {', '.join(sorted(p.name for p in kept))}")
+    if snapshot is not None:
+        print(f"  poprzedni katalog: {snapshot.name} (usun recznie, gdy wynik bedzie sprawdzony)")
     print(f"\nZapisano: {out}")
     print(f"Dalej: .venv/bin/python scripts/thesis/metrics_baselines.py --run-dir {out.name} --cluster-by rule")
     return 0

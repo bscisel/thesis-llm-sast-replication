@@ -27,21 +27,21 @@ def h6(dataset_main, dataset_ablation, repetition: int = 0, seed: int = 20260803
     """Porównanie przebiegu głównego z wariantem bez pokazanego kodu."""
     from analysis.tests import mcnemar_exact, discordance, mcnemar_cluster_signflip
 
-    wspolne = sorted(set(dataset_main.models) & set(dataset_ablation.models))
+    common = sorted(set(dataset_main.models) & set(dataset_ablation.models))
     result = {"przebieg_glownego": repetition, "modele": {},
              "brakujace_modele": sorted(set(dataset_main.models) - set(dataset_ablation.models))}
-    for m in wspolne:
+    for m in common:
         a, b = verdicts(dataset_main, m, repetition), verdicts(dataset_ablation, m, 0)
         keys = sorted(set(a) & set(b), key=str)
         if not keys:
             continue
-        traf_a = [a[k][0] == a[k][1] for k in keys]
-        traf_b = [b[k][0] == b[k][1] for k in keys]
-        nb, nc = discordance(traf_a, traf_b)
-        test_klastrowy = mcnemar_cluster_signflip(
-            traf_a, traf_b, [a[k][3] for k in keys], seed=seed
+        hits_a = [a[k][0] == a[k][1] for k in keys]
+        hits_b = [b[k][0] == b[k][1] for k in keys]
+        nb, nc = discordance(hits_a, hits_b)
+        test_clustered = mcnemar_cluster_signflip(
+            hits_a, hits_b, [a[k][3] for k in keys], seed=seed
         )
-        ta, tb = sum(traf_a) / len(keys), sum(traf_b) / len(keys)
+        ta, tb = sum(hits_a) / len(keys), sum(hits_b) / len(keys)
         per_tool = {}
         for tool in sorted({a[k][2] for k in keys}):
             kt = [k for k in keys if a[k][2] == tool]
@@ -52,7 +52,7 @@ def h6(dataset_main, dataset_ablation, repetition: int = 0, seed: int = 20260803
             }
         result["modele"][m] = {
             "n": len(keys), "z_kodem": ta, "bez_kodu": tb, "roznica": ta - tb,
-            "mcnemar": mcnemar_exact(nb, nc), "mcnemar_cluster": test_klastrowy,
+            "mcnemar": mcnemar_exact(nb, nc), "mcnemar_cluster": test_clustered,
             "per_tool": per_tool,
             "zachowanych_z_kodem": sum(a[k][0] for k in keys) / len(keys),
             "zachowanych_bez_kodu": sum(b[k][0] for k in keys) / len(keys),
@@ -94,11 +94,11 @@ def main():
 
     print(f"\n{'model':<22}" + "".join(f"{t[:12]:>13}" for t in ("error-prone", "sonarqube", "spotbugs")))
     for m, v in result["modele"].items():
-        kom = []
+        comment_text = []
         for t in ("error-prone", "sonarqube", "spotbugs"):
             d = v["per_tool"].get(t)
-            kom.append(f"{d['z_kodem'] - d['bez_kodu']:>+13.3f}" if d else f"{'—':>13}")
-        print(f"{m:<22}" + "".join(kom))
+            comment_text.append(f"{d['z_kodem'] - d['bez_kodu']:>+13.3f}" if d else f"{'—':>13}")
+        print(f"{m:<22}" + "".join(comment_text))
     print("\nPositive values: the code helps. Negative: the model does better without it.")
 
     print(f"\n{'model':<22}{'zachowanych z kodem':>21}{'bez kodu':>11}")

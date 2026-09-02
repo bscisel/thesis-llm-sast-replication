@@ -9077,6 +9077,75 @@
       },
       "runs": [
         {
+          "reasoning": "The file contains a FIXME comment on line 54, which SonarQube flags as a code smell that should be addressed.",
+          "is_true_positive": true,
+          "confidence": 0.99,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "fixme comment left in code",
+          "developer_explanation": "The pom.xml includes a FIXME comment indicating a future removal of a dependency. Such comments are considered code smells because they signal unfinished work and can be forgotten, making the build harder to maintain. Remove the comment (and the associated dependency) when the Servlet API is no longer needed, or resolve the issue now.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2921,
+            "output_tokens": 560,
+            "reasoning_tokens": 461,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000203277
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1834,
+          "latency_s": 21.877,
+          "rerun_after_context_fix": true
+        },
+        {
+          "reasoning": "The pom.xml file contains a FIXME comment on line 54, and SonarQube's S1134 rule flags any FIXME/TODO comments as code smells that should be removed. Because the comment is present, the tool's claim that an issue needs to be fixed is correct.",
+          "is_true_positive": true,
+          "confidence": 0.99,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "FIXME comment left in source code",
+          "developer_explanation": "A FIXME comment remains in the pom.xml, indicating unfinished work. Such comments are considered code smells because they can be forgotten and cause confusion. Remove the comment or resolve the underlying issue before committing.",
+          "run": 2,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2921,
+            "output_tokens": 535,
+            "reasoning_tokens": 429,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000199027
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1702,
+          "latency_s": 18.267,
+          "rerun_after_context_fix": true
+        },
+        {
+          "reasoning": "The pom.xml contains a FIXME comment, which SonarQube flags as a code smell that signals a pending action to be taken. This matches the rule's intent to require removal of such comments, so the warning correctly identifies a maintainability concern.",
+          "is_true_positive": true,
+          "confidence": 0.98,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "fixme comment indicating pending work",
+          "developer_explanation": "The FIXME comment marks code that should be cleaned up once the Servlet API is fully removed. Leaving such comments in production code reduces readability and may hide unfinished work. Remove the comment (and the associated dependency management block) when the condition is satisfied.",
+          "run": 3,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2921,
+            "output_tokens": 671,
+            "reasoning_tokens": 588,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000222147
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2333,
+          "latency_s": 33.435,
+          "rerun_after_context_fix": true
+        }
+      ],
+      "original_finding_index": 3102,
+      "superseded_runs": [
+        {
           "reasoning": "The flagged line is an XML element (<organizationUrl>...), not a comment containing the word FIXME, so the rule's claim that a FIXME comment needs fixing is incorrect.",
           "is_true_positive": false,
           "confidence": 0.96,
@@ -9139,8 +9208,7 @@
           "thinking_chars": 2102,
           "latency_s": 45.874
         }
-      ],
-      "original_finding_index": 3102
+      ]
     }
   ],
   "merged_from": [

@@ -1,8 +1,8 @@
 model;names_per_text;names_per_100_chars;mean_length_chars
-Claude Opus 5;1,878;0,268;702
-Claude Sonnet 5;1,789;0,286;627
-Qwen3.5 9B;1,089;0,266;410
-GPT-5.6 Terra;0,975;0,216;452
-gpt-oss-120b;0,864;0,392;221
+Claude Opus 5;1,875;0,267;701
+Claude Sonnet 5;1,786;0,285;626
+Qwen3.5 9B;1,086;0,265;410
+GPT-5.6 Terra;0,972;0,215;453
+gpt-oss-120b;0,861;0,391;220
 gpt-oss-20b;0,847;0,326;260
-GPT-5.6 Luna;0,756;0,178;423
+GPT-5.6 Luna;0,753;0,178;424

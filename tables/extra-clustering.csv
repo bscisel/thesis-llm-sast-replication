@@ -1,9 +1,9 @@
 quantity;cluster_unit;clusters;intraclass_correlation;design_effect;effective_sample_size
 reference label;rule;123;0,617;2,153;167
-accuracy of Claude Opus 5;rule;123;0,412;1,770;203
-accuracy of Claude Sonnet 5;rule;123;0,447;1,836;196
-accuracy of GPT-5.6 Terra;rule;123;0,236;1,442;250
-accuracy of GPT-5.6 Luna;rule;123;0,328;1,613;223
-accuracy of gpt-oss-120b;rule;123;0,228;1,426;252
-accuracy of gpt-oss-20b;rule;123;0,420;1,786;202
+accuracy of Claude Opus 5;rule;123;0,408;1,762;204
+accuracy of Claude Sonnet 5;rule;123;0,443;1,829;197
+accuracy of GPT-5.6 Terra;rule;123;0,230;1,429;252
+accuracy of GPT-5.6 Luna;rule;123;0,324;1,607;224
+accuracy of gpt-oss-120b;rule;123;0,223;1,416;254
+accuracy of gpt-oss-20b;rule;123;0,416;1,777;203
 accuracy of Qwen3.5 9B;rule;123;0,124;1,231;292

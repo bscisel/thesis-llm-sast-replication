@@ -6,17 +6,17 @@ stage 1;GPT-5.6 Luna;0,673
 stage 1;gpt-oss-120b;0,730
 stage 1;gpt-oss-20b;0,760
 stage 1;Qwen3.5 9B;0,703
-stage 2;Claude Opus 5;0,733
-stage 2;Claude Sonnet 5;0,700
-stage 2;GPT-5.6 Terra;0,833
-stage 2;GPT-5.6 Luna;0,783
-stage 2;gpt-oss-120b;0,767
-stage 2;gpt-oss-20b;0,700
+stage 2;Claude Opus 5;0,750
+stage 2;Claude Sonnet 5;0,717
+stage 2;GPT-5.6 Terra;0,850
+stage 2;GPT-5.6 Luna;0,800
+stage 2;gpt-oss-120b;0,783
+stage 2;gpt-oss-20b;0,717
 stage 2;Qwen3.5 9B;0,617
-combined;Claude Opus 5;0,742
-combined;Claude Sonnet 5;0,731
-combined;GPT-5.6 Terra;0,769
-combined;GPT-5.6 Luna;0,692
-combined;gpt-oss-120b;0,736
-combined;gpt-oss-20b;0,750
+combined;Claude Opus 5;0,744
+combined;Claude Sonnet 5;0,733
+combined;GPT-5.6 Terra;0,772
+combined;GPT-5.6 Luna;0,694
+combined;gpt-oss-120b;0,739
+combined;gpt-oss-20b;0,753
 combined;Qwen3.5 9B;0,689

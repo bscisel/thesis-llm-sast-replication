@@ -140,8 +140,8 @@ def _decision_from_runs(model: str, runs: list[dict[str, Any]]) -> Decision:
         if isinstance(run.get("is_true_positive"), bool)
         and str(run.get("stop_reason") or "") not in {"max_tokens", "length", "MAX_TOKENS"}
     ]
-    def _total(pole: str) -> int:
-        return sum(int((run.get("usage") or {}).get(pole) or 0) for run in runs)
+    def _total(field_name: str) -> int:
+        return sum(int((run.get("usage") or {}).get(field_name) or 0) for run in runs)
 
     input_tokens = _total("input_tokens")
     output_tokens = _total("output_tokens")

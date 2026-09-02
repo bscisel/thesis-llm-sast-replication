@@ -281,6 +281,13 @@ def main() -> None:
              "przed LLM_CONCURRENCY_<MODEL>.",
     )
     parser.add_argument(
+        "--paths-relative-to-root",
+        action="store_true",
+        help="report paths are relative to --source-root itself (SonarQube reports them relative "
+             "to the scanned project). Without it an ambiguous bare filename is refused instead "
+             "of being resolved to a same-named file at the root.",
+    )
+    parser.add_argument(
         "--limit",
         type=int,
         metavar="N",
@@ -314,6 +321,7 @@ def main() -> None:
     )
     parser.add_argument(
         "--bez-kodu",
+        dest="without_code",
         action="store_true",
         help="Wariant ablacyjny B3 (H6): ten sam prompt z pominietym fragmentem zrodla. "
              "Model dostaje wylacznie komunikat narzedzia i metadane. Wyniki zapisuja sie "
@@ -346,10 +354,11 @@ def main() -> None:
         "source_root": source_root,
         "num_runs": num_runs,
         "temperature": temperature,
-        "bez_kodu": args.bez_kodu,
+        "bez_kodu": args.without_code,
+        "paths_relative_to_root": args.paths_relative_to_root,
     }
 
-    if args.bez_kodu:
+    if args.without_code:
         logger.warning(
             "B3 VARIANT: the source excerpt will NOT be inserted into the prompt. "
             "Metryki z tego przebiegu nie sa porownywalne z glownym inaczej "

@@ -22,23 +22,23 @@ TOOL_LABEL = {
 
 def tool_label_baseline(dataset: Dataset) -> dict[str, Any]:
     """Ile trafia mechaniczne przełożenie etykiety narzędzia na taksonomię odniesienia."""
-    trafione = covered = 0
+    hit_items = covered = 0
     covered_findings = []
-    baza_klucze: set = set()
+    benchmark_keys: set = set()
     for finding in dataset.findings:
         specific = (finding.raw or {}).get("tool_specific") or {}
         label = specific.get("category") if finding.tool == "spotbugs" else specific.get("issue_type")
-        przelozona = TOOL_LABEL.get((finding.tool, label))
-        if przelozona is None or finding.reference_category is None:
+        mapped = TOOL_LABEL.get((finding.tool, label))
+        if mapped is None or finding.reference_category is None:
             continue
         covered += 1
         covered_findings.append(finding)
-        if przelozona == finding.reference_category:
-            trafione += 1
-            baza_klucze.add(finding.key)
+        if mapped == finding.reference_category:
+            hit_items += 1
+            benchmark_keys.add(finding.key)
     models_on_subset: dict[str, Any] = {}
     for model in dataset.models:
-        ocenione = matched = 0
+        evaluated = matched = 0
         matched_keys: set = set()
         for finding in covered_findings:
             decision = finding.decisions.get(model)
@@ -47,22 +47,22 @@ def tool_label_baseline(dataset: Dataset) -> dict[str, Any]:
             predicted = modal(decision.categories)
             if predicted is None:
                 continue
-            ocenione += 1
+            evaluated += 1
             if predicted == finding.reference_category:
                 matched += 1
                 matched_keys.add(finding.key)
-        if ocenione:
+        if evaluated:
             models_on_subset[dataset.display_name(model)] = {
-                "ocenione": ocenione,
-                "trafnosc": matched / ocenione,
-                "trafienia_wspolne_z_etykieta": len(matched_keys & baza_klucze),
-                "trafienia_tylko_model": len(matched_keys - baza_klucze),
-                "trafienia_tylko_etykieta": len(baza_klucze - matched_keys),
+                "ocenione": evaluated,
+                "trafnosc": matched / evaluated,
+                "trafienia_wspolne_z_etykieta": len(matched_keys & benchmark_keys),
+                "trafienia_tylko_model": len(matched_keys - benchmark_keys),
+                "trafienia_tylko_etykieta": len(benchmark_keys - matched_keys),
             }
     return {
         "z_etykieta_jednoznaczna": covered,
-        "trafione": trafione,
-        "trafnosc": trafione / covered if covered else None,
+        "trafione": hit_items,
+        "trafnosc": hit_items / covered if covered else None,
         "bez_etykiety": len(dataset.findings) - covered,
         "modele_na_tym_samym_podzbiorze": models_on_subset,
     }

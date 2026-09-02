@@ -7994,6 +7994,66 @@
       },
       "runs": [
         {
+          "reasoning": "The shown POM contains a FIXME explicitly stating that the Servlet API dependency-management entry is temporary and should be removed after a remaining migration condition is met. This records unresolved cleanup work in a build-critical configuration file, so it is a maintainability issue even though removing the dependency immediately may not be safe. The appropriate action is to complete or track the Servlet API removal and then remove this entry, or replace the comment with a durable issue reference if the work is intentionally deferred.",
+          "is_true_positive": true,
+          "confidence": 0.9,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "unresolved fixme comment",
+          "developer_explanation": "This POM documents temporary Servlet API dependency management that is expected to be removed once Servlet API usage no longer remains in the core. Do not remove it while it is still needed; complete and verify the migration, then delete the dependency-management entry and the comment. If the work is deferred, link the comment to a tracked task with clear ownership rather than leaving an untracked FIXME.",
+          "run": 1,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 2960,
+            "output_tokens": 580,
+            "reasoning_tokens": 358,
+            "cached_input_tokens": 0
+          },
+          "stop_reason": "stop",
+          "latency_s": 11.873,
+          "rerun_after_context_fix": true
+        },
+        {
+          "reasoning": "The shown POM contains a FIXME explicitly stating that the Servlet API dependency-management entry should be removed once remaining Servlet API usage is eliminated. This is an unresolved, action-oriented temporary marker tied to configuration that otherwise risks persisting after its rationale has expired, so the warning correctly identifies a maintainability issue. The snippet cannot establish whether the prerequisite has already been met, but the FIXME itself denotes tracked outstanding cleanup.",
+          "is_true_positive": true,
+          "confidence": 0.9,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "unresolved FIXME comment",
+          "developer_explanation": "This dependency-management entry is marked as temporary and should be revisited when Servlet API usage is no longer present in the core modules. Verify whether that usage remains; if it does not, remove the dependency-management block and the comment, or replace the comment with current, actionable tracking information.",
+          "run": 2,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 2960,
+            "output_tokens": 183,
+            "reasoning_tokens": 0,
+            "cached_input_tokens": 2957
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.885,
+          "rerun_after_context_fix": true
+        },
+        {
+          "reasoning": "The POM contains a FIXME explicitly recording that the Servlet API dependency management is temporary and must be removed after remaining Servlet API usage is eliminated from the module. This is an unresolved maintenance task and leaves temporary configuration in place, even though the comment clearly states the prerequisite for completing it. The dependency may be necessary today, but the outstanding cleanup should be tracked and completed once that prerequisite is met.",
+          "is_true_positive": true,
+          "confidence": 0.86,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "unresolved fixme comment",
+          "developer_explanation": "This POM retains a temporary Servlet API dependency-management entry while the core still uses that API. Eliminate the remaining usage and remove the dependency-management entry when possible, or track the work in the project's issue tracker and replace the FIXME with a reference to that tracked task.",
+          "run": 3,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 2960,
+            "output_tokens": 388,
+            "reasoning_tokens": 204,
+            "cached_input_tokens": 2957
+          },
+          "stop_reason": "stop",
+          "latency_s": 6.481,
+          "rerun_after_context_fix": true
+        }
+      ],
+      "original_finding_index": 3102,
+      "superseded_runs": [
+        {
           "category": "MAINTAINABILITY",
           "confidence": 0.99,
           "developer_explanation": "The flagged line is an ordinary Maven developer metadata element containing an organization URL; it does not contain a FIXME comment or indicate unfinished work. This alarm can be dismissed for this location.",
@@ -8047,8 +8107,7 @@
           "stop_reason": "stop",
           "latency_s": 2.805
         }
-      ],
-      "original_finding_index": 3102
+      ]
     }
   ],
   "merged_from": [

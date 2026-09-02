@@ -11,10 +11,11 @@ import shutil
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
-from analysis.constants import TRUNCATION_REASONS
 from typing import Any
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
+
+from analysis.constants import TRUNCATION_REASONS
 
 import llm.run_analysis as ra
 from llm.base import _build_code_context, _digest, _load_template
@@ -53,6 +54,7 @@ def main() -> None:
     parser.add_argument("--dry-run", action="store_true", help="Print only what would be retried.")
     parser.add_argument(
         "--bez-kodu",
+        dest="without_code",
         action="store_true",
         help="Powtorka w wariancie ablacyjnym B3 (H6): prompty z sufiksem _b3, bez fragmentu "
              "zrodla. Musi byc podana dla przebiegu, ktory tak powstal — inaczej skroty promptow "
@@ -79,7 +81,7 @@ def main() -> None:
     source_data = json.loads(findings_path.read_text(encoding="utf-8"))
     source_findings = source_data["findings"]
     variant = ra._resolve_system_prompt(None, run_dir)
-    system_prompt, user_template = _load_template(source_data["tool"], variant, args.bez_kodu)
+    system_prompt, user_template = _load_template(source_data["tool"], variant, args.without_code)
 
     for key, digest in (
         ("system_prompt_sha256", _digest(system_prompt)),
@@ -111,7 +113,7 @@ def main() -> None:
     source_root = ra._resolve_source_root(args.source_root, run_dir)
     analyzer = ra._build_analyzer(
         args.model,
-        {"source_root": source_root, "num_runs": 1, "temperature": ra._resolve_temperature(os.getenv("LLM_TEMPERATURE")), "concurrency": 1, "bez_kodu": args.bez_kodu},
+        {"source_root": source_root, "num_runs": 1, "temperature": ra._resolve_temperature(os.getenv("LLM_TEMPERATURE")), "concurrency": 1, "bez_kodu": args.without_code},
     )
 
     backup = result_path.with_name(
@@ -141,10 +143,10 @@ def main() -> None:
             failed += 1
             continue
 
-        kontekst = ("(code fragment intentionally omitted in this run)" if args.bez_kodu
+        context = ("(code fragment intentionally omitted in this run)" if args.without_code
                     else _build_code_context(source, source_root))
         system_msg, user_msg = analyzer.build_prompt(
-            source, kontekst, system_prompt, user_template
+            source, context, system_prompt, user_template
         )
         original = finding["runs"][r_idx]
         run_number = original.get("run")

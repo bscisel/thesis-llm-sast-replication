@@ -16,7 +16,7 @@
   "system_prompt_sha256": "b5b634e0a9109c59",
   "user_prompt_sha256": "233249fc03b8f699",
   "timestamp": "2026-08-15T08:10:27.158217+00:00",
-  "updated_at": "2026-08-15T08:10:27.158217+00:00",
+  "updated_at": "2026-08-31T21:39:53.831069+00:00",
   "findings": [
     {
       "finding_id": 0,
@@ -1302,6 +1302,66 @@
       },
       "runs": [
         {
+          "reasoning": "The line literally contains a FIXME comment indicating a known temporary workaround that should be removed later, which is exactly what rule S1134 flags. The comment is genuine, unresolved, and marks technical debt in the build configuration, so the tool's claim is accurate for this code.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "unresolved fixme comment marking pending work",
+          "developer_explanation": "This line has a FIXME comment noting that the Servlet API dependency should be removed once jetty-core no longer needs it. Since it's still present, it signals unfinished cleanup work that should be tracked and eventually resolved so the dependency isn't left in permanently by oversight.",
+          "run": 1,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 1839,
+            "output_tokens": 342,
+            "cache_creation_input_tokens": 2741,
+            "cache_read_input_tokens": 0
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 5.425,
+          "rerun_after_context_fix": true
+        },
+        {
+          "reasoning": "The flagged line is indeed a FIXME comment indicating pending cleanup work (removing the servlet API dependency once usage is eliminated from jetty-core), which is exactly the pattern S1134 is designed to detect. The comment marks unresolved technical debt that the rule correctly identifies as needing follow-up action or tracking.",
+          "is_true_positive": true,
+          "confidence": 0.9,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "fixme comment marking unresolved technical debt",
+          "developer_explanation": "This is a real FIXME comment left in the pom.xml noting that the jetty-jakarta-servlet-api dependency should be removed once servlet API usage is fully gone from jetty-core. Since it flags genuine pending work, either resolve the dependency removal or track it in an issue tracker instead of leaving it as an inline comment indefinitely.",
+          "run": 2,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 1839,
+            "output_tokens": 420,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 5.326,
+          "rerun_after_context_fix": true
+        },
+        {
+          "reasoning": "Line 54 contains an actual FIXME comment indicating that a dependency (jetty-jakarta-servlet-api) is only temporarily needed and should be removed once Servlet API usage is gone from jetty-core. The rule's purpose is exactly to surface such markers of known, unresolved technical debt, and this comment genuinely represents that pattern. There is no indication the FIXME has already been addressed elsewhere in the shown file.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "unresolved fixme comment marking technical debt",
+          "developer_explanation": "This pom.xml still carries a FIXME comment noting that the jetty-jakarta-servlet-api dependency should be removed once Servlet API usage is gone from jetty-core. Leaving such markers unaddressed means the temporary dependency may linger longer than intended, so it's worth tracking as a follow-up task or removing once the underlying work is done.",
+          "run": 3,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 1839,
+            "output_tokens": 429,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 5.205,
+          "rerun_after_context_fix": true
+        }
+      ],
+      "original_finding_index": 3102,
+      "superseded_runs": [
+        {
           "reasoning": "Line 54 in the shown snippet is `<organizationUrl>https://webtide.com</organizationUrl>`, plain XML content with no comment at all, let alone a FIXME comment; scanning the entire visible snippet (lines 1-204) shows no FIXME text anywhere. The warning claims a FIXME comment exists at this line that needs resolving, but the actual code does not contain any such comment, so the tool's claim is not materially correct for the shown code.",
           "is_true_positive": false,
           "confidence": 0.9,
@@ -1355,8 +1415,19 @@
           "stop_reason": "end_turn",
           "latency_s": 4.476
         }
-      ],
-      "original_finding_index": 3102
+      ]
+    }
+  ],
+  "rerun_history": [
+    {
+      "at": "2026-08-31T21:39:53.831069+00:00",
+      "finding": "xml:S1134 pom.xml:54",
+      "finding_id": 19,
+      "reason": "wycinek zbudowany z glownego pom.xml zamiast jetty-core/pom.xml; poprawka w _resolve_java_path",
+      "repetitions": 3,
+      "source_root": "jetty-core",
+      "paths_relative_to_root": true,
+      "configuration_changed": true
     }
   ]
 }

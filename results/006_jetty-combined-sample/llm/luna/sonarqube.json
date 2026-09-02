@@ -8002,6 +8002,66 @@
       },
       "runs": [
         {
+          "reasoning": "The shown POM contains an explicit FIXME stating that the Servlet API dependency should be removed after Servlet API usage is eliminated. This is an unresolved maintenance action, and the snippet provides no indication that the stated condition has been satisfied, so the warning is materially justified.",
+          "is_true_positive": true,
+          "confidence": 0.97,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "unresolved FIXME action item",
+          "developer_explanation": "The dependency-management entry is intentionally retained only as a temporary compatibility measure, but the FIXME records that it still requires follow-up. Remove the dependency and comment once Servlet API usage has actually been eliminated, or update the comment if the intended plan has changed.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 2960,
+            "output_tokens": 389,
+            "reasoning_tokens": 235,
+            "cached_input_tokens": 0
+          },
+          "stop_reason": "stop",
+          "latency_s": 4.184,
+          "rerun_after_context_fix": true
+        },
+        {
+          "reasoning": "The shown file contains an explicit FIXME stating that the servlet API dependency should be removed after Servlet API usage is eliminated. This documents unresolved technical debt and therefore represents a real maintainability issue, even if the dependency cannot be removed immediately.",
+          "is_true_positive": true,
+          "confidence": 0.98,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "unresolved FIXME marker",
+          "developer_explanation": "The comment identifies pending cleanup: the servlet API dependency remains in dependency management until all usage is removed. Track and complete that migration, then remove the dependency and FIXME comment; if the work is already tracked elsewhere, replace this marker with the appropriate reference.",
+          "run": 2,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 2960,
+            "output_tokens": 493,
+            "reasoning_tokens": 346,
+            "cached_input_tokens": 2957
+          },
+          "stop_reason": "stop",
+          "latency_s": 5.651,
+          "rerun_after_context_fix": true
+        },
+        {
+          "reasoning": "The shown POM contains an explicit FIXME stating that the servlet API dependency should be removed after Servlet API usage is eliminated. That marks unresolved cleanup work, so the warning correctly identifies a maintainability issue even though the required removal may depend on code outside this excerpt.",
+          "is_true_positive": true,
+          "confidence": 0.98,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "unresolved FIXME comment",
+          "developer_explanation": "The build configuration documents pending removal of the servlet API dependency, but the FIXME remains without evidence that the cleanup has been completed or tracked elsewhere. Remove the dependency and comment once usage is gone, or replace the FIXME with an appropriate tracked action if the dependency is still required.",
+          "run": 3,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 2960,
+            "output_tokens": 396,
+            "reasoning_tokens": 239,
+            "cached_input_tokens": 2957
+          },
+          "stop_reason": "stop",
+          "latency_s": 4.549,
+          "rerun_after_context_fix": true
+        }
+      ],
+      "original_finding_index": 3102,
+      "superseded_runs": [
+        {
           "category": "MAINTAINABILITY",
           "confidence": 0.99,
           "developer_explanation": "Line 54 contains only a normal organization URL and does not contain a FIXME comment or indicate an unfinished action. This alert can be safely dismissed for the shown code, although the actual analyzed file should be checked if the source differs from this excerpt.",
@@ -8055,8 +8115,7 @@
           "stop_reason": "stop",
           "latency_s": 2.784
         }
-      ],
-      "original_finding_index": 3102
+      ]
     }
   ],
   "merged_from": [

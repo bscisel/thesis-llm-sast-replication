@@ -24,11 +24,11 @@ def h3(dataset: Dataset, iterations: int, seed: int) -> dict[str, Any]:
     for scope, findings in _scopes(dataset):
         scope_result: dict[str, Any] = {}
         for model in dataset.models:
-            ocenione = [f for f in findings if f.decisions.get(model) and f.decisions[model].votes]
-            usable = [f for f in ocenione if len(f.decisions[model].votes) == RUNS_PER_FINDING]
+            evaluated = [f for f in findings if f.decisions.get(model) and f.decisions[model].votes]
+            usable = [f for f in evaluated if len(f.decisions[model].votes) == RUNS_PER_FINDING]
             if not usable:
                 continue
-            niepelne = len(ocenione) - len(usable)
+            incomplete = len(evaluated) - len(usable)
             votes = [finding.decisions[model].votes for finding in usable]
             unanimity = np.array([len(set(vote)) == 1 for vote in votes], dtype=bool)
             counts = np.array([[vote.count(False), vote.count(True)] for vote in votes], dtype=float)
@@ -43,7 +43,7 @@ def h3(dataset: Dataset, iterations: int, seed: int) -> dict[str, Any]:
             )
             scope_result[dataset.display_name(model)] = {
                 "findings": len(usable),
-                "findings_dropped_incomplete": niepelne,
+                "findings_dropped_incomplete": incomplete,
                 "runs_per_finding": {
                     str(size): int(np.count_nonzero(np.array([len(vote) for vote in votes]) == size))
                     for size in sorted({len(vote) for vote in votes})
@@ -74,52 +74,52 @@ def _pairs_on_difference(
     if len(models) < 2:
         return {"kryterium": KRYTERIUM, "par": 0, "roznic_wykazanych": 0, "szczegoly": {}}
 
-    jednomyslne, komplet = {}, {}
+    unanimous_items, complete_set = {}, {}
     for model in models:
-        decyzje = [f.decisions.get(model) for f in findings]
-        komplet[model] = np.array(
-            [bool(d and d.votes and len(d.votes) == RUNS_PER_FINDING) for d in decyzje]
+        decision_list = [f.decisions.get(model) for f in findings]
+        complete_set[model] = np.array(
+            [bool(d and d.votes and len(d.votes) == RUNS_PER_FINDING) for d in decision_list]
         )
-        jednomyslne[model] = np.array(
-            [bool(d and d.votes and len(set(d.votes)) == 1) for d in decyzje]
+        unanimous_items[model] = np.array(
+            [bool(d and d.votes and len(set(d.votes)) == 1) for d in decision_list]
         )
 
     resampler = Resampler(list(findings), scheme=RESAMPLING_SCHEME, seed=seed)
-    losowania = [resampler.draw() for _ in range(iterations)]
+    draws = [resampler.draw() for _ in range(iterations)]
 
-    pairs, wykazane = {}, 0
+    pairs, shown_items = {}, 0
     for i, a in enumerate(models):
         for b in models[i + 1:]:
-            wspolne = komplet[a] & komplet[b]
-            if not wspolne.any():
+            common = complete_set[a] & complete_set[b]
+            if not common.any():
                 continue
-            roznice = []
-            for indeksy in losowania:
-                wybrane = indeksy[wspolne[indeksy]]
-                if wybrane.size:
-                    roznice.append(
-                        float(jednomyslne[a][wybrane].mean() - jednomyslne[b][wybrane].mean())
+            differences = []
+            for indexes in draws:
+                selected = indexes[common[indexes]]
+                if selected.size:
+                    differences.append(
+                        float(unanimous_items[a][selected].mean() - unanimous_items[b][selected].mean())
                     )
-            if not roznice:
+            if not differences:
                 continue
-            uporzadkowane = np.sort(np.array(roznice))
-            lo = float(np.quantile(uporzadkowane, 0.025))
-            hi = float(np.quantile(uporzadkowane, 0.975))
-            punkt = float(
-                jednomyslne[a][wspolne].mean() - jednomyslne[b][wspolne].mean()
+            ordered_items = np.sort(np.array(differences))
+            lo = float(np.quantile(ordered_items, 0.025))
+            hi = float(np.quantile(ordered_items, 0.975))
+            point = float(
+                unanimous_items[a][common].mean() - unanimous_items[b][common].mean()
             )
-            wykazana = lo > 0.0 or hi < 0.0
-            wykazane += wykazana
+            shown_value = lo > 0.0 or hi < 0.0
+            shown_items += shown_value
             pairs[f"{dataset.display_name(a)} vs {dataset.display_name(b)}"] = {
-                "ostrzezen_wspolnych": int(wspolne.sum()),
-                "roznica": punkt,
+                "ostrzezen_wspolnych": int(common.sum()),
+                "roznica": point,
                 "roznica_ci": [lo, hi],
-                "roznica_wykazana": bool(wykazana),
+                "roznica_wykazana": bool(shown_value),
             }
     return {
         "kryterium": KRYTERIUM,
         "par": len(pairs),
-        "roznic_wykazanych": wykazane,
+        "roznic_wykazanych": shown_items,
         "szczegoly": pairs,
     }
 

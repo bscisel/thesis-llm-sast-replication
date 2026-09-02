@@ -60,15 +60,42 @@ def _strip_line_prefixes(context: str) -> list[tuple[int, str]]:
     return rows
 
 
-def build_grounding(finding: Finding, source_root: Path) -> Grounding:
-    context = _build_code_context(finding.raw or _as_raw(finding), source_root)
+def tool_roots(
+    findings: Sequence[Finding], source_root: Path
+) -> dict[str, tuple[Path, bool]]:
+    """Ustala dla kazdego narzedzia katalog, wzgledem ktorego podaje ono sciezki."""
+    candidate_paths = [source_root] + sorted(p for p in source_root.iterdir() if p.is_dir())
+    roots: dict[str, tuple[Path, bool]] = {}
+
+    for tool in sorted({f.tool for f in findings}):
+        paths = [f.source_path for f in findings if f.tool == tool and f.source_path]
+        if not paths:
+            roots[tool] = (source_root, False)
+            continue
+        hits = [sum((k / s).exists() for s in paths) for k in candidate_paths]
+        best_item = max(hits)
+        if best_item == 0 or hits.count(best_item) > 1:
+            roots[tool] = (source_root, False)
+            continue
+        root = candidate_paths[hits.index(best_item)]
+        roots[tool] = (root, root != source_root)
+    return roots
+
+
+def build_grounding(
+    finding: Finding, source_root: Path, root: tuple[Path, bool] | None = None
+) -> Grounding:
+    directory, relative_item = root or (source_root, False)
+    context = _build_code_context(
+        finding.raw or _as_raw(finding), directory, paths_relative_to_root=relative_item
+    )
     if context.startswith("("):
         return Grounding(frozenset(), frozenset(), frozenset(), False, False)
 
     rows = _strip_line_prefixes(context)
-    numery = [n for n, _ in rows]
-    oczyszczone = _strip_comments("\n".join(code for _, code in rows)).split("\n")
-    rows = list(zip(numery, oczyszczone))
+    numbers = [n for n, _ in rows]
+    cleaned = _strip_comments("\n".join(code for _, code in rows)).split("\n")
+    rows = list(zip(numbers, cleaned))
     code_tokens: set[str] = set()
     near_tokens: set[str] = set()
     try:
@@ -100,8 +127,13 @@ def _as_raw(finding: Finding) -> dict[str, Any]:
     }
 
 
-def context_kind(finding: Finding, source_root: Path) -> str:
-    context = _build_code_context(finding.raw or _as_raw(finding), source_root)
+def context_kind(
+    finding: Finding, source_root: Path, root: tuple[Path, bool] | None = None
+) -> str:
+    directory, relative_item = root or (source_root, False)
+    context = _build_code_context(
+        finding.raw or _as_raw(finding), directory, paths_relative_to_root=relative_item
+    )
     if context.startswith("("):
         return "no context"
     return "full file" if "complete file" in context.splitlines()[0] else "excerpt"

@@ -47,8 +47,8 @@ def parser(doc: str) -> argparse.ArgumentParser:
 def dataset_from(args: argparse.Namespace) -> Dataset:
     dataset = load_dataset(args.run_dir, include_partial=args.include_partial)
     for model, count in (dataset.partial_models or {}).items():
-        stan = "counted" if args.include_partial else "SKIPPED"
-        print(f"WARNING: {model} has {count}/{len(dataset.findings)} verdicts - {stan}.")
+        state = "counted" if args.include_partial else "SKIPPED"
+        print(f"WARNING: {model} has {count}/{len(dataset.findings)} verdicts - {state}.")
     return dataset
 
 
