@@ -1,0 +1,472 @@
+{
+  "schema_version": "1",
+  "run": "003_jetty-stage-1",
+  "updated_at": "2026-07-31",
+  "taxonomy": [
+    "CORRECTNESS",
+    "CONCURRENCY",
+    "SECURITY",
+    "PERFORMANCE",
+    "MAINTAINABILITY",
+    "OTHER"
+  ],
+  "keyed_by": [
+    "tool",
+    "type"
+  ],
+  "labeling_method": "manual_author_review_per_rule",
+  "total_rules": 63,
+  "labeled_rules": 63,
+  "rules": {
+    "error-prone::BanJNDI": {
+      "tool": "error-prone",
+      "type": "BanJNDI",
+      "count": 3,
+      "category": "SECURITY",
+      "context_dependent": false
+    },
+    "error-prone::FutureReturnValueIgnored": {
+      "tool": "error-prone",
+      "type": "FutureReturnValueIgnored",
+      "count": 17,
+      "category": "CORRECTNESS",
+      "context_dependent": false
+    },
+    "error-prone::IntLongMath": {
+      "tool": "error-prone",
+      "type": "IntLongMath",
+      "count": 10,
+      "category": "CORRECTNESS",
+      "context_dependent": false
+    },
+    "error-prone::InvalidParam": {
+      "tool": "error-prone",
+      "type": "InvalidParam",
+      "count": 1,
+      "category": "MAINTAINABILITY",
+      "context_dependent": false
+    },
+    "error-prone::MissingCasesInEnumSwitch": {
+      "tool": "error-prone",
+      "type": "MissingCasesInEnumSwitch",
+      "count": 12,
+      "category": "CORRECTNESS",
+      "context_dependent": false
+    },
+    "error-prone::MissingOverride": {
+      "tool": "error-prone",
+      "type": "MissingOverride",
+      "count": 8,
+      "category": "MAINTAINABILITY",
+      "context_dependent": false
+    },
+    "error-prone::MissingSummary": {
+      "tool": "error-prone",
+      "type": "MissingSummary",
+      "count": 12,
+      "category": "MAINTAINABILITY",
+      "context_dependent": false
+    },
+    "error-prone::OperatorPrecedence": {
+      "tool": "error-prone",
+      "type": "OperatorPrecedence",
+      "count": 10,
+      "category": "MAINTAINABILITY",
+      "context_dependent": false
+    },
+    "error-prone::ReferenceEquality": {
+      "tool": "error-prone",
+      "type": "ReferenceEquality",
+      "count": 10,
+      "category": "CORRECTNESS",
+      "context_dependent": false
+    },
+    "error-prone::SameNameButDifferent": {
+      "tool": "error-prone",
+      "type": "SameNameButDifferent",
+      "count": 10,
+      "category": "MAINTAINABILITY",
+      "context_dependent": false
+    },
+    "error-prone::UnnecessaryParentheses": {
+      "tool": "error-prone",
+      "type": "UnnecessaryParentheses",
+      "count": 4,
+      "category": "MAINTAINABILITY",
+      "context_dependent": false
+    },
+    "error-prone::UnusedVariable": {
+      "tool": "error-prone",
+      "type": "UnusedVariable",
+      "count": 3,
+      "category": "MAINTAINABILITY",
+      "context_dependent": false
+    },
+    "sonarqube::java:S1121": {
+      "tool": "sonarqube",
+      "type": "java:S1121",
+      "count": 1,
+      "category": "MAINTAINABILITY",
+      "context_dependent": false
+    },
+    "sonarqube::java:S1143": {
+      "tool": "sonarqube",
+      "type": "java:S1143",
+      "count": 1,
+      "category": "CORRECTNESS",
+      "context_dependent": false
+    },
+    "sonarqube::java:S115": {
+      "tool": "sonarqube",
+      "type": "java:S115",
+      "count": 1,
+      "category": "MAINTAINABILITY",
+      "context_dependent": false
+    },
+    "sonarqube::java:S1168": {
+      "tool": "sonarqube",
+      "type": "java:S1168",
+      "count": 1,
+      "category": "CORRECTNESS",
+      "context_dependent": false
+    },
+    "sonarqube::java:S1181": {
+      "tool": "sonarqube",
+      "type": "java:S1181",
+      "count": 2,
+      "category": "CORRECTNESS",
+      "context_dependent": false
+    },
+    "sonarqube::java:S1186": {
+      "tool": "sonarqube",
+      "type": "java:S1186",
+      "count": 1,
+      "category": "MAINTAINABILITY",
+      "context_dependent": false
+    },
+    "sonarqube::java:S1192": {
+      "tool": "sonarqube",
+      "type": "java:S1192",
+      "count": 2,
+      "category": "MAINTAINABILITY",
+      "context_dependent": false
+    },
+    "sonarqube::java:S1201": {
+      "tool": "sonarqube",
+      "type": "java:S1201",
+      "count": 1,
+      "category": "CORRECTNESS",
+      "context_dependent": false
+    },
+    "sonarqube::java:S1845": {
+      "tool": "sonarqube",
+      "type": "java:S1845",
+      "count": 6,
+      "category": "MAINTAINABILITY",
+      "context_dependent": false
+    },
+    "sonarqube::java:S1948": {
+      "tool": "sonarqube",
+      "type": "java:S1948",
+      "count": 2,
+      "category": "CORRECTNESS",
+      "context_dependent": false
+    },
+    "sonarqube::java:S2068": {
+      "tool": "sonarqube",
+      "type": "java:S2068",
+      "count": 1,
+      "category": "SECURITY",
+      "context_dependent": false,
+      "corrected_from": "OTHER"
+    },
+    "sonarqube::java:S2095": {
+      "tool": "sonarqube",
+      "type": "java:S2095",
+      "count": 21,
+      "category": "CORRECTNESS",
+      "context_dependent": false
+    },
+    "sonarqube::java:S2119": {
+      "tool": "sonarqube",
+      "type": "java:S2119",
+      "count": 1,
+      "category": "PERFORMANCE",
+      "context_dependent": false
+    },
+    "sonarqube::java:S2142": {
+      "tool": "sonarqube",
+      "type": "java:S2142",
+      "count": 16,
+      "category": "CONCURRENCY",
+      "context_dependent": false
+    },
+    "sonarqube::java:S2177": {
+      "tool": "sonarqube",
+      "type": "java:S2177",
+      "count": 1,
+      "category": "MAINTAINABILITY",
+      "context_dependent": false
+    },
+    "sonarqube::java:S2178": {
+      "tool": "sonarqube",
+      "type": "java:S2178",
+      "count": 10,
+      "category": "CORRECTNESS",
+      "context_dependent": false
+    },
+    "sonarqube::java:S2259": {
+      "tool": "sonarqube",
+      "type": "java:S2259",
+      "count": 6,
+      "category": "CORRECTNESS",
+      "context_dependent": false
+    },
+    "sonarqube::java:S2445": {
+      "tool": "sonarqube",
+      "type": "java:S2445",
+      "count": 1,
+      "category": "CONCURRENCY",
+      "context_dependent": false,
+      "corrected_from": "OTHER"
+    },
+    "sonarqube::java:S2583": {
+      "tool": "sonarqube",
+      "type": "java:S2583",
+      "count": 3,
+      "category": "CORRECTNESS",
+      "context_dependent": false
+    },
+    "sonarqube::java:S2696": {
+      "tool": "sonarqube",
+      "type": "java:S2696",
+      "count": 1,
+      "category": "CORRECTNESS",
+      "context_dependent": false
+    },
+    "sonarqube::java:S2755": {
+      "tool": "sonarqube",
+      "type": "java:S2755",
+      "count": 1,
+      "category": "SECURITY",
+      "context_dependent": false
+    },
+    "sonarqube::java:S3014": {
+      "tool": "sonarqube",
+      "type": "java:S3014",
+      "count": 2,
+      "category": "MAINTAINABILITY",
+      "context_dependent": false
+    },
+    "sonarqube::java:S3358": {
+      "tool": "sonarqube",
+      "type": "java:S3358",
+      "count": 1,
+      "category": "MAINTAINABILITY",
+      "context_dependent": false
+    },
+    "sonarqube::java:S3516": {
+      "tool": "sonarqube",
+      "type": "java:S3516",
+      "count": 4,
+      "category": "MAINTAINABILITY",
+      "context_dependent": false,
+      "corrected_from": "CORRECTNESS"
+    },
+    "sonarqube::java:S3551": {
+      "tool": "sonarqube",
+      "type": "java:S3551",
+      "count": 1,
+      "category": "CONCURRENCY",
+      "context_dependent": false
+    },
+    "sonarqube::java:S3776": {
+      "tool": "sonarqube",
+      "type": "java:S3776",
+      "count": 6,
+      "category": "MAINTAINABILITY",
+      "context_dependent": false
+    },
+    "sonarqube::java:S4973": {
+      "tool": "sonarqube",
+      "type": "java:S4973",
+      "count": 2,
+      "category": "CORRECTNESS",
+      "context_dependent": false
+    },
+    "sonarqube::java:S5164": {
+      "tool": "sonarqube",
+      "type": "java:S5164",
+      "count": 3,
+      "category": "CORRECTNESS",
+      "context_dependent": false,
+      "corrected_from": "PERFORMANCE"
+    },
+    "sonarqube::java:S6218": {
+      "tool": "sonarqube",
+      "type": "java:S6218",
+      "count": 1,
+      "category": "CORRECTNESS",
+      "context_dependent": false
+    },
+    "spotbugs::AT_NONATOMIC_64BIT_PRIMITIVE": {
+      "tool": "spotbugs",
+      "type": "AT_NONATOMIC_64BIT_PRIMITIVE",
+      "count": 7,
+      "category": "CONCURRENCY",
+      "context_dependent": false
+    },
+    "spotbugs::AT_STALE_THREAD_WRITE_OF_PRIMITIVE": {
+      "tool": "spotbugs",
+      "type": "AT_STALE_THREAD_WRITE_OF_PRIMITIVE",
+      "count": 25,
+      "category": "CONCURRENCY",
+      "context_dependent": false
+    },
+    "spotbugs::CT_CONSTRUCTOR_THROW": {
+      "tool": "spotbugs",
+      "type": "CT_CONSTRUCTOR_THROW",
+      "count": 25,
+      "category": "SECURITY",
+      "context_dependent": false
+    },
+    "spotbugs::EI_EXPOSE_REP": {
+      "tool": "spotbugs",
+      "type": "EI_EXPOSE_REP",
+      "count": 4,
+      "category": "SECURITY",
+      "context_dependent": false
+    },
+    "spotbugs::EI_EXPOSE_REP2": {
+      "tool": "spotbugs",
+      "type": "EI_EXPOSE_REP2",
+      "count": 6,
+      "category": "SECURITY",
+      "context_dependent": false
+    },
+    "spotbugs::HSM_HIDING_METHOD": {
+      "tool": "spotbugs",
+      "type": "HSM_HIDING_METHOD",
+      "count": 1,
+      "category": "CORRECTNESS",
+      "context_dependent": false
+    },
+    "spotbugs::INT_BAD_COMPARISON_WITH_NONNEGATIVE_VALUE": {
+      "tool": "spotbugs",
+      "type": "INT_BAD_COMPARISON_WITH_NONNEGATIVE_VALUE",
+      "count": 1,
+      "category": "CORRECTNESS",
+      "context_dependent": false,
+      "corrected_from": "OTHER"
+    },
+    "spotbugs::MS_MUTABLE_ARRAY": {
+      "tool": "spotbugs",
+      "type": "MS_MUTABLE_ARRAY",
+      "count": 1,
+      "category": "SECURITY",
+      "context_dependent": false,
+      "corrected_from": "OTHER"
+    },
+    "spotbugs::NM_CLASS_NAMING_CONVENTION": {
+      "tool": "spotbugs",
+      "type": "NM_CLASS_NAMING_CONVENTION",
+      "count": 1,
+      "category": "MAINTAINABILITY",
+      "context_dependent": false,
+      "corrected_from": "OTHER"
+    },
+    "spotbugs::NM_SAME_SIMPLE_NAME_AS_SUPERCLASS": {
+      "tool": "spotbugs",
+      "type": "NM_SAME_SIMPLE_NAME_AS_SUPERCLASS",
+      "count": 1,
+      "category": "MAINTAINABILITY",
+      "context_dependent": false
+    },
+    "spotbugs::NP_NULL_ON_SOME_PATH_EXCEPTION": {
+      "tool": "spotbugs",
+      "type": "NP_NULL_ON_SOME_PATH_EXCEPTION",
+      "count": 1,
+      "category": "CORRECTNESS",
+      "context_dependent": false
+    },
+    "spotbugs::NP_NULL_PARAM_DEREF": {
+      "tool": "spotbugs",
+      "type": "NP_NULL_PARAM_DEREF",
+      "count": 2,
+      "category": "CORRECTNESS",
+      "context_dependent": false
+    },
+    "spotbugs::RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE": {
+      "tool": "spotbugs",
+      "type": "RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE",
+      "count": 1,
+      "category": "CORRECTNESS",
+      "context_dependent": false
+    },
+    "spotbugs::RC_REF_COMPARISON_BAD_PRACTICE_BOOLEAN": {
+      "tool": "spotbugs",
+      "type": "RC_REF_COMPARISON_BAD_PRACTICE_BOOLEAN",
+      "count": 1,
+      "category": "CORRECTNESS",
+      "context_dependent": false
+    },
+    "spotbugs::RV_RETURN_VALUE_OF_PUTIFABSENT_IGNORED": {
+      "tool": "spotbugs",
+      "type": "RV_RETURN_VALUE_OF_PUTIFABSENT_IGNORED",
+      "count": 2,
+      "category": "CORRECTNESS",
+      "context_dependent": false
+    },
+    "spotbugs::SBSC_USE_STRINGBUFFER_CONCATENATION": {
+      "tool": "spotbugs",
+      "type": "SBSC_USE_STRINGBUFFER_CONCATENATION",
+      "count": 2,
+      "category": "PERFORMANCE",
+      "context_dependent": false
+    },
+    "spotbugs::SE_BAD_FIELD": {
+      "tool": "spotbugs",
+      "type": "SE_BAD_FIELD",
+      "count": 1,
+      "category": "CORRECTNESS",
+      "context_dependent": false,
+      "corrected_from": "OTHER"
+    },
+    "spotbugs::SIC_INNER_SHOULD_BE_STATIC": {
+      "tool": "spotbugs",
+      "type": "SIC_INNER_SHOULD_BE_STATIC",
+      "count": 6,
+      "category": "PERFORMANCE",
+      "context_dependent": false
+    },
+    "spotbugs::SQL_PREPARED_STATEMENT_GENERATED_FROM_NONCONSTANT_STRING": {
+      "tool": "spotbugs",
+      "type": "SQL_PREPARED_STATEMENT_GENERATED_FROM_NONCONSTANT_STRING",
+      "count": 3,
+      "category": "SECURITY",
+      "context_dependent": false
+    },
+    "spotbugs::UPM_UNCALLED_PRIVATE_METHOD": {
+      "tool": "spotbugs",
+      "type": "UPM_UNCALLED_PRIVATE_METHOD",
+      "count": 3,
+      "category": "MAINTAINABILITY",
+      "context_dependent": false
+    },
+    "spotbugs::URF_UNREAD_FIELD": {
+      "tool": "spotbugs",
+      "type": "URF_UNREAD_FIELD",
+      "count": 3,
+      "category": "MAINTAINABILITY",
+      "context_dependent": false
+    },
+    "spotbugs::WMI_WRONG_MAP_ITERATOR": {
+      "tool": "spotbugs",
+      "type": "WMI_WRONG_MAP_ITERATOR",
+      "count": 3,
+      "category": "PERFORMANCE",
+      "context_dependent": false
+    }
+  },
+  "overrides": {}
+}

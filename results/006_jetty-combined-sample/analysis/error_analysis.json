@@ -1,0 +1,269 @@
+{
+  "run": "006_jetty-combined-sample",
+  "models": {
+    "claude": "claude-opus-5",
+    "gpt": "gpt-5.6-terra",
+    "qwen": "qwen3.5:9b",
+    "oss": "openai/gpt-oss-120b",
+    "luna": "gpt-5.6-luna",
+    "oss20": "openai/gpt-oss-20b",
+    "sonnet": "claude-sonnet-5"
+  },
+  "settings": {
+    "iterations": 10000,
+    "seed": 20260803,
+    "alpha": 0.05,
+    "resampling": "rule"
+  },
+  "error_unanimity": {
+    "claude-opus-5": {
+      "errors": 92,
+      "unanimous": 80,
+      "split": 12,
+      "unanimous_share": 0.8695652173913043
+    },
+    "gpt-5.6-terra": {
+      "errors": 82,
+      "unanimous": 68,
+      "split": 14,
+      "unanimous_share": 0.8292682926829268
+    },
+    "qwen3.5:9b": {
+      "errors": 112,
+      "unanimous": 46,
+      "split": 66,
+      "unanimous_share": 0.4107142857142857
+    },
+    "openai/gpt-oss-120b": {
+      "errors": 94,
+      "unanimous": 72,
+      "split": 22,
+      "unanimous_share": 0.7659574468085106
+    },
+    "gpt-5.6-luna": {
+      "errors": 110,
+      "unanimous": 79,
+      "split": 31,
+      "unanimous_share": 0.7181818181818181
+    },
+    "openai/gpt-oss-20b": {
+      "errors": 89,
+      "unanimous": 55,
+      "split": 34,
+      "unanimous_share": 0.6179775280898876
+    },
+    "claude-sonnet-5": {
+      "errors": 96,
+      "unanimous": 83,
+      "split": 13,
+      "unanimous_share": 0.8645833333333334
+    }
+  },
+  "unanimous_misses": {
+    "count": 26,
+    "by_rule": {
+      "spotbugs::AT_STALE_THREAD_WRITE_OF_PRIMITIVE": 10,
+      "sonarqube::java:S3776": 4,
+      "sonarqube::java:S2142": 4,
+      "spotbugs::AT_NONATOMIC_64BIT_PRIMITIVE": 1,
+      "error-prone::IntLongMath": 1,
+      "error-prone::FutureReturnValueIgnored": 1,
+      "sonarqube::java:S5843": 1,
+      "sonarqube::java:S1144": 1,
+      "sonarqube::java:S108": 1,
+      "sonarqube::java:S1948": 1,
+      "sonarqube::java:S2755": 1
+    },
+    "list": [
+      {
+        "rule": "spotbugs::AT_STALE_THREAD_WRITE_OF_PRIMITIVE",
+        "tool": "spotbugs",
+        "file": "AbstractSessionManager.java",
+        "line": "371",
+        "label": false
+      },
+      {
+        "rule": "spotbugs::AT_STALE_THREAD_WRITE_OF_PRIMITIVE",
+        "tool": "spotbugs",
+        "file": "AbstractSessionManager.java",
+        "line": "856",
+        "label": false
+      },
+      {
+        "rule": "spotbugs::AT_STALE_THREAD_WRITE_OF_PRIMITIVE",
+        "tool": "spotbugs",
+        "file": "Entry.java",
+        "line": "54",
+        "label": false
+      },
+      {
+        "rule": "spotbugs::AT_STALE_THREAD_WRITE_OF_PRIMITIVE",
+        "tool": "spotbugs",
+        "file": "HTTP2Connection.java",
+        "line": "129",
+        "label": false
+      },
+      {
+        "rule": "spotbugs::AT_STALE_THREAD_WRITE_OF_PRIMITIVE",
+        "tool": "spotbugs",
+        "file": "HTTP2Session.java",
+        "line": "238",
+        "label": false
+      },
+      {
+        "rule": "spotbugs::AT_STALE_THREAD_WRITE_OF_PRIMITIVE",
+        "tool": "spotbugs",
+        "file": "HttpConnectionOverFCGI.java",
+        "line": "298",
+        "label": false
+      },
+      {
+        "rule": "spotbugs::AT_STALE_THREAD_WRITE_OF_PRIMITIVE",
+        "tool": "spotbugs",
+        "file": "LowResourceMonitor.java",
+        "line": "203",
+        "label": false
+      },
+      {
+        "rule": "spotbugs::AT_STALE_THREAD_WRITE_OF_PRIMITIVE",
+        "tool": "spotbugs",
+        "file": "QpackDecoder.java",
+        "line": "122",
+        "label": false
+      },
+      {
+        "rule": "spotbugs::AT_NONATOMIC_64BIT_PRIMITIVE",
+        "tool": "spotbugs",
+        "file": "ServerQuicheSession.java",
+        "line": "172",
+        "label": false
+      },
+      {
+        "rule": "spotbugs::AT_STALE_THREAD_WRITE_OF_PRIMITIVE",
+        "tool": "spotbugs",
+        "file": "WebSocketCoreSession.java",
+        "line": "573",
+        "label": false
+      },
+      {
+        "rule": "spotbugs::AT_STALE_THREAD_WRITE_OF_PRIMITIVE",
+        "tool": "spotbugs",
+        "file": "WebSocketCoreSession.java",
+        "line": "609",
+        "label": false
+      },
+      {
+        "rule": "error-prone::IntLongMath",
+        "tool": "error-prone",
+        "file": "FrameGenerator.java",
+        "line": "463",
+        "label": false
+      },
+      {
+        "rule": "error-prone::FutureReturnValueIgnored",
+        "tool": "error-prone",
+        "file": "HTTP2StreamEndPoint.java",
+        "line": "353",
+        "label": false
+      },
+      {
+        "rule": "sonarqube::java:S3776",
+        "tool": "sonarqube",
+        "file": "AsyncJSON.java",
+        "line": "1298",
+        "label": false
+      },
+      {
+        "rule": "sonarqube::java:S5843",
+        "tool": "sonarqube",
+        "file": "AuthenticationProtocolHandler.java",
+        "line": "44",
+        "label": false
+      },
+      {
+        "rule": "sonarqube::java:S2142",
+        "tool": "sonarqube",
+        "file": "Blocker.java",
+        "line": "216",
+        "label": false
+      },
+      {
+        "rule": "sonarqube::java:S2142",
+        "tool": "sonarqube",
+        "file": "Blocker.java",
+        "line": "513",
+        "label": false
+      },
+      {
+        "rule": "sonarqube::java:S3776",
+        "tool": "sonarqube",
+        "file": "HttpChannelState.java",
+        "line": "1338",
+        "label": false
+      },
+      {
+        "rule": "sonarqube::java:S3776",
+        "tool": "sonarqube",
+        "file": "MutableHttpFields.java",
+        "line": "431",
+        "label": false
+      },
+      {
+        "rule": "sonarqube::java:S2142",
+        "tool": "sonarqube",
+        "file": "QueuedThreadPool.java",
+        "line": "354",
+        "label": false
+      },
+      {
+        "rule": "sonarqube::java:S1144",
+        "tool": "sonarqube",
+        "file": "SecurityUtils.java",
+        "line": "233",
+        "label": false
+      },
+      {
+        "rule": "sonarqube::java:S2142",
+        "tool": "sonarqube",
+        "file": "SharedBlockingCallback.java",
+        "line": "231",
+        "label": false
+      },
+      {
+        "rule": "sonarqube::java:S108",
+        "tool": "sonarqube",
+        "file": "TypeUtil.java",
+        "line": "622",
+        "label": false
+      },
+      {
+        "rule": "sonarqube::java:S1948",
+        "tool": "sonarqube",
+        "file": "UnreadableSessionDataException.java",
+        "line": "26",
+        "label": false
+      },
+      {
+        "rule": "sonarqube::java:S3776",
+        "tool": "sonarqube",
+        "file": "Utf8StringBuilder.java",
+        "line": "351",
+        "label": false
+      },
+      {
+        "rule": "sonarqube::java:S2755",
+        "tool": "sonarqube",
+        "file": "XmlParser.java",
+        "line": "113",
+        "label": false
+      }
+    ]
+  },
+  "rejected_true_positives": {
+    "models": [
+      "qwen",
+      "oss20"
+    ],
+    "count": 69
+  }
+}

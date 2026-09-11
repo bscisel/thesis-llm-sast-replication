@@ -1,0 +1,8 @@
+model;vendor;weights;tier_or_size;price_input_usd_per_million;price_output_usd_per_million;access
+Claude Opus 5;Anthropic;closed;high;5;25;vendor API
+Claude Sonnet 5;Anthropic;closed;medium;2;10;vendor API
+GPT-5.6 Terra;OpenAI;closed;medium;2;12;vendor API
+GPT-5.6 Luna;OpenAI;closed;low;0,2;1,2;vendor API
+gpt-oss-120b;OpenAI;open;116.8B;0,037;0,17;OpenRouter
+gpt-oss-20b;OpenAI;open;20.9B;0,03;0,14;OpenRouter
+Qwen3.5 9B;Alibaba;open;9B;;;own GPU

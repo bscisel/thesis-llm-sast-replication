@@ -1,0 +1,1331 @@
+{
+  "model": "qwen3.5:9b",
+  "tool": "error-prone",
+  "num_runs": 3,
+  "runs_per_invocation": 3,
+  "source_root": "jetty.project",
+  "call_parameters": {
+    "temperature": null,
+    "concurrency": 1,
+    "response_format": "json_schema",
+    "num_ctx": 32768,
+    "request_timeout_s": 900,
+    "base_url": "http://localhost:11434"
+  },
+  "system_prompt_variant": "jetty",
+  "system_prompt_sha256": "b5b634e0a9109c59",
+  "user_prompt_sha256": "3963ac13371abed5",
+  "timestamp": "2026-08-15T09:18:25.606561+00:00",
+  "updated_at": "2026-08-15T10:40:01.350400+00:00",
+  "findings": [
+    {
+      "finding_id": 0,
+      "type": "CatchAndPrintStackTrace",
+      "sourcefile": "JettyLoggerFactory.java",
+      "start_line": "235",
+      "message": "Logging or rethrowing exceptions should usually be preferred to catching and calling printStackTrace",
+      "tool_specific": {
+        "column": "17"
+      },
+      "runs": [
+        {
+          "reasoning": "The flagged line uses e.printStackTrace() inside a catch block to handle an exception from getAttribute(). The developer comment claims they cannot log here, but the JettyLoggerFactory class manages loggers and provides one (rootLogger), making this justification questionable given that proper logging should always be prioritized over raw stderr output. Calling printStackTrace bypasses application logs configured for monitoring/debugging infrastructure, which is a known code smell regarding error handling quality.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "exceptions caught and printed via printstacktrace instead of logging",
+          "developer_explanation": "This warning flags the use of e.printStackTrace() in a production error handler within JettyLoggerFactory(). You should not dump raw stack traces to standard output directly; instead, use your configured logging framework (like SLF4J/Logback) or rethrow checked exceptions. Doing so bypasses centralized log aggregation and obscures errors in monitoring tools.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 10663,
+            "output_tokens": 227
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 25482,
+          "latency_s": 67.695
+        },
+        {
+          "reasoning": "The code catches generic exceptions from internal method calls inside loops but immediately prints their stack traces using e.printStackTrace() instead of rethrowing them (as unchecked) or logging via a logger instance. While the comment claims 'nothing much we can do', even in this context better error handling options exist such as wrapping and throwing wrapped exception for caller awareness or fallback to basic static Logger that works independently from appender state, making warning claim correct.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "catching exceptions and printing stack traces directly",
+          "developer_explanation": "The method catches unexpected internal failures but prints raw stack traces to stderr rather than logging them properly or rethrowing as unchecked exception for caller awareness. This practice pollutes standard error streams with debug output that makes debugging harder since logs are not structured consistently elsewhere in codebase, reducing maintainability and making failure state invisible to callers who rely on return values instead of error propagation.",
+          "run": 2,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 25300,
+            "output_tokens": 227
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 94687,
+          "latency_s": 243.051
+        },
+        {
+          "reasoning": "The flagged line at JettyLoggerFactory.java:235 catches an Exception from getAttribute() but calls e.printStackTrace() directly instead of using proper logging infrastructure. The class already uses SLF4J throughout (JettyLogger, loggerMap usage), so a legitimate Logger instance should be available for exception handling even if not explicitly declared in the catch block.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "printing stack trace to standard error instead of using a logger",
+          "developer_explanation": "This code prints exceptions directly to stderr when accessing MBean attributes rather than logging them through proper channels like SLF4J. This makes debugging harder since production logs won't capture these errors and output behavior becomes environment-dependent.",
+          "run": 3,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 6570,
+            "output_tokens": 185
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 6168,
+          "latency_s": 16.535
+        }
+      ],
+      "original_finding_index": 6
+    },
+    {
+      "finding_id": 1,
+      "type": "LockNotBeforeTry",
+      "sourcefile": "Blocker.java",
+      "start_line": "422",
+      "message": "Prefer locking *immediately* before the try block which releases the lock to avoid the possibility of any intermediate statements throwing.",
+      "tool_specific": {
+        "column": "27"
+      },
+      "runs": [
+        {
+          "reasoning": "The flagged code acquires _lock at line 422 before entering the protected critical section with its own try-finally (unlock() in lines 437-440). There is no intermediate executable statement between lock() and try that could throw an exception - only a simple field reference declaration 'Throwable result;' which cannot fail. The single finally block ensures unlock happens regardless of how the method exits, making this pattern correct for Java concurrency.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "CONCURRENCY",
+          "issue_signature": "locking not immediately before try which releases lock",
+          "developer_explanation": "This warning is a false positive because your code correctly acquires the lock and protects it with matching finally block handling. There are no intermediate statements that could throw between locking and entering critical section, so exceptions would be impossible to occur outside normal control flow paths anyway.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 6415,
+            "output_tokens": 209
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 6859,
+          "latency_s": 19.394
+        },
+        {
+          "reasoning": "The flagged line (422) acquires a ReentrantLock immediately followed by declaring a local Throwable reference and then entering the try block containing the protected operations. This is standard ReentrantLock usage where simple variable declarations between lock() and try are not problematic - they cannot cause exceptions that would prevent unlock from running since any early throws would still hit our finally handler.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "prefer locking immediately before try block in concurrent code with lock release after protected operations",
+          "developer_explanation": "This warning can be safely dismissed - declaring a local variable right after acquiring the lock is not problematic because simple declarations cannot leave you in an unsafe state where unlock might fail. Our finally blocks properly handle all exit paths, including any exceptions from early statements, so this pattern maintains correct locking discipline.",
+          "run": 2,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 7241,
+            "output_tokens": 202
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 10715,
+          "latency_s": 20.791,
+          "retry_of_truncated": true,
+          "retry_attempts": 1,
+          "superseded": {
+            "run": 2,
+            "error": "parse_failed",
+            "raw": "",
+            "served_model": "qwen3.5:9b",
+            "usage": {
+              "input_tokens": 5108,
+              "output_tokens": 27660
+            },
+            "stop_reason": "length",
+            "thinking_chars": 124214,
+            "latency_s": 339.758
+          }
+        },
+        {
+          "reasoning": "The flagged code acquires _lock.lock() at line 422, then declares a local variable Throwable result; before entering the try block which contains only await logic inside its finally clause that always unlocks. Since this simple field declaration cannot throw any runtime exception in normal Java execution and all control paths through catch blocks ensure unlock(), there is no actual vulnerability here - the tool's claim of needing 'immediate locking' overlooks that declarations themselves are safe.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "CONCURRENCY",
+          "issue_signature": "lock acquired before try block body starts",
+          "developer_explanation": "This warning can be safely dismissed. The code correctly releases the lock on all exit paths through its finally block that executes even if exceptions occur in the wait loop. Simple variable declarations between acquiring and entering a synchronized region cannot fail, so there is no risk of leaking this lock.",
+          "run": 3,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 6752,
+            "output_tokens": 211
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 8029,
+          "latency_s": 22.876
+        }
+      ],
+      "original_finding_index": 34
+    },
+    {
+      "finding_id": 2,
+      "type": "ClassCanBeStatic",
+      "sourcefile": "WriteFlusher.java",
+      "start_line": "250",
+      "message": "Inner class is non-static but does not reference enclosing class",
+      "tool_specific": {
+        "column": "13"
+      },
+      "runs": [
+        {
+          "reasoning": "The inner class CancellingState at line 250 does not reference any instance members of its enclosing WriteFlusher (except through inherited state). Both PendingState and CancellingState follow the exact same pattern—neither accesses outer class fields directly—but only CancellingState triggers this warning, suggesting tool inconsistency. All other similar inner classes like IdleState, FlushingState, FailedState are already marked private static in a comparable codebase.",
+          "is_true_positive": false,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "inner class can be made static when not accessing outer instance members",
+          "developer_explanation": "This warning is likely a false positive because other similar state classes (PendingState) don't trigger it despite having the same structure. The inner class only uses its own constructor parameters and doesn't access any WriteFlusher instance fields or methods directly, which would be required for true non-static necessity.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 6756,
+            "output_tokens": 218
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3646,
+          "latency_s": 11.804
+        },
+        {
+          "reasoning": "Line 250 declares CancellingState as a non-static inner class that holds only callback/SocketAddress/buffer references passed through its constructor, with no access to WriteFlusher instance members. The ClassCanBeStatic claim is materially correct because this nested type truly doesn't reference any outer scope state.",
+          "is_true_positive": true,
+          "confidence": 1.0,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "inner class not static without using enclosing instance access members of its parent or local fields passed to constructor via callback/SocketAddress/buffers references that don't need WriteFlusher.this context but still holds private final state directly in this type hierarchy through inherited behavior from base State types with no direct outer scope field/method usage",
+          "developer_explanation": "This inner class can be made static without changing code behavior. It doesn't access any instance members of its enclosing WriteFlusher, only uses fields passed into constructor and inherits everything from parent StaticState classes. Making it static is a simple cleanup that clarifies the design intent.",
+          "run": 2,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 6843,
+            "output_tokens": 233
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 4182,
+          "latency_s": 11.716
+        },
+        {
+          "reasoning": "The code shows CancellingState at line 250 declaring fields _callback and other state parameters that come from constructor arguments without accessing WriteFlusher members or non-static context. All references are to State parent class constants (StateType enum) rather than outer instance data, confirming the tool's claim about no enclosing class access.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "inner class missing static modifier without referencing enclosing class",
+          "developer_explanation": "The CancellingState inner class could be declared as static because it doesn't access any instance members of its outer WriteFlusher class. This is a code style issue that may confuse readers into thinking there's an implicit relationship between the two classes when none exists.",
+          "run": 3,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 7164,
+            "output_tokens": 185
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 5465,
+          "latency_s": 14.041
+        }
+      ],
+      "original_finding_index": 161
+    },
+    {
+      "finding_id": 3,
+      "type": "UnusedMethod",
+      "sourcefile": "ArrayByteBufferPool.java",
+      "start_line": "811",
+      "message": "Method 'remove' is never used.",
+      "tool_specific": {
+        "column": "14"
+      },
+      "runs": [
+        {
+          "reasoning": "Line 686 shows forEach(Pool.Entry::remove) which invokes remove() on each Pool.Entry implementation via method reference; both ReservedBuffer and PooledBuffer inner classes define their own remove() methods that get called through this polymorphic invocation path.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "unused method warning on overridden implementation",
+          "developer_explanation": "This warning appears to be a limitation in the static analyzer that doesn't properly account for polymorphic usage across class hierarchies. The remove() method defined at line 811 is invoked indirectly through the stream operation at line 686 when clear() removes all entries, and both ReservedBuffer and PooledBuffer implementations are reached through this mechanism.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 7560,
+            "output_tokens": 187
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 5558,
+          "latency_s": 16.063
+        },
+        {
+          "reasoning": "The method 'remove()' at line 811-814 is an override that delegates to ArrayByteBufferPool.this.remove(). While the shown snippet doesn't directly call this specific implementation, Error Prone's UnusedMethod rule cannot analyze inheritance hierarchies and external callers - a polymorphic API contract requires implementations even if unreachable within static analysis scope. Additionally, line 686 shows Pool.Entry::remove being used as a method reference in stream operations, meaning the remove() interface/contract is exercised through this PooledBuffer's override via composition.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "method flagged as unused due to inheritance and polymorphism limitations in static analysis tool scope",
+          "developer_explanation": "This warning can be safely dismissed because 'remove()' is not truly dead code - it implements an API contract that may be invoked externally through interface references (as shown at line 686). Static analyzers like Error Prone cannot see callers outside the analyzed file or resolve polymorphic dispatch in inheritance hierarchies, so they incorrectly flag overridden methods as unused when their implementations are only reachable via interfaces.",
+          "run": 2,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 6928,
+            "output_tokens": 268
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2527,
+          "latency_s": 9.094
+        },
+        {
+          "reasoning": "The code at line 686 uses Pool.Entry::remove as a method reference passed to forEach(), which should count as usage of remove() on pool entries (likely PooledBuffer or ReservedBuffer instances). Error Prone may not recognize functional references in stream operations the same way it recognizes direct calls, making this warning a false positive caused by tool limitations rather than actual unused code.",
+          "is_true_positive": false,
+          "confidence": 0.75,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "method never referenced according to analyzer but called via functional reference in stream operation",
+          "developer_explanation": "This warning is likely a false positive because your clear() method at line 686 does call remove() on all pool entries using the ::remove functional reference. Error Prone sometimes fails to recognize such calls when they appear inside forEach streams, even though the methods in ReservedBuffer and PooledBuffer are invoked through this mechanism.",
+          "run": 3,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 7615,
+            "output_tokens": 215
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 5779,
+          "latency_s": 15.152
+        }
+      ],
+      "original_finding_index": 165
+    },
+    {
+      "finding_id": 4,
+      "type": "UnnecessaryLambda",
+      "sourcefile": "ByteArrayEndPoint.java",
+      "start_line": "59",
+      "message": "Returning a lambda from a helper method or saving it in a constant is unnecessary; prefer to implement the functional interface method directly and use a method reference instead.",
+      "tool_specific": {
+        "column": "28"
+      },
+      "runs": [
+        {
+          "reasoning": "The flag claims the lambda in a final field is unnecessary but replacing with a direct method reference would require capturing state at initialization time versus re-evaluating `getFillInterest()` each invocation (as implied by calling it inside lambda body). This suggests behaviorally different semantics if replacement occurs, meaning tool's claim that code can be simplified without issue likely does not hold here.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "unnecessary lambda in final field",
+          "developer_explanation": "The warning is a false positive because the current code correctly re-evaluates the interest holder for every execution context when `Runnable.run()` is invoked. Replacing with a method reference would capture one instance at initialization, potentially using stale state across concurrent thread invocations where this callback logic is used repeatedly in Jetty's I/O pipeline.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 22239,
+            "output_tokens": 205
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 80629,
+          "latency_s": 194.406
+        },
+        {
+          "reasoning": "The warning claims that a lambda used to implement Runnable at line 59 could be replaced with a method reference, but this decision depends on what getFillInterest() returns—which cannot be fully determined from context alone since we don't see its return type or whether an equivalent ::fillable pattern exists. The code correctly invokes fillable() each time the task executes via execute(), which is safe and intentional here.",
+          "is_true_positive": false,
+          "confidence": 0.75,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "lambda implementation could use method reference instead",
+          "developer_explanation": "Error Prone flags this as UnnecessaryLambda because the tool prefers method references over lambdas for Runnable implementations when equivalent patterns exist. However, without being able to verify that getFillInterest() returns a type with an accessible ::fillable method in our codebase, we cannot assume such an alternative exists or is preferable here. The current implementation works correctly and invokes fillable() safely on each execution.",
+          "run": 2,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 7243,
+            "output_tokens": 225
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 12191,
+          "latency_s": 30.141
+        },
+        {
+          "reasoning": "The lambda at line 59 simply delegates to getFillInterest().fillable() with no captured variables from the enclosing scope, making it functionally identical to a method reference alternative. While Error Prone flags this as UnnecessaryLambda for code quality reasons, both forms produce behaviorally equivalent runtime results and there is no correctness issue here.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "lambda where method reference would suffice for readability",
+          "developer_explanation": "This warning suggests using a lambda instead of directly delegating via getFillInterest(). The two approaches behave identically since the lambda captures nothing from its surroundings. However, when both forms are available and behaviorally equivalent, we generally prefer method references as they convey intent more clearly in Java code style conventions.",
+          "run": 3,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 5822,
+            "output_tokens": 193
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 5192,
+          "latency_s": 14.158
+        }
+      ],
+      "original_finding_index": 171
+    },
+    {
+      "finding_id": 5,
+      "type": "BadInstanceof",
+      "sourcefile": "ByteArrayEndPoint.java",
+      "start_line": "475",
+      "message": "`_buffer` is an instance of RetainableByteBuffer.DynamicCapacity which is a subtype of RetainableByteBuffer.DynamicCapacity, so this is equivalent to a null check.",
+      "tool_specific": {
+        "column": "24"
+      },
+      "runs": [
+        {
+          "reasoning": "The code at line 475 checks if _buffer is an instance of RetainableByteBuffer.DynamicCapacity using instanceof, and Error Prone's BadInstanceof rule claims this pattern may be redundant when the field type guarantees non-null values. However, I cannot see the @Nullable annotation or null-handling context for _buffer in any visible code above line 325 where it was declared as a method parameter. Since potential nullable annotations could appear on the missing declaration and there's no evidence that DynamicCapacity permits null instances in this project's type system",
+          "is_true_positive": false,
+          "confidence": 0.8,
+          "category": "CORRECTNESS",
+          "issue_signature": "redundant instanceof when value is non-null by declaration",
+          "developer_explanation": "This warning may be a false positive because we cannot verify that _buffer was declared with any guarantees against null from the visible code. Error Prone's BadInstanceof rule fires on patterns where an instanceof check adds no extra information, but without seeing _buffer's field declaration and its initialization context above line 325, there is insufficient evidence to confirm this pattern would actually be redundant here. The warning might still be correct if you never assign null to _buffer in your codebase.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 5822,
+            "output_tokens": 279
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 7455,
+          "latency_s": 21.6
+        },
+        {
+          "reasoning": "The flagged line checks `_buffer instanceof RetainableByteBuffer.DynamicCapacity`. The static analysis tool warns this appears to be equivalent to checking if _buffer != null since an object being an instance of its own type (if such inheritance exists) would always return true for non-null objects. However, Java's isinstanceof operator already returns false on null without explicit check, making the 'null' semantics implicit in all instanceof checks - this is standard Java behavior that doesn't need tool intervention.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "redundant null check with instanceoft operator on object field",
+          "developer_explanation": "This warning can be safely dismissed because instanceof in Java already handles null correctly by returning false for the checked expression - this is expected behavior, not a bug. The code does what it should and doesn't need any change; developers often use such type checks as documentation rather than strict logic guards.",
+          "run": 2,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 4799,
+            "output_tokens": 225
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2302,
+          "latency_s": 8.298
+        },
+        {
+          "reasoning": "The code at line 475 checks `instanceof RetainableByteBuffer.DynamicCapacity` on `_buffer`, which is declared as a field of exactly this type class, making the check always true for non-null references and functionally just hiding a null check behind an redundant instanceof expression. Error Prone's BadInstanceof pattern flags this correctly because checking against your own known declared (or sub)type adds no semantic value beyond what the variable declaration already guarantees.",
+          "is_true_positive": false,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "redundant instanceof check on own type",
+          "developer_explanation": "This warning can be safely dismissed because the code is working as intended - you are checking that _buffer matches a specific subtype of DynamicCapacity. While Error Prone's BadInstanceof rule flags checks against your declared or known types, this pattern appears in real Java projects where developers need to check for concrete implementation subtypes at runtime, which does have semantic meaning beyond just null-checking.",
+          "run": 3,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 5173,
+            "output_tokens": 237
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 4330,
+          "latency_s": 12.613
+        }
+      ],
+      "original_finding_index": 183
+    },
+    {
+      "finding_id": 6,
+      "type": "JavaTimeDefaultTimeZone",
+      "sourcefile": "ManagedSelector.java",
+      "start_line": "474",
+      "message": "ZonedDateTime.now() is not allowed because it silently uses the system default time-zone. You must pass an explicit time-zone (e.g., ZoneId.of(\"America/Los_Angeles\")) to this method.",
+      "tool_specific": {
+        "column": "92"
+      },
+      "runs": [
+        {
+          "reasoning": "The code uses ZonedDateTime.now() solely to generate timestamp strings for internal diagnostic logging within the dump method, which is standard practice and does not affect business logic or correctness. Relying on the system default time zone in debug/inspection output reflects the environment where execution occurs and typically requires no fix unless explicit UTC policy exists.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "silent reliance on system default time zone in timestamp strings",
+          "developer_explanation": "This warning can be safely dismissed because this specific usage is inside a debug/inspection method that only prints diagnostic information (e.g., log entries for internal state). For logging output, reflecting the server's local clock at runtime using the default time zone is expected and correct behavior; it does not cause logic errors or incorrect results. If your project policy requires all timestamps to be UTC regardless of host timezone, you should update this line instead.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 10606,
+            "output_tokens": 220
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 22720,
+          "latency_s": 59.711
+        },
+        {
+          "reasoning": "The flagged code calls ZonedDateTime.now() without an explicit ZoneId argument, which causes it to use whatever system default timezone is configured at runtime for log dump timestamps.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "time zone dependency via implicit default in datetime creation",
+          "developer_explanation": "This code relies on the system's default timezone for timestamps used only in log dumps and debug output. While this works correctly at runtime (the dates aren't wrong), relying on environment-dependent defaults makes logs harder to analyze across servers with different timezones, complicates porting between environments, and reduces clarity about what zone was actually used.",
+          "run": 2,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 6434,
+            "output_tokens": 167
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2906,
+          "latency_s": 9.202
+        },
+        {
+          "reasoning": "The code at line 474 uses ZonedDateTime.now() inside a dump() method that outputs internal state information to logs via LOG.debug(). This is diagnostic/debugging output, not business logic affected by timezone consistency.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "implicit system time zone used for logging timestamp",
+          "developer_explanation": "This warning can be dismissed because the code is only capturing a current moment into debug log output for diagnostics and internal state dumps - it does not drive any business logic that depends on timezone consistency. While Error Prone flags this conservatively, in debugging/logging contexts using local system time makes sense since operators reading these logs will naturally use their own machine's timezone.",
+          "run": 3,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 6759,
+            "output_tokens": 181
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 4621,
+          "latency_s": 12.459
+        }
+      ],
+      "original_finding_index": 204
+    },
+    {
+      "finding_id": 7,
+      "type": "JavaLangClash",
+      "sourcefile": "HttpException.java",
+      "start_line": "83",
+      "message": "org.eclipse.jetty.http.HttpException.RuntimeException clashes with java.lang.RuntimeException",
+      "tool_specific": {
+        "column": "5"
+      },
+      "runs": [
+        {
+          "reasoning": "The tool correctly identifies a JavaLangClash where `org.eclipse.jetty.http.HttpException` declares nested exception classes named `RuntimeException`, `IllegalArgumentException`, and `IllegalStateException` that shadow standard JDK exception types at runtime when used together in the same scope.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "nested classes named after java lang exceptions",
+          "developer_explanation": "This naming pattern can cause ambiguity when external code references these exception types in the same scope as their JDK counterparts without fully qualified names. The nested inner-exception subclasses shadow standard Java.lang.* exceptions, which could confuse library users and make it unclear whether an IllegalArgumentException or java.lang.IllegalArgumentException is being caught.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 5312,
+            "output_tokens": 176
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 4382,
+          "latency_s": 12.351
+        },
+        {
+          "reasoning": "The code defines a nested class `RuntimeException` within the same file as jetty's interface but without static modifier, which is an inner class rather than intended to replace RuntimeException globally from external packages.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "inner exception extends java lang Runtime Exception with same name pattern in outer package namespace causing potential naming shadow confusion only if referenced directly via unqualified type names from outside jetty's scope which is not the intended usage for this library code where qualified types are used by consumers to handle HTTP-specific exceptions with status codes",
+          "developer_explanation": "This warning can be safely dismissed because Jetty intentionally creates specialized exception classes that extend standard JDK exceptions (RuntimeException, IllegalArgumentException) while adding HTTP-specific metadata like status codes and reasons. Since these nested classes live within the org.eclipse.jetty.http package and aren't meant to replace global RuntimeException types in your application code, they only matter when you import or reference them directly through Jetty's qualified names. External consumer code catching exceptions will still work correctly because instanceof checks treat all these as unchecked Runtime Exceptions.",
+          "run": 2,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 5937,
+            "output_tokens": 256
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 7923,
+          "latency_s": 18.21
+        },
+        {
+          "reasoning": "The flagged line declares a nested class named RuntimeException that extends java.lang.RuntimeException, which is exactly what JavaLangClash flags as problematic.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "exception subclasses with same name as java lang types cause confusion in error messages and type checking",
+          "developer_explanation": "Having a nested RuntimeException that extends the standard Java exception makes it harder to read stack traces - developers expecting NullPointerException might actually get this HTTP-specific variant. Consider using distinct class names like JettyRuntimeException or HttpException with specific subclasses instead.",
+          "run": 3,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 5473,
+            "output_tokens": 149
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 5411,
+          "latency_s": 13.084
+        }
+      ],
+      "original_finding_index": 207
+    },
+    {
+      "finding_id": 8,
+      "type": "EnumOrdinal",
+      "sourcefile": "Generator.java",
+      "start_line": "50",
+      "message": "You should almost never invoke the Enum.ordinal() method.",
+      "tool_specific": {
+        "column": "76"
+      },
+      "runs": [
+        {
+          "reasoning": "The code uses `Enum.ordinal()` to compute the size of a lookup table array based on enumeration order rather than explicit type IDs or stable constants. This relies on implementation details (the specific ordering and continuity of enum declaration positions) that can lead to incorrect results if frame types are reordered, new ones added between existing definitions without recompilation changes in dependent code, or if `getType()` returns values inconsistent with the ordinal mapping.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "relies on enum ordinal for array sizing",
+          "developer_explanation": "This line uses `ordinal()` to size an internal generator lookup table based on the order of frame type definitions rather than using explicit numeric IDs. While it may work correctly today with current constants in this specific project, relying on implicit indices makes code brittle against future refactoring where enum values might be reordered or shifted by adding new types; consider defining a constant for `MAX_FRAME` index instead to avoid potential array bounds issues.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 14888,
+            "output_tokens": 233
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 53903,
+          "latency_s": 138.063
+        },
+        {
+          "reasoning": "The code at line 50 relies on `FrameType.CONTINUATION.ordinal()` to determine the array size, coupling behavior directly to the declaration order of enum constants in source file.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "Enum ordinal usage couples code to declaration order",
+          "developer_explanation": "Using `ordinal()` ties your array sizing logic directly to the specific order enum constants appear in source code (line 1). If a developer ever adds, removes, or reorders frame types—even for an internal project like this—indices shift and initialization logic must be updated carefully. This fragility makes maintenance riskier; consider using `Map<FrameType, FrameGenerator>` to decouple array indices from declaration order.",
+          "run": 2,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 23342,
+            "output_tokens": 187
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 92636,
+          "latency_s": 239.287
+        },
+        {
+          "reasoning": "The code uses CONTINUATION.ordinal() only to calculate an initial array size needed to accommodate all FrameType enum constants (including the unused CONTINUATION). This is a legitimate idiom for determining collection capacity where ordinals serve as stable, declaration-order-based indices rather than runtime-dependent values.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "enum ordinal used for array size calculation",
+          "developer_explanation": "Error Prone flags all Enum.ordinal() calls as generally discouraged because they rely on declaration order rather than semantic meaning. In this case, the use is actually acceptable since it's just determining how large an index-based collection must be to match FrameType constants in their fixed source order. You can safely ignore or explicitly suppress this warning if you're confident no new frame type enum values will ever be added before existing ones.",
+          "run": 3,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 4573,
+            "output_tokens": 206
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 6476,
+          "latency_s": 16.073
+        }
+      ],
+      "original_finding_index": 357
+    },
+    {
+      "finding_id": 9,
+      "type": "InconsistentCapitalization",
+      "sourcefile": "HTTP2StreamEndPoint.java",
+      "start_line": "558",
+      "message": "Found the field 'endpoint' with the same name as the parameter 'endPoint' but with different capitalization.",
+      "tool_specific": {
+        "column": "62"
+      },
+      "runs": [
+        {
+          "reasoning": "The flagged code declares a class-level field 'endpoint' but uses constructor parameter name 'endPoint', differing only by capitalization while referring to the same logical concept in one method scope. This naming inconsistency within an isolated block creates unnecessary cognitive load when reading or modifying this part of the code, as readers must mentally track whether two nearly-identical names refer to different variables.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "inconsistent capitalization between field and parameter name",
+          "developer_explanation": "This warning indicates a naming inconsistency: the class has a field called 'endpoint' but the constructor uses 'endPoint'. While this won't cause runtime errors, inconsistent naming within a single scope makes code harder to read and maintain. Readers might confuse whether these are different variables or expect them to match in spelling throughout their usage.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 4762,
+            "output_tokens": 207
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3028,
+          "latency_s": 10.777
+        },
+        {
+          "reasoning": "The flagged code shows a field named 'endpoint' (line 554) with its constructor parameter named differently ('endPoint', line 558). This naming inconsistency between related identifiers in the same class is what Error Prone flags as InconsistentCapitalization. While this does represent a style violation according to stricter conventions, it's not an actual bug affecting correctness or security.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "field and parameter with inconsistent capitalization names",
+          "developer_explanation": "This warning notes that your field is called 'endpoint' but the constructor parameter uses 'endPoint'. In Java it's common for parameters to have slightly different naming than fields, so this difference doesn't affect correctness. You can safely ignore or adjust based on team convention.",
+          "run": 2,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 5187,
+            "output_tokens": 198
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 5402,
+          "latency_s": 15.859
+        },
+        {
+          "reasoning": "The code declares a field named 'endpoint' (line 555) while the constructor uses parameter name 'endPoint' with capital P (line 558), which are then assigned via this.endpoint = endPoint at line 561.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "inconsistent capitalization of same-named identifier in constructor and field",
+          "developer_explanation": "Your code uses different name casing for what is the same conceptual thing - a reference to an HTTP2StreamEndPoint object. The final instance field is named 'endpoint' but your constructor parameter is 'endPoint'. While this compiles fine, it can confuse readers wondering if there's some relationship or difference between them when you're just storing one variable into another.",
+          "run": 3,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 4820,
+            "output_tokens": 195
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3227,
+          "latency_s": 10.442
+        }
+      ],
+      "original_finding_index": 363
+    },
+    {
+      "finding_id": 10,
+      "type": "MalformedInlineTag",
+      "sourcefile": "HeaderBlockParser.java",
+      "start_line": "53",
+      "message": "The correct syntax to open this inline tag is {@code.",
+      "tool_specific": {
+        "column": "15"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning flags line 53 where Javadoc contains @{code instead of {@code, which is a clearly typographical error creating invalid inline tag syntax that won't render properly.",
+          "is_true_positive": true,
+          "confidence": 1.0,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "malformed javadoc code format tag",
+          "developer_explanation": "The Javadoc comment has a typo where @{code should be {@code for the inline code formatting syntax that standard tools like Eclipse or IntelliJ understand. This will cause documentation generators to display it literally instead of showing code samples properly, making your API reference appear broken.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 5143,
+            "output_tokens": 153
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 5493,
+          "latency_s": 18.243
+        },
+        {
+          "reasoning": "Line 53 contains `@{code` instead of the correct Javadoc syntax `{@code`. This malformed inline code tag will not parse correctly in documentation generators and could display broken HTML markup.",
+          "is_true_positive": true,
+          "confidence": 0.98,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "malformed javadoc inline tag syntax",
+          "developer_explanation": "There is a typo in the Javadoc comment on line 53 that uses `@{code` instead of `{@code`. This incorrect syntax will break when generating HTML documentation and should be fixed to use the proper Eclipse/Javadoctag format.",
+          "run": 2,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 4392,
+            "output_tokens": 158
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1973,
+          "latency_s": 7.486
+        },
+        {
+          "reasoning": "The flagged line contains `*@` which should be `{@code ...}` for proper JavaDoc inline tag syntax - this is a malformed Javadoc tag that won't render correctly in generated documentation.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "malformed javadoc inline code tag syntax",
+          "developer_explanation": "This is a Javadoc formatting issue where an asterisk appears before the opening brace in `*@` instead of `{@`. This typo will cause the documentation to render incorrectly when published. Fix by replacing `*@` with `{@code blockLength}` on line 53.",
+          "run": 3,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 4606,
+            "output_tokens": 162
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3041,
+          "latency_s": 9.032
+        }
+      ],
+      "original_finding_index": 365
+    },
+    {
+      "finding_id": 11,
+      "type": "InlineMeSuggester",
+      "sourcefile": "Response.java",
+      "start_line": "566",
+      "message": "This deprecated API looks inlineable. If you'd like the body of the API to be automatically inlined to its callers, please annotate it with @InlineMe. NOTE: the suggested fix makes the method final if it was not already.",
+      "tool_specific": {
+        "column": "17"
+      },
+      "runs": [
+        {
+          "reasoning": "The code shows a @Deprecated static method replaceCookie that only delegates directly to putCookie with no additional logic, which exactly matches the pattern InlineMeSuggester targets for automatic inlining. This claim is materially correct: deprecated delegating wrapper methods benefit from being marked inlineable via @InlineMe annotation.",
+          "is_true_positive": true,
+          "confidence": 0.98,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "deprecated method with simple delegation to another method",
+          "developer_explanation": "This deprecated wrapper only delegates directly without adding any logic or side effects. To improve long-term maintainability when you eventually remove the deprecated API, add @InlineMe so Error Prone can automatically inline it and prevent unnecessary indirection.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 7006,
+            "output_tokens": 173
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2764,
+          "latency_s": 10.001
+        },
+        {
+          "reasoning": "The tool claims that `replaceCookie` looks inlineable because its body contains only a single delegation call to another static method (`putCookie`) with no unique logic, creating an unnecessary indirection layer. This aligns with maintainability best practices for code quality and readability, especially since the API is already deprecated and should not require preserving thin wrappers that add complexity.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "deprecated wrapper suitable for automatic inlining",
+          "developer_explanation": "This method is a deprecated thin wrapper that delegates to another static helper without adding its own logic or checks. Keeping such wrappers adds unnecessary indirection and complexity, making the code harder to understand during maintenance or migration. You should accept this suggestion to clean up the legacy API surface using automated inlining tools before the implementation details are removed entirely.",
+          "run": 2,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 13101,
+            "output_tokens": 204
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 31986,
+          "latency_s": 81.519
+        },
+        {
+          "reasoning": "The flagged method replaceCookie at line 566-570 is a Deprecated static void that simply delegates to putCookie with no additional logic, exactly matching the pattern Error Prone's InlineMeSuggester detects for inlineable deprecated APIs.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "deprecated api looking inlineable to callers with annotation suggestion",
+          "developer_explanation": "This warning identifies a simple delegation pattern on a deprecated method that Error Prone suggests marking with @InlineMe so it can be automatically inlined for better code clarity. The claim is correct because the implementation matches what the rule detects. Adding this annotation won't change behavior but helps developers see through to the actual replacement logic during static analysis.",
+          "run": 3,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 7657,
+            "output_tokens": 186
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 6253,
+          "latency_s": 17.227
+        }
+      ],
+      "original_finding_index": 429
+    },
+    {
+      "finding_id": 12,
+      "type": "NarrowCalculation",
+      "sourcefile": "AbstractSessionDataStore.java",
+      "start_line": "298",
+      "message": "This product of integers could overflow before being implicitly cast to a long.",
+      "tool_specific": {
+        "column": "65"
+      },
+      "runs": [
+        {
+          "reasoning": "Line 298 performs integer arithmetic `10 * _gracePeriodSec` without a long suffix, potentially overflowing before being promoted to a long argument for the time unit method. Since configuration setters (visible at line 367-370) accept arbitrary integers with no explicit bounds checking shown in this context, inputs that would cause overflow are theoretically possible and affect session expiry logic correctness.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "integer product may overflow before long cast",
+          "developer_explanation": "The calculation for the orphan cleaning interval multiplies a configuration value with an integer constant without promoting to long arithmetic first. If someone sets this grace period parameter to a very large number (near the maximum int limit), the multiplication could wrap around and produce incorrect time values passed to the cleanup method, corrupting your session expiration logic.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 15711,
+            "output_tokens": 211
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 48043,
+          "latency_s": 121.805
+        },
+        {
+          "reasoning": "The flagged expression at line 298 performs an integer multiplication (`10 * _gracePeriodSec`) without explicit long casting before passing the result to a time conversion method that expects seconds converted to milliseconds as a duration parameter. Since `_gracePeriodSec` is inferred from setter signatures to be typed as int and no runtime bounds checks are visible in the provided snippet, intermediate overflow of this product can occur given Java's signed 32-bit arithmetic behavior if the configuration value exceeds approximately 215 million seconds (~68 years), leading to an incorrect duration passed downstream. This makes the correctness claim materially possible under unbounded input assumptions common for SAST analysis.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "potential integer multiplication overflow before conversion to long",
+          "developer_explanation": "Error Prone flags this line because multiplying two integers can wrap around silently in Java if the value exceeds ~2 billion (about 68 years worth of seconds for your configuration). Although typical settings are much smaller, there is no visible check preventing extremely large values from being set. If such a large number were configured here, the multiplication would overflow and produce an incorrect time duration passed to `TimeUnit.SECONDS.toMillis`, potentially causing orphan session cleanup at wrong times.",
+          "run": 2,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 21928,
+            "output_tokens": 294
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 69243,
+          "latency_s": 182.528
+        },
+        {
+          "reasoning": "The arithmetic operation `10 * _gracePeriodSec` involves two integers (literal and field) which are evaluated in the int range; if `_gracePeriodSec` is set to a value greater than approximately 206 million seconds, the product will overflow before being passed as an argument. The setter method visible at line 348 accepts any `int` value without validation limits shown in this snippet, allowing theoretically large values that could trigger incorrect behavior.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "potential integer overflow during multiplication before widening",
+          "developer_explanation": "This calculation multiplies a configuration value by an integer constant using int arithmetic without explicitly casting to long first. If the grace period configured exceeds roughly 7 years (due to lack of validation bounds), the result will wrap around and become incorrect, leading to wrong time calculations passed to `cleanOrphans` or other logic relying on this duration.",
+          "run": 3,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 20440,
+            "output_tokens": 228
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 65988,
+          "latency_s": 181.285
+        }
+      ],
+      "original_finding_index": 499
+    },
+    {
+      "finding_id": 13,
+      "type": "EqualsGetClass",
+      "sourcefile": "DeploymentScanner.java",
+      "start_line": "1389",
+      "message": "Prefer instanceof to getClass when implementing Object#equals.",
+      "tool_specific": {
+        "column": "24"
+      },
+      "runs": [
+        {
+          "reasoning": "The code implements Object#equals using getClass() != o.getClass() pattern on line 1391-1392 within a private static inner class PathsApp that has no subclasses and is used for deployment path matching where all instances represent the same conceptual entity. While Error Prone's EqualsGetClass rule generally recommends instanceof over getClass, this specific context involves a non-public, static helper class with no inheritance scenario where subclass equality semantics would matter—the warning correctly flags an anti-pattern but not one that causes issues in practice here.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "class comparison for type identity check in equals method",
+          "developer_explanation": "This warning flags a common pattern but is not problematic here because the class has no subclasses and all objects compared will be instances of PathsApp itself. The two approaches would behave identically in practice, so this can safely remain as-is without changing functionality or correctness.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 6727,
+            "output_tokens": 226
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3875,
+          "latency_s": 13.031
+        },
+        {
+          "reasoning": "The code implements equals() by comparing runtime types with o.getClass() != getClass(), then casting and comparing a field. Error Prone correctly identifies this against its documented pattern recommending instanceof for proper covariant equality semantics in Object#equals implementations, which allows subclasses to be considered equal unless explicit overrides exist.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "prefer instanceof over getClass in equals implementation",
+          "developer_explanation": "This warning flags a common pattern issue: your equals method uses type checks that may prevent subclasses from being equal even if they should be. If PathsApp has any subclasses, those instances would never match this class via the current logic unless you explicitly override their equals methods. Switching to instanceof with a cast allows proper subtype handling consistent with Java's equals contract.",
+          "run": 2,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 6794,
+            "output_tokens": 194
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 4230,
+          "latency_s": 11.745
+        },
+        {
+          "reasoning": "The code implements Object#equals to enforce strict class type equality by checking exact runtime classes via getClass(), which is a valid and often recommended pattern (e.g., in Joshua Bloch's guidelines) when only instances of the same concrete class should be considered equal. The tool claims this usage prevents polymorphic substitution correctly, but since no subclasses are present or required here to match content-based equality across types without breaking strict identity contracts needed for collection consistency (like Map keys), marking it as an error is incorrect.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "strict class type equality in equals method preferred over instanceof check",
+          "developer_explanation": "The warning suggests using `instanceof` instead of checking exact classes for object equality checks inside your `equals()` method. However, strictly comparing the runtime class (using `getClass()`) is a standard practice when you need to ensure that only objects of exactly the same type are considered equal—this prevents accidental matches with unrelated subclasses and ensures collection keys behave correctly. Dismissing this warning aligns with established Java design patterns for enforcing strict identity semantics.",
+          "run": 3,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 18147,
+            "output_tokens": 257
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 58903,
+          "latency_s": 150.054
+        }
+      ],
+      "original_finding_index": 730
+    },
+    {
+      "finding_id": 14,
+      "type": "AnnotateFormatMethod",
+      "sourcefile": "MetaDataBuilder.java",
+      "start_line": "238",
+      "message": "This method uses a pair of parameters as a format string and its arguments, but the enclosing method wasn't annotated @FormatMethod. Doing so gives compile-time rather than run-time protection against malformed format strings.",
+      "tool_specific": {
+        "column": "20"
+      },
+      "runs": [
+        {
+          "reasoning": "The code declares the streamException method with String.format-compatible arguments but lacks @FormatMethod annotation required by Error Prone to enable compile-time checks; thus its claim that protection is only run-time without it holds, pointing to a real quality gap in this tool configuration context.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "unannotated method uses format string and argument parameters",
+          "developer_explanation": "This warning means Error Prone cannot verify your String.format calls for type mismatches until runtime if the annotation is missing; adding @FormatMethod allows compile-time errors instead of exceptions that crash or produce wrong log messages. It should be added to prevent malformed formatting from causing unexpected crashes during production operation.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 18949,
+            "output_tokens": 181
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 67570,
+          "latency_s": 166.677
+        },
+        {
+          "reasoning": "The flagged method at line 238 is defined but does not contain or call any logging-style format methods that would benefit from @FormatMessage annotations—standard String.format has no such annotation support mechanism available to enable compile-time checking. The warning assumes a pattern where message formats can be annotated for verification, which only applies to frameworks like SLF4J/Logback with specific API contracts.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "format method not properly annotated",
+          "developer_explanation": "This warning can be safely dismissed because it applies a rule designed for logging frameworks to plain String.format calls that have no annotation support system available. The code uses standard Java formatting where all format parameters come from callers at runtime, and there is simply no mechanism for compile-time checking of message formats on this API.",
+          "run": 2,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 6590,
+            "output_tokens": 203
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 6878,
+          "latency_s": 18.604
+        },
+        {
+          "reasoning": "This method uses String.format(messageFormat, args) where messageFormat is a variable from parameters (not a literal), and callers pass potentially user-derived values through header.asString(). However, missing @FormatMethod annotation alone does not create an exploitable vulnerability since the code still produces correct results at runtime. The warning claims there's protection being missed that doesn't exist here.",
+          "is_true_positive": false,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "unannotated format method parameter for compile time validation",
+          "developer_explanation": "This warning is a false positive. The code correctly uses String.format with proper arguments at runtime - the missing annotation only provides optional compile-time checking, not security or correctness issues. You can safely dismiss this since there's no exploitable vulnerability in how exceptions are constructed here.",
+          "run": 3,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 6528,
+            "output_tokens": 196
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 6220,
+          "latency_s": 17.362
+        }
+      ],
+      "original_finding_index": 782
+    },
+    {
+      "finding_id": 15,
+      "type": "OverrideThrowableToString",
+      "sourcefile": "QuicException.java",
+      "start_line": "81",
+      "message": "To return a custom message with a Throwable class, one should override getMessage() instead of toString().",
+      "tool_specific": {
+        "column": "19"
+      },
+      "runs": [
+        {
+          "reasoning": "Line 83 overrides toString() in a custom exception class (QuicException) to include technical context such as frame type via getFrameType(). This pattern allows rich stack trace output with debug metadata that cannot be represented solely by the simple 'detail message' string stored when calling super(reason).",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "custom Throwable toString formatting",
+          "developer_explanation": "This alarm can be dismissed because overriding toString() is the standard way to display exception metadata (like frame types) in stack traces and console logs. The warning assumes getMessage() should hold all details, but that constructor argument approach only supports simple text messages; your code correctly uses toString for full diagnostic info.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 15095,
+            "output_tokens": 182
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 59037,
+          "latency_s": 144.179
+        },
+        {
+          "reasoning": "The code overrides toString() with custom formatting including errorCode, getMessage(), and frameType for debugging purposes in an exception class. Error Prone's claim that this should use getMessage() instead is incorrect here because overriding toString() with additional contextual information (error code, frame type) is a standard Java pattern for exceptions where the default representation lacks necessary diagnostic data.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "custom toString implementation preferred over getMessage override",
+          "developer_explanation": "This warning is a false positive in this context because overriding toString() to add custom diagnostic information (errorCode and frameType) along with the error message is standard practice for exceptions that carry additional state. The default RuntimeException.toString() only shows className + message, losing important debugging context like which QUIC frame caused an issue. Your implementation intentionally enhances readability when logging or inspecting thrown exceptions.",
+          "run": 2,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 4125,
+            "output_tokens": 211
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 5641,
+          "latency_s": 14.054
+        },
+        {
+          "reasoning": "The overridden toString() method intentionally includes additional diagnostic information (errorCode and frameType) alongside getMessage(). This is standard practice for exception types that require extra context in their string representation beyond the simple message field, making the warning claim that 'override getMessage()' instead a false positive.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "exception toString overridden with extra context fields",
+          "developer_explanation": "This exception type provides additional technical details (errorCode and frameType) that are specific to QUIC errors but not part of a standard message string passed in the constructor. You should keep overriding `toString()` so callers get this rich diagnostic information when they print or log the object directly, while also passing the simple reason text into super.",
+          "run": 3,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 5021,
+            "output_tokens": 178
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 9579,
+          "latency_s": 24.258
+        }
+      ],
+      "original_finding_index": 797
+    },
+    {
+      "finding_id": 16,
+      "type": "StringSplitter",
+      "sourcefile": "AbstractForkedChild.java",
+      "start_line": "154",
+      "message": "String.split(String) has surprising behavior",
+      "tool_specific": {
+        "column": "48"
+      },
+      "runs": [
+        {
+          "reasoning": "The flagged line uses String.split('=') to parse command-line arguments into key-value properties with proper bounds checking (tmp.length == 2). This is a standard and safe use case where the delimiter '=' is explicitly specified, not empty, so it does not exhibit the 'surprising behavior' that Error Prone warns about. The code guards against accessing non-existent array elements before splitting by length check.",
+          "is_true_positive": false,
+          "confidence": 0.85,
+          "category": "OTHER",
+          "issue_signature": "string split with delimiter empty or regex quirks",
+          "developer_explanation": "This warning is a false positive because the code splits on '=' which is explicitly specified—not an empty string that could create unexpected empty segments between consecutive delimiters. The bounds checking before accessing array elements handles all edge cases properly for this command-line parsing context.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 5452,
+            "output_tokens": 194
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 4396,
+          "latency_s": 14.708
+        },
+        {
+          "reasoning": "The code at line 154 uses String.split(\"=\") to parse key=value arguments with defensive length checking (tmp.length == 2), which handles Java's split semantics correctly in practice despite its unusual behavior around consecutive/empty delimiters.",
+          "is_true_positive": false,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "string splitter has surprising splitting behavior with edge cases on empty strings and adjacent delimiters",
+          "developer_explanation": "This warning can be safely dismissed in this context because the code already defends against malformed input by only processing arguments that split into exactly two parts. While String.split() behaves differently from Guava Splitter around consecutive or trailing empty tokens, the current logic correctly ignores such cases rather than storing invalid property values.",
+          "run": 2,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 5307,
+            "output_tokens": 184
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3245,
+          "latency_s": 10.273
+        },
+        {
+          "reasoning": "The split on '=' character with args[i].trim().split('=') works correctly in all Java versions and does not produce unexpected results because we use a simple literal delimiter without regex metacharacters. The check tmp.length == 2 before accessing array elements ensures that edge cases like missing delimiters are handled safely, making the code's behavior predictable.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "string split with literal delimiter has surprising regex behavior",
+          "developer_explanation": "This warning is a best-practice suggestion to use Guava Splitter instead of String.split(). However, your specific usage here - splitting on '=' for key=value parsing with proper length checking before array access - behaves correctly and predictably. The 'surprising behavior' Error Prone references applies primarily when split handles complex regex delimiters or trailing empty strings in certain ways that don't affect this simple single-character delimiter use case.",
+          "run": 3,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 6333,
+            "output_tokens": 222
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 8698,
+          "latency_s": 23.201
+        }
+      ],
+      "original_finding_index": 871
+    },
+    {
+      "finding_id": 17,
+      "type": "EmptyCatch",
+      "sourcefile": "NamingEntryUtil.java",
+      "start_line": "86",
+      "message": "Caught exceptions should not be ignored",
+      "tool_specific": {
+        "column": "9"
+      },
+      "runs": [
+        {
+          "reasoning": "The method `lookupNamingEntry` declares `throws NamingException` at line 74 but catches only `NameNotFoundException` (a subclass) on lines 86-88 and silently suppresses it. This means callers who catch or handle exceptions declared in the throws clause cannot distinguish between a suppressed NameNotFoundException versus other propagating NamedingExceptions, breaking exception contract expectations.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "exception caught and silently ignored without logging or handling information loss",
+          "developer_explanation": "This catch block suppresses NameNotFoundException but still declares the method can throw NamingException in its signature. Callers will see exceptions for some subtypes (like if other operations fail) but not others, making it impossible to distinguish between an actual failure and a 'not found' scenario just from exception handling code.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 6481,
+            "output_tokens": 207
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 7246,
+          "latency_s": 20.064
+        },
+        {
+          "reasoning": "The empty catch block at line 86-89 catches NameNotFoundException without action, but the method returns null when a lookup fails, which callers handle appropriately (as seen in bindToENC returning false on failure). Other methods in the same file demonstrate this is intentional design: getNameForScope logs warnings and returns null for exceptions, while lookupNamingEntries returns empty collections silently. The catch suppresses only NameNotFoundException—a specific checked exception where silent failure is a documented contract here.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "caught exceptions handled by returning null or empty collection intentionally",
+          "developer_explanation": "This warning can be safely dismissed because silently catching NameNotFoundException here is intentional design: the JNDI lookup may legitimately fail when an entry doesn't exist, and the method returns null as documented in its behavior. Similar patterns throughout this utility class handle missing resources gracefully rather than throwing unchecked failures to callers.",
+          "run": 2,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 5996,
+            "output_tokens": 224
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 4853,
+          "latency_s": 14.433
+        },
+        {
+          "reasoning": "Line 86 catches a checked NameNotFoundException exception inside lookupNamingEntry but leaves the catch body empty, silently ignoring this failure case without logging or documentation to justify suppression. The method declares it throws NamingException yet internally handles one specific subclass by returning null/false and relying on return value semantics instead of visibility through logs; while logic is functionally consistent with fail-open design for optional resources, hiding configuration errors from observability traces represents a maintainability/quality issue per standard error handling guidelines.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "checked exception silently swallowed in catch block without logging",
+          "developer_explanation": "The empty catch block at line 86 ignores NameNotFoundException (resource not found) and does not log or document why this specific failure is acceptable. While your method returns null/false to signal optional resource unavailability, omitting logs makes debugging startup misconfigurations harder since other methods in the same class do log warnings for similar exceptions.",
+          "run": 3,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 17076,
+            "output_tokens": 231
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 60044,
+          "latency_s": 143.423
+        }
+      ],
+      "original_finding_index": 919
+    },
+    {
+      "finding_id": 18,
+      "type": "SuperCallToObjectMethod",
+      "sourcefile": "Frame.java",
+      "start_line": "407",
+      "message": "`super.hashCode()` is equivalent to `System.identityHashCode(this)` here",
+      "tool_specific": {
+        "column": "52"
+      },
+      "runs": [
+        {
+          "reasoning": "In this Frame class, toString() builds debug output using super.hashCode() to include an identity hash in the string representation. Since neither Frame nor its parent classes override hashCode(), calling super.hashCode() is semantically equivalent to System.identityHashCode(this) for object identification purposes.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "OTHER",
+          "issue_signature": "super hashcode call in string representation context",
+          "developer_explanation": "This warning can be safely dismissed because calling super.hashCode() here is not a bug - it's used to display an object's identity for debugging purposes. Since hashCode isn't overridden, the Object implementation behavior matches identityHashCode anyway, so there's no correctness or semantic difference between using either form in this toString context.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 6431,
+            "output_tokens": 178
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3404,
+          "latency_s": 10.401
+        },
+        {
+          "reasoning": "The code shows a Frame class with its toString() method calling super.hashCode(), but neither this nor any visible parent/child classes override hashCode(). Since Object's default implementation returns identity hash code and no subclass changes this, both expressions produce identical results here.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "super method call equivalent to static field access for object methods when not overridden",
+          "developer_explanation": "This warning is a false positive in your case because no class in this hierarchy overrides hashCode(). When an override doesn't exist anywhere, super.hashCode() and the normal expression produce identical results with no semantic difference. The tool's concern about polymorphic behavior only matters if some subclass has overridden hashCode(), which isn't present here.",
+          "run": 2,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 6639,
+            "output_tokens": 186
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 4425,
+          "latency_s": 12.554
+        },
+        {
+          "reasoning": "The flagged code appears inside a `toString()` method intended for debug logging where object identity information is desired rather than logical equality semantics; since no overridden hashcode implementation exists or affects this specific context, calling super returns the same value as System.identityHashCode(this), so there is no functional correctness issue and overhead is negligible.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "PERFORMANCE",
+          "issue_signature": "unnecessary object method call in identity hashing context",
+          "developer_explanation": "You can safely ignore this warning because `super.hashCode()` and direct usage of the class's hash logic are functionally identical here when no subclasses have overridden `hashCode`. The suggestion to avoid calling parent methods for debug strings is a style preference rather than an actual problem requiring a fix in your logging code.",
+          "run": 3,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 14097,
+            "output_tokens": 189
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 39287,
+          "latency_s": 102.92
+        }
+      ],
+      "original_finding_index": 956
+    },
+    {
+      "finding_id": 19,
+      "type": "NonCanonicalType",
+      "sourcefile": "PerMessageDeflateExtension.java",
+      "start_line": "60",
+      "message": "The type `CompressionPool.Entry` was referred to by the non-canonical name `InflaterPool.Entry`. This may be misleading.",
+      "tool_specific": {
+        "column": "25"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning claims there is a naming inconsistency between CompressionPool.Entry and InflaterPool.Entry, but examining lines 59-60 shows two entirely different private fields: one holds DeflaterPool.Entry (line 59) and the other holds InflaterPool.Entry (line 60). Both are legitimate distinct types used in this compression extension - they handle deflation vs inflation operations separately.",
+          "is_true_positive": false,
+          "confidence": 1.0,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "inner class referenced by non canonical name",
+          "developer_explanation": "This warning is incorrect because CompressionPool.Entry and InflaterPool.Entry are two completely different types in the codebase that serve separate purposes - one for compression (deflation) and one for decompression. The naming distinction between them is intentional, not a mistake or inconsistency you should fix.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 5677,
+            "output_tokens": 201
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3717,
+          "latency_s": 13.141
+        },
+        {
+          "reasoning": "Line 60 declares a field of type InflaterPool.Entry which comes from the import org.eclipse.jetty.util.compression.InflaterPool (line 29), matching its pool source consistently with line 59's DeflaterPool.Entry using its corresponding import. The warning suggests CompressionPool.Entry should be used, but these are two distinct Jetty compression implementations (deflate vs inflate) that legitimately have their own Entry types - the code is correctly using InflaterPool.Entry for an inflater holder field.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "non canonical type reference in class name",
+          "developer_explanation": "This warning can be safely dismissed because the code correctly uses InflaterPool.Entry to match its corresponding pool import on line 29 - this is consistent Java design matching a specific inflation operation with an inflater implementation. Both Deflater and Inflater pools are legitimate Jetty classes for different operations, so using their respective Entry types is correct.",
+          "run": 2,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 5924,
+            "output_tokens": 234
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 5124,
+          "latency_s": 14.959
+        },
+        {
+          "reasoning": "The code declares `inflaterHolder` as type `InflaterPool.Entry`, which matches the object it retrieves via `getInflaterPool().acquire()` on line 202. Error Prone's warning claims a mismatch to `CompressionPool.Entry`, but these are fundamentally different pool types (deflation vs inflation) that would never be compatible.",
+          "is_true_positive": false,
+          "confidence": 1.0,
+          "category": "CORRECTNESS",
+          "issue_signature": "non canonical type name used for compression entry holder field declaration",
+          "developer_explanation": "This warning can be dismissed because the code is correct as written - `InflaterPool` handles decompression (inflate) while `DeflaterPool` handles compression (deflate). Using one to hold entries from the other pool would cause a type mismatch. The tool appears to have confused these distinct classes, and following its suggestion would break functionality.",
+          "run": 3,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 5731,
+            "output_tokens": 205
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 4093,
+          "latency_s": 12.405
+        }
+      ],
+      "original_finding_index": 977
+    }
+  ],
+  "retry_history": [
+    {
+      "at": "2026-08-15T10:40:01.350400+00:00",
+      "reason": "failed_runs",
+      "kinds": [
+        "ucięty"
+      ],
+      "attempted": 1,
+      "repaired": 1,
+      "still_missing": 0,
+      "max_attempts": 3,
+      "configuration_changed": false
+    }
+  ]
+}

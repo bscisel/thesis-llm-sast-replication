@@ -1,0 +1,3916 @@
+{
+  "run": "006_jetty-combined-sample",
+  "models": {
+    "claude": "claude-opus-5",
+    "gpt": "gpt-5.6-terra",
+    "qwen": "qwen3.5:9b",
+    "oss": "openai/gpt-oss-120b",
+    "luna": "gpt-5.6-luna",
+    "oss20": "openai/gpt-oss-20b",
+    "sonnet": "claude-sonnet-5"
+  },
+  "settings": {
+    "iterations": 10000,
+    "seed": 20260803,
+    "alpha": 0.05,
+    "resampling": "rule"
+  },
+  "H1": {
+    "claude-opus-5": {
+      "n": 360,
+      "fp_reduction": 0.5740740740740741,
+      "fp_reduction_ci": [
+        0.42291878896540486,
+        0.712824074074074
+      ],
+      "lost_tp": 0,
+      "lost_tp_share": 0.0,
+      "f1": 0.7578947368421053,
+      "f1_raw_report": 0.5714285714285715,
+      "delta_f1": 0.18646616541353378,
+      "delta_f1_ci": [
+        0.11661260717141987,
+        0.2633184292684535
+      ],
+      "supported": true
+    },
+    "gpt-5.6-terra": {
+      "n": 360,
+      "fp_reduction": 0.6527777777777778,
+      "fp_reduction_ci": [
+        0.5301204819277109,
+        0.7850011682242991
+      ],
+      "lost_tp": 7,
+      "lost_tp_share": 0.04861111111111111,
+      "f1": 0.7696629213483146,
+      "f1_raw_report": 0.5714285714285715,
+      "delta_f1": 0.1982343499197431,
+      "delta_f1_ci": [
+        0.13067216874955923,
+        0.2789531011203422
+      ],
+      "supported": true
+    },
+    "qwen3.5:9b": {
+      "n": 360,
+      "fp_reduction": 0.7361111111111112,
+      "fp_reduction_ci": [
+        0.6383878095836324,
+        0.8321720195971692
+      ],
+      "lost_tp": 55,
+      "lost_tp_share": 0.3819444444444444,
+      "f1": 0.6137931034482759,
+      "f1_raw_report": 0.5714285714285715,
+      "delta_f1": 0.04236453201970436,
+      "delta_f1_ci": [
+        -0.06443266605053302,
+        0.1419172582050983
+      ],
+      "supported": false
+    },
+    "openai/gpt-oss-120b": {
+      "n": 360,
+      "fp_reduction": 0.6111111111111112,
+      "fp_reduction_ci": [
+        0.46511627906976744,
+        0.7290090437333133
+      ],
+      "lost_tp": 10,
+      "lost_tp_share": 0.06944444444444445,
+      "f1": 0.7403314917127072,
+      "f1_raw_report": 0.5714285714285715,
+      "delta_f1": 0.16890292028413567,
+      "delta_f1_ci": [
+        0.08546410994680378,
+        0.24843593489631308
+      ],
+      "supported": true
+    },
+    "gpt-5.6-luna": {
+      "n": 360,
+      "fp_reduction": 0.5046296296296297,
+      "fp_reduction_ci": [
+        0.37795094161616893,
+        0.6450074786324785
+      ],
+      "lost_tp": 3,
+      "lost_tp_share": 0.020833333333333332,
+      "f1": 0.7193877551020408,
+      "f1_raw_report": 0.5714285714285715,
+      "delta_f1": 0.14795918367346927,
+      "delta_f1_ci": [
+        0.09359613752726259,
+        0.20962468314927318
+      ],
+      "supported": true
+    },
+    "openai/gpt-oss-20b": {
+      "n": 360,
+      "fp_reduction": 0.7546296296296297,
+      "fp_reduction_ci": [
+        0.6256968915628134,
+        0.8571587301587299
+      ],
+      "lost_tp": 36,
+      "lost_tp_share": 0.25,
+      "f1": 0.7081967213114755,
+      "f1_raw_report": 0.5714285714285715,
+      "delta_f1": 0.13676814988290398,
+      "delta_f1_ci": [
+        -0.0036247678190520394,
+        0.2667630467943359
+      ],
+      "supported": false
+    },
+    "claude-sonnet-5": {
+      "n": 360,
+      "fp_reduction": 0.5601851851851852,
+      "fp_reduction_ci": [
+        0.3893621749043552,
+        0.714301874595992
+      ],
+      "lost_tp": 1,
+      "lost_tp_share": 0.006944444444444444,
+      "f1": 0.7486910994764399,
+      "f1_raw_report": 0.5714285714285715,
+      "delta_f1": 0.17726252804786835,
+      "delta_f1_ci": [
+        0.10093406411084759,
+        0.2637967400132376
+      ],
+      "supported": true
+    }
+  },
+  "H2": {
+    "wszystkie": {
+      "n": 360,
+      "accuracy": {
+        "claude-opus-5": 0.7444444444444445,
+        "gpt-5.6-terra": 0.7722222222222223,
+        "qwen3.5:9b": 0.6888888888888889,
+        "openai/gpt-oss-120b": 0.7388888888888889,
+        "gpt-5.6-luna": 0.6944444444444444,
+        "openai/gpt-oss-20b": 0.7527777777777778,
+        "claude-sonnet-5": 0.7333333333333333
+      },
+      "cochran_q": {
+        "q": 17.59953161592506,
+        "df": 6,
+        "p_value": 0.007314935762132154,
+        "test": "Q Cochrana",
+        "p_value_cluster": 0.5571221438928053,
+        "permutations": 20000,
+        "clusters": 123
+      },
+      "vs_naive": {
+        "claude-opus-5": {
+          "accuracy": 0.7444444444444445,
+          "accuracy_naive": 0.6,
+          "difference": 0.1444444444444445,
+          "ci_low": -0.024393232902917283,
+          "ci_high": 0.3355481727574751,
+          "mcnemar_cluster": {
+            "b": 144,
+            "c": 92,
+            "clusters_with_discordance": 97,
+            "statistic": 52.0,
+            "p_value": 0.1080445977701115,
+            "permutations": 20000,
+            "test": "cluster-level sign-flip (SAST rule)"
+          },
+          "mcnemar_exact": {
+            "b": 144,
+            "c": 92,
+            "discordant": 236,
+            "p_value": 0.0008629690272218246,
+            "odds_ratio": 1.565217391304348,
+            "test": "exact McNemar test (two-sided, binomial distribution)"
+          }
+        },
+        "gpt-5.6-terra": {
+          "accuracy": 0.7722222222222223,
+          "accuracy_naive": 0.6,
+          "difference": 0.17222222222222228,
+          "ci_low": 0.01841819221967969,
+          "ci_high": 0.35755072037635977,
+          "mcnemar_cluster": {
+            "b": 137,
+            "c": 75,
+            "clusters_with_discordance": 79,
+            "statistic": 62.0,
+            "p_value": 0.03719814009299535,
+            "permutations": 20000,
+            "test": "cluster-level sign-flip (SAST rule)"
+          },
+          "mcnemar_exact": {
+            "b": 137,
+            "c": 75,
+            "discordant": 212,
+            "p_value": 2.4690993214744054e-05,
+            "odds_ratio": 1.8266666666666667,
+            "test": "exact McNemar test (two-sided, binomial distribution)"
+          }
+        },
+        "qwen3.5:9b": {
+          "accuracy": 0.6888888888888889,
+          "accuracy_naive": 0.6,
+          "difference": 0.0888888888888889,
+          "ci_low": -0.002841932473146421,
+          "ci_high": 0.201865431986822,
+          "mcnemar_cluster": {
+            "b": 89,
+            "c": 57,
+            "clusters_with_discordance": 56,
+            "statistic": 32.0,
+            "p_value": 0.09509524523773812,
+            "permutations": 20000,
+            "test": "cluster-level sign-flip (SAST rule)"
+          },
+          "mcnemar_exact": {
+            "b": 89,
+            "c": 57,
+            "discordant": 146,
+            "p_value": 0.010056475566925313,
+            "odds_ratio": 1.5614035087719298,
+            "test": "exact McNemar test (two-sided, binomial distribution)"
+          }
+        },
+        "openai/gpt-oss-120b": {
+          "accuracy": 0.7388888888888889,
+          "accuracy_naive": 0.6,
+          "difference": 0.13888888888888895,
+          "ci_low": 0.010886167022069699,
+          "ci_high": 0.2981910408432146,
+          "mcnemar_cluster": {
+            "b": 134,
+            "c": 84,
+            "clusters_with_discordance": 88,
+            "statistic": 50.0,
+            "p_value": 0.05509724513774311,
+            "permutations": 20000,
+            "test": "cluster-level sign-flip (SAST rule)"
+          },
+          "mcnemar_exact": {
+            "b": 134,
+            "c": 84,
+            "discordant": 218,
+            "p_value": 0.0008633647470830889,
+            "odds_ratio": 1.5952380952380953,
+            "test": "exact McNemar test (two-sided, binomial distribution)"
+          }
+        },
+        "gpt-5.6-luna": {
+          "accuracy": 0.6944444444444444,
+          "accuracy_naive": 0.6,
+          "difference": 0.09444444444444444,
+          "ci_low": -0.08378795462128799,
+          "ci_high": 0.30333620689655166,
+          "mcnemar_cluster": {
+            "b": 141,
+            "c": 107,
+            "clusters_with_discordance": 90,
+            "statistic": 34.0,
+            "p_value": 0.3490825458727064,
+            "permutations": 20000,
+            "test": "cluster-level sign-flip (SAST rule)"
+          },
+          "mcnemar_exact": {
+            "b": 141,
+            "c": 107,
+            "discordant": 248,
+            "p_value": 0.0359137460164223,
+            "odds_ratio": 1.3177570093457944,
+            "test": "exact McNemar test (two-sided, binomial distribution)"
+          }
+        },
+        "openai/gpt-oss-20b": {
+          "accuracy": 0.7527777777777778,
+          "accuracy_naive": 0.6,
+          "difference": 0.1527777777777778,
+          "ci_low": 0.05109302845225686,
+          "ci_high": 0.2803758174260676,
+          "mcnemar_cluster": {
+            "b": 108,
+            "c": 53,
+            "clusters_with_discordance": 61,
+            "statistic": 55.0,
+            "p_value": 0.004749762511874406,
+            "permutations": 20000,
+            "test": "cluster-level sign-flip (SAST rule)"
+          },
+          "mcnemar_exact": {
+            "b": 108,
+            "c": 53,
+            "discordant": 161,
+            "p_value": 1.7460281640801083e-05,
+            "odds_ratio": 2.0377358490566038,
+            "test": "exact McNemar test (two-sided, binomial distribution)"
+          }
+        },
+        "claude-sonnet-5": {
+          "accuracy": 0.7333333333333333,
+          "accuracy_naive": 0.6,
+          "difference": 0.1333333333333333,
+          "ci_low": -0.03275526539406989,
+          "ci_high": 0.3153426910231345,
+          "mcnemar_cluster": {
+            "b": 143,
+            "c": 95,
+            "clusters_with_discordance": 98,
+            "statistic": 48.0,
+            "p_value": 0.13804309784510774,
+            "permutations": 20000,
+            "test": "cluster-level sign-flip (SAST rule)"
+          },
+          "mcnemar_exact": {
+            "b": 143,
+            "c": 95,
+            "discordant": 238,
+            "p_value": 0.0022467345076008726,
+            "odds_ratio": 1.5052631578947369,
+            "test": "exact McNemar test (two-sided, binomial distribution)"
+          }
+        }
+      }
+    }
+  },
+  "H3": {
+    "models": {
+      "claude-opus-5": {
+        "n": 360,
+        "unanimity": 0.9305555555555556,
+        "unanimity_ci": [
+          0.9008032662750958,
+          0.956989247311828
+        ],
+        "fleiss_kappa": 0.8981251249853789,
+        "fleiss_kappa_ci": [
+          0.8452588235485685,
+          0.9359584331721014
+        ]
+      },
+      "gpt-5.6-terra": {
+        "n": 360,
+        "unanimity": 0.8722222222222222,
+        "unanimity_ci": [
+          0.8340062701881056,
+          0.9076923076923077
+        ],
+        "fleiss_kappa": 0.8228017862493048,
+        "fleiss_kappa_ci": [
+          0.768990234234292,
+          0.8672941612638569
+        ]
+      },
+      "qwen3.5:9b": {
+        "n": 360,
+        "unanimity": 0.5611111111111111,
+        "unanimity_ci": [
+          0.47120219927115325,
+          0.6481047643279689
+        ],
+        "fleiss_kappa": 0.39652855384702423,
+        "fleiss_kappa_ci": [
+          0.2815448671750907,
+          0.4931485699062577
+        ]
+      },
+      "openai/gpt-oss-120b": {
+        "n": 360,
+        "unanimity": 0.8583333333333333,
+        "unanimity_ci": [
+          0.8164549318167921,
+          0.9034869558117065
+        ],
+        "fleiss_kappa": 0.8018070533372195,
+        "fleiss_kappa_ci": [
+          0.7472737586311285,
+          0.8536420343072342
+        ]
+      },
+      "gpt-5.6-luna": {
+        "n": 360,
+        "unanimity": 0.8388888888888889,
+        "unanimity_ci": [
+          0.7645629531768465,
+          0.9044296467863346
+        ],
+        "fleiss_kappa": 0.7555569430569433,
+        "fleiss_kappa_ci": [
+          0.639481055031961,
+          0.8511528227373136
+        ]
+      },
+      "openai/gpt-oss-20b": {
+        "n": 360,
+        "unanimity": 0.7638888888888888,
+        "unanimity_ci": [
+          0.6996980496980497,
+          0.819047619047619
+        ],
+        "fleiss_kappa": 0.6832691591106697,
+        "fleiss_kappa_ci": [
+          0.5928949385176169,
+          0.753199139400267
+        ]
+      },
+      "claude-sonnet-5": {
+        "n": 360,
+        "unanimity": 0.9166666666666666,
+        "unanimity_ci": [
+          0.8775471107983424,
+          0.95
+        ],
+        "fleiss_kappa": 0.8769819573537452,
+        "fleiss_kappa_ci": [
+          0.8043403361994342,
+          0.9267231898015524
+        ]
+      }
+    },
+    "pairwise": {
+      "pairs": 21,
+      "differences_shown": 15,
+      "details": {
+        "claude-opus-5 vs gpt-5.6-terra": {
+          "n": 360,
+          "difference": 0.05833333333333335,
+          "difference_ci": [
+            0.023314555970598838,
+            0.0952410059378274
+          ],
+          "proven": true
+        },
+        "claude-opus-5 vs qwen3.5:9b": {
+          "n": 360,
+          "difference": 0.36944444444444446,
+          "difference_ci": [
+            0.28,
+            0.4590657067196292
+          ],
+          "proven": true
+        },
+        "claude-opus-5 vs openai/gpt-oss-120b": {
+          "n": 360,
+          "difference": 0.0722222222222223,
+          "difference_ci": [
+            0.023622047244094554,
+            0.1164786200418822
+          ],
+          "proven": true
+        },
+        "claude-opus-5 vs gpt-5.6-luna": {
+          "n": 360,
+          "difference": 0.09166666666666667,
+          "difference_ci": [
+            0.03472222222222232,
+            0.15247049799386353
+          ],
+          "proven": true
+        },
+        "claude-opus-5 vs openai/gpt-oss-20b": {
+          "n": 360,
+          "difference": 0.16666666666666674,
+          "difference_ci": [
+            0.10436893203883502,
+            0.23734294594899139
+          ],
+          "proven": true
+        },
+        "claude-opus-5 vs claude-sonnet-5": {
+          "n": 360,
+          "difference": 0.01388888888888895,
+          "difference_ci": [
+            -0.02527101164158523,
+            0.052503289473684156
+          ],
+          "proven": false
+        },
+        "gpt-5.6-terra vs qwen3.5:9b": {
+          "n": 360,
+          "difference": 0.3111111111111111,
+          "difference_ci": [
+            0.21717137866601668,
+            0.40816487987600103
+          ],
+          "proven": true
+        },
+        "gpt-5.6-terra vs openai/gpt-oss-120b": {
+          "n": 360,
+          "difference": 0.01388888888888895,
+          "difference_ci": [
+            -0.03081256475192817,
+            0.05292479108635095
+          ],
+          "proven": false
+        },
+        "gpt-5.6-terra vs gpt-5.6-luna": {
+          "n": 360,
+          "difference": 0.033333333333333326,
+          "difference_ci": [
+            -0.02702843468468474,
+            0.09855853873239445
+          ],
+          "proven": false
+        },
+        "gpt-5.6-terra vs openai/gpt-oss-20b": {
+          "n": 360,
+          "difference": 0.10833333333333339,
+          "difference_ci": [
+            0.04575031625553453,
+            0.17711249513429345
+          ],
+          "proven": true
+        },
+        "gpt-5.6-terra vs claude-sonnet-5": {
+          "n": 360,
+          "difference": -0.0444444444444444,
+          "difference_ci": [
+            -0.08797838396134189,
+            0.0
+          ],
+          "proven": false
+        },
+        "qwen3.5:9b vs openai/gpt-oss-120b": {
+          "n": 360,
+          "difference": -0.29722222222222217,
+          "difference_ci": [
+            -0.3978276374569713,
+            -0.20370370370370372
+          ],
+          "proven": true
+        },
+        "qwen3.5:9b vs gpt-5.6-luna": {
+          "n": 360,
+          "difference": -0.2777777777777778,
+          "difference_ci": [
+            -0.39759212287747475,
+            -0.14741519929019936
+          ],
+          "proven": true
+        },
+        "qwen3.5:9b vs openai/gpt-oss-20b": {
+          "n": 360,
+          "difference": -0.20277777777777772,
+          "difference_ci": [
+            -0.29167588495575225,
+            -0.11573878848728245
+          ],
+          "proven": true
+        },
+        "qwen3.5:9b vs claude-sonnet-5": {
+          "n": 360,
+          "difference": -0.3555555555555555,
+          "difference_ci": [
+            -0.4379776974080772,
+            -0.27864563177244583
+          ],
+          "proven": true
+        },
+        "openai/gpt-oss-120b vs gpt-5.6-luna": {
+          "n": 360,
+          "difference": 0.019444444444444375,
+          "difference_ci": [
+            -0.048850808716163166,
+            0.09270263355749549
+          ],
+          "proven": false
+        },
+        "openai/gpt-oss-120b vs openai/gpt-oss-20b": {
+          "n": 360,
+          "difference": 0.09444444444444444,
+          "difference_ci": [
+            0.031087579858141756,
+            0.16716513893554727
+          ],
+          "proven": true
+        },
+        "openai/gpt-oss-120b vs claude-sonnet-5": {
+          "n": 360,
+          "difference": -0.05833333333333335,
+          "difference_ci": [
+            -0.10298125489560545,
+            -0.008377002631700454
+          ],
+          "proven": true
+        },
+        "gpt-5.6-luna vs openai/gpt-oss-20b": {
+          "n": 360,
+          "difference": 0.07500000000000007,
+          "difference_ci": [
+            -0.03147747421402833,
+            0.1789489928525016
+          ],
+          "proven": false
+        },
+        "gpt-5.6-luna vs claude-sonnet-5": {
+          "n": 360,
+          "difference": -0.07777777777777772,
+          "difference_ci": [
+            -0.15727086320141365,
+            -0.009433962264150941
+          ],
+          "proven": true
+        },
+        "openai/gpt-oss-20b vs claude-sonnet-5": {
+          "n": 360,
+          "difference": -0.1527777777777778,
+          "difference_ci": [
+            -0.2229513735046522,
+            -0.09018221931688197
+          ],
+          "proven": true
+        }
+      }
+    }
+  },
+  "H4": {
+    "available": true,
+    "findings_with_context": 360,
+    "models": {
+      "claude-opus-5": {
+        "n": 360,
+        "reasoning": 0.8333333333333334,
+        "message": 0.5166666666666667,
+        "difference": 0.31666666666666665,
+        "ci_low": 0.21893323657474603,
+        "ci_high": 0.41984793990996283,
+        "mcnemar_cluster": {
+          "b": 126,
+          "c": 12,
+          "clusters_with_discordance": 66,
+          "statistic": 114.0,
+          "p_value": 4.999750012499375e-05,
+          "permutations": 20000,
+          "test": "cluster-level sign-flip (SAST rule)"
+        },
+        "mcnemar_exact": {
+          "b": 126,
+          "c": 12,
+          "discordant": 138,
+          "p_value": 3.855331674762765e-25,
+          "odds_ratio": 10.5,
+          "test": "exact McNemar test (two-sided, binomial distribution)"
+        }
+      },
+      "gpt-5.6-terra": {
+        "n": 360,
+        "reasoning": 0.7194444444444444,
+        "message": 0.5166666666666667,
+        "difference": 0.20277777777777772,
+        "ci_low": 0.06398862876254187,
+        "ci_high": 0.33708124659418215,
+        "mcnemar_cluster": {
+          "b": 105,
+          "c": 32,
+          "clusters_with_discordance": 57,
+          "statistic": 73.0,
+          "p_value": 0.005149742512874356,
+          "permutations": 20000,
+          "test": "cluster-level sign-flip (SAST rule)"
+        },
+        "mcnemar_exact": {
+          "b": 105,
+          "c": 32,
+          "discordant": 137,
+          "p_value": 2.876303627501573e-10,
+          "odds_ratio": 3.28125,
+          "test": "exact McNemar test (two-sided, binomial distribution)"
+        }
+      },
+      "qwen3.5:9b": {
+        "n": 360,
+        "reasoning": 0.7555555555555555,
+        "message": 0.5166666666666667,
+        "difference": 0.23888888888888882,
+        "ci_low": 0.13043205840688682,
+        "ci_high": 0.34891333098219,
+        "mcnemar_cluster": {
+          "b": 104,
+          "c": 18,
+          "clusters_with_discordance": 55,
+          "statistic": 86.0,
+          "p_value": 9.99950002499875e-05,
+          "permutations": 20000,
+          "test": "cluster-level sign-flip (SAST rule)"
+        },
+        "mcnemar_exact": {
+          "b": 104,
+          "c": 18,
+          "discordant": 122,
+          "p_value": 6.780884736177504e-16,
+          "odds_ratio": 5.777777777777778,
+          "test": "exact McNemar test (two-sided, binomial distribution)"
+        }
+      },
+      "openai/gpt-oss-120b": {
+        "n": 360,
+        "reasoning": 0.7611111111111111,
+        "message": 0.5166666666666667,
+        "difference": 0.24444444444444435,
+        "ci_low": 0.1448585363362444,
+        "ci_high": 0.35434988992845345,
+        "mcnemar_cluster": {
+          "b": 103,
+          "c": 15,
+          "clusters_with_discordance": 56,
+          "statistic": 88.0,
+          "p_value": 4.999750012499375e-05,
+          "permutations": 20000,
+          "test": "cluster-level sign-flip (SAST rule)"
+        },
+        "mcnemar_exact": {
+          "b": 103,
+          "c": 15,
+          "discordant": 118,
+          "p_value": 2.5388391153940443e-17,
+          "odds_ratio": 6.866666666666666,
+          "test": "exact McNemar test (two-sided, binomial distribution)"
+        }
+      },
+      "gpt-5.6-luna": {
+        "n": 360,
+        "reasoning": 0.6611111111111111,
+        "message": 0.5166666666666667,
+        "difference": 0.14444444444444438,
+        "ci_low": 0.0,
+        "ci_high": 0.28688641020864386,
+        "mcnemar_cluster": {
+          "b": 94,
+          "c": 42,
+          "clusters_with_discordance": 57,
+          "statistic": 52.0,
+          "p_value": 0.0671966401679916,
+          "permutations": 20000,
+          "test": "cluster-level sign-flip (SAST rule)"
+        },
+        "mcnemar_exact": {
+          "b": 94,
+          "c": 42,
+          "discordant": 136,
+          "p_value": 9.669159852144027e-06,
+          "odds_ratio": 2.238095238095238,
+          "test": "exact McNemar test (two-sided, binomial distribution)"
+        }
+      },
+      "openai/gpt-oss-20b": {
+        "n": 360,
+        "reasoning": 0.7583333333333333,
+        "message": 0.5166666666666667,
+        "difference": 0.24166666666666659,
+        "ci_low": 0.13970450711456647,
+        "ci_high": 0.34909379509379507,
+        "mcnemar_cluster": {
+          "b": 110,
+          "c": 23,
+          "clusters_with_discordance": 67,
+          "statistic": 87.0,
+          "p_value": 4.999750012499375e-05,
+          "permutations": 20000,
+          "test": "cluster-level sign-flip (SAST rule)"
+        },
+        "mcnemar_exact": {
+          "b": 110,
+          "c": 23,
+          "discordant": 133,
+          "p_value": 8.363230064667416e-15,
+          "odds_ratio": 4.782608695652174,
+          "test": "exact McNemar test (two-sided, binomial distribution)"
+        }
+      },
+      "claude-sonnet-5": {
+        "n": 360,
+        "reasoning": 0.8583333333333333,
+        "message": 0.5166666666666667,
+        "difference": 0.34166666666666656,
+        "ci_low": 0.24647837449626941,
+        "ci_high": 0.4517136641959394,
+        "mcnemar_cluster": {
+          "b": 128,
+          "c": 5,
+          "clusters_with_discordance": 61,
+          "statistic": 123.0,
+          "p_value": 4.999750012499375e-05,
+          "permutations": 20000,
+          "test": "cluster-level sign-flip (SAST rule)"
+        },
+        "mcnemar_exact": {
+          "b": 128,
+          "c": 5,
+          "discordant": 133,
+          "p_value": 6.139234950382772e-32,
+          "odds_ratio": 25.6,
+          "test": "exact McNemar test (two-sided, binomial distribution)"
+        }
+      }
+    },
+    "per_tool": {
+      "error-prone": {
+        "n": 120,
+        "message": 0.25,
+        "model_min": 0.6916666666666667,
+        "model_max": 0.85
+      },
+      "sonarqube": {
+        "n": 120,
+        "message": 0.375,
+        "model_min": 0.6583333333333333,
+        "model_max": 0.8166666666666667
+      },
+      "spotbugs": {
+        "n": 120,
+        "message": 0.925,
+        "model_min": 0.6333333333333333,
+        "model_max": 0.925
+      }
+    }
+  },
+  "H5": {
+    "usage": {
+      "claude-opus-5": {
+        "findings": 360,
+        "cost_usd_total": 58.6694725,
+        "cost_usd_per_finding": 0.16297075694444443
+      },
+      "gpt-5.6-terra": {
+        "findings": 360,
+        "cost_usd_total": 11.917237199999999,
+        "cost_usd_per_finding": 0.033103436666666666
+      },
+      "qwen3.5:9b": {
+        "findings": 360,
+        "cost_usd_total": 0.0,
+        "cost_usd_per_finding": 0.0
+      },
+      "openai/gpt-oss-120b": {
+        "findings": 360,
+        "cost_usd_total": 0.30795428700000005,
+        "cost_usd_per_finding": 0.0008554285750000002
+      },
+      "gpt-5.6-luna": {
+        "findings": 360,
+        "cost_usd_total": 1.06842588,
+        "cost_usd_per_finding": 0.0029678496666666666
+      },
+      "openai/gpt-oss-20b": {
+        "findings": 360,
+        "cost_usd_total": 0.33737903,
+        "cost_usd_per_finding": 0.0009371639722222223
+      },
+      "claude-sonnet-5": {
+        "findings": 360,
+        "cost_usd_total": 23.9116511,
+        "cost_usd_per_finding": 0.06642125305555556
+      }
+    },
+    "ratios": {
+      "gpt-5.6-terra": {
+        "reference": "claude-opus-5",
+        "f1_ratio": 1.015527465667915,
+        "f1_ratio_ci": [
+          0.9555336698555041,
+          1.0790470544807764
+        ],
+        "threshold_met": true
+      },
+      "qwen3.5:9b": {
+        "reference": "claude-opus-5",
+        "f1_ratio": 0.8098659003831418,
+        "f1_ratio_ci": [
+          0.7057776400219832,
+          0.917357346051335
+        ],
+        "threshold_met": false
+      },
+      "openai/gpt-oss-120b": {
+        "reference": "claude-opus-5",
+        "f1_ratio": 0.9768262737875997,
+        "f1_ratio_ci": [
+          0.8992244160968352,
+          1.076081820495791
+        ],
+        "threshold_met": true
+      },
+      "gpt-5.6-luna": {
+        "reference": "claude-opus-5",
+        "f1_ratio": 0.9491921768707482,
+        "f1_ratio_ci": [
+          0.8820932951859201,
+          1.0043566254694076
+        ],
+        "threshold_met": true
+      },
+      "openai/gpt-oss-20b": {
+        "reference": "claude-opus-5",
+        "f1_ratio": 0.9344262295081968,
+        "f1_ratio_ci": [
+          0.7905114044994873,
+          1.093380816682311
+        ],
+        "threshold_met": false
+      },
+      "claude-sonnet-5": {
+        "reference": "claude-opus-5",
+        "f1_ratio": 0.9878563118091914,
+        "f1_ratio_ci": [
+          0.9537612722049043,
+          1.0241935483870965
+        ],
+        "threshold_met": true
+      }
+    },
+    "pricing_supplied": true
+  },
+  "RQ8": {
+    "findings_with_reference": 360,
+    "models": {
+      "claude-opus-5": {
+        "scored": 360,
+        "accuracy": 0.9027777777777778,
+        "accuracy_per_tool": {
+          "error-prone": 0.8666666666666667,
+          "sonarqube": 0.9083333333333333,
+          "spotbugs": 0.9333333333333333
+        },
+        "unanimous_across_runs": 0.9805555555555555,
+        "confusion": {
+          "CORRECTNESS": {
+            "CORRECTNESS": 101,
+            "CONCURRENCY": 3,
+            "SECURITY": 0,
+            "PERFORMANCE": 1,
+            "MAINTAINABILITY": 25,
+            "OTHER": 0
+          },
+          "CONCURRENCY": {
+            "CORRECTNESS": 0,
+            "CONCURRENCY": 53,
+            "SECURITY": 0,
+            "PERFORMANCE": 0,
+            "MAINTAINABILITY": 0,
+            "OTHER": 0
+          },
+          "SECURITY": {
+            "CORRECTNESS": 0,
+            "CONCURRENCY": 0,
+            "SECURITY": 47,
+            "PERFORMANCE": 0,
+            "MAINTAINABILITY": 3,
+            "OTHER": 0
+          },
+          "PERFORMANCE": {
+            "CORRECTNESS": 0,
+            "CONCURRENCY": 0,
+            "SECURITY": 1,
+            "PERFORMANCE": 12,
+            "MAINTAINABILITY": 1,
+            "OTHER": 0
+          },
+          "MAINTAINABILITY": {
+            "CORRECTNESS": 1,
+            "CONCURRENCY": 0,
+            "SECURITY": 0,
+            "PERFORMANCE": 0,
+            "MAINTAINABILITY": 112,
+            "OTHER": 0
+          },
+          "OTHER": {
+            "CORRECTNESS": 0,
+            "CONCURRENCY": 0,
+            "SECURITY": 0,
+            "PERFORMANCE": 0,
+            "MAINTAINABILITY": 0,
+            "OTHER": 0
+          }
+        }
+      },
+      "gpt-5.6-terra": {
+        "scored": 360,
+        "accuracy": 0.8472222222222222,
+        "accuracy_per_tool": {
+          "error-prone": 0.825,
+          "sonarqube": 0.8,
+          "spotbugs": 0.9166666666666666
+        },
+        "unanimous_across_runs": 0.9,
+        "confusion": {
+          "CORRECTNESS": {
+            "CORRECTNESS": 84,
+            "CONCURRENCY": 1,
+            "SECURITY": 1,
+            "PERFORMANCE": 3,
+            "MAINTAINABILITY": 41,
+            "OTHER": 0
+          },
+          "CONCURRENCY": {
+            "CORRECTNESS": 0,
+            "CONCURRENCY": 53,
+            "SECURITY": 0,
+            "PERFORMANCE": 0,
+            "MAINTAINABILITY": 0,
+            "OTHER": 0
+          },
+          "SECURITY": {
+            "CORRECTNESS": 2,
+            "CONCURRENCY": 0,
+            "SECURITY": 43,
+            "PERFORMANCE": 0,
+            "MAINTAINABILITY": 5,
+            "OTHER": 0
+          },
+          "PERFORMANCE": {
+            "CORRECTNESS": 0,
+            "CONCURRENCY": 0,
+            "SECURITY": 0,
+            "PERFORMANCE": 13,
+            "MAINTAINABILITY": 1,
+            "OTHER": 0
+          },
+          "MAINTAINABILITY": {
+            "CORRECTNESS": 1,
+            "CONCURRENCY": 0,
+            "SECURITY": 0,
+            "PERFORMANCE": 0,
+            "MAINTAINABILITY": 112,
+            "OTHER": 0
+          },
+          "OTHER": {
+            "CORRECTNESS": 0,
+            "CONCURRENCY": 0,
+            "SECURITY": 0,
+            "PERFORMANCE": 0,
+            "MAINTAINABILITY": 0,
+            "OTHER": 0
+          }
+        }
+      },
+      "qwen3.5:9b": {
+        "scored": 360,
+        "accuracy": 0.7388888888888889,
+        "accuracy_per_tool": {
+          "error-prone": 0.7333333333333333,
+          "sonarqube": 0.6583333333333333,
+          "spotbugs": 0.825
+        },
+        "unanimous_across_runs": 0.5722222222222222,
+        "confusion": {
+          "CORRECTNESS": {
+            "CORRECTNESS": 53,
+            "CONCURRENCY": 3,
+            "SECURITY": 3,
+            "PERFORMANCE": 6,
+            "MAINTAINABILITY": 60,
+            "OTHER": 5
+          },
+          "CONCURRENCY": {
+            "CORRECTNESS": 2,
+            "CONCURRENCY": 49,
+            "SECURITY": 0,
+            "PERFORMANCE": 0,
+            "MAINTAINABILITY": 1,
+            "OTHER": 1
+          },
+          "SECURITY": {
+            "CORRECTNESS": 0,
+            "CONCURRENCY": 0,
+            "SECURITY": 40,
+            "PERFORMANCE": 0,
+            "MAINTAINABILITY": 9,
+            "OTHER": 1
+          },
+          "PERFORMANCE": {
+            "CORRECTNESS": 0,
+            "CONCURRENCY": 0,
+            "SECURITY": 0,
+            "PERFORMANCE": 13,
+            "MAINTAINABILITY": 1,
+            "OTHER": 0
+          },
+          "MAINTAINABILITY": {
+            "CORRECTNESS": 0,
+            "CONCURRENCY": 0,
+            "SECURITY": 0,
+            "PERFORMANCE": 1,
+            "MAINTAINABILITY": 111,
+            "OTHER": 1
+          },
+          "OTHER": {
+            "CORRECTNESS": 0,
+            "CONCURRENCY": 0,
+            "SECURITY": 0,
+            "PERFORMANCE": 0,
+            "MAINTAINABILITY": 0,
+            "OTHER": 0
+          }
+        }
+      },
+      "openai/gpt-oss-120b": {
+        "scored": 360,
+        "accuracy": 0.7861111111111111,
+        "accuracy_per_tool": {
+          "error-prone": 0.825,
+          "sonarqube": 0.7166666666666667,
+          "spotbugs": 0.8166666666666667
+        },
+        "unanimous_across_runs": 0.8361111111111111,
+        "confusion": {
+          "CORRECTNESS": {
+            "CORRECTNESS": 90,
+            "CONCURRENCY": 1,
+            "SECURITY": 0,
+            "PERFORMANCE": 1,
+            "MAINTAINABILITY": 38,
+            "OTHER": 0
+          },
+          "CONCURRENCY": {
+            "CORRECTNESS": 17,
+            "CONCURRENCY": 35,
+            "SECURITY": 0,
+            "PERFORMANCE": 0,
+            "MAINTAINABILITY": 1,
+            "OTHER": 0
+          },
+          "SECURITY": {
+            "CORRECTNESS": 1,
+            "CONCURRENCY": 0,
+            "SECURITY": 34,
+            "PERFORMANCE": 0,
+            "MAINTAINABILITY": 15,
+            "OTHER": 0
+          },
+          "PERFORMANCE": {
+            "CORRECTNESS": 0,
+            "CONCURRENCY": 0,
+            "SECURITY": 0,
+            "PERFORMANCE": 13,
+            "MAINTAINABILITY": 1,
+            "OTHER": 0
+          },
+          "MAINTAINABILITY": {
+            "CORRECTNESS": 1,
+            "CONCURRENCY": 0,
+            "SECURITY": 0,
+            "PERFORMANCE": 1,
+            "MAINTAINABILITY": 111,
+            "OTHER": 0
+          },
+          "OTHER": {
+            "CORRECTNESS": 0,
+            "CONCURRENCY": 0,
+            "SECURITY": 0,
+            "PERFORMANCE": 0,
+            "MAINTAINABILITY": 0,
+            "OTHER": 0
+          }
+        }
+      },
+      "gpt-5.6-luna": {
+        "scored": 360,
+        "accuracy": 0.8472222222222222,
+        "accuracy_per_tool": {
+          "error-prone": 0.85,
+          "sonarqube": 0.8166666666666667,
+          "spotbugs": 0.875
+        },
+        "unanimous_across_runs": 0.9,
+        "confusion": {
+          "CORRECTNESS": {
+            "CORRECTNESS": 95,
+            "CONCURRENCY": 1,
+            "SECURITY": 0,
+            "PERFORMANCE": 3,
+            "MAINTAINABILITY": 31,
+            "OTHER": 0
+          },
+          "CONCURRENCY": {
+            "CORRECTNESS": 7,
+            "CONCURRENCY": 46,
+            "SECURITY": 0,
+            "PERFORMANCE": 0,
+            "MAINTAINABILITY": 0,
+            "OTHER": 0
+          },
+          "SECURITY": {
+            "CORRECTNESS": 0,
+            "CONCURRENCY": 0,
+            "SECURITY": 38,
+            "PERFORMANCE": 0,
+            "MAINTAINABILITY": 12,
+            "OTHER": 0
+          },
+          "PERFORMANCE": {
+            "CORRECTNESS": 0,
+            "CONCURRENCY": 0,
+            "SECURITY": 0,
+            "PERFORMANCE": 13,
+            "MAINTAINABILITY": 1,
+            "OTHER": 0
+          },
+          "MAINTAINABILITY": {
+            "CORRECTNESS": 0,
+            "CONCURRENCY": 0,
+            "SECURITY": 0,
+            "PERFORMANCE": 0,
+            "MAINTAINABILITY": 113,
+            "OTHER": 0
+          },
+          "OTHER": {
+            "CORRECTNESS": 0,
+            "CONCURRENCY": 0,
+            "SECURITY": 0,
+            "PERFORMANCE": 0,
+            "MAINTAINABILITY": 0,
+            "OTHER": 0
+          }
+        }
+      },
+      "openai/gpt-oss-20b": {
+        "scored": 360,
+        "accuracy": 0.7611111111111111,
+        "accuracy_per_tool": {
+          "error-prone": 0.8416666666666667,
+          "sonarqube": 0.65,
+          "spotbugs": 0.7916666666666666
+        },
+        "unanimous_across_runs": 0.6722222222222223,
+        "confusion": {
+          "CORRECTNESS": {
+            "CORRECTNESS": 82,
+            "CONCURRENCY": 2,
+            "SECURITY": 0,
+            "PERFORMANCE": 4,
+            "MAINTAINABILITY": 37,
+            "OTHER": 5
+          },
+          "CONCURRENCY": {
+            "CORRECTNESS": 21,
+            "CONCURRENCY": 30,
+            "SECURITY": 0,
+            "PERFORMANCE": 0,
+            "MAINTAINABILITY": 1,
+            "OTHER": 1
+          },
+          "SECURITY": {
+            "CORRECTNESS": 0,
+            "CONCURRENCY": 0,
+            "SECURITY": 38,
+            "PERFORMANCE": 0,
+            "MAINTAINABILITY": 10,
+            "OTHER": 2
+          },
+          "PERFORMANCE": {
+            "CORRECTNESS": 0,
+            "CONCURRENCY": 0,
+            "SECURITY": 0,
+            "PERFORMANCE": 12,
+            "MAINTAINABILITY": 1,
+            "OTHER": 1
+          },
+          "MAINTAINABILITY": {
+            "CORRECTNESS": 0,
+            "CONCURRENCY": 0,
+            "SECURITY": 0,
+            "PERFORMANCE": 1,
+            "MAINTAINABILITY": 112,
+            "OTHER": 0
+          },
+          "OTHER": {
+            "CORRECTNESS": 0,
+            "CONCURRENCY": 0,
+            "SECURITY": 0,
+            "PERFORMANCE": 0,
+            "MAINTAINABILITY": 0,
+            "OTHER": 0
+          }
+        }
+      },
+      "claude-sonnet-5": {
+        "scored": 360,
+        "accuracy": 0.8972222222222223,
+        "accuracy_per_tool": {
+          "error-prone": 0.9166666666666666,
+          "sonarqube": 0.9,
+          "spotbugs": 0.875
+        },
+        "unanimous_across_runs": 0.9055555555555556,
+        "confusion": {
+          "CORRECTNESS": {
+            "CORRECTNESS": 108,
+            "CONCURRENCY": 3,
+            "SECURITY": 0,
+            "PERFORMANCE": 2,
+            "MAINTAINABILITY": 17,
+            "OTHER": 0
+          },
+          "CONCURRENCY": {
+            "CORRECTNESS": 0,
+            "CONCURRENCY": 53,
+            "SECURITY": 0,
+            "PERFORMANCE": 0,
+            "MAINTAINABILITY": 0,
+            "OTHER": 0
+          },
+          "SECURITY": {
+            "CORRECTNESS": 0,
+            "CONCURRENCY": 0,
+            "SECURITY": 39,
+            "PERFORMANCE": 0,
+            "MAINTAINABILITY": 11,
+            "OTHER": 0
+          },
+          "PERFORMANCE": {
+            "CORRECTNESS": 1,
+            "CONCURRENCY": 0,
+            "SECURITY": 0,
+            "PERFORMANCE": 12,
+            "MAINTAINABILITY": 1,
+            "OTHER": 0
+          },
+          "MAINTAINABILITY": {
+            "CORRECTNESS": 2,
+            "CONCURRENCY": 0,
+            "SECURITY": 0,
+            "PERFORMANCE": 0,
+            "MAINTAINABILITY": 111,
+            "OTHER": 0
+          },
+          "OTHER": {
+            "CORRECTNESS": 0,
+            "CONCURRENCY": 0,
+            "SECURITY": 0,
+            "PERFORMANCE": 0,
+            "MAINTAINABILITY": 0,
+            "OTHER": 0
+          }
+        }
+      }
+    },
+    "agreement_between_models": {
+      "kappa": 0.7569405342213785,
+      "observed_agreement": 0.8287037037037036,
+      "expected_agreement": 0.295249433106576,
+      "subjects": 360,
+      "raters": 7
+    },
+    "confusion_summed": {
+      "CORRECTNESS": {
+        "CORRECTNESS": 613,
+        "CONCURRENCY": 14,
+        "SECURITY": 4,
+        "PERFORMANCE": 20,
+        "MAINTAINABILITY": 249,
+        "OTHER": 10
+      },
+      "CONCURRENCY": {
+        "CORRECTNESS": 47,
+        "CONCURRENCY": 319,
+        "SECURITY": 0,
+        "PERFORMANCE": 0,
+        "MAINTAINABILITY": 3,
+        "OTHER": 2
+      },
+      "SECURITY": {
+        "CORRECTNESS": 3,
+        "CONCURRENCY": 0,
+        "SECURITY": 279,
+        "PERFORMANCE": 0,
+        "MAINTAINABILITY": 65,
+        "OTHER": 3
+      },
+      "PERFORMANCE": {
+        "CORRECTNESS": 1,
+        "CONCURRENCY": 0,
+        "SECURITY": 1,
+        "PERFORMANCE": 88,
+        "MAINTAINABILITY": 7,
+        "OTHER": 1
+      },
+      "MAINTAINABILITY": {
+        "CORRECTNESS": 5,
+        "CONCURRENCY": 0,
+        "SECURITY": 0,
+        "PERFORMANCE": 3,
+        "MAINTAINABILITY": 782,
+        "OTHER": 1
+      },
+      "OTHER": {
+        "CORRECTNESS": 0,
+        "CONCURRENCY": 0,
+        "SECURITY": 0,
+        "PERFORMANCE": 0,
+        "MAINTAINABILITY": 0,
+        "OTHER": 0
+      }
+    },
+    "errors_summed": 439,
+    "distribution": {
+      "claude-opus-5": {
+        "CORRECTNESS": 102,
+        "CONCURRENCY": 56,
+        "SECURITY": 48,
+        "PERFORMANCE": 13,
+        "MAINTAINABILITY": 141,
+        "OTHER": 0
+      },
+      "gpt-5.6-terra": {
+        "CORRECTNESS": 87,
+        "CONCURRENCY": 54,
+        "SECURITY": 44,
+        "PERFORMANCE": 16,
+        "MAINTAINABILITY": 159,
+        "OTHER": 0
+      },
+      "qwen3.5:9b": {
+        "CORRECTNESS": 55,
+        "CONCURRENCY": 52,
+        "SECURITY": 43,
+        "PERFORMANCE": 20,
+        "MAINTAINABILITY": 182,
+        "OTHER": 8
+      },
+      "openai/gpt-oss-120b": {
+        "CORRECTNESS": 109,
+        "CONCURRENCY": 36,
+        "SECURITY": 34,
+        "PERFORMANCE": 15,
+        "MAINTAINABILITY": 166,
+        "OTHER": 0
+      },
+      "gpt-5.6-luna": {
+        "CORRECTNESS": 102,
+        "CONCURRENCY": 47,
+        "SECURITY": 38,
+        "PERFORMANCE": 16,
+        "MAINTAINABILITY": 157,
+        "OTHER": 0
+      },
+      "openai/gpt-oss-20b": {
+        "CORRECTNESS": 103,
+        "CONCURRENCY": 32,
+        "SECURITY": 38,
+        "PERFORMANCE": 17,
+        "MAINTAINABILITY": 161,
+        "OTHER": 9
+      },
+      "claude-sonnet-5": {
+        "CORRECTNESS": 111,
+        "CONCURRENCY": 56,
+        "SECURITY": 39,
+        "PERFORMANCE": 14,
+        "MAINTAINABILITY": 140,
+        "OTHER": 0
+      }
+    },
+    "reference_distribution": {
+      "CORRECTNESS": 130,
+      "CONCURRENCY": 53,
+      "SECURITY": 50,
+      "PERFORMANCE": 14,
+      "MAINTAINABILITY": 113,
+      "OTHER": 0
+    },
+    "tool_label_baseline": {
+      "with_unambiguous_label": 198,
+      "correct": 150,
+      "accuracy": 0.7575757575757576,
+      "without_label": 162,
+      "models_on_same_subset": {
+        "claude-opus-5": {
+          "scored": 198,
+          "accuracy": 0.9191919191919192,
+          "hits_shared_with_label": 143,
+          "hits_model_only": 39,
+          "hits_label_only": 7
+        },
+        "gpt-5.6-terra": {
+          "scored": 198,
+          "accuracy": 0.8434343434343434,
+          "hits_shared_with_label": 135,
+          "hits_model_only": 32,
+          "hits_label_only": 15
+        },
+        "qwen3.5:9b": {
+          "scored": 198,
+          "accuracy": 0.7474747474747475,
+          "hits_shared_with_label": 120,
+          "hits_model_only": 28,
+          "hits_label_only": 30
+        },
+        "openai/gpt-oss-120b": {
+          "scored": 198,
+          "accuracy": 0.7929292929292929,
+          "hits_shared_with_label": 140,
+          "hits_model_only": 17,
+          "hits_label_only": 10
+        },
+        "gpt-5.6-luna": {
+          "scored": 198,
+          "accuracy": 0.8232323232323232,
+          "hits_shared_with_label": 132,
+          "hits_model_only": 31,
+          "hits_label_only": 18
+        },
+        "openai/gpt-oss-20b": {
+          "scored": 198,
+          "accuracy": 0.702020202020202,
+          "hits_shared_with_label": 122,
+          "hits_model_only": 17,
+          "hits_label_only": 28
+        },
+        "claude-sonnet-5": {
+          "scored": 198,
+          "accuracy": 0.8787878787878788,
+          "hits_shared_with_label": 133,
+          "hits_model_only": 41,
+          "hits_label_only": 17
+        }
+      }
+    }
+  },
+  "RQ9": {
+    "models": {
+      "claude-opus-5": {
+        "findings_with_signature": 360,
+        "distinct_signatures": 255,
+        "unanimous_across_runs": 0.13333333333333333,
+        "within_rule_identical_pair_share": 0.15028177833437695,
+        "within_rule_close_pair_share": 0.5209768315591734,
+        "within_rule_pairs": 1597,
+        "within_rule_mean_similarity": 0.7017627954359702,
+        "per_rule": [
+          {
+            "rule": "error-prone::BanJNDI",
+            "findings": 3,
+            "distinct_signatures": 3,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.6049176118504351
+          },
+          {
+            "rule": "error-prone::FutureReturnValueIgnored",
+            "findings": 17,
+            "distinct_signatures": 16,
+            "identical_pair_share": 0.007352941176470588,
+            "mean_similarity": 0.5439120031304886
+          },
+          {
+            "rule": "error-prone::IntLongMath",
+            "findings": 10,
+            "distinct_signatures": 5,
+            "identical_pair_share": 0.2,
+            "mean_similarity": 0.7054717722680522
+          },
+          {
+            "rule": "error-prone::MissingCasesInEnumSwitch",
+            "findings": 12,
+            "distinct_signatures": 9,
+            "identical_pair_share": 0.045454545454545456,
+            "mean_similarity": 0.6526038323716797
+          },
+          {
+            "rule": "error-prone::MissingOverride",
+            "findings": 8,
+            "distinct_signatures": 4,
+            "identical_pair_share": 0.21428571428571427,
+            "mean_similarity": 0.7432109619886701
+          },
+          {
+            "rule": "error-prone::MissingSummary",
+            "findings": 12,
+            "distinct_signatures": 6,
+            "identical_pair_share": 0.19696969696969696,
+            "mean_similarity": 0.7943870504634076
+          },
+          {
+            "rule": "error-prone::OperatorPrecedence",
+            "findings": 10,
+            "distinct_signatures": 6,
+            "identical_pair_share": 0.15555555555555556,
+            "mean_similarity": 0.8187923507303764
+          },
+          {
+            "rule": "error-prone::ReferenceEquality",
+            "findings": 10,
+            "distinct_signatures": 6,
+            "identical_pair_share": 0.15555555555555556,
+            "mean_similarity": 0.7431289558223759
+          },
+          {
+            "rule": "error-prone::SameNameButDifferent",
+            "findings": 10,
+            "distinct_signatures": 2,
+            "identical_pair_share": 0.6444444444444445,
+            "mean_similarity": 0.9721739130434782
+          },
+          {
+            "rule": "error-prone::UnnecessaryParentheses",
+            "findings": 4,
+            "distinct_signatures": 3,
+            "identical_pair_share": 0.16666666666666666,
+            "mean_similarity": 0.9295734458777937
+          },
+          {
+            "rule": "error-prone::UnusedVariable",
+            "findings": 3,
+            "distinct_signatures": 3,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.37555276617539907
+          },
+          {
+            "rule": "sonarqube::java:S1181",
+            "findings": 2,
+            "distinct_signatures": 2,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.7346938775510204
+          },
+          {
+            "rule": "sonarqube::java:S1192",
+            "findings": 2,
+            "distinct_signatures": 2,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.9848484848484849
+          },
+          {
+            "rule": "sonarqube::java:S1845",
+            "findings": 6,
+            "distinct_signatures": 6,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.7577836453469372
+          },
+          {
+            "rule": "sonarqube::java:S1948",
+            "findings": 2,
+            "distinct_signatures": 1,
+            "identical_pair_share": 1.0,
+            "mean_similarity": 1.0
+          },
+          {
+            "rule": "sonarqube::java:S2095",
+            "findings": 21,
+            "distinct_signatures": 14,
+            "identical_pair_share": 0.10476190476190476,
+            "mean_similarity": 0.7418483469433754
+          },
+          {
+            "rule": "sonarqube::java:S2142",
+            "findings": 16,
+            "distinct_signatures": 11,
+            "identical_pair_share": 0.058333333333333334,
+            "mean_similarity": 0.6782037168202909
+          },
+          {
+            "rule": "sonarqube::java:S2178",
+            "findings": 10,
+            "distinct_signatures": 7,
+            "identical_pair_share": 0.08888888888888889,
+            "mean_similarity": 0.7226404225430432
+          },
+          {
+            "rule": "sonarqube::java:S2259",
+            "findings": 6,
+            "distinct_signatures": 6,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.6421175854802234
+          },
+          {
+            "rule": "sonarqube::java:S2583",
+            "findings": 3,
+            "distinct_signatures": 3,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.6041242692522069
+          },
+          {
+            "rule": "sonarqube::java:S3014",
+            "findings": 2,
+            "distinct_signatures": 2,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.40384615384615385
+          },
+          {
+            "rule": "sonarqube::java:S3516",
+            "findings": 4,
+            "distinct_signatures": 1,
+            "identical_pair_share": 1.0,
+            "mean_similarity": 1.0
+          },
+          {
+            "rule": "sonarqube::java:S3776",
+            "findings": 6,
+            "distinct_signatures": 4,
+            "identical_pair_share": 0.2,
+            "mean_similarity": 0.8085543396570282
+          },
+          {
+            "rule": "sonarqube::java:S4973",
+            "findings": 2,
+            "distinct_signatures": 1,
+            "identical_pair_share": 1.0,
+            "mean_similarity": 1.0
+          },
+          {
+            "rule": "sonarqube::java:S5164",
+            "findings": 3,
+            "distinct_signatures": 3,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.6108718766613503
+          },
+          {
+            "rule": "spotbugs::AT_NONATOMIC_64BIT_PRIMITIVE",
+            "findings": 7,
+            "distinct_signatures": 4,
+            "identical_pair_share": 0.2857142857142857,
+            "mean_similarity": 0.7493980543067861
+          },
+          {
+            "rule": "spotbugs::AT_STALE_THREAD_WRITE_OF_PRIMITIVE",
+            "findings": 25,
+            "distinct_signatures": 8,
+            "identical_pair_share": 0.20333333333333334,
+            "mean_similarity": 0.6879829574258862
+          },
+          {
+            "rule": "spotbugs::CT_CONSTRUCTOR_THROW",
+            "findings": 25,
+            "distinct_signatures": 12,
+            "identical_pair_share": 0.11,
+            "mean_similarity": 0.6383457632765164
+          },
+          {
+            "rule": "spotbugs::EI_EXPOSE_REP",
+            "findings": 4,
+            "distinct_signatures": 3,
+            "identical_pair_share": 0.16666666666666666,
+            "mean_similarity": 0.9094856634242482
+          },
+          {
+            "rule": "spotbugs::EI_EXPOSE_REP2",
+            "findings": 6,
+            "distinct_signatures": 5,
+            "identical_pair_share": 0.06666666666666667,
+            "mean_similarity": 0.8530196513116546
+          },
+          {
+            "rule": "spotbugs::NP_NULL_PARAM_DEREF",
+            "findings": 2,
+            "distinct_signatures": 1,
+            "identical_pair_share": 1.0,
+            "mean_similarity": 1.0
+          },
+          {
+            "rule": "spotbugs::RV_RETURN_VALUE_OF_PUTIFABSENT_IGNORED",
+            "findings": 2,
+            "distinct_signatures": 2,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.5669291338582677
+          },
+          {
+            "rule": "spotbugs::SBSC_USE_STRINGBUFFER_CONCATENATION",
+            "findings": 2,
+            "distinct_signatures": 2,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.9052631578947369
+          },
+          {
+            "rule": "spotbugs::SIC_INNER_SHOULD_BE_STATIC",
+            "findings": 6,
+            "distinct_signatures": 2,
+            "identical_pair_share": 0.6666666666666666,
+            "mean_similarity": 0.9597701149425287
+          },
+          {
+            "rule": "spotbugs::SQL_PREPARED_STATEMENT_GENERATED_FROM_NONCONSTANT_STRING",
+            "findings": 3,
+            "distinct_signatures": 1,
+            "identical_pair_share": 1.0,
+            "mean_similarity": 1.0
+          },
+          {
+            "rule": "spotbugs::UPM_UNCALLED_PRIVATE_METHOD",
+            "findings": 3,
+            "distinct_signatures": 3,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.677115987460815
+          },
+          {
+            "rule": "spotbugs::URF_UNREAD_FIELD",
+            "findings": 3,
+            "distinct_signatures": 2,
+            "identical_pair_share": 0.3333333333333333,
+            "mean_similarity": 0.9191919191919192
+          },
+          {
+            "rule": "spotbugs::WMI_WRONG_MAP_ITERATOR",
+            "findings": 3,
+            "distinct_signatures": 1,
+            "identical_pair_share": 1.0,
+            "mean_similarity": 1.0
+          }
+        ],
+        "cross_tool_merges": {
+          "signatures": 2,
+          "findings_covered": 6,
+          "groups_at_similarity_threshold": 3,
+          "groups_closed_transitively": 1,
+          "lowest_similarity_in_group": 0.7863247863247863,
+          "findings_covered_at_threshold": 15,
+          "examples": [
+            {
+              "signature": "non transient non serializable field in serializable class",
+              "tools": [
+                "sonarqube",
+                "spotbugs"
+              ],
+              "findings": 3
+            },
+            {
+              "signature": "string compared with reference equality instead of equals",
+              "tools": [
+                "error-prone",
+                "sonarqube"
+              ],
+              "findings": 3
+            }
+          ]
+        }
+      },
+      "gpt-5.6-terra": {
+        "findings_with_signature": 360,
+        "distinct_signatures": 233,
+        "unanimous_across_runs": 0.20555555555555555,
+        "within_rule_identical_pair_share": 0.36192861615529115,
+        "within_rule_close_pair_share": 0.8303068252974327,
+        "within_rule_pairs": 1597,
+        "within_rule_mean_similarity": 0.7326688169311492,
+        "per_rule": [
+          {
+            "rule": "error-prone::BanJNDI",
+            "findings": 3,
+            "distinct_signatures": 3,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.5430408450299952
+          },
+          {
+            "rule": "error-prone::FutureReturnValueIgnored",
+            "findings": 17,
+            "distinct_signatures": 11,
+            "identical_pair_share": 0.058823529411764705,
+            "mean_similarity": 0.6394850958884181
+          },
+          {
+            "rule": "error-prone::IntLongMath",
+            "findings": 10,
+            "distinct_signatures": 5,
+            "identical_pair_share": 0.24444444444444444,
+            "mean_similarity": 0.8331983232925961
+          },
+          {
+            "rule": "error-prone::MissingCasesInEnumSwitch",
+            "findings": 12,
+            "distinct_signatures": 3,
+            "identical_pair_share": 0.5606060606060606,
+            "mean_similarity": 0.8411177452491012
+          },
+          {
+            "rule": "error-prone::MissingOverride",
+            "findings": 8,
+            "distinct_signatures": 4,
+            "identical_pair_share": 0.21428571428571427,
+            "mean_similarity": 0.8050891999404893
+          },
+          {
+            "rule": "error-prone::MissingSummary",
+            "findings": 12,
+            "distinct_signatures": 3,
+            "identical_pair_share": 0.5606060606060606,
+            "mean_similarity": 0.8335602413869485
+          },
+          {
+            "rule": "error-prone::OperatorPrecedence",
+            "findings": 10,
+            "distinct_signatures": 6,
+            "identical_pair_share": 0.15555555555555556,
+            "mean_similarity": 0.6265683713813565
+          },
+          {
+            "rule": "error-prone::ReferenceEquality",
+            "findings": 10,
+            "distinct_signatures": 5,
+            "identical_pair_share": 0.2,
+            "mean_similarity": 0.525306566149658
+          },
+          {
+            "rule": "error-prone::SameNameButDifferent",
+            "findings": 10,
+            "distinct_signatures": 7,
+            "identical_pair_share": 0.06666666666666667,
+            "mean_similarity": 0.585668609523694
+          },
+          {
+            "rule": "error-prone::UnnecessaryParentheses",
+            "findings": 4,
+            "distinct_signatures": 2,
+            "identical_pair_share": 0.5,
+            "mean_similarity": 0.7421052631578947
+          },
+          {
+            "rule": "error-prone::UnusedVariable",
+            "findings": 3,
+            "distinct_signatures": 3,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.4176330657151353
+          },
+          {
+            "rule": "sonarqube::java:S1181",
+            "findings": 2,
+            "distinct_signatures": 1,
+            "identical_pair_share": 1.0,
+            "mean_similarity": 1.0
+          },
+          {
+            "rule": "sonarqube::java:S1192",
+            "findings": 2,
+            "distinct_signatures": 1,
+            "identical_pair_share": 1.0,
+            "mean_similarity": 1.0
+          },
+          {
+            "rule": "sonarqube::java:S1845",
+            "findings": 6,
+            "distinct_signatures": 5,
+            "identical_pair_share": 0.06666666666666667,
+            "mean_similarity": 0.5696453174939441
+          },
+          {
+            "rule": "sonarqube::java:S1948",
+            "findings": 2,
+            "distinct_signatures": 2,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.8775510204081632
+          },
+          {
+            "rule": "sonarqube::java:S2095",
+            "findings": 21,
+            "distinct_signatures": 20,
+            "identical_pair_share": 0.004761904761904762,
+            "mean_similarity": 0.42098675156757476
+          },
+          {
+            "rule": "sonarqube::java:S2142",
+            "findings": 16,
+            "distinct_signatures": 9,
+            "identical_pair_share": 0.23333333333333334,
+            "mean_similarity": 0.6970432228846865
+          },
+          {
+            "rule": "sonarqube::java:S2178",
+            "findings": 10,
+            "distinct_signatures": 3,
+            "identical_pair_share": 0.4888888888888889,
+            "mean_similarity": 0.9092793481028775
+          },
+          {
+            "rule": "sonarqube::java:S2259",
+            "findings": 6,
+            "distinct_signatures": 5,
+            "identical_pair_share": 0.06666666666666667,
+            "mean_similarity": 0.5494079733388039
+          },
+          {
+            "rule": "sonarqube::java:S2583",
+            "findings": 3,
+            "distinct_signatures": 3,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.42845282571309967
+          },
+          {
+            "rule": "sonarqube::java:S3014",
+            "findings": 2,
+            "distinct_signatures": 1,
+            "identical_pair_share": 1.0,
+            "mean_similarity": 1.0
+          },
+          {
+            "rule": "sonarqube::java:S3516",
+            "findings": 4,
+            "distinct_signatures": 2,
+            "identical_pair_share": 0.5,
+            "mean_similarity": 0.9210526315789473
+          },
+          {
+            "rule": "sonarqube::java:S3776",
+            "findings": 6,
+            "distinct_signatures": 1,
+            "identical_pair_share": 1.0,
+            "mean_similarity": 1.0
+          },
+          {
+            "rule": "sonarqube::java:S4973",
+            "findings": 2,
+            "distinct_signatures": 2,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.49122807017543857
+          },
+          {
+            "rule": "sonarqube::java:S5164",
+            "findings": 3,
+            "distinct_signatures": 3,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.5286840289128618
+          },
+          {
+            "rule": "spotbugs::AT_NONATOMIC_64BIT_PRIMITIVE",
+            "findings": 7,
+            "distinct_signatures": 5,
+            "identical_pair_share": 0.14285714285714285,
+            "mean_similarity": 0.6914509064101222
+          },
+          {
+            "rule": "spotbugs::AT_STALE_THREAD_WRITE_OF_PRIMITIVE",
+            "findings": 25,
+            "distinct_signatures": 7,
+            "identical_pair_share": 0.46,
+            "mean_similarity": 0.8575559298132707
+          },
+          {
+            "rule": "spotbugs::CT_CONSTRUCTOR_THROW",
+            "findings": 25,
+            "distinct_signatures": 4,
+            "identical_pair_share": 0.77,
+            "mean_similarity": 0.8687822021385139
+          },
+          {
+            "rule": "spotbugs::EI_EXPOSE_REP",
+            "findings": 4,
+            "distinct_signatures": 3,
+            "identical_pair_share": 0.16666666666666666,
+            "mean_similarity": 0.8579922492965971
+          },
+          {
+            "rule": "spotbugs::EI_EXPOSE_REP2",
+            "findings": 6,
+            "distinct_signatures": 6,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.564007949846652
+          },
+          {
+            "rule": "spotbugs::NP_NULL_PARAM_DEREF",
+            "findings": 2,
+            "distinct_signatures": 1,
+            "identical_pair_share": 1.0,
+            "mean_similarity": 1.0
+          },
+          {
+            "rule": "spotbugs::RV_RETURN_VALUE_OF_PUTIFABSENT_IGNORED",
+            "findings": 2,
+            "distinct_signatures": 2,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.7428571428571429
+          },
+          {
+            "rule": "spotbugs::SBSC_USE_STRINGBUFFER_CONCATENATION",
+            "findings": 2,
+            "distinct_signatures": 2,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.821917808219178
+          },
+          {
+            "rule": "spotbugs::SIC_INNER_SHOULD_BE_STATIC",
+            "findings": 6,
+            "distinct_signatures": 4,
+            "identical_pair_share": 0.13333333333333333,
+            "mean_similarity": 0.6580858179640985
+          },
+          {
+            "rule": "spotbugs::SQL_PREPARED_STATEMENT_GENERATED_FROM_NONCONSTANT_STRING",
+            "findings": 3,
+            "distinct_signatures": 3,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.8476800976800977
+          },
+          {
+            "rule": "spotbugs::UPM_UNCALLED_PRIVATE_METHOD",
+            "findings": 3,
+            "distinct_signatures": 1,
+            "identical_pair_share": 1.0,
+            "mean_similarity": 1.0
+          },
+          {
+            "rule": "spotbugs::URF_UNREAD_FIELD",
+            "findings": 3,
+            "distinct_signatures": 2,
+            "identical_pair_share": 0.3333333333333333,
+            "mean_similarity": 0.8271604938271605
+          },
+          {
+            "rule": "spotbugs::WMI_WRONG_MAP_ITERATOR",
+            "findings": 3,
+            "distinct_signatures": 1,
+            "identical_pair_share": 1.0,
+            "mean_similarity": 1.0
+          }
+        ],
+        "cross_tool_merges": {
+          "signatures": 3,
+          "findings_covered": 16,
+          "groups_at_similarity_threshold": 6,
+          "groups_closed_transitively": 0,
+          "lowest_similarity_in_group": 0.8292682926829268,
+          "findings_covered_at_threshold": 24,
+          "examples": [
+            {
+              "signature": "non exhaustive enum switch",
+              "tools": [
+                "error-prone",
+                "sonarqube"
+              ],
+              "findings": 10
+            },
+            {
+              "signature": "unused private method",
+              "tools": [
+                "sonarqube",
+                "spotbugs"
+              ],
+              "findings": 4
+            },
+            {
+              "signature": "unclosed input stream",
+              "tools": [
+                "sonarqube",
+                "spotbugs"
+              ],
+              "findings": 2
+            }
+          ]
+        }
+      },
+      "qwen3.5:9b": {
+        "findings_with_signature": 360,
+        "distinct_signatures": 351,
+        "unanimous_across_runs": 0.0,
+        "within_rule_identical_pair_share": 0.006261740763932373,
+        "within_rule_close_pair_share": 0.06950532247964934,
+        "within_rule_pairs": 1597,
+        "within_rule_mean_similarity": 0.5102989002863482,
+        "per_rule": [
+          {
+            "rule": "error-prone::BanJNDI",
+            "findings": 3,
+            "distinct_signatures": 3,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.44394825447457026
+          },
+          {
+            "rule": "error-prone::FutureReturnValueIgnored",
+            "findings": 17,
+            "distinct_signatures": 17,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.4664922556622912
+          },
+          {
+            "rule": "error-prone::IntLongMath",
+            "findings": 10,
+            "distinct_signatures": 10,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.5951872104205411
+          },
+          {
+            "rule": "error-prone::MissingCasesInEnumSwitch",
+            "findings": 12,
+            "distinct_signatures": 12,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.47222059560222257
+          },
+          {
+            "rule": "error-prone::MissingOverride",
+            "findings": 8,
+            "distinct_signatures": 7,
+            "identical_pair_share": 0.03571428571428571,
+            "mean_similarity": 0.6448491105182612
+          },
+          {
+            "rule": "error-prone::MissingSummary",
+            "findings": 12,
+            "distinct_signatures": 12,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.5568645402236744
+          },
+          {
+            "rule": "error-prone::OperatorPrecedence",
+            "findings": 10,
+            "distinct_signatures": 10,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.441450143020781
+          },
+          {
+            "rule": "error-prone::ReferenceEquality",
+            "findings": 10,
+            "distinct_signatures": 8,
+            "identical_pair_share": 0.06666666666666667,
+            "mean_similarity": 0.5775043166427606
+          },
+          {
+            "rule": "error-prone::SameNameButDifferent",
+            "findings": 10,
+            "distinct_signatures": 10,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.6097204408467399
+          },
+          {
+            "rule": "error-prone::UnnecessaryParentheses",
+            "findings": 4,
+            "distinct_signatures": 4,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.7314248927929893
+          },
+          {
+            "rule": "error-prone::UnusedVariable",
+            "findings": 3,
+            "distinct_signatures": 3,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.29187064233793203
+          },
+          {
+            "rule": "sonarqube::java:S1181",
+            "findings": 2,
+            "distinct_signatures": 2,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.5510204081632653
+          },
+          {
+            "rule": "sonarqube::java:S1192",
+            "findings": 2,
+            "distinct_signatures": 2,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.6407766990291263
+          },
+          {
+            "rule": "sonarqube::java:S1845",
+            "findings": 6,
+            "distinct_signatures": 6,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.4193821814361027
+          },
+          {
+            "rule": "sonarqube::java:S1948",
+            "findings": 2,
+            "distinct_signatures": 2,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.45901639344262296
+          },
+          {
+            "rule": "sonarqube::java:S2095",
+            "findings": 21,
+            "distinct_signatures": 21,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.34441504691828434
+          },
+          {
+            "rule": "sonarqube::java:S2142",
+            "findings": 16,
+            "distinct_signatures": 15,
+            "identical_pair_share": 0.008333333333333333,
+            "mean_similarity": 0.6096064719391757
+          },
+          {
+            "rule": "sonarqube::java:S2178",
+            "findings": 10,
+            "distinct_signatures": 10,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.5474790050209238
+          },
+          {
+            "rule": "sonarqube::java:S2259",
+            "findings": 6,
+            "distinct_signatures": 6,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.4331174337367907
+          },
+          {
+            "rule": "sonarqube::java:S2583",
+            "findings": 3,
+            "distinct_signatures": 3,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.40196029901717484
+          },
+          {
+            "rule": "sonarqube::java:S3014",
+            "findings": 2,
+            "distinct_signatures": 2,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.42038216560509556
+          },
+          {
+            "rule": "sonarqube::java:S3516",
+            "findings": 4,
+            "distinct_signatures": 4,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.45261992789210376
+          },
+          {
+            "rule": "sonarqube::java:S3776",
+            "findings": 6,
+            "distinct_signatures": 6,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.4701015062371065
+          },
+          {
+            "rule": "sonarqube::java:S4973",
+            "findings": 2,
+            "distinct_signatures": 2,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.4567901234567901
+          },
+          {
+            "rule": "sonarqube::java:S5164",
+            "findings": 3,
+            "distinct_signatures": 3,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.46570544151189314
+          },
+          {
+            "rule": "spotbugs::AT_NONATOMIC_64BIT_PRIMITIVE",
+            "findings": 7,
+            "distinct_signatures": 7,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.4073866111023018
+          },
+          {
+            "rule": "spotbugs::AT_STALE_THREAD_WRITE_OF_PRIMITIVE",
+            "findings": 25,
+            "distinct_signatures": 22,
+            "identical_pair_share": 0.01,
+            "mean_similarity": 0.48413074892298824
+          },
+          {
+            "rule": "spotbugs::CT_CONSTRUCTOR_THROW",
+            "findings": 25,
+            "distinct_signatures": 23,
+            "identical_pair_share": 0.006666666666666667,
+            "mean_similarity": 0.6115363513676035
+          },
+          {
+            "rule": "spotbugs::EI_EXPOSE_REP",
+            "findings": 4,
+            "distinct_signatures": 4,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.4928922552788726
+          },
+          {
+            "rule": "spotbugs::EI_EXPOSE_REP2",
+            "findings": 6,
+            "distinct_signatures": 6,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.4518263208302488
+          },
+          {
+            "rule": "spotbugs::NP_NULL_PARAM_DEREF",
+            "findings": 2,
+            "distinct_signatures": 2,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.3404255319148936
+          },
+          {
+            "rule": "spotbugs::RV_RETURN_VALUE_OF_PUTIFABSENT_IGNORED",
+            "findings": 2,
+            "distinct_signatures": 2,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.4144144144144144
+          },
+          {
+            "rule": "spotbugs::SBSC_USE_STRINGBUFFER_CONCATENATION",
+            "findings": 2,
+            "distinct_signatures": 2,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.4409448818897638
+          },
+          {
+            "rule": "spotbugs::SIC_INNER_SHOULD_BE_STATIC",
+            "findings": 6,
+            "distinct_signatures": 6,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.5006931788172914
+          },
+          {
+            "rule": "spotbugs::SQL_PREPARED_STATEMENT_GENERATED_FROM_NONCONSTANT_STRING",
+            "findings": 3,
+            "distinct_signatures": 3,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.5000149618616738
+          },
+          {
+            "rule": "spotbugs::UPM_UNCALLED_PRIVATE_METHOD",
+            "findings": 3,
+            "distinct_signatures": 3,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.5730218681173938
+          },
+          {
+            "rule": "spotbugs::URF_UNREAD_FIELD",
+            "findings": 3,
+            "distinct_signatures": 3,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.3478213507625272
+          },
+          {
+            "rule": "spotbugs::WMI_WRONG_MAP_ITERATOR",
+            "findings": 3,
+            "distinct_signatures": 3,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.3660788202327459
+          }
+        ],
+        "cross_tool_merges": {
+          "signatures": 0,
+          "findings_covered": 0,
+          "groups_at_similarity_threshold": 0,
+          "groups_closed_transitively": 0,
+          "lowest_similarity_in_group": null,
+          "findings_covered_at_threshold": 0,
+          "examples": []
+        }
+      },
+      "openai/gpt-oss-120b": {
+        "findings_with_signature": 360,
+        "distinct_signatures": 233,
+        "unanimous_across_runs": 0.44166666666666665,
+        "within_rule_identical_pair_share": 0.25297432686286786,
+        "within_rule_close_pair_share": 0.7294927989981215,
+        "within_rule_pairs": 1597,
+        "within_rule_mean_similarity": 0.7213182070693626,
+        "per_rule": [
+          {
+            "rule": "error-prone::BanJNDI",
+            "findings": 3,
+            "distinct_signatures": 3,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.788900636826904
+          },
+          {
+            "rule": "error-prone::FutureReturnValueIgnored",
+            "findings": 17,
+            "distinct_signatures": 3,
+            "identical_pair_share": 0.4411764705882353,
+            "mean_similarity": 0.8621868327750681
+          },
+          {
+            "rule": "error-prone::IntLongMath",
+            "findings": 10,
+            "distinct_signatures": 7,
+            "identical_pair_share": 0.08888888888888889,
+            "mean_similarity": 0.7794593344883106
+          },
+          {
+            "rule": "error-prone::MissingCasesInEnumSwitch",
+            "findings": 12,
+            "distinct_signatures": 2,
+            "identical_pair_share": 0.8333333333333334,
+            "mean_similarity": 0.9150943396226415
+          },
+          {
+            "rule": "error-prone::MissingOverride",
+            "findings": 8,
+            "distinct_signatures": 2,
+            "identical_pair_share": 0.5714285714285714,
+            "mean_similarity": 0.88
+          },
+          {
+            "rule": "error-prone::MissingSummary",
+            "findings": 12,
+            "distinct_signatures": 2,
+            "identical_pair_share": 0.696969696969697,
+            "mean_similarity": 0.9494949494949495
+          },
+          {
+            "rule": "error-prone::OperatorPrecedence",
+            "findings": 10,
+            "distinct_signatures": 6,
+            "identical_pair_share": 0.15555555555555556,
+            "mean_similarity": 0.6441432562228803
+          },
+          {
+            "rule": "error-prone::ReferenceEquality",
+            "findings": 10,
+            "distinct_signatures": 7,
+            "identical_pair_share": 0.13333333333333333,
+            "mean_similarity": 0.7003979629415736
+          },
+          {
+            "rule": "error-prone::SameNameButDifferent",
+            "findings": 10,
+            "distinct_signatures": 7,
+            "identical_pair_share": 0.06666666666666667,
+            "mean_similarity": 0.5247746990965966
+          },
+          {
+            "rule": "error-prone::UnnecessaryParentheses",
+            "findings": 4,
+            "distinct_signatures": 4,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.6833176099498072
+          },
+          {
+            "rule": "error-prone::UnusedVariable",
+            "findings": 3,
+            "distinct_signatures": 3,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.45527572731220145
+          },
+          {
+            "rule": "sonarqube::java:S1181",
+            "findings": 2,
+            "distinct_signatures": 1,
+            "identical_pair_share": 1.0,
+            "mean_similarity": 1.0
+          },
+          {
+            "rule": "sonarqube::java:S1192",
+            "findings": 2,
+            "distinct_signatures": 1,
+            "identical_pair_share": 1.0,
+            "mean_similarity": 1.0
+          },
+          {
+            "rule": "sonarqube::java:S1845",
+            "findings": 6,
+            "distinct_signatures": 5,
+            "identical_pair_share": 0.06666666666666667,
+            "mean_similarity": 0.5999114850959618
+          },
+          {
+            "rule": "sonarqube::java:S1948",
+            "findings": 2,
+            "distinct_signatures": 1,
+            "identical_pair_share": 1.0,
+            "mean_similarity": 1.0
+          },
+          {
+            "rule": "sonarqube::java:S2095",
+            "findings": 21,
+            "distinct_signatures": 11,
+            "identical_pair_share": 0.1619047619047619,
+            "mean_similarity": 0.6311555342149647
+          },
+          {
+            "rule": "sonarqube::java:S2142",
+            "findings": 16,
+            "distinct_signatures": 12,
+            "identical_pair_share": 0.058333333333333334,
+            "mean_similarity": 0.6439922520399243
+          },
+          {
+            "rule": "sonarqube::java:S2178",
+            "findings": 10,
+            "distinct_signatures": 8,
+            "identical_pair_share": 0.06666666666666667,
+            "mean_similarity": 0.6187317509931446
+          },
+          {
+            "rule": "sonarqube::java:S2259",
+            "findings": 6,
+            "distinct_signatures": 6,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.6741403957090903
+          },
+          {
+            "rule": "sonarqube::java:S2583",
+            "findings": 3,
+            "distinct_signatures": 3,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.40008265601322496
+          },
+          {
+            "rule": "sonarqube::java:S3014",
+            "findings": 2,
+            "distinct_signatures": 2,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.5454545454545454
+          },
+          {
+            "rule": "sonarqube::java:S3516",
+            "findings": 4,
+            "distinct_signatures": 3,
+            "identical_pair_share": 0.16666666666666666,
+            "mean_similarity": 0.8602767602767601
+          },
+          {
+            "rule": "sonarqube::java:S3776",
+            "findings": 6,
+            "distinct_signatures": 4,
+            "identical_pair_share": 0.13333333333333333,
+            "mean_similarity": 0.7417869143886942
+          },
+          {
+            "rule": "sonarqube::java:S4973",
+            "findings": 2,
+            "distinct_signatures": 2,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.6
+          },
+          {
+            "rule": "sonarqube::java:S5164",
+            "findings": 3,
+            "distinct_signatures": 3,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.6667257473709087
+          },
+          {
+            "rule": "spotbugs::AT_NONATOMIC_64BIT_PRIMITIVE",
+            "findings": 7,
+            "distinct_signatures": 2,
+            "identical_pair_share": 0.7142857142857143,
+            "mean_similarity": 0.9539170506912442
+          },
+          {
+            "rule": "spotbugs::AT_STALE_THREAD_WRITE_OF_PRIMITIVE",
+            "findings": 25,
+            "distinct_signatures": 8,
+            "identical_pair_share": 0.2866666666666667,
+            "mean_similarity": 0.8333560820432068
+          },
+          {
+            "rule": "spotbugs::CT_CONSTRUCTOR_THROW",
+            "findings": 25,
+            "distinct_signatures": 10,
+            "identical_pair_share": 0.14,
+            "mean_similarity": 0.56815796287846
+          },
+          {
+            "rule": "spotbugs::EI_EXPOSE_REP",
+            "findings": 4,
+            "distinct_signatures": 2,
+            "identical_pair_share": 0.5,
+            "mean_similarity": 0.9470588235294118
+          },
+          {
+            "rule": "spotbugs::EI_EXPOSE_REP2",
+            "findings": 6,
+            "distinct_signatures": 5,
+            "identical_pair_share": 0.06666666666666667,
+            "mean_similarity": 0.7294794176205104
+          },
+          {
+            "rule": "spotbugs::NP_NULL_PARAM_DEREF",
+            "findings": 2,
+            "distinct_signatures": 2,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.9285714285714286
+          },
+          {
+            "rule": "spotbugs::RV_RETURN_VALUE_OF_PUTIFABSENT_IGNORED",
+            "findings": 2,
+            "distinct_signatures": 2,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.5376344086021505
+          },
+          {
+            "rule": "spotbugs::SBSC_USE_STRINGBUFFER_CONCATENATION",
+            "findings": 2,
+            "distinct_signatures": 2,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.9655172413793104
+          },
+          {
+            "rule": "spotbugs::SIC_INNER_SHOULD_BE_STATIC",
+            "findings": 6,
+            "distinct_signatures": 3,
+            "identical_pair_share": 0.26666666666666666,
+            "mean_similarity": 0.6236616743471582
+          },
+          {
+            "rule": "spotbugs::SQL_PREPARED_STATEMENT_GENERATED_FROM_NONCONSTANT_STRING",
+            "findings": 3,
+            "distinct_signatures": 3,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.7789241604572829
+          },
+          {
+            "rule": "spotbugs::UPM_UNCALLED_PRIVATE_METHOD",
+            "findings": 3,
+            "distinct_signatures": 1,
+            "identical_pair_share": 1.0,
+            "mean_similarity": 1.0
+          },
+          {
+            "rule": "spotbugs::URF_UNREAD_FIELD",
+            "findings": 3,
+            "distinct_signatures": 2,
+            "identical_pair_share": 0.3333333333333333,
+            "mean_similarity": 0.8333333333333334
+          },
+          {
+            "rule": "spotbugs::WMI_WRONG_MAP_ITERATOR",
+            "findings": 3,
+            "distinct_signatures": 2,
+            "identical_pair_share": 0.3333333333333333,
+            "mean_similarity": 0.9377777777777778
+          }
+        ],
+        "cross_tool_merges": {
+          "signatures": 4,
+          "findings_covered": 11,
+          "groups_at_similarity_threshold": 5,
+          "groups_closed_transitively": 0,
+          "lowest_similarity_in_group": 0.8292682926829268,
+          "findings_covered_at_threshold": 16,
+          "examples": [
+            {
+              "signature": "unused private method",
+              "tools": [
+                "sonarqube",
+                "spotbugs"
+              ],
+              "findings": 4
+            },
+            {
+              "signature": "non serializable field in serializable class",
+              "tools": [
+                "sonarqube",
+                "spotbugs"
+              ],
+              "findings": 3
+            },
+            {
+              "signature": "unclosed file input stream",
+              "tools": [
+                "sonarqube",
+                "spotbugs"
+              ],
+              "findings": 2
+            },
+            {
+              "signature": "string reference equality comparison",
+              "tools": [
+                "error-prone",
+                "spotbugs"
+              ],
+              "findings": 2
+            }
+          ]
+        }
+      },
+      "gpt-5.6-luna": {
+        "findings_with_signature": 360,
+        "distinct_signatures": 245,
+        "unanimous_across_runs": 0.25,
+        "within_rule_identical_pair_share": 0.3706950532247965,
+        "within_rule_close_pair_share": 0.8484658735128365,
+        "within_rule_pairs": 1597,
+        "within_rule_mean_similarity": 0.7465653501726429,
+        "per_rule": [
+          {
+            "rule": "error-prone::BanJNDI",
+            "findings": 3,
+            "distinct_signatures": 3,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.7006248098268956
+          },
+          {
+            "rule": "error-prone::FutureReturnValueIgnored",
+            "findings": 17,
+            "distinct_signatures": 4,
+            "identical_pair_share": 0.6691176470588235,
+            "mean_similarity": 0.8998634133448998
+          },
+          {
+            "rule": "error-prone::IntLongMath",
+            "findings": 10,
+            "distinct_signatures": 5,
+            "identical_pair_share": 0.15555555555555556,
+            "mean_similarity": 0.8367714839791204
+          },
+          {
+            "rule": "error-prone::MissingCasesInEnumSwitch",
+            "findings": 12,
+            "distinct_signatures": 1,
+            "identical_pair_share": 1.0,
+            "mean_similarity": 1.0
+          },
+          {
+            "rule": "error-prone::MissingOverride",
+            "findings": 8,
+            "distinct_signatures": 2,
+            "identical_pair_share": 0.75,
+            "mean_similarity": 0.9146341463414634
+          },
+          {
+            "rule": "error-prone::MissingSummary",
+            "findings": 12,
+            "distinct_signatures": 4,
+            "identical_pair_share": 0.3181818181818182,
+            "mean_similarity": 0.8096022142636725
+          },
+          {
+            "rule": "error-prone::OperatorPrecedence",
+            "findings": 10,
+            "distinct_signatures": 6,
+            "identical_pair_share": 0.13333333333333333,
+            "mean_similarity": 0.6108086404987407
+          },
+          {
+            "rule": "error-prone::ReferenceEquality",
+            "findings": 10,
+            "distinct_signatures": 3,
+            "identical_pair_share": 0.4888888888888889,
+            "mean_similarity": 0.7598278964959243
+          },
+          {
+            "rule": "error-prone::SameNameButDifferent",
+            "findings": 10,
+            "distinct_signatures": 5,
+            "identical_pair_share": 0.3333333333333333,
+            "mean_similarity": 0.7772997712295255
+          },
+          {
+            "rule": "error-prone::UnnecessaryParentheses",
+            "findings": 4,
+            "distinct_signatures": 1,
+            "identical_pair_share": 1.0,
+            "mean_similarity": 1.0
+          },
+          {
+            "rule": "error-prone::UnusedVariable",
+            "findings": 3,
+            "distinct_signatures": 3,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.42452107279693485
+          },
+          {
+            "rule": "sonarqube::java:S1181",
+            "findings": 2,
+            "distinct_signatures": 2,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.6176470588235294
+          },
+          {
+            "rule": "sonarqube::java:S1192",
+            "findings": 2,
+            "distinct_signatures": 2,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.8771929824561403
+          },
+          {
+            "rule": "sonarqube::java:S1845",
+            "findings": 6,
+            "distinct_signatures": 4,
+            "identical_pair_share": 0.2,
+            "mean_similarity": 0.6442561979779476
+          },
+          {
+            "rule": "sonarqube::java:S1948",
+            "findings": 2,
+            "distinct_signatures": 2,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.851063829787234
+          },
+          {
+            "rule": "sonarqube::java:S2095",
+            "findings": 21,
+            "distinct_signatures": 15,
+            "identical_pair_share": 0.05714285714285714,
+            "mean_similarity": 0.6018281932314149
+          },
+          {
+            "rule": "sonarqube::java:S2142",
+            "findings": 16,
+            "distinct_signatures": 14,
+            "identical_pair_share": 0.025,
+            "mean_similarity": 0.5878786930589361
+          },
+          {
+            "rule": "sonarqube::java:S2178",
+            "findings": 10,
+            "distinct_signatures": 8,
+            "identical_pair_share": 0.044444444444444446,
+            "mean_similarity": 0.6254477134204799
+          },
+          {
+            "rule": "sonarqube::java:S2259",
+            "findings": 6,
+            "distinct_signatures": 6,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.5503673820797056
+          },
+          {
+            "rule": "sonarqube::java:S2583",
+            "findings": 3,
+            "distinct_signatures": 3,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.5704022005391868
+          },
+          {
+            "rule": "sonarqube::java:S3014",
+            "findings": 2,
+            "distinct_signatures": 2,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.5660377358490566
+          },
+          {
+            "rule": "sonarqube::java:S3516",
+            "findings": 4,
+            "distinct_signatures": 2,
+            "identical_pair_share": 0.5,
+            "mean_similarity": 0.8963963963963963
+          },
+          {
+            "rule": "sonarqube::java:S3776",
+            "findings": 6,
+            "distinct_signatures": 4,
+            "identical_pair_share": 0.2,
+            "mean_similarity": 0.8273125031862988
+          },
+          {
+            "rule": "sonarqube::java:S4973",
+            "findings": 2,
+            "distinct_signatures": 1,
+            "identical_pair_share": 1.0,
+            "mean_similarity": 1.0
+          },
+          {
+            "rule": "sonarqube::java:S5164",
+            "findings": 3,
+            "distinct_signatures": 3,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.5782663460437422
+          },
+          {
+            "rule": "spotbugs::AT_NONATOMIC_64BIT_PRIMITIVE",
+            "findings": 7,
+            "distinct_signatures": 5,
+            "identical_pair_share": 0.09523809523809523,
+            "mean_similarity": 0.6995075338588292
+          },
+          {
+            "rule": "spotbugs::AT_STALE_THREAD_WRITE_OF_PRIMITIVE",
+            "findings": 25,
+            "distinct_signatures": 1,
+            "identical_pair_share": 1.0,
+            "mean_similarity": 1.0
+          },
+          {
+            "rule": "spotbugs::CT_CONSTRUCTOR_THROW",
+            "findings": 25,
+            "distinct_signatures": 20,
+            "identical_pair_share": 0.016666666666666666,
+            "mean_similarity": 0.5409766471708826
+          },
+          {
+            "rule": "spotbugs::EI_EXPOSE_REP",
+            "findings": 4,
+            "distinct_signatures": 4,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.6728526663329539
+          },
+          {
+            "rule": "spotbugs::EI_EXPOSE_REP2",
+            "findings": 6,
+            "distinct_signatures": 6,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.5341644511074867
+          },
+          {
+            "rule": "spotbugs::NP_NULL_PARAM_DEREF",
+            "findings": 2,
+            "distinct_signatures": 2,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.5806451612903226
+          },
+          {
+            "rule": "spotbugs::RV_RETURN_VALUE_OF_PUTIFABSENT_IGNORED",
+            "findings": 2,
+            "distinct_signatures": 2,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.5294117647058824
+          },
+          {
+            "rule": "spotbugs::SBSC_USE_STRINGBUFFER_CONCATENATION",
+            "findings": 2,
+            "distinct_signatures": 2,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.9375
+          },
+          {
+            "rule": "spotbugs::SIC_INNER_SHOULD_BE_STATIC",
+            "findings": 6,
+            "distinct_signatures": 5,
+            "identical_pair_share": 0.06666666666666667,
+            "mean_similarity": 0.8356566867424199
+          },
+          {
+            "rule": "spotbugs::SQL_PREPARED_STATEMENT_GENERATED_FROM_NONCONSTANT_STRING",
+            "findings": 3,
+            "distinct_signatures": 3,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.6153649218165347
+          },
+          {
+            "rule": "spotbugs::UPM_UNCALLED_PRIVATE_METHOD",
+            "findings": 3,
+            "distinct_signatures": 2,
+            "identical_pair_share": 0.3333333333333333,
+            "mean_similarity": 0.9090909090909092
+          },
+          {
+            "rule": "spotbugs::URF_UNREAD_FIELD",
+            "findings": 3,
+            "distinct_signatures": 3,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.6349206349206349
+          },
+          {
+            "rule": "spotbugs::WMI_WRONG_MAP_ITERATOR",
+            "findings": 3,
+            "distinct_signatures": 2,
+            "identical_pair_share": 0.3333333333333333,
+            "mean_similarity": 0.9733333333333333
+          }
+        ],
+        "cross_tool_merges": {
+          "signatures": 2,
+          "findings_covered": 5,
+          "groups_at_similarity_threshold": 4,
+          "groups_closed_transitively": 1,
+          "lowest_similarity_in_group": 0.6862745098039216,
+          "findings_covered_at_threshold": 16,
+          "examples": [
+            {
+              "signature": "unused private method",
+              "tools": [
+                "sonarqube",
+                "spotbugs"
+              ],
+              "findings": 3
+            },
+            {
+              "signature": "unclosed file input stream",
+              "tools": [
+                "sonarqube",
+                "spotbugs"
+              ],
+              "findings": 2
+            }
+          ]
+        }
+      },
+      "openai/gpt-oss-20b": {
+        "findings_with_signature": 360,
+        "distinct_signatures": 290,
+        "unanimous_across_runs": 0.05,
+        "within_rule_identical_pair_share": 0.08891671884783969,
+        "within_rule_close_pair_share": 0.26737633061991234,
+        "within_rule_pairs": 1597,
+        "within_rule_mean_similarity": 0.5828681116311412,
+        "per_rule": [
+          {
+            "rule": "error-prone::BanJNDI",
+            "findings": 3,
+            "distinct_signatures": 3,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.40286716486197954
+          },
+          {
+            "rule": "error-prone::FutureReturnValueIgnored",
+            "findings": 17,
+            "distinct_signatures": 12,
+            "identical_pair_share": 0.11029411764705882,
+            "mean_similarity": 0.5758881130037754
+          },
+          {
+            "rule": "error-prone::IntLongMath",
+            "findings": 10,
+            "distinct_signatures": 10,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.7213411741286794
+          },
+          {
+            "rule": "error-prone::MissingCasesInEnumSwitch",
+            "findings": 12,
+            "distinct_signatures": 9,
+            "identical_pair_share": 0.06060606060606061,
+            "mean_similarity": 0.6156176503728016
+          },
+          {
+            "rule": "error-prone::MissingOverride",
+            "findings": 8,
+            "distinct_signatures": 2,
+            "identical_pair_share": 0.75,
+            "mean_similarity": 0.9259259259259259
+          },
+          {
+            "rule": "error-prone::MissingSummary",
+            "findings": 12,
+            "distinct_signatures": 5,
+            "identical_pair_share": 0.24242424242424243,
+            "mean_similarity": 0.8038890299792989
+          },
+          {
+            "rule": "error-prone::OperatorPrecedence",
+            "findings": 10,
+            "distinct_signatures": 9,
+            "identical_pair_share": 0.022222222222222223,
+            "mean_similarity": 0.4676885348283027
+          },
+          {
+            "rule": "error-prone::ReferenceEquality",
+            "findings": 10,
+            "distinct_signatures": 9,
+            "identical_pair_share": 0.022222222222222223,
+            "mean_similarity": 0.5844216824657568
+          },
+          {
+            "rule": "error-prone::SameNameButDifferent",
+            "findings": 10,
+            "distinct_signatures": 10,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.4977311517656292
+          },
+          {
+            "rule": "error-prone::UnnecessaryParentheses",
+            "findings": 4,
+            "distinct_signatures": 3,
+            "identical_pair_share": 0.16666666666666666,
+            "mean_similarity": 0.7573338426279603
+          },
+          {
+            "rule": "error-prone::UnusedVariable",
+            "findings": 3,
+            "distinct_signatures": 3,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.5059074912016088
+          },
+          {
+            "rule": "sonarqube::java:S1181",
+            "findings": 2,
+            "distinct_signatures": 2,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.96
+          },
+          {
+            "rule": "sonarqube::java:S1192",
+            "findings": 2,
+            "distinct_signatures": 1,
+            "identical_pair_share": 1.0,
+            "mean_similarity": 1.0
+          },
+          {
+            "rule": "sonarqube::java:S1845",
+            "findings": 6,
+            "distinct_signatures": 6,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.43242533960082075
+          },
+          {
+            "rule": "sonarqube::java:S1948",
+            "findings": 2,
+            "distinct_signatures": 1,
+            "identical_pair_share": 1.0,
+            "mean_similarity": 1.0
+          },
+          {
+            "rule": "sonarqube::java:S2095",
+            "findings": 21,
+            "distinct_signatures": 13,
+            "identical_pair_share": 0.08571428571428572,
+            "mean_similarity": 0.5108342078696612
+          },
+          {
+            "rule": "sonarqube::java:S2142",
+            "findings": 16,
+            "distinct_signatures": 14,
+            "identical_pair_share": 0.016666666666666666,
+            "mean_similarity": 0.5425656871787982
+          },
+          {
+            "rule": "sonarqube::java:S2178",
+            "findings": 10,
+            "distinct_signatures": 10,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.5002559558171455
+          },
+          {
+            "rule": "sonarqube::java:S2259",
+            "findings": 6,
+            "distinct_signatures": 4,
+            "identical_pair_share": 0.2,
+            "mean_similarity": 0.49736540916299654
+          },
+          {
+            "rule": "sonarqube::java:S2583",
+            "findings": 3,
+            "distinct_signatures": 3,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.538961038961039
+          },
+          {
+            "rule": "sonarqube::java:S3014",
+            "findings": 2,
+            "distinct_signatures": 2,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.39285714285714285
+          },
+          {
+            "rule": "sonarqube::java:S3516",
+            "findings": 4,
+            "distinct_signatures": 1,
+            "identical_pair_share": 1.0,
+            "mean_similarity": 1.0
+          },
+          {
+            "rule": "sonarqube::java:S3776",
+            "findings": 6,
+            "distinct_signatures": 3,
+            "identical_pair_share": 0.4,
+            "mean_similarity": 0.9011458051393092
+          },
+          {
+            "rule": "sonarqube::java:S4973",
+            "findings": 2,
+            "distinct_signatures": 2,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.43478260869565216
+          },
+          {
+            "rule": "sonarqube::java:S5164",
+            "findings": 3,
+            "distinct_signatures": 2,
+            "identical_pair_share": 0.3333333333333333,
+            "mean_similarity": 0.7037037037037037
+          },
+          {
+            "rule": "spotbugs::AT_NONATOMIC_64BIT_PRIMITIVE",
+            "findings": 7,
+            "distinct_signatures": 6,
+            "identical_pair_share": 0.047619047619047616,
+            "mean_similarity": 0.7340267144342152
+          },
+          {
+            "rule": "spotbugs::AT_STALE_THREAD_WRITE_OF_PRIMITIVE",
+            "findings": 25,
+            "distinct_signatures": 20,
+            "identical_pair_share": 0.02,
+            "mean_similarity": 0.6075011410235311
+          },
+          {
+            "rule": "spotbugs::CT_CONSTRUCTOR_THROW",
+            "findings": 25,
+            "distinct_signatures": 15,
+            "identical_pair_share": 0.10333333333333333,
+            "mean_similarity": 0.5244703151271068
+          },
+          {
+            "rule": "spotbugs::EI_EXPOSE_REP",
+            "findings": 4,
+            "distinct_signatures": 4,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.5386999656152612
+          },
+          {
+            "rule": "spotbugs::EI_EXPOSE_REP2",
+            "findings": 6,
+            "distinct_signatures": 5,
+            "identical_pair_share": 0.06666666666666667,
+            "mean_similarity": 0.637917728112168
+          },
+          {
+            "rule": "spotbugs::NP_NULL_PARAM_DEREF",
+            "findings": 2,
+            "distinct_signatures": 2,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.9122807017543859
+          },
+          {
+            "rule": "spotbugs::RV_RETURN_VALUE_OF_PUTIFABSENT_IGNORED",
+            "findings": 2,
+            "distinct_signatures": 2,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.49572649572649574
+          },
+          {
+            "rule": "spotbugs::SBSC_USE_STRINGBUFFER_CONCATENATION",
+            "findings": 2,
+            "distinct_signatures": 1,
+            "identical_pair_share": 1.0,
+            "mean_similarity": 1.0
+          },
+          {
+            "rule": "spotbugs::SIC_INNER_SHOULD_BE_STATIC",
+            "findings": 6,
+            "distinct_signatures": 5,
+            "identical_pair_share": 0.06666666666666667,
+            "mean_similarity": 0.5629615475787312
+          },
+          {
+            "rule": "spotbugs::SQL_PREPARED_STATEMENT_GENERATED_FROM_NONCONSTANT_STRING",
+            "findings": 3,
+            "distinct_signatures": 3,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.6340816519844653
+          },
+          {
+            "rule": "spotbugs::UPM_UNCALLED_PRIVATE_METHOD",
+            "findings": 3,
+            "distinct_signatures": 2,
+            "identical_pair_share": 0.3333333333333333,
+            "mean_similarity": 0.7297297297297298
+          },
+          {
+            "rule": "spotbugs::URF_UNREAD_FIELD",
+            "findings": 3,
+            "distinct_signatures": 1,
+            "identical_pair_share": 1.0,
+            "mean_similarity": 1.0
+          },
+          {
+            "rule": "spotbugs::WMI_WRONG_MAP_ITERATOR",
+            "findings": 3,
+            "distinct_signatures": 3,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.6025293586269196
+          }
+        ],
+        "cross_tool_merges": {
+          "signatures": 2,
+          "findings_covered": 5,
+          "groups_at_similarity_threshold": 5,
+          "groups_closed_transitively": 1,
+          "lowest_similarity_in_group": 0.7368421052631579,
+          "findings_covered_at_threshold": 17,
+          "examples": [
+            {
+              "signature": "unused private method",
+              "tools": [
+                "sonarqube",
+                "spotbugs"
+              ],
+              "findings": 3
+            },
+            {
+              "signature": "unclosed file input stream",
+              "tools": [
+                "sonarqube",
+                "spotbugs"
+              ],
+              "findings": 2
+            }
+          ]
+        }
+      },
+      "claude-sonnet-5": {
+        "findings_with_signature": 360,
+        "distinct_signatures": 307,
+        "unanimous_across_runs": 0.06666666666666667,
+        "within_rule_identical_pair_share": 0.058860363180964305,
+        "within_rule_close_pair_share": 0.3368816530995617,
+        "within_rule_pairs": 1597,
+        "within_rule_mean_similarity": 0.6127535376666939,
+        "per_rule": [
+          {
+            "rule": "error-prone::BanJNDI",
+            "findings": 3,
+            "distinct_signatures": 2,
+            "identical_pair_share": 0.3333333333333333,
+            "mean_similarity": 0.7564102564102564
+          },
+          {
+            "rule": "error-prone::FutureReturnValueIgnored",
+            "findings": 17,
+            "distinct_signatures": 15,
+            "identical_pair_share": 0.014705882352941176,
+            "mean_similarity": 0.5750270590741939
+          },
+          {
+            "rule": "error-prone::IntLongMath",
+            "findings": 10,
+            "distinct_signatures": 8,
+            "identical_pair_share": 0.06666666666666667,
+            "mean_similarity": 0.6420575703124408
+          },
+          {
+            "rule": "error-prone::MissingCasesInEnumSwitch",
+            "findings": 12,
+            "distinct_signatures": 9,
+            "identical_pair_share": 0.09090909090909091,
+            "mean_similarity": 0.5930305290433538
+          },
+          {
+            "rule": "error-prone::MissingOverride",
+            "findings": 8,
+            "distinct_signatures": 6,
+            "identical_pair_share": 0.07142857142857142,
+            "mean_similarity": 0.5959970806704961
+          },
+          {
+            "rule": "error-prone::MissingSummary",
+            "findings": 12,
+            "distinct_signatures": 8,
+            "identical_pair_share": 0.06060606060606061,
+            "mean_similarity": 0.824803018387184
+          },
+          {
+            "rule": "error-prone::OperatorPrecedence",
+            "findings": 10,
+            "distinct_signatures": 7,
+            "identical_pair_share": 0.06666666666666667,
+            "mean_similarity": 0.5899666959012271
+          },
+          {
+            "rule": "error-prone::ReferenceEquality",
+            "findings": 10,
+            "distinct_signatures": 10,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.5109543528350258
+          },
+          {
+            "rule": "error-prone::SameNameButDifferent",
+            "findings": 10,
+            "distinct_signatures": 8,
+            "identical_pair_share": 0.044444444444444446,
+            "mean_similarity": 0.7573926690114234
+          },
+          {
+            "rule": "error-prone::UnnecessaryParentheses",
+            "findings": 4,
+            "distinct_signatures": 3,
+            "identical_pair_share": 0.16666666666666666,
+            "mean_similarity": 0.7426185880999449
+          },
+          {
+            "rule": "error-prone::UnusedVariable",
+            "findings": 3,
+            "distinct_signatures": 3,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.3808705139774749
+          },
+          {
+            "rule": "sonarqube::java:S1181",
+            "findings": 2,
+            "distinct_signatures": 2,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.5176470588235295
+          },
+          {
+            "rule": "sonarqube::java:S1192",
+            "findings": 2,
+            "distinct_signatures": 2,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.7959183673469388
+          },
+          {
+            "rule": "sonarqube::java:S1845",
+            "findings": 6,
+            "distinct_signatures": 5,
+            "identical_pair_share": 0.06666666666666667,
+            "mean_similarity": 0.708694824294194
+          },
+          {
+            "rule": "sonarqube::java:S1948",
+            "findings": 2,
+            "distinct_signatures": 2,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.6785714285714286
+          },
+          {
+            "rule": "sonarqube::java:S2095",
+            "findings": 21,
+            "distinct_signatures": 19,
+            "identical_pair_share": 0.009523809523809525,
+            "mean_similarity": 0.41486131709236
+          },
+          {
+            "rule": "sonarqube::java:S2142",
+            "findings": 16,
+            "distinct_signatures": 4,
+            "identical_pair_share": 0.35833333333333334,
+            "mean_similarity": 0.9351820864074099
+          },
+          {
+            "rule": "sonarqube::java:S2178",
+            "findings": 10,
+            "distinct_signatures": 10,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.6032105647862603
+          },
+          {
+            "rule": "sonarqube::java:S2259",
+            "findings": 6,
+            "distinct_signatures": 6,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.4918758620810904
+          },
+          {
+            "rule": "sonarqube::java:S2583",
+            "findings": 3,
+            "distinct_signatures": 3,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.43029878618113915
+          },
+          {
+            "rule": "sonarqube::java:S3014",
+            "findings": 2,
+            "distinct_signatures": 2,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.5961538461538461
+          },
+          {
+            "rule": "sonarqube::java:S3516",
+            "findings": 4,
+            "distinct_signatures": 4,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.7032919238021136
+          },
+          {
+            "rule": "sonarqube::java:S3776",
+            "findings": 6,
+            "distinct_signatures": 6,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.5817977572876244
+          },
+          {
+            "rule": "sonarqube::java:S4973",
+            "findings": 2,
+            "distinct_signatures": 2,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.7142857142857143
+          },
+          {
+            "rule": "sonarqube::java:S5164",
+            "findings": 3,
+            "distinct_signatures": 3,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.6415980533627592
+          },
+          {
+            "rule": "spotbugs::AT_NONATOMIC_64BIT_PRIMITIVE",
+            "findings": 7,
+            "distinct_signatures": 5,
+            "identical_pair_share": 0.09523809523809523,
+            "mean_similarity": 0.6318328615433887
+          },
+          {
+            "rule": "spotbugs::AT_STALE_THREAD_WRITE_OF_PRIMITIVE",
+            "findings": 25,
+            "distinct_signatures": 24,
+            "identical_pair_share": 0.0033333333333333335,
+            "mean_similarity": 0.5270196751512832
+          },
+          {
+            "rule": "spotbugs::CT_CONSTRUCTOR_THROW",
+            "findings": 25,
+            "distinct_signatures": 17,
+            "identical_pair_share": 0.04666666666666667,
+            "mean_similarity": 0.6608331789200761
+          },
+          {
+            "rule": "spotbugs::EI_EXPOSE_REP",
+            "findings": 4,
+            "distinct_signatures": 3,
+            "identical_pair_share": 0.16666666666666666,
+            "mean_similarity": 0.7031661262635897
+          },
+          {
+            "rule": "spotbugs::EI_EXPOSE_REP2",
+            "findings": 6,
+            "distinct_signatures": 6,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.6379000313351126
+          },
+          {
+            "rule": "spotbugs::NP_NULL_PARAM_DEREF",
+            "findings": 2,
+            "distinct_signatures": 2,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.5046728971962616
+          },
+          {
+            "rule": "spotbugs::RV_RETURN_VALUE_OF_PUTIFABSENT_IGNORED",
+            "findings": 2,
+            "distinct_signatures": 2,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.6349206349206349
+          },
+          {
+            "rule": "spotbugs::SBSC_USE_STRINGBUFFER_CONCATENATION",
+            "findings": 2,
+            "distinct_signatures": 2,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.5233644859813084
+          },
+          {
+            "rule": "spotbugs::SIC_INNER_SHOULD_BE_STATIC",
+            "findings": 6,
+            "distinct_signatures": 4,
+            "identical_pair_share": 0.2,
+            "mean_similarity": 0.8108780299778823
+          },
+          {
+            "rule": "spotbugs::SQL_PREPARED_STATEMENT_GENERATED_FROM_NONCONSTANT_STRING",
+            "findings": 3,
+            "distinct_signatures": 3,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.6802451333813987
+          },
+          {
+            "rule": "spotbugs::UPM_UNCALLED_PRIVATE_METHOD",
+            "findings": 3,
+            "distinct_signatures": 3,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.48467616552722936
+          },
+          {
+            "rule": "spotbugs::URF_UNREAD_FIELD",
+            "findings": 3,
+            "distinct_signatures": 1,
+            "identical_pair_share": 1.0,
+            "mean_similarity": 1.0
+          },
+          {
+            "rule": "spotbugs::WMI_WRONG_MAP_ITERATOR",
+            "findings": 3,
+            "distinct_signatures": 3,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.6736806722689076
+          }
+        ],
+        "cross_tool_merges": {
+          "signatures": 2,
+          "findings_covered": 4,
+          "groups_at_similarity_threshold": 4,
+          "groups_closed_transitively": 1,
+          "lowest_similarity_in_group": 0.6548672566371682,
+          "findings_covered_at_threshold": 11,
+          "examples": [
+            {
+              "signature": "non static inner class not using enclosing instance",
+              "tools": [
+                "error-prone",
+                "spotbugs"
+              ],
+              "findings": 2
+            },
+            {
+              "signature": "class implements cloneable without overriding clone",
+              "tools": [
+                "sonarqube",
+                "spotbugs"
+              ],
+              "findings": 2
+            }
+          ]
+        }
+      }
+    },
+    "reference_grouping": {
+      "findings": 360,
+      "groups_by_rule": 123,
+      "groups_by_rule_and_file": 291
+    }
+  },
+  "H6": {
+    "main_repetition": 0,
+    "missing_models": [],
+    "models": {
+      "claude-opus-5": {
+        "n": 360,
+        "with_code": 0.7277777777777777,
+        "without_code": 0.6194444444444445,
+        "kept_with_code": 0.6666666666666666,
+        "kept_without_code": 0.7694444444444445,
+        "difference": 0.10833333333333328,
+        "ci_low": 0.034363933265129445,
+        "ci_high": 0.1941505846667839,
+        "mcnemar_cluster": {
+          "b": 46,
+          "c": 7,
+          "clusters_with_discordance": 24,
+          "statistic": 39.0,
+          "p_value": 0.0029498525073746312,
+          "permutations": 20000,
+          "test": "cluster-level sign-flip (SAST rule)"
+        },
+        "mcnemar_exact": {
+          "b": 46,
+          "c": 7,
+          "discordant": 53,
+          "p_value": 4.003196174551249e-08,
+          "odds_ratio": 6.571428571428571,
+          "test": "exact McNemar test (two-sided, binomial distribution)"
+        }
+      },
+      "gpt-5.6-terra": {
+        "n": 360,
+        "with_code": 0.7555555555555555,
+        "without_code": 0.5777777777777777,
+        "kept_with_code": 0.5888888888888889,
+        "kept_without_code": 0.8222222222222222,
+        "difference": 0.1777777777777778,
+        "ci_low": 0.09823519432271716,
+        "ci_high": 0.25890789362063116,
+        "mcnemar_cluster": {
+          "b": 77,
+          "c": 13,
+          "clusters_with_discordance": 40,
+          "statistic": 64.0,
+          "p_value": 4.999750012499375e-05,
+          "permutations": 20000,
+          "test": "cluster-level sign-flip (SAST rule)"
+        },
+        "mcnemar_exact": {
+          "b": 77,
+          "c": 13,
+          "discordant": 90,
+          "p_value": 3.175275355987434e-12,
+          "odds_ratio": 5.923076923076923,
+          "test": "exact McNemar test (two-sided, binomial distribution)"
+        }
+      },
+      "gpt-5.6-luna": {
+        "n": 360,
+        "with_code": 0.7277777777777777,
+        "without_code": 0.4888888888888889,
+        "kept_with_code": 0.6555555555555556,
+        "kept_without_code": 0.9111111111111111,
+        "difference": 0.23888888888888887,
+        "ci_low": 0.1505781126748868,
+        "ci_high": 0.3359215837017105,
+        "mcnemar_cluster": {
+          "b": 95,
+          "c": 9,
+          "clusters_with_discordance": 44,
+          "statistic": 86.0,
+          "p_value": 4.999750012499375e-05,
+          "permutations": 20000,
+          "test": "cluster-level sign-flip (SAST rule)"
+        },
+        "mcnemar_exact": {
+          "b": 95,
+          "c": 9,
+          "discordant": 104,
+          "p_value": 2.985745088286603e-19,
+          "odds_ratio": 10.555555555555555,
+          "test": "exact McNemar test (two-sided, binomial distribution)"
+        }
+      },
+      "openai/gpt-oss-120b": {
+        "n": 360,
+        "with_code": 0.7277777777777777,
+        "without_code": 0.5222222222222223,
+        "kept_with_code": 0.6166666666666667,
+        "kept_without_code": 0.8222222222222222,
+        "difference": 0.2055555555555555,
+        "ci_low": 0.09465855418525329,
+        "ci_high": 0.3219906380335433,
+        "mcnemar_cluster": {
+          "b": 94,
+          "c": 20,
+          "clusters_with_discordance": 46,
+          "statistic": 74.0,
+          "p_value": 0.00024998750062496874,
+          "permutations": 20000,
+          "test": "cluster-level sign-flip (SAST rule)"
+        },
+        "mcnemar_exact": {
+          "b": 94,
+          "c": 20,
+          "discordant": 114,
+          "p_value": 1.1680094670975612e-12,
+          "odds_ratio": 4.7,
+          "test": "exact McNemar test (two-sided, binomial distribution)"
+        }
+      },
+      "openai/gpt-oss-20b": {
+        "n": 360,
+        "with_code": 0.7222222222222222,
+        "without_code": 0.525,
+        "kept_with_code": 0.46111111111111114,
+        "kept_without_code": 0.7472222222222222,
+        "difference": 0.1972222222222222,
+        "ci_low": 0.06796050548754745,
+        "ci_high": 0.3253498972204844,
+        "mcnemar_cluster": {
+          "b": 107,
+          "c": 36,
+          "clusters_with_discordance": 65,
+          "statistic": 71.0,
+          "p_value": 0.007149642517874106,
+          "permutations": 20000,
+          "test": "cluster-level sign-flip (SAST rule)"
+        },
+        "mcnemar_exact": {
+          "b": 107,
+          "c": 36,
+          "discordant": 143,
+          "p_value": 2.2533836638015286e-09,
+          "odds_ratio": 2.9722222222222223,
+          "test": "exact McNemar test (two-sided, binomial distribution)"
+        }
+      },
+      "qwen3.5:9b": {
+        "n": 360,
+        "with_code": 0.6527777777777778,
+        "without_code": 0.4527777777777778,
+        "kept_with_code": 0.4027777777777778,
+        "kept_without_code": 0.7527777777777778,
+        "difference": 0.2,
+        "ci_low": 0.09487154150197628,
+        "ci_high": 0.29974806201550375,
+        "mcnemar_cluster": {
+          "b": 123,
+          "c": 51,
+          "clusters_with_discordance": 78,
+          "statistic": 72.0,
+          "p_value": 0.0012499375031248437,
+          "permutations": 20000,
+          "test": "cluster-level sign-flip (SAST rule)"
+        },
+        "mcnemar_exact": {
+          "b": 123,
+          "c": 51,
+          "discordant": 174,
+          "p_value": 4.7788627962880454e-08,
+          "odds_ratio": 2.411764705882353,
+          "test": "exact McNemar test (two-sided, binomial distribution)"
+        }
+      },
+      "claude-sonnet-5": {
+        "n": 360,
+        "with_code": 0.7277777777777777,
+        "without_code": 0.5805555555555556,
+        "kept_with_code": 0.6666666666666666,
+        "kept_without_code": 0.8027777777777778,
+        "difference": 0.14722222222222214,
+        "ci_low": 0.07253698280393475,
+        "ci_high": 0.23432569566183553,
+        "mcnemar_cluster": {
+          "b": 59,
+          "c": 6,
+          "clusters_with_discordance": 28,
+          "statistic": 53.0,
+          "p_value": 9.99950002499875e-05,
+          "permutations": 20000,
+          "test": "cluster-level sign-flip (SAST rule)"
+        },
+        "mcnemar_exact": {
+          "b": 59,
+          "c": 6,
+          "discordant": 65,
+          "p_value": 4.964650327128616e-12,
+          "odds_ratio": 9.833333333333334,
+          "test": "exact McNemar test (two-sided, binomial distribution)"
+        }
+      }
+    },
+    "ablation_run": "007_jetty-no-code"
+  },
+  "holm_family": {
+    "raw": {
+      "H2/cochran": 0.5571221438928053,
+      "H2/naive/claude-opus-5": 0.1080445977701115,
+      "H2/naive/gpt-5.6-terra": 0.03719814009299535,
+      "H2/naive/qwen3.5:9b": 0.09509524523773812,
+      "H2/naive/openai/gpt-oss-120b": 0.05509724513774311,
+      "H2/naive/gpt-5.6-luna": 0.3490825458727064,
+      "H2/naive/openai/gpt-oss-20b": 0.004749762511874406,
+      "H2/naive/claude-sonnet-5": 0.13804309784510774,
+      "H4/claude-opus-5": 4.999750012499375e-05,
+      "H4/gpt-5.6-terra": 0.005149742512874356,
+      "H4/qwen3.5:9b": 9.99950002499875e-05,
+      "H4/openai/gpt-oss-120b": 4.999750012499375e-05,
+      "H4/gpt-5.6-luna": 0.0671966401679916,
+      "H4/openai/gpt-oss-20b": 4.999750012499375e-05,
+      "H4/claude-sonnet-5": 4.999750012499375e-05,
+      "H6/claude-opus-5": 0.0029498525073746312,
+      "H6/gpt-5.6-terra": 4.999750012499375e-05,
+      "H6/gpt-5.6-luna": 4.999750012499375e-05,
+      "H6/openai/gpt-oss-120b": 0.00024998750062496874,
+      "H6/openai/gpt-oss-20b": 0.007149642517874106,
+      "H6/qwen3.5:9b": 0.0012499375031248437,
+      "H6/claude-sonnet-5": 9.99950002499875e-05
+    },
+    "adjusted": {
+      "H2/cochran": 0.6981650917454127,
+      "H2/naive/claude-opus-5": 0.47547622618869056,
+      "H2/naive/gpt-5.6-terra": 0.2975851207439628,
+      "H2/naive/qwen3.5:9b": 0.47547622618869056,
+      "H2/naive/openai/gpt-oss-120b": 0.3856807159642018,
+      "H2/naive/gpt-5.6-luna": 0.6981650917454127,
+      "H2/naive/openai/gpt-oss-20b": 0.052247387630618466,
+      "H2/naive/claude-sonnet-5": 0.47547622618869056,
+      "H4/claude-opus-5": 0.0010999450027498626,
+      "H4/gpt-5.6-terra": 0.052247387630618466,
+      "H4/qwen3.5:9b": 0.0015999200039998,
+      "H4/openai/gpt-oss-120b": 0.0010999450027498626,
+      "H4/gpt-5.6-luna": 0.40317984100794957,
+      "H4/openai/gpt-oss-20b": 0.0010999450027498626,
+      "H4/claude-sonnet-5": 0.0010999450027498626,
+      "H6/claude-opus-5": 0.035398230088495575,
+      "H6/gpt-5.6-terra": 0.0010999450027498626,
+      "H6/gpt-5.6-luna": 0.0010999450027498626,
+      "H6/openai/gpt-oss-120b": 0.0034998250087495625,
+      "H6/openai/gpt-oss-20b": 0.06434678266086695,
+      "H6/qwen3.5:9b": 0.01624918754062297,
+      "H6/claude-sonnet-5": 0.0015999200039998
+    },
+    "size": 22
+  }
+}

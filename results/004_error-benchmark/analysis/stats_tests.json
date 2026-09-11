@@ -1,0 +1,1915 @@
+{
+  "run": "004_error-benchmark",
+  "models": {
+    "claude": "claude-opus-5",
+    "gpt": "gpt-5.6-terra",
+    "qwen": "qwen3.5:9b",
+    "oss": "openai/gpt-oss-120b",
+    "luna": "gpt-5.6-luna",
+    "oss20": "openai/gpt-oss-20b",
+    "sonnet": "claude-sonnet-5"
+  },
+  "settings": {
+    "iterations": 10000,
+    "seed": 20260803,
+    "alpha": 0.05,
+    "resampling": "rule"
+  },
+  "H1": {
+    "claude-opus-5": {
+      "n": 43,
+      "fp_reduction": null,
+      "fp_reduction_ci": [
+        null,
+        null
+      ],
+      "lost_tp": 1,
+      "lost_tp_share": 0.023255813953488372,
+      "f1": 0.988235294117647,
+      "f1_raw_report": 1.0,
+      "delta_f1": -0.01176470588235301,
+      "delta_f1_ci": [
+        -0.03703703703703698,
+        0.0
+      ],
+      "supported": false
+    },
+    "gpt-5.6-terra": {
+      "n": 43,
+      "fp_reduction": null,
+      "fp_reduction_ci": [
+        null,
+        null
+      ],
+      "lost_tp": 2,
+      "lost_tp_share": 0.046511627906976744,
+      "f1": 0.9761904761904763,
+      "f1_raw_report": 1.0,
+      "delta_f1": -0.023809523809523725,
+      "delta_f1_ci": [
+        -0.07317073170731714,
+        0.0
+      ],
+      "supported": false
+    },
+    "qwen3.5:9b": {
+      "n": 43,
+      "fp_reduction": null,
+      "fp_reduction_ci": [
+        null,
+        null
+      ],
+      "lost_tp": 7,
+      "lost_tp_share": 0.16279069767441862,
+      "f1": 0.9113924050632911,
+      "f1_raw_report": 1.0,
+      "delta_f1": -0.08860759493670889,
+      "delta_f1_ci": [
+        -0.1578947368421052,
+        -0.03612331679659847
+      ],
+      "supported": false
+    },
+    "openai/gpt-oss-120b": {
+      "n": 43,
+      "fp_reduction": null,
+      "fp_reduction_ci": [
+        null,
+        null
+      ],
+      "lost_tp": 5,
+      "lost_tp_share": 0.11627906976744186,
+      "f1": 0.9382716049382717,
+      "f1_raw_report": 1.0,
+      "delta_f1": -0.061728395061728336,
+      "delta_f1_ci": [
+        -0.1358024691358024,
+        -0.01176470588235301
+      ],
+      "supported": false
+    },
+    "gpt-5.6-luna": {
+      "n": 43,
+      "fp_reduction": null,
+      "fp_reduction_ci": [
+        null,
+        null
+      ],
+      "lost_tp": 1,
+      "lost_tp_share": 0.023255813953488372,
+      "f1": 0.988235294117647,
+      "f1_raw_report": 1.0,
+      "delta_f1": -0.01176470588235301,
+      "delta_f1_ci": [
+        -0.03703703703703698,
+        0.0
+      ],
+      "supported": false
+    },
+    "openai/gpt-oss-20b": {
+      "n": 43,
+      "fp_reduction": null,
+      "fp_reduction_ci": [
+        null,
+        null
+      ],
+      "lost_tp": 3,
+      "lost_tp_share": 0.06976744186046512,
+      "f1": 0.963855421686747,
+      "f1_raw_report": 1.0,
+      "delta_f1": -0.03614457831325302,
+      "delta_f1_ci": [
+        -0.09756097560975607,
+        0.0
+      ],
+      "supported": false
+    },
+    "claude-sonnet-5": {
+      "n": 43,
+      "fp_reduction": null,
+      "fp_reduction_ci": [
+        null,
+        null
+      ],
+      "lost_tp": 1,
+      "lost_tp_share": 0.023255813953488372,
+      "f1": 0.988235294117647,
+      "f1_raw_report": 1.0,
+      "delta_f1": -0.01176470588235301,
+      "delta_f1_ci": [
+        -0.03703703703703698,
+        0.0
+      ],
+      "supported": false
+    }
+  },
+  "H2": {
+    "wszystkie": {
+      "n": 43,
+      "accuracy": {
+        "claude-opus-5": 0.9767441860465116,
+        "gpt-5.6-terra": 0.9534883720930233,
+        "qwen3.5:9b": 0.8372093023255814,
+        "openai/gpt-oss-120b": 0.8837209302325582,
+        "gpt-5.6-luna": 0.9767441860465116,
+        "openai/gpt-oss-20b": 0.9302325581395349,
+        "claude-sonnet-5": 0.9767441860465116
+      },
+      "cochran_q": {
+        "q": 16.829268292682926,
+        "df": 6,
+        "p_value": 0.009931619640401443,
+        "test": "Q Cochrana",
+        "p_value_cluster": 0.021548922553872307,
+        "permutations": 20000,
+        "clusters": 41
+      },
+      "vs_naive": {
+        "claude-opus-5": {
+          "accuracy": 0.9767441860465116,
+          "accuracy_naive": 0.0,
+          "difference": 0.9767441860465116,
+          "ci_low": 0.9285714285714286,
+          "ci_high": 1.0,
+          "mcnemar_cluster": {
+            "b": 42,
+            "c": 0,
+            "clusters_with_discordance": 40,
+            "statistic": 42.0,
+            "p_value": 4.999750012499375e-05,
+            "permutations": 20000,
+            "test": "cluster-level sign-flip (SAST rule)"
+          },
+          "mcnemar_exact": {
+            "b": 42,
+            "c": 0,
+            "discordant": 42,
+            "p_value": 4.547473508864641e-13,
+            "odds_ratio": null,
+            "test": "exact McNemar test (two-sided, binomial distribution)"
+          }
+        },
+        "gpt-5.6-terra": {
+          "accuracy": 0.9534883720930233,
+          "accuracy_naive": 0.0,
+          "difference": 0.9534883720930233,
+          "ci_low": 0.8636363636363636,
+          "ci_high": 1.0,
+          "mcnemar_cluster": {
+            "b": 41,
+            "c": 0,
+            "clusters_with_discordance": 40,
+            "statistic": 41.0,
+            "p_value": 4.999750012499375e-05,
+            "permutations": 20000,
+            "test": "cluster-level sign-flip (SAST rule)"
+          },
+          "mcnemar_exact": {
+            "b": 41,
+            "c": 0,
+            "discordant": 41,
+            "p_value": 9.094947017729282e-13,
+            "odds_ratio": null,
+            "test": "exact McNemar test (two-sided, binomial distribution)"
+          }
+        },
+        "qwen3.5:9b": {
+          "accuracy": 0.8372093023255814,
+          "accuracy_naive": 0.0,
+          "difference": 0.8372093023255814,
+          "ci_low": 0.7272727272727273,
+          "ci_high": 0.9302721987315005,
+          "mcnemar_cluster": {
+            "b": 36,
+            "c": 0,
+            "clusters_with_discordance": 35,
+            "statistic": 36.0,
+            "p_value": 4.999750012499375e-05,
+            "permutations": 20000,
+            "test": "cluster-level sign-flip (SAST rule)"
+          },
+          "mcnemar_exact": {
+            "b": 36,
+            "c": 0,
+            "discordant": 36,
+            "p_value": 2.9103830456733704e-11,
+            "odds_ratio": null,
+            "test": "exact McNemar test (two-sided, binomial distribution)"
+          }
+        },
+        "openai/gpt-oss-120b": {
+          "accuracy": 0.8837209302325582,
+          "accuracy_naive": 0.0,
+          "difference": 0.8837209302325582,
+          "ci_low": 0.7608695652173914,
+          "ci_high": 0.9767441860465116,
+          "mcnemar_cluster": {
+            "b": 38,
+            "c": 0,
+            "clusters_with_discordance": 37,
+            "statistic": 38.0,
+            "p_value": 4.999750012499375e-05,
+            "permutations": 20000,
+            "test": "cluster-level sign-flip (SAST rule)"
+          },
+          "mcnemar_exact": {
+            "b": 38,
+            "c": 0,
+            "discordant": 38,
+            "p_value": 7.275957614183426e-12,
+            "odds_ratio": null,
+            "test": "exact McNemar test (two-sided, binomial distribution)"
+          }
+        },
+        "gpt-5.6-luna": {
+          "accuracy": 0.9767441860465116,
+          "accuracy_naive": 0.0,
+          "difference": 0.9767441860465116,
+          "ci_low": 0.9285714285714286,
+          "ci_high": 1.0,
+          "mcnemar_cluster": {
+            "b": 42,
+            "c": 0,
+            "clusters_with_discordance": 40,
+            "statistic": 42.0,
+            "p_value": 4.999750012499375e-05,
+            "permutations": 20000,
+            "test": "cluster-level sign-flip (SAST rule)"
+          },
+          "mcnemar_exact": {
+            "b": 42,
+            "c": 0,
+            "discordant": 42,
+            "p_value": 4.547473508864641e-13,
+            "odds_ratio": null,
+            "test": "exact McNemar test (two-sided, binomial distribution)"
+          }
+        },
+        "openai/gpt-oss-20b": {
+          "accuracy": 0.9302325581395349,
+          "accuracy_naive": 0.0,
+          "difference": 0.9302325581395349,
+          "ci_low": 0.8222222222222222,
+          "ci_high": 1.0,
+          "mcnemar_cluster": {
+            "b": 40,
+            "c": 0,
+            "clusters_with_discordance": 39,
+            "statistic": 40.0,
+            "p_value": 4.999750012499375e-05,
+            "permutations": 20000,
+            "test": "cluster-level sign-flip (SAST rule)"
+          },
+          "mcnemar_exact": {
+            "b": 40,
+            "c": 0,
+            "discordant": 40,
+            "p_value": 1.8189894035458565e-12,
+            "odds_ratio": null,
+            "test": "exact McNemar test (two-sided, binomial distribution)"
+          }
+        },
+        "claude-sonnet-5": {
+          "accuracy": 0.9767441860465116,
+          "accuracy_naive": 0.0,
+          "difference": 0.9767441860465116,
+          "ci_low": 0.9285714285714286,
+          "ci_high": 1.0,
+          "mcnemar_cluster": {
+            "b": 42,
+            "c": 0,
+            "clusters_with_discordance": 40,
+            "statistic": 42.0,
+            "p_value": 4.999750012499375e-05,
+            "permutations": 20000,
+            "test": "cluster-level sign-flip (SAST rule)"
+          },
+          "mcnemar_exact": {
+            "b": 42,
+            "c": 0,
+            "discordant": 42,
+            "p_value": 4.547473508864641e-13,
+            "odds_ratio": null,
+            "test": "exact McNemar test (two-sided, binomial distribution)"
+          }
+        }
+      }
+    }
+  },
+  "H3": {
+    "models": {
+      "claude-opus-5": {
+        "n": 43,
+        "unanimity": 1.0,
+        "unanimity_ci": [
+          1.0,
+          1.0
+        ],
+        "fleiss_kappa": 1.0,
+        "fleiss_kappa_ci": [
+          1.0,
+          1.0
+        ]
+      },
+      "gpt-5.6-terra": {
+        "n": 43,
+        "unanimity": 0.9302325581395349,
+        "unanimity_ci": [
+          0.8478260869565217,
+          1.0
+        ],
+        "fleiss_kappa": 0.5468384074941458,
+        "fleiss_kappa_ci": [
+          -0.03278688524590238,
+          0.7919354838709655
+        ]
+      },
+      "qwen3.5:9b": {
+        "n": 43,
+        "unanimity": 0.813953488372093,
+        "unanimity_ci": [
+          0.6818181818181818,
+          0.9285714285714286
+        ],
+        "fleiss_kappa": 0.6030769230769235,
+        "fleiss_kappa_ci": [
+          0.2909649541634836,
+          0.8453854632676453
+        ]
+      },
+      "openai/gpt-oss-120b": {
+        "n": 43,
+        "unanimity": 1.0,
+        "unanimity_ci": [
+          1.0,
+          1.0
+        ],
+        "fleiss_kappa": 1.0,
+        "fleiss_kappa_ci": [
+          1.0,
+          1.0
+        ]
+      },
+      "gpt-5.6-luna": {
+        "n": 43,
+        "unanimity": 0.8837209302325582,
+        "unanimity_ci": [
+          0.7674418604651163,
+          0.9767441860465116
+        ],
+        "fleiss_kappa": 0.1260162601626025,
+        "fleiss_kappa_ci": [
+          -0.06299212598425274,
+          0.4749999999999996
+        ]
+      },
+      "openai/gpt-oss-20b": {
+        "n": 43,
+        "unanimity": 0.813953488372093,
+        "unanimity_ci": [
+          0.6904761904761905,
+          0.926872822299651
+        ],
+        "fleiss_kappa": 0.396491228070176,
+        "fleiss_kappa_ci": [
+          -0.08403361344537781,
+          0.7324628935773319
+        ]
+      },
+      "claude-sonnet-5": {
+        "n": 43,
+        "unanimity": 1.0,
+        "unanimity_ci": [
+          1.0,
+          1.0
+        ],
+        "fleiss_kappa": 1.0,
+        "fleiss_kappa_ci": [
+          1.0,
+          1.0
+        ]
+      }
+    },
+    "pairwise": {
+      "pairs": 21,
+      "differences_shown": 9,
+      "details": {
+        "claude-opus-5 vs gpt-5.6-terra": {
+          "n": 43,
+          "difference": 0.06976744186046513,
+          "difference_ci": [
+            0.0,
+            0.15217391304347827
+          ],
+          "proven": false
+        },
+        "claude-opus-5 vs qwen3.5:9b": {
+          "n": 43,
+          "difference": 0.18604651162790697,
+          "difference_ci": [
+            0.0714285714285714,
+            0.31818181818181823
+          ],
+          "proven": true
+        },
+        "claude-opus-5 vs openai/gpt-oss-120b": {
+          "n": 43,
+          "difference": 0.0,
+          "difference_ci": [
+            0.0,
+            0.0
+          ],
+          "proven": false
+        },
+        "claude-opus-5 vs gpt-5.6-luna": {
+          "n": 43,
+          "difference": 0.11627906976744184,
+          "difference_ci": [
+            0.023255813953488413,
+            0.2325581395348837
+          ],
+          "proven": true
+        },
+        "claude-opus-5 vs openai/gpt-oss-20b": {
+          "n": 43,
+          "difference": 0.18604651162790697,
+          "difference_ci": [
+            0.07312717770034842,
+            0.30952380952380953
+          ],
+          "proven": true
+        },
+        "claude-opus-5 vs claude-sonnet-5": {
+          "n": 43,
+          "difference": 0.0,
+          "difference_ci": [
+            0.0,
+            0.0
+          ],
+          "proven": false
+        },
+        "gpt-5.6-terra vs qwen3.5:9b": {
+          "n": 43,
+          "difference": 0.11627906976744184,
+          "difference_ci": [
+            0.0,
+            0.2272727272727273
+          ],
+          "proven": false
+        },
+        "gpt-5.6-terra vs openai/gpt-oss-120b": {
+          "n": 43,
+          "difference": -0.06976744186046513,
+          "difference_ci": [
+            -0.15217391304347827,
+            0.0
+          ],
+          "proven": false
+        },
+        "gpt-5.6-terra vs gpt-5.6-luna": {
+          "n": 43,
+          "difference": 0.046511627906976716,
+          "difference_ci": [
+            -0.045454545454545414,
+            0.13636363636363635
+          ],
+          "proven": false
+        },
+        "gpt-5.6-terra vs openai/gpt-oss-20b": {
+          "n": 43,
+          "difference": 0.11627906976744184,
+          "difference_ci": [
+            -0.022222222222222143,
+            0.2558139534883721
+          ],
+          "proven": false
+        },
+        "gpt-5.6-terra vs claude-sonnet-5": {
+          "n": 43,
+          "difference": -0.06976744186046513,
+          "difference_ci": [
+            -0.15217391304347827,
+            0.0
+          ],
+          "proven": false
+        },
+        "qwen3.5:9b vs openai/gpt-oss-120b": {
+          "n": 43,
+          "difference": -0.18604651162790697,
+          "difference_ci": [
+            -0.31818181818181823,
+            -0.0714285714285714
+          ],
+          "proven": true
+        },
+        "qwen3.5:9b vs gpt-5.6-luna": {
+          "n": 43,
+          "difference": -0.06976744186046513,
+          "difference_ci": [
+            -0.18604651162790697,
+            0.04761904761904756
+          ],
+          "proven": false
+        },
+        "qwen3.5:9b vs openai/gpt-oss-20b": {
+          "n": 43,
+          "difference": 0.0,
+          "difference_ci": [
+            -0.13636363636363635,
+            0.1428571428571429
+          ],
+          "proven": false
+        },
+        "qwen3.5:9b vs claude-sonnet-5": {
+          "n": 43,
+          "difference": -0.18604651162790697,
+          "difference_ci": [
+            -0.31818181818181823,
+            -0.0714285714285714
+          ],
+          "proven": true
+        },
+        "openai/gpt-oss-120b vs gpt-5.6-luna": {
+          "n": 43,
+          "difference": 0.11627906976744184,
+          "difference_ci": [
+            0.023255813953488413,
+            0.2325581395348837
+          ],
+          "proven": true
+        },
+        "openai/gpt-oss-120b vs openai/gpt-oss-20b": {
+          "n": 43,
+          "difference": 0.18604651162790697,
+          "difference_ci": [
+            0.07312717770034842,
+            0.30952380952380953
+          ],
+          "proven": true
+        },
+        "openai/gpt-oss-120b vs claude-sonnet-5": {
+          "n": 43,
+          "difference": 0.0,
+          "difference_ci": [
+            0.0,
+            0.0
+          ],
+          "proven": false
+        },
+        "gpt-5.6-luna vs openai/gpt-oss-20b": {
+          "n": 43,
+          "difference": 0.06976744186046513,
+          "difference_ci": [
+            -0.06666666666666676,
+            0.20454545454545459
+          ],
+          "proven": false
+        },
+        "gpt-5.6-luna vs claude-sonnet-5": {
+          "n": 43,
+          "difference": -0.11627906976744184,
+          "difference_ci": [
+            -0.2325581395348837,
+            -0.023255813953488413
+          ],
+          "proven": true
+        },
+        "openai/gpt-oss-20b vs claude-sonnet-5": {
+          "n": 43,
+          "difference": -0.18604651162790697,
+          "difference_ci": [
+            -0.30952380952380953,
+            -0.07312717770034902
+          ],
+          "proven": true
+        }
+      }
+    }
+  },
+  "H4": {
+    "available": true,
+    "findings_with_context": 43,
+    "models": {
+      "claude-opus-5": {
+        "n": 43,
+        "reasoning": 0.3488372093023256,
+        "message": 0.32558139534883723,
+        "difference": 0.023255813953488358,
+        "ci_low": -0.09523809523809523,
+        "ci_high": 0.15909090909090912,
+        "mcnemar_cluster": {
+          "b": 6,
+          "c": 5,
+          "clusters_with_discordance": 11,
+          "statistic": 1.0,
+          "p_value": 1.0,
+          "permutations": 20000,
+          "test": "cluster-level sign-flip (SAST rule)"
+        },
+        "mcnemar_exact": {
+          "b": 6,
+          "c": 5,
+          "discordant": 11,
+          "p_value": 1.0,
+          "odds_ratio": 1.2,
+          "test": "exact McNemar test (two-sided, binomial distribution)"
+        }
+      },
+      "gpt-5.6-terra": {
+        "n": 43,
+        "reasoning": 0.37209302325581395,
+        "message": 0.32558139534883723,
+        "difference": 0.046511627906976716,
+        "ci_low": -0.09523809523809523,
+        "ci_high": 0.1951219512195122,
+        "mcnemar_cluster": {
+          "b": 8,
+          "c": 6,
+          "clusters_with_discordance": 14,
+          "statistic": 2.0,
+          "p_value": 0.7853107344632768,
+          "permutations": 20000,
+          "test": "cluster-level sign-flip (SAST rule)"
+        },
+        "mcnemar_exact": {
+          "b": 8,
+          "c": 6,
+          "discordant": 14,
+          "p_value": 0.79052734375,
+          "odds_ratio": 1.3333333333333333,
+          "test": "exact McNemar test (two-sided, binomial distribution)"
+        }
+      },
+      "qwen3.5:9b": {
+        "n": 43,
+        "reasoning": 0.32558139534883723,
+        "message": 0.32558139534883723,
+        "difference": 0.0,
+        "ci_low": -0.11904761904761907,
+        "ci_high": 0.13636363636363635,
+        "mcnemar_cluster": {
+          "b": 6,
+          "c": 6,
+          "clusters_with_discordance": 12,
+          "statistic": 0.0,
+          "p_value": 1.0,
+          "permutations": 20000,
+          "test": "cluster-level sign-flip (SAST rule)"
+        },
+        "mcnemar_exact": {
+          "b": 6,
+          "c": 6,
+          "discordant": 12,
+          "p_value": 1.0,
+          "odds_ratio": 1.0,
+          "test": "exact McNemar test (two-sided, binomial distribution)"
+        }
+      },
+      "openai/gpt-oss-120b": {
+        "n": 43,
+        "reasoning": 0.32558139534883723,
+        "message": 0.32558139534883723,
+        "difference": 0.0,
+        "ci_low": -0.1162790697674419,
+        "ci_high": 0.12251275510203986,
+        "mcnemar_cluster": {
+          "b": 5,
+          "c": 5,
+          "clusters_with_discordance": 10,
+          "statistic": 0.0,
+          "p_value": 1.0,
+          "permutations": 20000,
+          "test": "cluster-level sign-flip (SAST rule)"
+        },
+        "mcnemar_exact": {
+          "b": 5,
+          "c": 5,
+          "discordant": 10,
+          "p_value": 1.0,
+          "odds_ratio": 1.0,
+          "test": "exact McNemar test (two-sided, binomial distribution)"
+        }
+      },
+      "gpt-5.6-luna": {
+        "n": 43,
+        "reasoning": 0.3488372093023256,
+        "message": 0.32558139534883723,
+        "difference": 0.023255813953488358,
+        "ci_low": -0.11904761904761901,
+        "ci_high": 0.1707317073170732,
+        "mcnemar_cluster": {
+          "b": 8,
+          "c": 7,
+          "clusters_with_discordance": 15,
+          "statistic": 1.0,
+          "p_value": 1.0,
+          "permutations": 20000,
+          "test": "cluster-level sign-flip (SAST rule)"
+        },
+        "mcnemar_exact": {
+          "b": 8,
+          "c": 7,
+          "discordant": 15,
+          "p_value": 1.0,
+          "odds_ratio": 1.1428571428571428,
+          "test": "exact McNemar test (two-sided, binomial distribution)"
+        }
+      },
+      "openai/gpt-oss-20b": {
+        "n": 43,
+        "reasoning": 0.32558139534883723,
+        "message": 0.32558139534883723,
+        "difference": 0.0,
+        "ci_low": -0.1162790697674419,
+        "ci_high": 0.12251275510203986,
+        "mcnemar_cluster": {
+          "b": 5,
+          "c": 5,
+          "clusters_with_discordance": 10,
+          "statistic": 0.0,
+          "p_value": 1.0,
+          "permutations": 20000,
+          "test": "cluster-level sign-flip (SAST rule)"
+        },
+        "mcnemar_exact": {
+          "b": 5,
+          "c": 5,
+          "discordant": 10,
+          "p_value": 1.0,
+          "odds_ratio": 1.0,
+          "test": "exact McNemar test (two-sided, binomial distribution)"
+        }
+      },
+      "claude-sonnet-5": {
+        "n": 43,
+        "reasoning": 0.3953488372093023,
+        "message": 0.32558139534883723,
+        "difference": 0.06976744186046507,
+        "ci_low": -0.06818181818181818,
+        "ci_high": 0.2093023255813954,
+        "mcnemar_cluster": {
+          "b": 8,
+          "c": 5,
+          "clusters_with_discordance": 13,
+          "statistic": 3.0,
+          "p_value": 0.5771711414429278,
+          "permutations": 20000,
+          "test": "cluster-level sign-flip (SAST rule)"
+        },
+        "mcnemar_exact": {
+          "b": 8,
+          "c": 5,
+          "discordant": 13,
+          "p_value": 0.5810546875,
+          "odds_ratio": 1.6,
+          "test": "exact McNemar test (two-sided, binomial distribution)"
+        }
+      }
+    },
+    "per_tool": {
+      "error-prone": {
+        "n": 15,
+        "message": 0.26666666666666666,
+        "model_min": 0.4,
+        "model_max": 0.5333333333333333
+      },
+      "sonarqube": {
+        "n": 16,
+        "message": 0.0625,
+        "model_min": 0.25,
+        "model_max": 0.3125
+      },
+      "spotbugs": {
+        "n": 12,
+        "message": 0.75,
+        "model_min": 0.25,
+        "model_max": 0.3333333333333333
+      }
+    }
+  },
+  "H5": {
+    "usage": {
+      "claude-opus-5": {
+        "findings": 43,
+        "cost_usd_total": 2.4281575,
+        "cost_usd_per_finding": 0.056468779069767445
+      },
+      "gpt-5.6-terra": {
+        "findings": 43,
+        "cost_usd_total": 0.5548146,
+        "cost_usd_per_finding": 0.01290266511627907
+      },
+      "qwen3.5:9b": {
+        "findings": 43,
+        "cost_usd_total": 0.0,
+        "cost_usd_per_finding": 0.0
+      },
+      "openai/gpt-oss-120b": {
+        "findings": 43,
+        "cost_usd_total": 0.02072118,
+        "cost_usd_per_finding": 0.00048188790697674416
+      },
+      "gpt-5.6-luna": {
+        "findings": 43,
+        "cost_usd_total": 0.07177332,
+        "cost_usd_per_finding": 0.001669146976744186
+      },
+      "openai/gpt-oss-20b": {
+        "findings": 43,
+        "cost_usd_total": 0.02132014,
+        "cost_usd_per_finding": 0.0004958172093023256
+      },
+      "claude-sonnet-5": {
+        "findings": 43,
+        "cost_usd_total": 1.029003,
+        "cost_usd_per_finding": 0.023930302325581392
+      }
+    },
+    "ratios": {
+      "gpt-5.6-terra": {
+        "reference": "claude-opus-5",
+        "f1_ratio": 0.9878117913832201,
+        "f1_ratio_ci": [
+          0.9285714285714286,
+          1.0365853658536586
+        ],
+        "threshold_met": true
+      },
+      "qwen3.5:9b": {
+        "reference": "claude-opus-5",
+        "f1_ratio": 0.9222423146473779,
+        "f1_ratio_ci": [
+          0.8478120978120979,
+          0.9873640905083749
+        ],
+        "threshold_met": true
+      },
+      "openai/gpt-oss-120b": {
+        "reference": "claude-opus-5",
+        "f1_ratio": 0.9494415049970607,
+        "f1_ratio_ci": [
+          0.8807539727131686,
+          1.0
+        ],
+        "threshold_met": true
+      },
+      "gpt-5.6-luna": {
+        "reference": "claude-opus-5",
+        "f1_ratio": 1.0,
+        "f1_ratio_ci": [
+          1.0,
+          1.0
+        ],
+        "threshold_met": true
+      },
+      "openai/gpt-oss-20b": {
+        "reference": "claude-opus-5",
+        "f1_ratio": 0.9753298909925416,
+        "f1_ratio_ci": [
+          0.9214285714285714,
+          1.0
+        ],
+        "threshold_met": true
+      },
+      "claude-sonnet-5": {
+        "reference": "claude-opus-5",
+        "f1_ratio": 1.0,
+        "f1_ratio_ci": [
+          1.0,
+          1.0
+        ],
+        "threshold_met": true
+      }
+    },
+    "pricing_supplied": true
+  },
+  "RQ8": {
+    "findings_with_reference": 43,
+    "models": {
+      "claude-opus-5": {
+        "scored": 43,
+        "accuracy": 0.9302325581395349,
+        "accuracy_per_tool": {
+          "error-prone": 0.8,
+          "sonarqube": 1.0,
+          "spotbugs": 1.0
+        },
+        "unanimous_across_runs": 0.9534883720930233,
+        "confusion": {
+          "CORRECTNESS": {
+            "CORRECTNESS": 37,
+            "CONCURRENCY": 0,
+            "SECURITY": 0,
+            "PERFORMANCE": 0,
+            "MAINTAINABILITY": 2,
+            "OTHER": 0
+          },
+          "CONCURRENCY": {
+            "CORRECTNESS": 0,
+            "CONCURRENCY": 0,
+            "SECURITY": 0,
+            "PERFORMANCE": 0,
+            "MAINTAINABILITY": 0,
+            "OTHER": 0
+          },
+          "SECURITY": {
+            "CORRECTNESS": 0,
+            "CONCURRENCY": 0,
+            "SECURITY": 0,
+            "PERFORMANCE": 0,
+            "MAINTAINABILITY": 0,
+            "OTHER": 0
+          },
+          "PERFORMANCE": {
+            "CORRECTNESS": 0,
+            "CONCURRENCY": 0,
+            "SECURITY": 0,
+            "PERFORMANCE": 0,
+            "MAINTAINABILITY": 0,
+            "OTHER": 0
+          },
+          "MAINTAINABILITY": {
+            "CORRECTNESS": 1,
+            "CONCURRENCY": 0,
+            "SECURITY": 0,
+            "PERFORMANCE": 0,
+            "MAINTAINABILITY": 3,
+            "OTHER": 0
+          },
+          "OTHER": {
+            "CORRECTNESS": 0,
+            "CONCURRENCY": 0,
+            "SECURITY": 0,
+            "PERFORMANCE": 0,
+            "MAINTAINABILITY": 0,
+            "OTHER": 0
+          }
+        }
+      },
+      "gpt-5.6-terra": {
+        "scored": 43,
+        "accuracy": 0.9069767441860465,
+        "accuracy_per_tool": {
+          "error-prone": 0.8,
+          "sonarqube": 0.9375,
+          "spotbugs": 1.0
+        },
+        "unanimous_across_runs": 0.9302325581395349,
+        "confusion": {
+          "CORRECTNESS": {
+            "CORRECTNESS": 37,
+            "CONCURRENCY": 0,
+            "SECURITY": 0,
+            "PERFORMANCE": 0,
+            "MAINTAINABILITY": 2,
+            "OTHER": 0
+          },
+          "CONCURRENCY": {
+            "CORRECTNESS": 0,
+            "CONCURRENCY": 0,
+            "SECURITY": 0,
+            "PERFORMANCE": 0,
+            "MAINTAINABILITY": 0,
+            "OTHER": 0
+          },
+          "SECURITY": {
+            "CORRECTNESS": 0,
+            "CONCURRENCY": 0,
+            "SECURITY": 0,
+            "PERFORMANCE": 0,
+            "MAINTAINABILITY": 0,
+            "OTHER": 0
+          },
+          "PERFORMANCE": {
+            "CORRECTNESS": 0,
+            "CONCURRENCY": 0,
+            "SECURITY": 0,
+            "PERFORMANCE": 0,
+            "MAINTAINABILITY": 0,
+            "OTHER": 0
+          },
+          "MAINTAINABILITY": {
+            "CORRECTNESS": 2,
+            "CONCURRENCY": 0,
+            "SECURITY": 0,
+            "PERFORMANCE": 0,
+            "MAINTAINABILITY": 2,
+            "OTHER": 0
+          },
+          "OTHER": {
+            "CORRECTNESS": 0,
+            "CONCURRENCY": 0,
+            "SECURITY": 0,
+            "PERFORMANCE": 0,
+            "MAINTAINABILITY": 0,
+            "OTHER": 0
+          }
+        }
+      },
+      "qwen3.5:9b": {
+        "scored": 43,
+        "accuracy": 0.8372093023255814,
+        "accuracy_per_tool": {
+          "error-prone": 1.0,
+          "sonarqube": 0.6875,
+          "spotbugs": 0.8333333333333334
+        },
+        "unanimous_across_runs": 0.7441860465116279,
+        "confusion": {
+          "CORRECTNESS": {
+            "CORRECTNESS": 32,
+            "CONCURRENCY": 1,
+            "SECURITY": 0,
+            "PERFORMANCE": 0,
+            "MAINTAINABILITY": 6,
+            "OTHER": 0
+          },
+          "CONCURRENCY": {
+            "CORRECTNESS": 0,
+            "CONCURRENCY": 0,
+            "SECURITY": 0,
+            "PERFORMANCE": 0,
+            "MAINTAINABILITY": 0,
+            "OTHER": 0
+          },
+          "SECURITY": {
+            "CORRECTNESS": 0,
+            "CONCURRENCY": 0,
+            "SECURITY": 0,
+            "PERFORMANCE": 0,
+            "MAINTAINABILITY": 0,
+            "OTHER": 0
+          },
+          "PERFORMANCE": {
+            "CORRECTNESS": 0,
+            "CONCURRENCY": 0,
+            "SECURITY": 0,
+            "PERFORMANCE": 0,
+            "MAINTAINABILITY": 0,
+            "OTHER": 0
+          },
+          "MAINTAINABILITY": {
+            "CORRECTNESS": 0,
+            "CONCURRENCY": 0,
+            "SECURITY": 0,
+            "PERFORMANCE": 0,
+            "MAINTAINABILITY": 4,
+            "OTHER": 0
+          },
+          "OTHER": {
+            "CORRECTNESS": 0,
+            "CONCURRENCY": 0,
+            "SECURITY": 0,
+            "PERFORMANCE": 0,
+            "MAINTAINABILITY": 0,
+            "OTHER": 0
+          }
+        }
+      },
+      "openai/gpt-oss-120b": {
+        "scored": 43,
+        "accuracy": 0.8837209302325582,
+        "accuracy_per_tool": {
+          "error-prone": 0.8,
+          "sonarqube": 0.875,
+          "spotbugs": 1.0
+        },
+        "unanimous_across_runs": 0.9767441860465116,
+        "confusion": {
+          "CORRECTNESS": {
+            "CORRECTNESS": 36,
+            "CONCURRENCY": 0,
+            "SECURITY": 0,
+            "PERFORMANCE": 0,
+            "MAINTAINABILITY": 3,
+            "OTHER": 0
+          },
+          "CONCURRENCY": {
+            "CORRECTNESS": 0,
+            "CONCURRENCY": 0,
+            "SECURITY": 0,
+            "PERFORMANCE": 0,
+            "MAINTAINABILITY": 0,
+            "OTHER": 0
+          },
+          "SECURITY": {
+            "CORRECTNESS": 0,
+            "CONCURRENCY": 0,
+            "SECURITY": 0,
+            "PERFORMANCE": 0,
+            "MAINTAINABILITY": 0,
+            "OTHER": 0
+          },
+          "PERFORMANCE": {
+            "CORRECTNESS": 0,
+            "CONCURRENCY": 0,
+            "SECURITY": 0,
+            "PERFORMANCE": 0,
+            "MAINTAINABILITY": 0,
+            "OTHER": 0
+          },
+          "MAINTAINABILITY": {
+            "CORRECTNESS": 2,
+            "CONCURRENCY": 0,
+            "SECURITY": 0,
+            "PERFORMANCE": 0,
+            "MAINTAINABILITY": 2,
+            "OTHER": 0
+          },
+          "OTHER": {
+            "CORRECTNESS": 0,
+            "CONCURRENCY": 0,
+            "SECURITY": 0,
+            "PERFORMANCE": 0,
+            "MAINTAINABILITY": 0,
+            "OTHER": 0
+          }
+        }
+      },
+      "gpt-5.6-luna": {
+        "scored": 43,
+        "accuracy": 0.9302325581395349,
+        "accuracy_per_tool": {
+          "error-prone": 0.8666666666666667,
+          "sonarqube": 0.9375,
+          "spotbugs": 1.0
+        },
+        "unanimous_across_runs": 0.9302325581395349,
+        "confusion": {
+          "CORRECTNESS": {
+            "CORRECTNESS": 38,
+            "CONCURRENCY": 0,
+            "SECURITY": 0,
+            "PERFORMANCE": 0,
+            "MAINTAINABILITY": 1,
+            "OTHER": 0
+          },
+          "CONCURRENCY": {
+            "CORRECTNESS": 0,
+            "CONCURRENCY": 0,
+            "SECURITY": 0,
+            "PERFORMANCE": 0,
+            "MAINTAINABILITY": 0,
+            "OTHER": 0
+          },
+          "SECURITY": {
+            "CORRECTNESS": 0,
+            "CONCURRENCY": 0,
+            "SECURITY": 0,
+            "PERFORMANCE": 0,
+            "MAINTAINABILITY": 0,
+            "OTHER": 0
+          },
+          "PERFORMANCE": {
+            "CORRECTNESS": 0,
+            "CONCURRENCY": 0,
+            "SECURITY": 0,
+            "PERFORMANCE": 0,
+            "MAINTAINABILITY": 0,
+            "OTHER": 0
+          },
+          "MAINTAINABILITY": {
+            "CORRECTNESS": 2,
+            "CONCURRENCY": 0,
+            "SECURITY": 0,
+            "PERFORMANCE": 0,
+            "MAINTAINABILITY": 2,
+            "OTHER": 0
+          },
+          "OTHER": {
+            "CORRECTNESS": 0,
+            "CONCURRENCY": 0,
+            "SECURITY": 0,
+            "PERFORMANCE": 0,
+            "MAINTAINABILITY": 0,
+            "OTHER": 0
+          }
+        }
+      },
+      "openai/gpt-oss-20b": {
+        "scored": 43,
+        "accuracy": 0.8837209302325582,
+        "accuracy_per_tool": {
+          "error-prone": 0.8,
+          "sonarqube": 0.875,
+          "spotbugs": 1.0
+        },
+        "unanimous_across_runs": 0.8372093023255814,
+        "confusion": {
+          "CORRECTNESS": {
+            "CORRECTNESS": 36,
+            "CONCURRENCY": 0,
+            "SECURITY": 0,
+            "PERFORMANCE": 0,
+            "MAINTAINABILITY": 3,
+            "OTHER": 0
+          },
+          "CONCURRENCY": {
+            "CORRECTNESS": 0,
+            "CONCURRENCY": 0,
+            "SECURITY": 0,
+            "PERFORMANCE": 0,
+            "MAINTAINABILITY": 0,
+            "OTHER": 0
+          },
+          "SECURITY": {
+            "CORRECTNESS": 0,
+            "CONCURRENCY": 0,
+            "SECURITY": 0,
+            "PERFORMANCE": 0,
+            "MAINTAINABILITY": 0,
+            "OTHER": 0
+          },
+          "PERFORMANCE": {
+            "CORRECTNESS": 0,
+            "CONCURRENCY": 0,
+            "SECURITY": 0,
+            "PERFORMANCE": 0,
+            "MAINTAINABILITY": 0,
+            "OTHER": 0
+          },
+          "MAINTAINABILITY": {
+            "CORRECTNESS": 2,
+            "CONCURRENCY": 0,
+            "SECURITY": 0,
+            "PERFORMANCE": 0,
+            "MAINTAINABILITY": 2,
+            "OTHER": 0
+          },
+          "OTHER": {
+            "CORRECTNESS": 0,
+            "CONCURRENCY": 0,
+            "SECURITY": 0,
+            "PERFORMANCE": 0,
+            "MAINTAINABILITY": 0,
+            "OTHER": 0
+          }
+        }
+      },
+      "claude-sonnet-5": {
+        "scored": 43,
+        "accuracy": 0.8837209302325582,
+        "accuracy_per_tool": {
+          "error-prone": 0.8,
+          "sonarqube": 0.875,
+          "spotbugs": 1.0
+        },
+        "unanimous_across_runs": 0.9069767441860465,
+        "confusion": {
+          "CORRECTNESS": {
+            "CORRECTNESS": 36,
+            "CONCURRENCY": 0,
+            "SECURITY": 0,
+            "PERFORMANCE": 0,
+            "MAINTAINABILITY": 3,
+            "OTHER": 0
+          },
+          "CONCURRENCY": {
+            "CORRECTNESS": 0,
+            "CONCURRENCY": 0,
+            "SECURITY": 0,
+            "PERFORMANCE": 0,
+            "MAINTAINABILITY": 0,
+            "OTHER": 0
+          },
+          "SECURITY": {
+            "CORRECTNESS": 0,
+            "CONCURRENCY": 0,
+            "SECURITY": 0,
+            "PERFORMANCE": 0,
+            "MAINTAINABILITY": 0,
+            "OTHER": 0
+          },
+          "PERFORMANCE": {
+            "CORRECTNESS": 0,
+            "CONCURRENCY": 0,
+            "SECURITY": 0,
+            "PERFORMANCE": 0,
+            "MAINTAINABILITY": 0,
+            "OTHER": 0
+          },
+          "MAINTAINABILITY": {
+            "CORRECTNESS": 2,
+            "CONCURRENCY": 0,
+            "SECURITY": 0,
+            "PERFORMANCE": 0,
+            "MAINTAINABILITY": 2,
+            "OTHER": 0
+          },
+          "OTHER": {
+            "CORRECTNESS": 0,
+            "CONCURRENCY": 0,
+            "SECURITY": 0,
+            "PERFORMANCE": 0,
+            "MAINTAINABILITY": 0,
+            "OTHER": 0
+          }
+        }
+      }
+    },
+    "agreement_between_models": {
+      "kappa": 0.5799023028611314,
+      "observed_agreement": 0.9069767441860467,
+      "expected_agreement": 0.7785675654794096,
+      "subjects": 43,
+      "raters": 7
+    },
+    "confusion_summed": {
+      "CORRECTNESS": {
+        "CORRECTNESS": 252,
+        "CONCURRENCY": 1,
+        "SECURITY": 0,
+        "PERFORMANCE": 0,
+        "MAINTAINABILITY": 20,
+        "OTHER": 0
+      },
+      "CONCURRENCY": {
+        "CORRECTNESS": 0,
+        "CONCURRENCY": 0,
+        "SECURITY": 0,
+        "PERFORMANCE": 0,
+        "MAINTAINABILITY": 0,
+        "OTHER": 0
+      },
+      "SECURITY": {
+        "CORRECTNESS": 0,
+        "CONCURRENCY": 0,
+        "SECURITY": 0,
+        "PERFORMANCE": 0,
+        "MAINTAINABILITY": 0,
+        "OTHER": 0
+      },
+      "PERFORMANCE": {
+        "CORRECTNESS": 0,
+        "CONCURRENCY": 0,
+        "SECURITY": 0,
+        "PERFORMANCE": 0,
+        "MAINTAINABILITY": 0,
+        "OTHER": 0
+      },
+      "MAINTAINABILITY": {
+        "CORRECTNESS": 11,
+        "CONCURRENCY": 0,
+        "SECURITY": 0,
+        "PERFORMANCE": 0,
+        "MAINTAINABILITY": 17,
+        "OTHER": 0
+      },
+      "OTHER": {
+        "CORRECTNESS": 0,
+        "CONCURRENCY": 0,
+        "SECURITY": 0,
+        "PERFORMANCE": 0,
+        "MAINTAINABILITY": 0,
+        "OTHER": 0
+      }
+    },
+    "errors_summed": 32,
+    "distribution": {
+      "claude-opus-5": {
+        "CORRECTNESS": 38,
+        "CONCURRENCY": 0,
+        "SECURITY": 0,
+        "PERFORMANCE": 0,
+        "MAINTAINABILITY": 5,
+        "OTHER": 0
+      },
+      "gpt-5.6-terra": {
+        "CORRECTNESS": 39,
+        "CONCURRENCY": 0,
+        "SECURITY": 0,
+        "PERFORMANCE": 0,
+        "MAINTAINABILITY": 4,
+        "OTHER": 0
+      },
+      "qwen3.5:9b": {
+        "CORRECTNESS": 32,
+        "CONCURRENCY": 1,
+        "SECURITY": 0,
+        "PERFORMANCE": 0,
+        "MAINTAINABILITY": 10,
+        "OTHER": 0
+      },
+      "openai/gpt-oss-120b": {
+        "CORRECTNESS": 38,
+        "CONCURRENCY": 0,
+        "SECURITY": 0,
+        "PERFORMANCE": 0,
+        "MAINTAINABILITY": 5,
+        "OTHER": 0
+      },
+      "gpt-5.6-luna": {
+        "CORRECTNESS": 40,
+        "CONCURRENCY": 0,
+        "SECURITY": 0,
+        "PERFORMANCE": 0,
+        "MAINTAINABILITY": 3,
+        "OTHER": 0
+      },
+      "openai/gpt-oss-20b": {
+        "CORRECTNESS": 38,
+        "CONCURRENCY": 0,
+        "SECURITY": 0,
+        "PERFORMANCE": 0,
+        "MAINTAINABILITY": 5,
+        "OTHER": 0
+      },
+      "claude-sonnet-5": {
+        "CORRECTNESS": 38,
+        "CONCURRENCY": 0,
+        "SECURITY": 0,
+        "PERFORMANCE": 0,
+        "MAINTAINABILITY": 5,
+        "OTHER": 0
+      }
+    },
+    "reference_distribution": {
+      "CORRECTNESS": 39,
+      "CONCURRENCY": 0,
+      "SECURITY": 0,
+      "PERFORMANCE": 0,
+      "MAINTAINABILITY": 4,
+      "OTHER": 0
+    },
+    "tool_label_baseline": {
+      "with_unambiguous_label": 23,
+      "correct": 18,
+      "accuracy": 0.782608695652174,
+      "without_label": 20,
+      "models_on_same_subset": {
+        "claude-opus-5": {
+          "scored": 23,
+          "accuracy": 1.0,
+          "hits_shared_with_label": 18,
+          "hits_model_only": 5,
+          "hits_label_only": 0
+        },
+        "gpt-5.6-terra": {
+          "scored": 23,
+          "accuracy": 0.9565217391304348,
+          "hits_shared_with_label": 17,
+          "hits_model_only": 5,
+          "hits_label_only": 1
+        },
+        "qwen3.5:9b": {
+          "scored": 23,
+          "accuracy": 0.782608695652174,
+          "hits_shared_with_label": 16,
+          "hits_model_only": 2,
+          "hits_label_only": 2
+        },
+        "openai/gpt-oss-120b": {
+          "scored": 23,
+          "accuracy": 0.9130434782608695,
+          "hits_shared_with_label": 17,
+          "hits_model_only": 4,
+          "hits_label_only": 1
+        },
+        "gpt-5.6-luna": {
+          "scored": 23,
+          "accuracy": 0.9565217391304348,
+          "hits_shared_with_label": 17,
+          "hits_model_only": 5,
+          "hits_label_only": 1
+        },
+        "openai/gpt-oss-20b": {
+          "scored": 23,
+          "accuracy": 0.9130434782608695,
+          "hits_shared_with_label": 17,
+          "hits_model_only": 4,
+          "hits_label_only": 1
+        },
+        "claude-sonnet-5": {
+          "scored": 23,
+          "accuracy": 0.9130434782608695,
+          "hits_shared_with_label": 17,
+          "hits_model_only": 4,
+          "hits_label_only": 1
+        }
+      }
+    }
+  },
+  "RQ9": {
+    "models": {
+      "claude-opus-5": {
+        "findings_with_signature": 43,
+        "distinct_signatures": 41,
+        "unanimous_across_runs": 0.06976744186046512,
+        "within_rule_identical_pair_share": 0.0,
+        "within_rule_close_pair_share": 0.0,
+        "within_rule_pairs": 2,
+        "within_rule_mean_similarity": 0.5693237410071943,
+        "per_rule": [
+          {
+            "rule": "error-prone::EqualsGetClass",
+            "findings": 2,
+            "distinct_signatures": 2,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.6906474820143885
+          },
+          {
+            "rule": "spotbugs::UC_USELESS_CONDITION",
+            "findings": 2,
+            "distinct_signatures": 2,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.448
+          }
+        ],
+        "cross_tool_merges": {
+          "signatures": 2,
+          "findings_covered": 4,
+          "groups_at_similarity_threshold": 3,
+          "groups_closed_transitively": 1,
+          "lowest_similarity_in_group": 0.7058823529411765,
+          "findings_covered_at_threshold": 8,
+          "examples": [
+            {
+              "signature": "equals overridden without corresponding hashcode override",
+              "tools": [
+                "sonarqube",
+                "spotbugs"
+              ],
+              "findings": 2
+            },
+            {
+              "signature": "exception instantiated but never thrown",
+              "tools": [
+                "error-prone",
+                "sonarqube"
+              ],
+              "findings": 2
+            }
+          ]
+        }
+      },
+      "gpt-5.6-terra": {
+        "findings_with_signature": 43,
+        "distinct_signatures": 42,
+        "unanimous_across_runs": 0.23255813953488372,
+        "within_rule_identical_pair_share": 0.0,
+        "within_rule_close_pair_share": 0.5,
+        "within_rule_pairs": 2,
+        "within_rule_mean_similarity": 0.6126373626373627,
+        "per_rule": [
+          {
+            "rule": "error-prone::EqualsGetClass",
+            "findings": 2,
+            "distinct_signatures": 2,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.8214285714285714
+          },
+          {
+            "rule": "spotbugs::UC_USELESS_CONDITION",
+            "findings": 2,
+            "distinct_signatures": 2,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.40384615384615385
+          }
+        ],
+        "cross_tool_merges": {
+          "signatures": 1,
+          "findings_covered": 2,
+          "groups_at_similarity_threshold": 5,
+          "groups_closed_transitively": 0,
+          "lowest_similarity_in_group": 0.810126582278481,
+          "findings_covered_at_threshold": 12,
+          "examples": [
+            {
+              "signature": "equals overridden without matching hashcode",
+              "tools": [
+                "sonarqube",
+                "spotbugs"
+              ],
+              "findings": 2
+            }
+          ]
+        }
+      },
+      "qwen3.5:9b": {
+        "findings_with_signature": 43,
+        "distinct_signatures": 43,
+        "unanimous_across_runs": 0.0,
+        "within_rule_identical_pair_share": 0.0,
+        "within_rule_close_pair_share": 0.0,
+        "within_rule_pairs": 2,
+        "within_rule_mean_similarity": 0.4375234521575985,
+        "per_rule": [
+          {
+            "rule": "error-prone::EqualsGetClass",
+            "findings": 2,
+            "distinct_signatures": 2,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.5365853658536586
+          },
+          {
+            "rule": "spotbugs::UC_USELESS_CONDITION",
+            "findings": 2,
+            "distinct_signatures": 2,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.3384615384615385
+          }
+        ],
+        "cross_tool_merges": {
+          "signatures": 0,
+          "findings_covered": 0,
+          "groups_at_similarity_threshold": 1,
+          "groups_closed_transitively": 0,
+          "lowest_similarity_in_group": 0.9052631578947369,
+          "findings_covered_at_threshold": 2,
+          "examples": []
+        }
+      },
+      "openai/gpt-oss-120b": {
+        "findings_with_signature": 43,
+        "distinct_signatures": 40,
+        "unanimous_across_runs": 0.9069767441860465,
+        "within_rule_identical_pair_share": 0.0,
+        "within_rule_close_pair_share": 0.0,
+        "within_rule_pairs": 2,
+        "within_rule_mean_similarity": 0.6933667083854819,
+        "per_rule": [
+          {
+            "rule": "error-prone::EqualsGetClass",
+            "findings": 2,
+            "distinct_signatures": 2,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.7058823529411765
+          },
+          {
+            "rule": "spotbugs::UC_USELESS_CONDITION",
+            "findings": 2,
+            "distinct_signatures": 2,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.6808510638297872
+          }
+        ],
+        "cross_tool_merges": {
+          "signatures": 3,
+          "findings_covered": 6,
+          "groups_at_similarity_threshold": 4,
+          "groups_closed_transitively": 0,
+          "lowest_similarity_in_group": 0.8333333333333334,
+          "findings_covered_at_threshold": 9,
+          "examples": [
+            {
+              "signature": "exception created but not thrown",
+              "tools": [
+                "error-prone",
+                "spotbugs"
+              ],
+              "findings": 2
+            },
+            {
+              "signature": "missing break in switch case",
+              "tools": [
+                "error-prone",
+                "sonarqube"
+              ],
+              "findings": 2
+            },
+            {
+              "signature": "class overrides equals without overriding hashcode",
+              "tools": [
+                "error-prone",
+                "sonarqube"
+              ],
+              "findings": 2
+            }
+          ]
+        }
+      },
+      "gpt-5.6-luna": {
+        "findings_with_signature": 43,
+        "distinct_signatures": 42,
+        "unanimous_across_runs": 0.13953488372093023,
+        "within_rule_identical_pair_share": 0.0,
+        "within_rule_close_pair_share": 0.0,
+        "within_rule_pairs": 2,
+        "within_rule_mean_similarity": 0.5536723163841808,
+        "per_rule": [
+          {
+            "rule": "error-prone::EqualsGetClass",
+            "findings": 2,
+            "distinct_signatures": 2,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.6666666666666666
+          },
+          {
+            "rule": "spotbugs::UC_USELESS_CONDITION",
+            "findings": 2,
+            "distinct_signatures": 2,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.4406779661016949
+          }
+        ],
+        "cross_tool_merges": {
+          "signatures": 1,
+          "findings_covered": 2,
+          "groups_at_similarity_threshold": 3,
+          "groups_closed_transitively": 0,
+          "lowest_similarity_in_group": 0.8135593220338984,
+          "findings_covered_at_threshold": 6,
+          "examples": [
+            {
+              "signature": "ignored substring return value",
+              "tools": [
+                "error-prone",
+                "sonarqube"
+              ],
+              "findings": 2
+            }
+          ]
+        }
+      },
+      "openai/gpt-oss-20b": {
+        "findings_with_signature": 43,
+        "distinct_signatures": 42,
+        "unanimous_across_runs": 0.046511627906976744,
+        "within_rule_identical_pair_share": 0.5,
+        "within_rule_close_pair_share": 1.0,
+        "within_rule_pairs": 2,
+        "within_rule_mean_similarity": 0.8333333333333333,
+        "per_rule": [
+          {
+            "rule": "error-prone::EqualsGetClass",
+            "findings": 2,
+            "distinct_signatures": 2,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.6666666666666666
+          },
+          {
+            "rule": "spotbugs::UC_USELESS_CONDITION",
+            "findings": 2,
+            "distinct_signatures": 1,
+            "identical_pair_share": 1.0,
+            "mean_similarity": 1.0
+          }
+        ],
+        "cross_tool_merges": {
+          "signatures": 0,
+          "findings_covered": 0,
+          "groups_at_similarity_threshold": 0,
+          "groups_closed_transitively": 0,
+          "lowest_similarity_in_group": null,
+          "findings_covered_at_threshold": 0,
+          "examples": []
+        }
+      },
+      "claude-sonnet-5": {
+        "findings_with_signature": 43,
+        "distinct_signatures": 38,
+        "unanimous_across_runs": 0.023255813953488372,
+        "within_rule_identical_pair_share": 0.5,
+        "within_rule_close_pair_share": 1.0,
+        "within_rule_pairs": 2,
+        "within_rule_mean_similarity": 0.6203007518796992,
+        "per_rule": [
+          {
+            "rule": "error-prone::EqualsGetClass",
+            "findings": 2,
+            "distinct_signatures": 1,
+            "identical_pair_share": 1.0,
+            "mean_similarity": 1.0
+          },
+          {
+            "rule": "spotbugs::UC_USELESS_CONDITION",
+            "findings": 2,
+            "distinct_signatures": 2,
+            "identical_pair_share": 0.0,
+            "mean_similarity": 0.24060150375939848
+          }
+        ],
+        "cross_tool_merges": {
+          "signatures": 4,
+          "findings_covered": 8,
+          "groups_at_similarity_threshold": 6,
+          "groups_closed_transitively": 0,
+          "lowest_similarity_in_group": 0.8,
+          "findings_covered_at_threshold": 14,
+          "examples": [
+            {
+              "signature": "comparable class missing consistent equals override",
+              "tools": [
+                "sonarqube",
+                "spotbugs"
+              ],
+              "findings": 2
+            },
+            {
+              "signature": "equals overridden without matching hashcode override",
+              "tools": [
+                "sonarqube",
+                "spotbugs"
+              ],
+              "findings": 2
+            },
+            {
+              "signature": "ignored return value of immutable string method call",
+              "tools": [
+                "sonarqube",
+                "spotbugs"
+              ],
+              "findings": 2
+            },
+            {
+              "signature": "exception object constructed but never thrown",
+              "tools": [
+                "error-prone",
+                "spotbugs"
+              ],
+              "findings": 2
+            }
+          ]
+        }
+      }
+    },
+    "reference_grouping": {
+      "findings": 43,
+      "groups_by_rule": 41,
+      "groups_by_rule_and_file": 43
+    }
+  },
+  "H6": {
+    "main_repetition": 0,
+    "missing_models": [],
+    "models": {},
+    "ablation_run": "007_jetty-no-code"
+  },
+  "holm_family": {
+    "raw": {
+      "H2/cochran": 0.021548922553872307,
+      "H2/naive/claude-opus-5": 4.999750012499375e-05,
+      "H2/naive/gpt-5.6-terra": 4.999750012499375e-05,
+      "H2/naive/qwen3.5:9b": 4.999750012499375e-05,
+      "H2/naive/openai/gpt-oss-120b": 4.999750012499375e-05,
+      "H2/naive/gpt-5.6-luna": 4.999750012499375e-05,
+      "H2/naive/openai/gpt-oss-20b": 4.999750012499375e-05,
+      "H2/naive/claude-sonnet-5": 4.999750012499375e-05,
+      "H4/claude-opus-5": 1.0,
+      "H4/gpt-5.6-terra": 0.7853107344632768,
+      "H4/qwen3.5:9b": 1.0,
+      "H4/openai/gpt-oss-120b": 1.0,
+      "H4/gpt-5.6-luna": 1.0,
+      "H4/openai/gpt-oss-20b": 1.0,
+      "H4/claude-sonnet-5": 0.5771711414429278
+    },
+    "adjusted": {
+      "H2/cochran": 0.17239138043097846,
+      "H2/naive/claude-opus-5": 0.0007499625018749063,
+      "H2/naive/gpt-5.6-terra": 0.0007499625018749063,
+      "H2/naive/qwen3.5:9b": 0.0007499625018749063,
+      "H2/naive/openai/gpt-oss-120b": 0.0007499625018749063,
+      "H2/naive/gpt-5.6-luna": 0.0007499625018749063,
+      "H2/naive/openai/gpt-oss-20b": 0.0007499625018749063,
+      "H2/naive/claude-sonnet-5": 0.0007499625018749063,
+      "H4/claude-opus-5": 1.0,
+      "H4/gpt-5.6-terra": 1.0,
+      "H4/qwen3.5:9b": 1.0,
+      "H4/openai/gpt-oss-120b": 1.0,
+      "H4/gpt-5.6-luna": 1.0,
+      "H4/openai/gpt-oss-20b": 1.0,
+      "H4/claude-sonnet-5": 1.0
+    },
+    "size": 15
+  }
+}

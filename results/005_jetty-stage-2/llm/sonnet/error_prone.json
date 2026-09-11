@@ -1,0 +1,1362 @@
+{
+  "model": "claude-sonnet-5",
+  "tool": "error-prone",
+  "num_runs": 3,
+  "runs_per_invocation": 3,
+  "source_root": "jetty.project",
+  "call_parameters": {
+    "temperature": null,
+    "concurrency": 3,
+    "response_format": "json_schema",
+    "max_tokens": 8192,
+    "max_retries": 6,
+    "base_url": "https://api.anthropic.com"
+  },
+  "system_prompt_variant": "jetty",
+  "system_prompt_sha256": "b5b634e0a9109c59",
+  "user_prompt_sha256": "3963ac13371abed5",
+  "timestamp": "2026-08-15T08:05:24.966532+00:00",
+  "updated_at": "2026-08-15T08:05:24.966532+00:00",
+  "findings": [
+    {
+      "finding_id": 0,
+      "type": "CatchAndPrintStackTrace",
+      "sourcefile": "JettyLoggerFactory.java",
+      "start_line": "235",
+      "message": "Logging or rethrowing exceptions should usually be preferred to catching and calling printStackTrace",
+      "tool_specific": {
+        "column": "17"
+      },
+      "runs": [
+        {
+          "reasoning": "The code catches Exception and calls e.printStackTrace() instead of logging or rethrowing, exactly the pattern the rule flags. While the code comment explains that ordinary SLF4J logging cannot be used here (since this class implements the logging system itself), printStackTrace still only writes to stderr, which may be redirected or lost in production and loses structured context; alternatives like using java.util.logging directly or rethrowing as a RuntimeException remain available. The claim that logging/rethrowing is usually preferable to printStackTrace is still materially valid advice for this code, even though the specific constraints of being a logger factory make the fix less obvious.",
+          "is_true_positive": true,
+          "confidence": 0.6,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "exception swallowed via printStackTrace instead of logging or rethrowing",
+          "developer_explanation": "This catch block calls printStackTrace() instead of logging the exception or rethrowing it, which means the error information only goes to stderr and can easily be lost or ignored in production. Even though this class can't use the normal SLF4J logging (since it is the logging system itself), consider using java.util.logging or another mechanism, or rethrowing as an unchecked exception, so the failure is properly recorded and not silently discarded.",
+          "run": 1,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 4580,
+            "output_tokens": 1084,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 13.259
+        },
+        {
+          "reasoning": "The flagged line does catch an exception and call e.printStackTrace() instead of logging it or rethrowing it, which is exactly the pattern the rule targets. The inline comment explains this is a logging bootstrap class where a proper logger isn't available, but that context doesn't change the fact that printStackTrace() writes uncontrollably to stderr and silently swallows the exception without any structured handling, which is the real issue the rule flags. The claim behind the warning (printStackTrace is a poor substitute for logging/rethrowing) is materially true for this code.",
+          "is_true_positive": true,
+          "confidence": 0.75,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "exception printStackTrace instead of logging or rethrowing",
+          "developer_explanation": "This catch block swallows the exception and dumps its stack trace directly to standard error instead of logging it through a proper mechanism or rethrowing it. Even in a logging bootstrap class where a full logger isn't available yet, printStackTrace() gives no control over output destination and makes the failure easy to miss in production. Consider wrapping in a runtime exception, using a minimal fallback logger, or at least writing to a well-defined stream with context.",
+          "run": 2,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 4580,
+            "output_tokens": 788,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 8.525
+        },
+        {
+          "reasoning": "The code catches Exception and calls e.printStackTrace() at line 235 (and similarly at 263), matching exactly the pattern the rule targets. While the comment explains that logging isn't available in this context (this class implements the logger factory itself), printStackTrace() still writes to System.err in an uncontrolled way that could be lost or intermixed with other output, and alternatives like using a static bootstrap logger or System.err.println with more context exist. The claim that logging/rethrowing is generally preferable over printStackTrace is materially accurate for this code.",
+          "is_true_positive": true,
+          "confidence": 0.72,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "exception stack trace printed instead of logged or rethrown",
+          "developer_explanation": "The catch block calls printStackTrace() on the caught exception instead of logging it through a proper logging mechanism or rethrowing it. Even though this is inside the logging factory itself and normal logging isn't easily available here, printStackTrace() writes directly to System.err, which can be lost, buried, or misconfigured in production and isn't as flexible as a fallback logging call. Consider using a bootstrap/fallback logger or at least writing a more structured error message instead of relying on printStackTrace().",
+          "run": 3,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 4580,
+            "output_tokens": 880,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 10.325
+        }
+      ],
+      "original_finding_index": 6
+    },
+    {
+      "finding_id": 1,
+      "type": "LockNotBeforeTry",
+      "sourcefile": "Blocker.java",
+      "start_line": "422",
+      "message": "Prefer locking *immediately* before the try block which releases the lock to avoid the possibility of any intermediate statements throwing.",
+      "tool_specific": {
+        "column": "27"
+      },
+      "runs": [
+        {
+          "reasoning": "The statement between _lock.lock() and the try block is 'Throwable result;', a bare local variable declaration with no initializer. Such a declaration cannot throw at runtime, so the specific risk the rule describes—an intermediate statement throwing and leaving the lock permanently held because the associated unlock() never runs—cannot occur in this exact code. The rule's generic pattern matched syntactically, but the concrete claim about a throwing intermediate statement does not hold here.",
+          "is_true_positive": false,
+          "confidence": 0.75,
+          "category": "CONCURRENCY",
+          "issue_signature": "lock acquired with intervening statement before try block",
+          "developer_explanation": "The tool warns that a statement sits between acquiring the lock and the try block that releases it, risking a lock leak if that statement throws. In this case the only intervening line is a bare variable declaration with no initializer, which cannot throw, so there is no actual risk of the lock never being released here.The alarm can be safely dismissed for this code.",
+          "run": 1,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 3954,
+            "output_tokens": 1273,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 14.752
+        },
+        {
+          "reasoning": "The intermediate statement between _lock.lock() and the try block is a bare local variable declaration `Throwable result;` with no initializer expression, so it cannot throw. The rule's stated concern — that an intermediate statement could throw and thus leave the lock held without a matching unlock in a try/finally — does not apply here since no exception can occur from a declaration alone.",
+          "is_true_positive": false,
+          "confidence": 0.85,
+          "category": "CONCURRENCY",
+          "issue_signature": "lock acquired with statement between lock and try block",
+          "developer_explanation": "The tool flags that a statement sits between locking and the try block, warning that if it throws, the lock would never be released. But the statement in question is just a local variable declaration with no initializer, which cannot throw an exception, so there is no actual risk of leaking the lock here.  This alarm can safely be dismissed for this specific case.",
+          "run": 2,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 3954,
+            "output_tokens": 870,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 10.565
+        },
+        {
+          "reasoning": "The statement between lock() and try is `Throwable result;`, a local variable declaration with no initializer, which by the Java language specification cannot throw any exception. The rule's stated concern—that an intermediate statement could throw and cause the lock to leak—therefore does not apply to this specific code, even though the syntactic pattern (lock call not immediately followed by try) is present. This mirrors the earlier method (lines 397-399) which uses the identical safe pattern.",
+          "is_true_positive": false,
+          "confidence": 0.85,
+          "category": "CONCURRENCY",
+          "issue_signature": "lock acquired with non-throwing statement before try block",
+          "developer_explanation": "The lock() call is followed by a bare local variable declaration (`Throwable result;`) before the try block starts. That kind of declaration without an initializer cannot throw an exception, so there is no actual risk of the lock leaking due to an intermediate failure here, and this alert can be safely ignored.",
+          "run": 3,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 3954,
+            "output_tokens": 1291,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 14.317
+        }
+      ],
+      "original_finding_index": 34
+    },
+    {
+      "finding_id": 2,
+      "type": "ClassCanBeStatic",
+      "sourcefile": "WriteFlusher.java",
+      "start_line": "250",
+      "message": "Inner class is non-static but does not reference enclosing class",
+      "tool_specific": {
+        "column": "13"
+      },
+      "runs": [
+        {
+          "reasoning": "The flagged CancellingState class only extends State, stores a callback in a field, and calls the superclass constructor; it never accesses any field or method of the enclosing WriteFlusher instance, so it does not need an implicit outer-class reference. This matches the sibling classes (FailedState, CompletingState, etc.) which are already declared static, confirming CancellingState could likewise be static without behavior change.",
+          "is_true_positive": true,
+          "confidence": 0.9,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "non-static inner class not using outer instance",
+          "developer_explanation": "The CancellingState inner class doesn't use any state or method from its enclosing WriteFlusher instance, so it doesn't need to be a non-static inner class. Making it 'private static class CancellingState' avoids an unnecessary hidden reference to the outer instance, which saves a small amount of memory per instance and makes the class's independence explicit, consistent with the other State subclasses in this file.",
+          "run": 1,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 5078,
+            "output_tokens": 616,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 7.234
+        },
+        {
+          "reasoning": "The flagged class CancellingState only declares a Callback field and a constructor that calls super(StateType.CANCELLING) and assigns the field; it never references any field or method of the enclosing WriteFlusher instance, so it does not need an implicit outer-class reference and could be declared static like its sibling classes (IdleState, FlushingState, FailedState, CompletingState) already are. This matches the rule's claim precisely for the shown code.",
+          "is_true_positive": true,
+          "confidence": 0.9,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "non-static inner class not using enclosing instance",
+          "developer_explanation": "CancellingState is declared as a non-static inner class, but it never touches any field or method of the outer WriteFlusher instance — it only uses its own Callback field. Because of this it silently carries a hidden reference to the enclosing object, wasting a small amount of memory per instance and making its true independence from the outer class less obvious. Declaring it static, like the neighboring PendingState-style classes already are, removes that unnecessary coupling.",
+          "run": 2,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 5078,
+            "output_tokens": 598,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 9.306
+        },
+        {
+          "reasoning": "The flagged CancellingState class body only sets a callback field and calls the superclass constructor with a StateType constant; it never accesses any field or method of the enclosing WriteFlusher instance, so like its sibling State subclasses it can safely be declared static. The tool's claim that this inner class does not reference the enclosing class matches the shown code.",
+          "is_true_positive": true,
+          "confidence": 0.9,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "non-static inner class not using enclosing instance",
+          "developer_explanation": "CancellingState is declared as a non-static inner class, but its constructor and fields never touch anything from the outer WriteFlusher instance. Because it's an inner class it silently carries a hidden reference to the enclosing WriteFlusher, wasting a small amount of memory per instance and obscuring the fact that it's really independent. Declaring it 'private static class CancellingState extends State' (like the sibling PendingState, IdleState, etc. should also be) removes that unnecessary coupling.",
+          "run": 3,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 5078,
+            "output_tokens": 644,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 8.419
+        }
+      ],
+      "original_finding_index": 161
+    },
+    {
+      "finding_id": 3,
+      "type": "UnusedMethod",
+      "sourcefile": "ArrayByteBufferPool.java",
+      "start_line": "811",
+      "message": "Method 'remove' is never used.",
+      "tool_specific": {
+        "column": "14"
+      },
+      "runs": [
+        {
+          "reasoning": "The flagged method 'remove()' in PooledBuffer has package-private visibility and PooledBuffer is itself a private inner class, so its methods are only reachable from within the enclosing outer class's compilation unit, which Error Prone can fully see. The analogous ReservedBuffer.remove() at line 777 is not flagged, which is evidence it is actually invoked somewhere, while this asymmetry suggests PooledBuffer.remove() genuinely lacks a call site in this file rather than both being dispatched polymorphically through a common supertype method (if that were the case, both would be recognized as overrides and both excluded). Without visibility into the rest of the 1183-line file, there remains some chance of a call I cannot see, but the tool's semantic, whole-compilation-unit analysis for this specific check is normally reliable for private/package-private methods restricted to a private enclosing class.",
+          "is_true_positive": true,
+          "confidence": 0.6,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "unused package-private method with no callers",
+          "developer_explanation": "The remove() method defined in this private inner class doesn't appear to be called anywhere in the enclosing class. Since the class itself is private, this method can only be invoked from within this file, and no such call site is visible, so it looks like leftover dead code from a refactor. If it's truly unused, remove it; if it's meant to be called polymorphically through a shared type, double-check that the call site actually exists and uses the right reference.",
+          "run": 1,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 5914,
+            "output_tokens": 6577,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 68.586
+        },
+        {
+          "reasoning": "The flagged method PooledBuffer.remove() (lines 811-814) is a package-private method with no @Override annotation, distinct from the similarly-named ReservedBuffer.remove() in a sibling class — neither appears to override a common supertype method, since PooledBuffer.release() at line 802 does carry @Override while remove() does not. Error Prone's UnusedMethod check operates over the whole compilation unit and specifically excludes methods that override or implement a supertype/interface method, so its flagging this particular method suggests it correctly determined this is a standalone method with no call site anywhere in the file. While the call site could theoretically be outside the shown excerpt (lines 1-660 and 962-1183 are not visible), the absence of any polymorphic dispatch mechanism visible in this snippet and the tool's demonstrated correctness in distinguishing override vs. non-override methods here supports trusting its full-file analysis.",
+          "is_true_positive": true,
+          "confidence": 0.6,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "unused private/package-private method never invoked",
+          "developer_explanation": "The no-argument remove() method defined in this inner class does not appear to be called anywhere in the file, and it is not an override of a method from a parent class or interface. Dead code like this adds maintenance burden and confusion, since a reader may assume it's part of the active lifecycle logic. If it truly isn't called, it should be removed; if it's meant to be invoked externally, verify that the call site exists and wasn't dropped during a refactor.",
+          "run": 2,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 5914,
+            "output_tokens": 6808,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 72.451
+        },
+        {
+          "reasoning": "The flagged method `remove()` is a package-private member of the private nested class `PooledBuffer`, so any caller must reside within this same file; Error Prone's UnusedMethod check is based on full compilation-unit symbol resolution and is generally reliable in this scenario. Within the shown 300-line window there is no call site referencing this specific method (calls seen at lines 662 and 686 target `Pool.Entry.remove()`, not `PooledBuffer.remove()`), and unlike the sibling `ReservedBuffer.remove()` which the tool did not flag, this one was singled out as dead, suggesting a genuine divergence rather than a shared polymorphic contract missed by the tool. Some uncertainty remains because the file has ~1183 lines and only 661-961 are visible, so a caller could theoretically exist outside the shown range, but the tool's whole-file analysis makes that less likely to produce a false alarm.",
+          "is_true_positive": true,
+          "confidence": 0.55,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "unused private method left in class",
+          "developer_explanation": "The `remove()` method defined on the `PooledBuffer` inner class does not appear to be called anywhere in the file, which is scoped to be the only place it could be invoked since the class is private. This looks like leftover dead code, possibly from a refactor where the buffer removal logic was moved to call `entry.remove()` directly instead. Consider removing the method or wiring it back in if it was meant to be invoked during pool cleanup or buffer eviction.",
+          "run": 3,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 5914,
+            "output_tokens": 4394,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 45.528
+        }
+      ],
+      "original_finding_index": 165
+    },
+    {
+      "finding_id": 4,
+      "type": "UnnecessaryLambda",
+      "sourcefile": "ByteArrayEndPoint.java",
+      "start_line": "59",
+      "message": "Returning a lambda from a helper method or saving it in a constant is unnecessary; prefer to implement the functional interface method directly and use a method reference instead.",
+      "tool_specific": {
+        "column": "28"
+      },
+      "runs": [
+        {
+          "reasoning": "The field `_runFillable` stores a lambda that simply delegates to `getFillInterest().fillable()`, and it is used only once, at `execute(_runFillable)`. This is exactly the pattern UnnecessaryLambda targets: instead of keeping a private field holding a trivial lambda, the class could define a private method and pass a method reference at the call site, removing the indirection without changing behavior. Nothing in the shown code indicates this lambda needs identity semantics (e.g., adding/removing as a listener) that would require it to be a stable field reference beyond this single call.",
+          "is_true_positive": true,
+          "confidence": 0.72,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "lambda stored in field instead of method reference",
+          "developer_explanation": "The `_runFillable` field just wraps a call to `getFillInterest().fillable()` in a lambda and is passed to `execute()`. Since it doesn't need to be a stable object identity (like a listener that gets registered/unregistered), you can drop the field and instead define a small private method, then pass a method reference (`this::runFillable`) directly where it's used. This removes an unnecessary field and indirection, making the code slightly clearer.",
+          "run": 1,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 4215,
+            "output_tokens": 900,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 11.248
+        },
+        {
+          "reasoning": "The flagged field `_runFillable` is exactly the pattern the rule targets: a lambda assigned to a private instance field and used only within the class (in `execute(_runFillable)`), rather than being implemented as a private method referenced via a method reference. The lambda captures no local state beyond `this`, so it could indeed be rewritten as a private method invoked with `this::methodName`, which is functionally equivalent and slightly more readable, matching the tool's claim precisely for this code.",
+          "is_true_positive": true,
+          "confidence": 0.75,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "lambda unnecessarily stored in a field instead of method reference",
+          "developer_explanation": "The `_runFillable` field just wraps a call to `getFillInterest().fillable()` in a lambda and stores it as an instance field, but this indirection isn't needed: you can implement the same behavior as a private method and reference it with `this::methodName` at the point of use. This keeps the intent clearer without changing behavior, since the lambda doesn't capture any state beyond `this`.",
+          "run": 2,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 4215,
+            "output_tokens": 1712,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 19.057
+        },
+        {
+          "reasoning": "The field `_runFillable` is a plain non-capturing-of-state lambda that simply forwards to `getFillInterest().fillable()`, is used only once at the call site (`execute(_runFillable)`), and does not exploit any special semantics of being stored as a field (no memoization, no laziness). This matches exactly the pattern Error Prone's UnnecessaryLambda targets: a lambda that could be expressed as a private method and referenced via a method reference at the single call site, with no functional or meaningful performance difference (the surrounding `execute` already allocates a new Thread each call, so any allocation saved by caching the Runnable is negligible). The suggested rewrite is behavior-preserving and simplifies the code.",
+          "is_true_positive": true,
+          "confidence": 0.62,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "lambda stored in field instead of method reference",
+          "developer_explanation": "The `_runFillable` field just wraps a call to `getFillInterest().fillable()` and is only used once, so storing it as a lambda field adds indirection without real benefit. It would be clearer to implement this as a private method and pass a method reference (`this::runFillable`) at the point of use, since the surrounding code already allocates a new Thread per call so the field caching saves nothing meaningful.",
+          "run": 3,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 4215,
+            "output_tokens": 3145,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 32.917
+        }
+      ],
+      "original_finding_index": 171
+    },
+    {
+      "finding_id": 5,
+      "type": "BadInstanceof",
+      "sourcefile": "ByteArrayEndPoint.java",
+      "start_line": "475",
+      "message": "`_buffer` is an instance of RetainableByteBuffer.DynamicCapacity which is a subtype of RetainableByteBuffer.DynamicCapacity, so this is equivalent to a null check.",
+      "tool_specific": {
+        "column": "24"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that Error Prone's static type analysis determined the field _buffer has a declared type identical to RetainableByteBuffer.DynamicCapacity, making the instanceof check tautological (true whenever non-null) rather than a genuine capacity-type check. If that's accurate, isGrowOutput() no longer expresses its intended semantics: it always returns true for any non-null buffer, regardless of whether it is actually a growable buffer type, silently breaking its documented purpose. Error Prone's BadInstanceof check relies on precise type-hierarchy analysis of the compiled types, which is generally reliable, and the snippet gives no evidence contradicting it (the field's declaration isn't shown, but the tool's message explicitly asserts the subtype relationship makes the check redundant).",
+          "is_true_positive": true,
+          "confidence": 0.68,
+          "category": "CORRECTNESS",
+          "issue_signature": "redundant instanceof check equivalent to null check",
+          "developer_explanation": "The instanceof check here doesn't actually distinguish buffer subtypes: because the variable's declared type is already the same class being tested against, the check just reduces to checking for null. This means the method no longer verifies what it's supposed to (whether the buffer is a growable/dynamic-capacity buffer) and will return true for any non-null buffer. Consider changing the field's declared type to a broader interface type so the instanceof check is meaningful again, or replace the check with an explicit null check if that's truly all that's needed.",
+          "run": 1,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 3212,
+            "output_tokens": 1107,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 11.921
+        },
+        {
+          "reasoning": "The class's setGrowOutput() setter is deprecated and unconditionally throws UnsupportedOperationException, indicating the output buffer's growability is no longer configurable and the field _buffer is now always constructed with the concrete DynamicCapacity implementation. Given that, an instanceof check against the buffer's own declared/allocated type does not distinguish between buffer variants — it can only be true when _buffer is non-null, exactly what BadInstanceof flags. This matches the tool's claim that the check degenerates to a null check rather than a meaningful type discrimination.",
+          "is_true_positive": true,
+          "confidence": 0.68,
+          "category": "CORRECTNESS",
+          "issue_signature": "instanceof check against variable's own static type",
+          "developer_explanation": "The instanceof test in isGrowOutput() checks whether _buffer is an instance of the exact type it is already statically declared/constructed as, so this check can never distinguish anything — it only tells you whether _buffer is non-null. Since setGrowOutput() is now unsupported, this method is effectively dead logic disguised as a meaningful state check; replace it with an explicit null check or remove it if grow-output is now always true.",
+          "run": 2,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 3212,
+            "output_tokens": 3686,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 37.039
+        },
+        {
+          "reasoning": "Error Prone's BadInstanceof check relies on the compiler's own type information, and it is reporting that the declared static type of the field `_buffer` is already `RetainableByteBuffer.DynamicCapacity`, not a broader interface such as `RetainableByteBuffer`. That means the `instanceof` test at line 475 can never be false except when `_buffer` is null, so `isGrowOutput()` will always report true (assuming a non-null buffer) even though its evident purpose is to distinguish a fixed-capacity buffer from a dynamically growable one. This is a genuine correctness problem: the check no longer does what its name implies, and a plain null check would behave identically.",
+          "is_true_positive": true,
+          "confidence": 0.68,
+          "category": "CORRECTNESS",
+          "issue_signature": "instanceof check against a type identical to the variable's static type",
+          "developer_explanation": "The variable being tested is already statically typed as the exact subclass you are checking for with instanceof, so the check can never distinguish anything other than null vs non-null. As a result this method always returns true for a non-null buffer, defeating its apparent purpose of telling growable buffers apart from fixed ones. Either change the field's declared type to the general interface so the check is meaningful, or replace this with an explicit null check if that is really all that's needed.",
+          "run": 3,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 3212,
+            "output_tokens": 1740,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 17.535
+        }
+      ],
+      "original_finding_index": 183
+    },
+    {
+      "finding_id": 6,
+      "type": "JavaTimeDefaultTimeZone",
+      "sourcefile": "ManagedSelector.java",
+      "start_line": "474",
+      "message": "ZonedDateTime.now() is not allowed because it silently uses the system default time-zone. You must pass an explicit time-zone (e.g., ZoneId.of(\"America/Los_Angeles\")) to this method.",
+      "tool_specific": {
+        "column": "92"
+      },
+      "runs": [
+        {
+          "reasoning": "The flagged line does call ZonedDateTime.now() with no time-zone argument, so it does implicitly use the JVM's default zone, exactly as the warning states; this is a factually accurate description of the code. Although the value is used only for a debug dump timestamp and the ISO_OFFSET_DATE_TIME formatter will still include the offset, the underlying claim — that the code silently depends on the ambient system zone rather than an explicit one — is correct and matches the rule's intent of avoiding hidden, environment-dependent behavior.",
+          "is_true_positive": true,
+          "confidence": 0.72,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "date-time obtained using implicit system default time zone",
+          "developer_explanation": "This call to ZonedDateTime.now() relies on the JVM's default time zone instead of specifying one explicitly, so the timestamp produced can differ depending on where or how the process is run, and code that depends on it becomes harder to test deterministically. Passing an explicit ZoneId (e.g., ZoneId.of(\"UTC\") or ZoneOffset.UTC) makes the behavior predictable and independent of host configuration.",
+          "run": 1,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 5202,
+            "output_tokens": 1392,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 15.879
+        },
+        {
+          "reasoning": "The flagged call `ZonedDateTime.now()` indeed uses the JVM's default time-zone implicitly, exactly as the rule states, and the same pattern also appears at line 463 in the same method. While the timestamp is only used for a diagnostic dump, the pattern is still an implicit, non-explicit dependency on the system's default zone, which is what the Error Prone rule specifically targets for consistency and testability reasons. The rule's underlying claim about the code's behavior (silent dependency on system default zone) is factually accurate here, so this is not a false alarm about the code's actual behavior.",
+          "is_true_positive": true,
+          "confidence": 0.75,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "implicit reliance on system default time zone",
+          "developer_explanation": "The call to ZonedDateTime.now() implicitly uses whatever time zone the JVM happens to be running in, rather than an explicit zone. This can make timestamps inconsistent or hard to reason about across environments and complicates testing; consider passing ZoneId.systemDefault() or a specific zone explicitly to make the intent clear.",
+          "run": 2,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 5202,
+            "output_tokens": 1345,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 15.076
+        },
+        {
+          "reasoning": "The flagged line does call ZonedDateTime.now() without an explicit ZoneId argument, so it does rely on the JVM's system default time zone, exactly as the rule states. This is a diagnostic dump timestamp, but the rule's factual claim about the code's behavior (implicit dependence on system default zone) is accurate, and such implicit dependence can produce inconsistent or ambiguous timestamps if the JVM's default zone differs across environments or changes at runtime.",
+          "is_true_positive": true,
+          "confidence": 0.75,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "date-time obtained using implicit system default time zone",
+          "developer_explanation": "The call to ZonedDateTime.now() here doesn't specify a time zone, so it silently uses whatever the JVM's default zone happens to be, which can vary between machines or change at runtime. For consistent, reproducible timestamps (even for debug dumps), pass an explicit ZoneId such as ZoneId.of(\"UTC\") or ZoneId.systemDefault() if that's intentional.",
+          "run": 3,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 5202,
+            "output_tokens": 1030,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 11.293
+        }
+      ],
+      "original_finding_index": 204
+    },
+    {
+      "finding_id": 7,
+      "type": "JavaLangClash",
+      "sourcefile": "HttpException.java",
+      "start_line": "83",
+      "message": "org.eclipse.jetty.http.HttpException.RuntimeException clashes with java.lang.RuntimeException",
+      "tool_specific": {
+        "column": "5"
+      },
+      "runs": [
+        {
+          "reasoning": "The code defines an inner class named RuntimeException that extends java.lang.RuntimeException, and the same file already needs to repeatedly use the fully-qualified java.lang.RuntimeException to disambiguate from this new type (e.g., lines 36, 42, 98, 103, 105). This confirms the clash is real and causes exactly the kind of confusion the rule warns about, requiring careful qualification throughout the codebase whenever the standard java.lang.RuntimeException is meant instead of this custom type.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "custom class shadows java.lang exception class name",
+          "developer_explanation": "Naming this inner class 'RuntimeException' causes it to shadow java.lang.RuntimeException within the interface, forcing every reference to the standard exception type to be fully qualified as java.lang.RuntimeException to avoid ambiguity, as already seen multiple times in this very file. This increases the risk of confusion or accidental misuse for anyone reading or extending this code; consider a more distinct name such as HttpRuntimeException.",
+          "run": 1,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 3643,
+            "output_tokens": 645,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 7.273
+        },
+        {
+          "reasoning": "The nested class HttpException.RuntimeException does have the same simple name as java.lang.RuntimeException, and the file itself is forced to use the fully-qualified java.lang.RuntimeException in several places (lines 36, 42, and the extends clause) to disambiguate, which is exactly the confusion this rule is meant to flag. This is a deliberate design choice in Jetty, but the warning's factual claim — that the type name collides with java.lang.RuntimeException and can cause reader/tooling confusion — is materially correct for this code.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "nested class shadows a java.lang exception name",
+          "developer_explanation": "Your nested class HttpException.RuntimeException has the exact same simple name as java.lang.RuntimeException, so anywhere inside this interface an unqualified 'RuntimeException' refers to your own class, not the standard one. You already have to write java.lang.RuntimeException explicitly in several places to work around this, which is a sign the naming is confusing; consider a distinct name to avoid mistakes for future readers or tooling.",
+          "run": 2,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 3643,
+            "output_tokens": 851,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 10.305
+        },
+        {
+          "reasoning": "The nested class is literally named RuntimeException and extends java.lang.RuntimeException, and the file itself must use the fully-qualified java.lang.RuntimeException at lines 36, 42 and 44 to disambiguate from the nested type — direct evidence that the name shadows the JDK class within this scope. This is exactly the pattern the JavaLangClash rule targets: a type name that collides with a core java.lang class name, creating a real risk of confusion or accidental misuse for anyone reading or extending this code.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "nested class named same as java.lang class",
+          "developer_explanation": "The nested class HttpException.RuntimeException shares its simple name with java.lang.RuntimeException, so unqualified references to RuntimeException inside this file (and by anyone extending it) can be ambiguous or misleading; the code already needs to fully qualify java.lang.RuntimeException to avoid picking up the wrong type. Consider a distinct name (e.g. HttpRuntimeException) to avoid this kind of confusion for future maintainers.",
+          "run": 3,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 3643,
+            "output_tokens": 861,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 10.24
+        }
+      ],
+      "original_finding_index": 207
+    },
+    {
+      "finding_id": 8,
+      "type": "EnumOrdinal",
+      "sourcefile": "Generator.java",
+      "start_line": "50",
+      "message": "You should almost never invoke the Enum.ordinal() method.",
+      "tool_specific": {
+        "column": "76"
+      },
+      "runs": [
+        {
+          "reasoning": "The code calls FrameType.CONTINUATION.ordinal() to size an array, which implicitly assumes that the enum's declaration order exactly mirrors the HTTP/2 frame type codes used elsewhere via getType(). This is exactly the fragile pattern the rule warns about: adding, removing, or reordering enum constants would silently change the array size without any compiler error, potentially causing incorrect behavior or ArrayIndexOutOfBoundsException even though nothing about getType() changed. The rest of the code deliberately uses explicit getType() values for indexing, showing the class already has a stable numeric identifier that should be used instead of relying on ordinal position.",
+          "is_true_positive": true,
+          "confidence": 0.7,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "array sizing or logic depends on enum ordinal position",
+          "developer_explanation": "You're using FrameType.CONTINUATION.ordinal() to determine the size of the generators array, which silently assumes the enum's declared order matches the frame type codes used everywhere else via getType(). If someone reorders or inserts a new FrameType constant, this array size could become wrong without any compile-time warning, leading to subtle bugs. Prefer computing the array size from getType() values (e.g., the maximum getType() + 1) instead of relying on ordinal().",
+          "run": 1,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 2614,
+            "output_tokens": 1620,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 17.274
+        },
+        {
+          "reasoning": "The code sizes the generators array using FrameType.CONTINUATION.ordinal() but then indexes into that array using a separate FrameType.getType() method, meaning the array's correctness depends on ordinal() staying in sync with getType() for all enum constants. This is exactly the fragility the rule warns about: any future reordering, insertion, or removal of FrameType constants (especially adding a constant after CONTINUATION but with a getType() value that doesn't fit the sizing assumption) would silently produce an incorrectly sized array or an ArrayIndexOutOfBoundsException, without any compiler warning. Because the code visibly relies on ordinal() as an implicit constant tied to enum declaration order for structural sizing rather than treating it as a semantic value, the warning's underlying claim is materially valid here.",
+          "is_true_positive": true,
+          "confidence": 0.65,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "array sizing or indexing relies on enum ordinal value",
+          "developer_explanation": "Sizing the generators array using FrameType.CONTINUATION.ordinal() while indexing it elsewhere with a separate FrameType.getType() method creates a hidden dependency on the enum's declaration order matching its type codes. If the enum constants are ever reordered or a new one is inserted, this array could silently end up too small or misaligned with the getType() values, causing an out-of-bounds error at runtime. It's safer to size and index the array based on an explicit, stable value (like a dedicated constant or the maximum getType() value) rather than relying on ordinal().",
+          "run": 2,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 2614,
+            "output_tokens": 1210,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 14.741
+        },
+        {
+          "reasoning": "The code sizes the generators array using FrameType.CONTINUATION.ordinal() while indexing into that array everywhere else via FrameType.getType(), which implicitly assumes ordinal() and getType() always agree; this coupling to declaration order is exactly the fragile pattern the rule warns about, since any future reordering or divergence between the ordinal and the FrameType's own type-code field would silently break the array sizing without a compile error. The tool's claim that ordinal() usage here is risky and should generally be avoided in favor of an explicit method is materially correct for this code.",
+          "is_true_positive": true,
+          "confidence": 0.62,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "array sized or indexed using enum ordinal method",
+          "developer_explanation": "Sizing the generators array with FrameType.CONTINUATION.ordinal() ties the array's size to the declaration order of the enum, while the array is actually indexed elsewhere using getType(). If these two ever diverge (e.g., someone reorders the enum constants or getType() is changed to not mirror ordinal()), the array could be undersized or misindexed with no compiler warning. It would be safer to derive the size from getType() (e.g., via a max-type constant) rather than relying on ordinal().",
+          "run": 3,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 2614,
+            "output_tokens": 1185,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 13.455
+        }
+      ],
+      "original_finding_index": 357
+    },
+    {
+      "finding_id": 9,
+      "type": "InconsistentCapitalization",
+      "sourcefile": "HTTP2StreamEndPoint.java",
+      "start_line": "558",
+      "message": "Found the field 'endpoint' with the same name as the parameter 'endPoint' but with different capitalization.",
+      "tool_specific": {
+        "column": "62"
+      },
+      "runs": [
+        {
+          "reasoning": "The field is named 'endpoint' (all lowercase) while the constructor parameter is named 'endPoint' (camelCase with capital P), which is exactly the inconsistent capitalization the rule detects. This kind of naming mismatch can confuse readers and IDEs (e.g., autocomplete, refactoring tools) into thinking these are unrelated identifiers when they represent the same concept. The claim is accurate for the shown code.",
+          "is_true_positive": true,
+          "confidence": 0.9,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "field and parameter names differ only in capitalization",
+          "developer_explanation": "The field 'endpoint' and the constructor parameter 'endPoint' represent the same concept but are capitalized differently, which can be confusing to readers and tooling. Consider renaming one to match the other's capitalization for consistency.",
+          "run": 1,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 3110,
+            "output_tokens": 398,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 4.459
+        },
+        {
+          "reasoning": "The field is named 'endpoint' (all lowercase) while the constructor parameter is named 'endPoint' (camelCase with capital P), which is exactly the inconsistency the rule describes and is visible in the shown code (lines 555 and 558). This does not cause a functional bug since the assignment on line 561 is correct, but the inconsistent naming can confuse readers and future maintainers who expect matching names.",
+          "is_true_positive": true,
+          "confidence": 0.92,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "inconsistent capitalization between field and parameter names",
+          "developer_explanation": "The field 'endpoint' and the constructor parameter 'endPoint' differ only in capitalization, which can make the code confusing to read and increases the risk of typos or mix-ups during future edits. Consider renaming one of them so both use the same casing convention.",
+          "run": 2,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 3110,
+            "output_tokens": 424,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 4.889
+        },
+        {
+          "reasoning": "The field is named 'endpoint' while the constructor parameter with the same conceptual name is 'endPoint', differing only in capitalization of the internal 'P'. This is exactly the pattern the rule targets and can cause confusion or subtle bugs when readers assume the two refer to differently-named entities or when auto-complete/refactoring tools get confused. The code compiles and works correctly here, but the naming inconsistency is real and matches the warning's claim.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "field and parameter share name but differ in capitalization",
+          "developer_explanation": "The field 'endpoint' and the constructor parameter 'endPoint' are the same identifier except for capitalization, which is confusing and easy to typo or misread. Consider renaming one of them to match the other's casing for consistency.",
+          "run": 3,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 3110,
+            "output_tokens": 376,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 4.162
+        }
+      ],
+      "original_finding_index": 363
+    },
+    {
+      "finding_id": 10,
+      "type": "MalformedInlineTag",
+      "sourcefile": "HeaderBlockParser.java",
+      "start_line": "53",
+      "message": "The correct syntax to open this inline tag is {@code.",
+      "tool_specific": {
+        "column": "15"
+      },
+      "runs": [
+        {
+          "reasoning": "Line 53 contains \"@{code blockLength}\" instead of the correct Javadoc inline tag syntax \"{@code blockLength}\", which is a genuine typo that will not render as intended by the Javadoc tool. The tool correctly identifies this malformed inline tag syntax.",
+          "is_true_positive": true,
+          "confidence": 0.97,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "malformed javadoc inline tag syntax",
+          "developer_explanation": "The Javadoc comment has the braces and tag name reversed: it reads '@{code blockLength}' instead of '{@code blockLength}'. This typo means the tag won't be recognized correctly by Javadoc tooling and won't render as monospaced code. Fix it to '{@code blockLength}'.",
+          "run": 1,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 3283,
+            "output_tokens": 320,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 5.002
+        },
+        {
+          "reasoning": "The javadoc comment at line 53 reads '@{code blockLength}' with the @ symbol placed before the opening brace, instead of the correct '{@code blockLength}' syntax used elsewhere in the same comment for {@code buffer}. This is a genuine typo that will cause Javadoc to render the tag incorrectly instead of formatting blockLength as code.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "malformed javadoc inline tag syntax",
+          "developer_explanation": "In the Javadoc comment above the parse method, the inline tag is written as '@{code blockLength}' but the correct syntax is '{@code blockLength}' with the @ inside the braces. As written, Javadoc won't render 'blockLength' as code text; fix the tag ordering to match the correctly-written '{@code buffer}' right after it.",
+          "run": 2,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 3283,
+            "output_tokens": 386,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 5.941
+        },
+        {
+          "reasoning": "The Javadoc comment on line 53 contains the malformed tag \"@{code blockLength}\" where the @ symbol appears before the opening brace instead of inside it; the correct syntax is \"{@code blockLength}\" as correctly used later in the same line for \"buffer\". This is a genuine typo that would cause the tag to render incorrectly as literal text in generated documentation.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "malformed javadoc inline tag syntax",
+          "developer_explanation": "In the Javadoc comment above the parse method, the tag is written as \"@{code blockLength}\" but the correct syntax is \"{@code blockLength}\" (the @ symbol goes inside the braces). This typo will cause the tag to render as literal text instead of being formatted as code in generated documentation. Fix the order to \"{@code blockLength}\" to match the correctly-formatted \"{@code buffer}\" tag later in the same line.",
+          "run": 3,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 3283,
+            "output_tokens": 450,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 5.627
+        }
+      ],
+      "original_finding_index": 365
+    },
+    {
+      "finding_id": 11,
+      "type": "InlineMeSuggester",
+      "sourcefile": "Response.java",
+      "start_line": "566",
+      "message": "This deprecated API looks inlineable. If you'd like the body of the API to be automatically inlined to its callers, please annotate it with @InlineMe. NOTE: the suggested fix makes the method final if it was not already.",
+      "tool_specific": {
+        "column": "17"
+      },
+      "runs": [
+        {
+          "reasoning": "The flagged method replaceCookie is marked @Deprecated and its body consists of a single delegating call to putCookie(response, cookie), which is exactly the pattern the InlineMeSuggester rule targets: a deprecated API whose implementation is trivial enough to be mechanically inlined at call sites. The suggested replacement string accurately reflects the method body shown. There is no evidence in the snippet that inlining would be incorrect or that the method has additional side effects beyond the delegation.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "deprecated method with trivial delegating body lacking inline annotation",
+          "developer_explanation": "This deprecated method just forwards to putCookie(response, cookie) in one line, which makes it a good candidate for the @InlineMe annotation so that tooling can automatically rewrite callers to use the replacement method directly. Adding the annotation costs little and helps downstream migration off the deprecated API. This is a suggestion for tooling support, not a bug, but it accurately reflects the code's inlineable structure.",
+          "run": 1,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 5998,
+            "output_tokens": 592,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 6.524
+        },
+        {
+          "reasoning": "The flagged method replaceCookie is annotated @Deprecated and its body consists of exactly one statement that delegates to putCookie(response, cookie) with identical parameter types, which is precisely the pattern InlineMeSuggester targets: a deprecated API whose implementation could be mechanically inlined at call sites via an @InlineMe annotation. The suggested replacement string matches the actual body verbatim, so the claim is accurate for this code.",
+          "is_true_positive": true,
+          "confidence": 0.9,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "deprecated method with trivial delegating body lacking inline annotation",
+          "developer_explanation": "This deprecated method's entire body is a single call to putCookie with the same arguments, which is exactly the kind of trivial wrapper that can be annotated with @InlineMe so tooling can automatically rewrite callers to use putCookie directly instead of the deprecated method. Adding the annotation makes future removal of this deprecated method easier and keeps call sites up to date automatically.",
+          "run": 2,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 5998,
+            "output_tokens": 580,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 7.089
+        },
+        {
+          "reasoning": "The flagged method replaceCookie is annotated @Deprecated and its body consists of a single delegating call to putCookie(response, cookie) with matching parameters, which is precisely the forwarding-method pattern the InlineMeSuggester rule targets. Annotating it with @InlineMe would let tooling automatically replace callers' usages with the inlined call, which is a legitimate suggestion here since the method has no additional logic. This is a real, actionable maintainability observation, not a misfire.",
+          "is_true_positive": true,
+          "confidence": 0.9,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "deprecated single-statement forwarding method missing inline annotation",
+          "developer_explanation": "The deprecated replaceCookie method just forwards to putCookie with the same arguments, so it is a perfect candidate for an @InlineMe annotation that lets tooling automatically rewrite callers to use putCookie directly instead of the deprecated wrapper. Adding the annotation makes future removal of the deprecated method easier and keeps call sites up to date automatically.",
+          "run": 3,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 5998,
+            "output_tokens": 504,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 6.179
+        }
+      ],
+      "original_finding_index": 429
+    },
+    {
+      "finding_id": 12,
+      "type": "NarrowCalculation",
+      "sourcefile": "AbstractSessionDataStore.java",
+      "start_line": "298",
+      "message": "This product of integers could overflow before being implicitly cast to a long.",
+      "tool_specific": {
+        "column": "65"
+      },
+      "runs": [
+        {
+          "reasoning": "The code computes `10 * _gracePeriodSec` using int arithmetic (since 10 is an int literal and _gracePeriodSec is declared as an int field) before this int result is implicitly widened to long as an argument to TimeUnit.SECONDS.toMillis. Because _gracePeriodSec is settable via a public setter with no bounds, sufficiently large values (over ~214 million) would cause the multiplication to overflow before the widening conversion occurs, producing an incorrect result. This matches the tool's claim precisely: the overflow happens in int space prior to the implicit cast to long, and the field is not constrained to prevent it.",
+          "is_true_positive": true,
+          "confidence": 0.82,
+          "category": "CORRECTNESS",
+          "issue_signature": "integer multiplication overflow before widening to long",
+          "developer_explanation": "The expression `10 * _gracePeriodSec` is evaluated using 32-bit int arithmetic before it's passed to a method expecting a long, so if _gracePeriodSec is large enough, the multiplication overflows and produces a wrong (possibly negative) result. Since _gracePeriodSec is a plain int field settable via a public setter with no upper bound enforced, this is a real risk of incorrect timing calculations. Casting one of the operands to long before multiplying (e.g., `10L * _gracePeriodSec`) avoids the overflow.",
+          "run": 1,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 4227,
+            "output_tokens": 986,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 10.772
+        },
+        {
+          "reasoning": "The flagged line computes `10 * _gracePeriodSec` using int arithmetic (both operands are int), and this product is only widened to long afterward when passed to TimeUnit.SECONDS.toMillis(long). Since _gracePeriodSec is a mutable int field exposed via a public setter with no bounds checking, a caller could set it to a large enough value (roughly > Integer.MAX_VALUE/10) to cause the multiplication to overflow before the implicit widening occurs, producing an incorrect (possibly negative) result. This matches the rule's claim precisely: the overflow is a real, code-permitted possibility given the unconstrained int field, even though it requires an unusually large configured value to trigger.",
+          "is_true_positive": true,
+          "confidence": 0.75,
+          "category": "CORRECTNESS",
+          "issue_signature": "integer multiplication overflow before widening to long",
+          "developer_explanation": "The expression `10 * _gracePeriodSec` is evaluated using 32-bit int arithmetic before the result is passed to a method expecting a long, so if _gracePeriodSec is ever set to a large value the multiplication can silently overflow and produce a wrong (or negative) millisecond value. Since _gracePeriodSec is settable via a public setter with no range validation, this is a latent correctness risk. Cast one operand to long (e.g. `10L * _gracePeriodSec`) before multiplying to avoid the overflow.",
+          "run": 2,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 4227,
+            "output_tokens": 1151,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 11.789
+        },
+        {
+          "reasoning": "The code computes `10 * _gracePeriodSec` using int arithmetic before the result is implicitly widened to long as the argument to TimeUnit.SECONDS.toMillis(long). Since _gracePeriodSec is an int field settable via setGracePeriodSec(int), a sufficiently large value (greater than roughly Integer.MAX_VALUE/10) would cause this multiplication to overflow silently before being converted to long, producing an incorrect (possibly negative) result. This is exactly the overflow-before-widening pattern the rule describes, and the possibility exists in this code even if such large grace periods are uncommon.",
+          "is_true_positive": true,
+          "confidence": 0.75,
+          "category": "CORRECTNESS",
+          "issue_signature": "integer multiplication overflow before widening to long",
+          "developer_explanation": "The expression `10 * _gracePeriodSec` is evaluated as 32-bit int arithmetic and only afterward widened to long when passed to TimeUnit.SECONDS.toMillis(). If _gracePeriodSec is ever set to a very large value, this multiplication can silently overflow and produce a wrong (possibly negative) time offset. To be safe, cast one operand to long before multiplying, e.g. `10L * _gracePeriodSec`.",
+          "run": 3,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 4227,
+            "output_tokens": 974,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 10.038
+        }
+      ],
+      "original_finding_index": 499
+    },
+    {
+      "finding_id": 13,
+      "type": "EqualsGetClass",
+      "sourcefile": "DeploymentScanner.java",
+      "start_line": "1389",
+      "message": "Prefer instanceof to getClass when implementing Object#equals.",
+      "tool_specific": {
+        "column": "24"
+      },
+      "runs": [
+        {
+          "reasoning": "The equals method at line 1389 does compare getClass() != o.getClass() at line 1391, exactly the pattern the rule targets. This is a legitimate style observation: using getClass() equality can be more restrictive than instanceof and can break correctness for legitimate subclasses in an equals contract, matching what the tool describes. There is no evidence in the shown code that this getClass() check is deliberately required for a security or correctness reason that would make the warning inapplicable.",
+          "is_true_positive": true,
+          "confidence": 0.75,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "equals method compares getclass instead of using instanceof",
+          "developer_explanation": "Your equals() method uses `getClass() != o.getClass()` to test type compatibility, rather than an instanceof check. This means equals() will always return false when comparing to any subclass, even if the fields match, which is less flexible and can cause subtle bugs if the class is ever subclassed. Prefer `!(o instanceof PathsApp)` unless you have a specific reason to require exact class matching (e.g. to preserve symmetry when subclassing with different fields).",
+          "run": 1,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 5585,
+            "output_tokens": 842,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 11.091
+        },
+        {
+          "reasoning": "The flagged equals() method literally uses `getClass() != o.getClass()` to compare types, exactly the pattern the rule targets. PathsApp is a non-final class, so any subclass would automatically fail equality checks against instances of the base type even if logically equal, violating the Liskov substitution principle for equals(). This is a legitimate design concern independent of whether a subclass currently exists in the shown code.",
+          "is_true_positive": true,
+          "confidence": 0.75,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "equals implementation compares getClass instead of instanceof",
+          "developer_explanation": "Your equals() method compares getClass() results, which means any future subclass of this class will never be considered equal to instances of the base class, even if all relevant fields match. Using an instanceof check instead (combined with a proper type test) would keep equals() consistent for subclasses if the class is ever extended. If you intend the class to never be subclassed, consider marking it final to make that guarantee explicit.",
+          "run": 2,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 5585,
+            "output_tokens": 997,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 12.583
+        },
+        {
+          "reasoning": "The equals() method uses getClass() != o.getClass() to check type equality, which is exactly the pattern the EqualsGetClass rule targets. PathsApp is a package-private static class with no visible subclasses in this snippet, but the rule's general concern is that using getClass() instead of instanceof breaks equals() contracts in subclassing scenarios and is less idiomatic/robust than instanceof pattern matching, especially since the code already uses modern instanceof pattern matching elsewhere (e.g., getEnvironmentName). The claim that instanceof is generally preferred here is materially correct given the code style used elsewhere in the file.",
+          "is_true_positive": true,
+          "confidence": 0.75,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "getclass comparison instead of instanceof in equals",
+          "developer_explanation": "Your equals() method compares runtime classes with getClass() != o.getClass(), which is more restrictive than necessary and can behave unexpectedly if the class is ever subclassed. Using an instanceof check instead (e.g., if (!(o instanceof PathsApp))) is the more idiomatic and flexible pattern, especially since the rest of the file already uses instanceof pattern matching elsewhere. Consider switching to instanceof for consistency and to avoid subtle equals() contract issues if subclasses are introduced later.",
+          "run": 3,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 5585,
+            "output_tokens": 456,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 6.161
+        }
+      ],
+      "original_finding_index": 730
+    },
+    {
+      "finding_id": 14,
+      "type": "AnnotateFormatMethod",
+      "sourcefile": "MetaDataBuilder.java",
+      "start_line": "238",
+      "message": "This method uses a pair of parameters as a format string and its arguments, but the enclosing method wasn't annotated @FormatMethod. Doing so gives compile-time rather than run-time protection against malformed format strings.",
+      "tool_specific": {
+        "column": "20"
+      },
+      "runs": [
+        {
+          "reasoning": "The method streamException(String messageFormat, Object... args) passes its parameters directly into String.format(messageFormat, args) on line 240, which is precisely the pattern the rule targets: a method that forwards a format string and vararg arguments to a formatting method. Without @FormatMethod (and @FormatString on the parameter), javac and Error Prone cannot catch mismatched format specifiers at compile time, e.g. at call site 'streamException(\"Connection specific field '%s'\", header)' passes an HttpHeader object where %s is used but that's fine for %s; however other calls could pass wrong types and no compile-time check exists. The claim is materially correct: the method is a format-forwarding method lacking the annotation.",
+          "is_true_positive": true,
+          "confidence": 0.9,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "format-forwarding method missing format method annotation",
+          "developer_explanation": "Your streamException(String, Object...) method forwards its arguments straight into String.format, which is the exact pattern that should be annotated so the compiler can catch mismatched format specifiers and argument types ahead of time. Right now, a mistake like passing the wrong number or type of arguments would only surface at runtime. Adding an appropriate format-method annotation (and annotating the String parameter as the format string) lets the compiler validate call sites for you.",
+          "run": 1,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 4358,
+            "output_tokens": 620,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 7.73
+        },
+        {
+          "reasoning": "The method streamException(String messageFormat, Object... args) takes a format string and its arguments and forwards them to String.format at line 240, matching exactly the pattern the rule targets, yet it lacks the @FormatMethod annotation. Without that annotation, mismatches between format specifiers and arguments (as seen at line 218 where %s is used for a header object) are only caught at runtime rather than compile time. This is a legitimate maintainability/tooling improvement suggestion that Error Prone correctly identifies.",
+          "is_true_positive": true,
+          "confidence": 0.9,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "format-forwarding method missing format method annotation",
+          "developer_explanation": "This method takes a format string and variable arguments and passes them straight into String.format, but it isn't marked with the @FormatMethod annotation. Adding that annotation (and @FormatString on the first parameter) lets the compiler catch format string/argument mismatches at build time instead of only failing at runtime.",
+          "run": 2,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 4358,
+            "output_tokens": 489,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 5.444
+        },
+        {
+          "reasoning": "The method streamException(String messageFormat, Object... args) passes messageFormat and args directly into String.format at line 240, which is exactly the pattern the rule targets, and it lacks the @FormatMethod annotation that would enable compile-time checking of call sites (e.g., line 218 passes 'header' as a %s arg where header is not a String, which would be caught if annotated). The claim is accurate for this code.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "format method missing format annotation",
+          "developer_explanation": "This method builds a message with String.format from its parameters but isn't annotated to tell the compiler it's a format method. Annotating it would let the compiler catch mismatched format specifiers and arguments at call sites instead of only failing at runtime, which is useful since one call site already passes a non-String value for a %s placeholder.",
+          "run": 3,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 4358,
+            "output_tokens": 437,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 5.066
+        }
+      ],
+      "original_finding_index": 782
+    },
+    {
+      "finding_id": 15,
+      "type": "OverrideThrowableToString",
+      "sourcefile": "QuicException.java",
+      "start_line": "81",
+      "message": "To return a custom message with a Throwable class, one should override getMessage() instead of toString().",
+      "tool_specific": {
+        "column": "19"
+      },
+      "runs": [
+        {
+          "reasoning": "The code overrides toString() to produce a custom message (\"%s %s frame[0x%x]\") while getMessage() is left as the plain reason inherited from RuntimeException, exactly the anti-pattern the rule targets. This breaks the convention that Throwable.toString() should be class-name-prefixed and delegate meaningful message construction to getMessage(), causing tools that call getMessage() (e.g., logging frameworks, exception chaining, some IDEs) to miss the enriched error code/frame type context that toString() now carries instead.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "custom exception overrides toString instead of getMessage",
+          "developer_explanation": "Your QuicException overrides toString() to build a rich message (error code, reason, frame type) but leaves getMessage() returning just the plain reason. Many tools and frameworks call getMessage() to get the exception's message, so they'll miss the extra context you added in toString(). Move the message-building logic into an overridden getMessage() instead, and let toString() use the default Throwable behavior (or delegate to getMessage()).",
+          "run": 1,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 1820,
+            "output_tokens": 705,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 7.785
+        },
+        {
+          "reasoning": "The overridden toString() here does not simply return a custom message in place of getMessage(); it builds a diagnostic string that combines the error code, the inherited getMessage() value, and the frame type — additional structured state not exposed by getMessage() alone. This is the common and legitimate pattern of enriching toString() with extra exception-specific fields for logging/debugging, rather than the anti-pattern the rule targets where toString() is used as a substitute for getMessage(). Since getMessage() is untouched and still returns the plain reason, code paths that rely on getMessage() are unaffected; the toString() enhancement is additive, not a broken substitute.",
+          "is_true_positive": false,
+          "confidence": 0.6,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "toString override on throwable instead of getmessage",
+          "developer_explanation": "The tool warns that overriding toString() on an exception class should instead be done via getMessage(). But here toString() is not replacing the message — it still calls getMessage() and just adds extra structured fields (error code and frame type) for a richer debug/log string. Since getMessage() remains intact and correct, other code that queries the exception message is unaffected, so this override is a reasonable, intentional enhancement rather than a bug.",
+          "run": 2,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 1820,
+            "output_tokens": 1882,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 21.946
+        },
+        {
+          "reasoning": "The code overrides toString() to compose ",
+          "is_true_positive": true,
+          "confidence": 0.65,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "throwable overrides toString instead of getMessage for custom info",
+          "developer_explanation": "This exception overrides toString() to include the error code and frame type together with the message, but leaves getMessage() unchanged, so it just returns the plain reason string. Any code that calls getMessage() directly (loggers, exception-handling code, frameworks) will miss the error code and frame type context that toString() adds. If that extra context is meant to be part of the exception's message, it should be produced by overriding getMessage() so it is available consistently, not only via toString().",
+          "run": 3,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 1820,
+            "output_tokens": 2010,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 29.125
+        }
+      ],
+      "original_finding_index": 797
+    },
+    {
+      "finding_id": 16,
+      "type": "StringSplitter",
+      "sourcefile": "AbstractForkedChild.java",
+      "start_line": "154",
+      "message": "String.split(String) has surprising behavior",
+      "tool_specific": {
+        "column": "48"
+      },
+      "runs": [
+        {
+          "reasoning": "The code splits args[i].trim() on the literal \"=\" using String.split, and while \"=\" is not a regex metacharacter here, split's documented behavior of removing trailing empty strings from the result array is genuinely surprising and can cause real problems: e.g. an argument like \"propname=\" (empty value) would split to a single-element array [\"propname\"], failing the tmp.length==2 check and silently dropping that property instead of adding it with an empty value. This is exactly the kind of surprising behavior the rule is designed to catch, and it is reachable given the flagged code processes arbitrary command-line args as key=value pairs. The claim is materially correct for this snippet.",
+          "is_true_positive": true,
+          "confidence": 0.65,
+          "category": "CORRECTNESS",
+          "issue_signature": "split silently drops trailing empty strings",
+          "developer_explanation": "String.split(\"=\") silently discards a trailing empty element, so an argument like \"propname=\" (an empty value) will produce a one-element array instead of two, and the code's length==2 check will silently skip that property instead of storing it with an empty value. Consider using a splitter that preserves trailing empty strings (e.g. Guava's Splitter with a fixed limit, or split(\"=\", -1)) so empty values are handled correctly.",
+          "run": 1,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 3714,
+            "output_tokens": 1632,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 18.382
+        },
+        {
+          "reasoning": "The code calls args[i].trim().split(\"=\") without a limit, which uses Java's default behavior of silently discarding trailing empty strings and splitting into more than two parts whenever the value itself contains an '=' character. Because the code only accepts key/value pairs when tmp.length==2, a property with an empty value (e.g. 'foo=') or a value containing '=' (e.g. 'foo=bar=baz') will be silently dropped instead of processed, which is exactly the kind of surprising split() behavior the rule warns about. This is a real, reachable correctness concern for command-line arguments parsed here, not just a syntactic pattern match.",
+          "is_true_positive": true,
+          "confidence": 0.72,
+          "category": "CORRECTNESS",
+          "issue_signature": "unpredictable string splitting due to default split() semantics",
+          "developer_explanation": "Using String.split(\"=\") here can silently mishandle property values: trailing empty strings are dropped by default, and any value that itself contains an '=' will produce more than two array elements, causing the property to be skipped by the tmp.length==2 check. Consider using split with a limit (e.g. split(\"=\", 2)) or a dedicated key/value parsing utility to reliably capture the whole value after the first '='.",
+          "run": 2,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 3714,
+            "output_tokens": 1019,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 12.09
+        },
+        {
+          "reasoning": "The split call uses String.split(\"=\") and then requires tmp.length==2 before adding the property; because String.split silently drops trailing empty strings, an argument like \"foo=\" (empty value) would produce a one-element array instead of [\"foo\",\"\"], so the length check fails and the property is silently dropped. This is exactly the surprising trailing-empty-string-removal behavior the rule warns about, and it is reachable through normal usage of this argument-parsing loop.",
+          "is_true_positive": true,
+          "confidence": 0.72,
+          "category": "CORRECTNESS",
+          "issue_signature": "unexpected trailing empty string removal from string split",
+          "developer_explanation": "String.split silently removes trailing empty strings from the result, so an argument like \"foo=\" (empty value) will produce a single-element array instead of two elements, causing the length check to fail and the property to be silently skipped. Consider using a splitter that preserves empty trailing tokens (or explicitly pass a negative limit to split) so that key=value pairs with empty values are still captured.",
+          "run": 3,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 3714,
+            "output_tokens": 862,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 9.899
+        }
+      ],
+      "original_finding_index": 871
+    },
+    {
+      "finding_id": 17,
+      "type": "EmptyCatch",
+      "sourcefile": "NamingEntryUtil.java",
+      "start_line": "86",
+      "message": "Caught exceptions should not be ignored",
+      "tool_specific": {
+        "column": "9"
+      },
+      "runs": [
+        {
+          "reasoning": "The catch block at line 86 literally does nothing when a NameNotFoundException is thrown—it neither logs, rethrows, nor comments on why the exception is being suppressed, even though other similar catch clauses in the same file (e.g., lines 122-125, 146-150) either return a value with rationale or log at debug level. While the intent (treat 'not found' as null) is plausible from the variable name 'ignored', the tool's underlying claim—that an exception is caught and silently discarded without any explanation—is factually accurate for this snippet. This lack of documentation can genuinely make debugging or future maintenance harder, since a reader cannot tell whether ignoring the exception here was deliberate or an oversight.",
+          "is_true_positive": true,
+          "confidence": 0.6,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "empty catch block silently swallows exception without explanation",
+          "developer_explanation": "The catch block that handles NameNotFoundException is completely empty—no log statement, no comment explaining why it's safe to ignore this exception. Even though naming the variable 'ignored' hints at intent, leaving the block empty and undocumented makes it harder for future maintainers to tell whether this is deliberate control flow or a missed error case. Consider adding a short comment (or a debug log, as done elsewhere in this class) explaining that a NameNotFoundException here simply means the entry does not exist and null is the expected result.",
+          "run": 1,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 4253,
+            "output_tokens": 2137,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 23.09
+        },
+        {
+          "reasoning": "The catch block on line 86 is completely empty except for a variable name of 'ignored' — no comment, no log statement, and no explanation for why NameNotFoundException is being silently discarded. While the intent can be inferred from the surrounding code (entry stays null and is returned as such), the block itself contains no documentation of that intent, which is exactly the pattern this rule targets: an exception is caught and dropped without any trace for future readers or debuggers. This is a legitimate, if minor, maintainability concern rather than a functional bug, since the control-flow logic (returning null on not-found) still works correctly.",
+          "is_true_positive": true,
+          "confidence": 0.6,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "empty catch block without explanation",
+          "developer_explanation": "The catch block for NameNotFoundException is completely empty and has no comment explaining why it's safe to ignore this exception. Although the surrounding code logic (leaving entry null and returning it) makes the intent clear enough on inspection, an empty catch block with no documentation makes it hard for future maintainers to tell deliberate design from an accidental omission. Consider adding a short comment or a debug log line stating that a not-found lookup is expected and safely ignored here.",
+          "run": 2,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 4253,
+            "output_tokens": 4115,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 45.152
+        },
+        {
+          "reasoning": "The catch block at lines 86-88 catches NameNotFoundException and does nothing but leave entry as null, with no comment explaining why the exception is being ignored, unlike the similar pattern at lines 122-125 (returns empty list) and 146-150 (logs a debug message). While the intent (treat 'not found' as null result) is plausible, the code as shown provides no documentation of that intent, which is exactly the pattern EmptyCatch flags — a silently swallowed exception with no explanatory comment. This is a real code-smell instance even if the underlying behavior is arguably intentional.",
+          "is_true_positive": true,
+          "confidence": 0.6,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "empty catch block silently swallows exception without explanation",
+          "developer_explanation": "The catch block for NameNotFoundException does nothing and has no comment explaining why it's safe to ignore this exception. Even if returning null on 'not found' is the intended behavior, leaving the catch block undocumented makes the code harder to maintain and can hide real bugs later. Add a short comment (or logging, as done elsewhere in this file) clarifying that a NameNotFoundException here simply means 'entry not found'.",
+          "run": 3,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 4253,
+            "output_tokens": 1909,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 20.742
+        }
+      ],
+      "original_finding_index": 919
+    },
+    {
+      "finding_id": 18,
+      "type": "SuperCallToObjectMethod",
+      "sourcefile": "Frame.java",
+      "start_line": "407",
+      "message": "`super.hashCode()` is equivalent to `System.identityHashCode(this)` here",
+      "tool_specific": {
+        "column": "52"
+      },
+      "runs": [
+        {
+          "reasoning": "The claim is that super.hashCode() called from within Frame (which extends Object with no visible hashCode() override in this class or its ancestors) is functionally identical to System.identityHashCode(this), since Object's hashCode() returns an identity-based hash. Nothing in the snippet suggests Frame or an intermediate superclass overrides hashCode(), so the equivalence holds and using super.hashCode() here is a confusing, non-obvious way to compute an identity hash that could mislead readers about its meaning or behavior if a hashCode() override is later added to a superclass. The suggested rewrite doesn't change behavior, only clarifies intent, matching the tool's own framing.",
+          "is_true_positive": true,
+          "confidence": 0.75,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "unclear use of super.hashCode() instead of identity hash call",
+          "developer_explanation": "Calling super.hashCode() here relies on Object's default identity-based hashCode, which is exactly what System.identityHashCode(this) computes directly. Using super.hashCode() obscures the intent and could silently change behavior if a superclass later overrides hashCode(); replacing it with System.identityHashCode(this) makes the intent explicit without altering behavior.",
+          "run": 1,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 4711,
+            "output_tokens": 918,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 10.46
+        },
+        {
+          "reasoning": "The flagged class Frame appears to extend only Object (no other superclass is shown or implied), and no hashCode() override is visible anywhere in the shown portion of the file, so super.hashCode() in the toString() method resolves to Object's default identity-based hash code. This matches the pattern the rule detects: a call to super.method() that is calling into Object with no meaningful override in between, making it equivalent to System.identityHashCode(this) and slightly obscuring intent.",
+          "is_true_positive": true,
+          "confidence": 0.75,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "unnecessary super call to inherited object hashcode",
+          "developer_explanation": "Calling super.hashCode() here just invokes the default Object.hashCode() implementation, since Frame does not override hashCode() and its superclass is Object. Using System.identityHashCode(this) directly makes the intent clearer without changing behavior.and avoids the indirection through super.",
+          "run": 2,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 4711,
+            "output_tokens": 817,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 11.934
+        },
+        {
+          "reasoning": "The code calls super.hashCode() inside Frame's toString() method, and since Frame's direct superclass is Object (no other superclass is shown or implied), Object.hashCode() is documented to return the identity hash code equivalent to System.identityHashCode(this). The claim is a straightforward, verifiable fact about the semantics of calling super.hashCode() when the superclass doesn't override hashCode(), which is the case here since Object provides the identity-based default. This is a valid style suggestion for clarity, not indicating any behavioral bug.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "calling super.hashCode instead of explicit identity hash code",
+          "developer_explanation": "Calling super.hashCode() here just invokes Object's default hashCode(), which returns the identity hash code. Writing System.identityHashCode(this) directly instead of super.hashCode() makes the intent clearer to readers without changing behavior.“}",
+          "run": 3,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 4711,
+            "output_tokens": 913,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 9.744
+        }
+      ],
+      "original_finding_index": 956
+    },
+    {
+      "finding_id": 19,
+      "type": "NonCanonicalType",
+      "sourcefile": "PerMessageDeflateExtension.java",
+      "start_line": "60",
+      "message": "The type `CompressionPool.Entry` was referred to by the non-canonical name `InflaterPool.Entry`. This may be misleading.",
+      "tool_specific": {
+        "column": "25"
+      },
+      "runs": [
+        {
+          "reasoning": "The code declares `private InflaterPool.Entry inflaterHolder;` and the analogous line 59 uses `DeflaterPool.Entry deflaterHolder`, consistent with both InflaterPool and DeflaterPool extending a common CompressionPool base class that declares the nested Entry type. Referring to an inherited nested type via the subclass name (InflaterPool.Entry) instead of the class that actually declares it (CompressionPool.Entry) is exactly the pattern this Error Prone check targets, and it is indeed misleading since Entry is not defined in InflaterPool itself. This is a legitimate, if minor, naming/readability concern rather than a functional bug.",
+          "is_true_positive": true,
+          "confidence": 0.75,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "nested type referenced via non-declaring subclass name",
+          "developer_explanation": "The field type is written as InflaterPool.Entry, but the Entry class is actually declared in the parent CompressionPool class, not in InflaterPool itself. Referring to it through the subclass name is misleading about where the type is defined; using CompressionPool.Entry directly would be clearer and avoid confusion for readers.",
+          "run": 1,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 4491,
+            "output_tokens": 754,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 9.196
+        },
+        {
+          "reasoning": "The field type is declared as InflaterPool.Entry, and based on the codebase structure (InflaterPool extends CompressionPool and Entry is defined in CompressionPool), this is inherited access to a nested type declared in the superclass rather than in InflaterPool itself, exactly the pattern the NonCanonicalType check targets. Referring to an inherited nested type via the subclass name compiles fine but obscures where the type is actually declared, which is a legitimate readability/maintainability concern. Nothing in the shown snippet contradicts this class relationship, and the parallel use of DeflaterPool.Entry at line 59 supports that Entry is a shared type from a common pool base class.",
+          "is_true_positive": true,
+          "confidence": 0.75,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "nested type referenced through non-canonical subclass name",
+          "developer_explanation": "The field is declared using InflaterPool.Entry, but Entry is actually defined in the superclass CompressionPool and merely inherited by InflaterPool. Referring to it through the subclass name works but hides where the type is really declared, which can confuse readers about the class hierarchy; consider using the canonical name CompressionPool.Entry instead.",
+          "run": 2,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 4491,
+            "output_tokens": 837,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 9.371
+        },
+        {
+          "reasoning": "The code declares `private InflaterPool.Entry inflaterHolder;`, and the tool's suggested fix confirms that `Entry` is actually declared in `CompressionPool`, with `InflaterPool` merely inheriting it as a subclass of `CompressionPool<Inflater>`. Referring to an inherited nested type through the subclass name rather than the declaring class is exactly the anti-pattern this Error Prone check targets, and it can indeed be misleading about where the type is actually defined. This is a legitimate, narrowly cosmetic style issue rather than a functional bug, but the tool's claim about the code is materially correct.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "nested type referenced via subclass name instead of declaring class",
+          "developer_explanation": "The field type `InflaterPool.Entry` is actually inherited from `CompressionPool`, where `Entry` is declared; `InflaterPool` doesn't define its own nested `Entry` type. Referring to it by the subclass name can mislead readers into thinking `InflaterPool` owns this type. Consider writing `CompressionPool.Entry` (or `CompressionPool<Inflater>.Entry`) to make the actual declaring class clear.",
+          "run": 3,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 4491,
+            "output_tokens": 864,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 9.012
+        }
+      ],
+      "original_finding_index": 977
+    }
+  ]
+}

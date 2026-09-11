@@ -1,0 +1,15 @@
+[WARNING] java-errors-benchmark/src/main/java/app/PersonMatcher.java:[28,24] [EqualsGetClass] Prefer instanceof to getClass when implementing Object#equals.
+[WARNING] java-errors-benchmark/src/main/java/app/TextAssembler.java:[5,28] [StringBuilderInitWithChar] StringBuilder does not have a char constructor; this invokes the int constructor.
+[WARNING] java-errors-benchmark/src/main/java/app/ValueProcessor.java:[11,13] [DeadException] Exception created but not thrown
+[WARNING] java-errors-benchmark/src/main/java/app/DiscountCalculator.java:[6,11] [NarrowingCompoundAssignment] Compound assignments from double to int hide lossy casts
+[WARNING] java-errors-benchmark/src/main/java/app/NumberComparison.java:[7,33] [BoxedPrimitiveEquality] Comparison using reference equality instead of value equality. Reference equality of boxed primitive types is usually not useful, as they are value objects, and it is bug-prone, as instances are cached for some values but not others.
+[WARNING] java-errors-benchmark/src/main/java/app/NumberComparison.java:[7,33] [ReferenceEquality] Comparison using reference equality instead of value equality
+[WARNING] java-errors-benchmark/src/main/java/app/TypeNameFormatter.java:[10,49] [StringCaseLocaleUsage] Specify a `Locale` when calling `String#to{Lower,Upper}Case`. (Note: there are multiple suggested fixes; the third may be most appropriate if you're dealing with ASCII Strings.)
+[WARNING] java-errors-benchmark/src/main/java/app/PersonRegistry.java:[21,24] [EqualsHashCode] Classes that override equals should also override hashCode.
+[WARNING] java-errors-benchmark/src/main/java/app/PersonRegistry.java:[21,24] [EqualsGetClass] Prefer instanceof to getClass when implementing Object#equals.
+[WARNING] java-errors-benchmark/src/main/java/app/PersonRegistry.java:[29,52] [SelfEquals] Testing an object for equality with itself will always be true.
+[WARNING] java-errors-benchmark/src/main/java/app/ValueReporter.java:[10,13] [UnusedVariable] This assignment to the local variable 'x' is never read.
+[WARNING] java-errors-benchmark/src/main/java/app/TextTrimmer.java:[6,20] [ReturnValueIgnored] Return value of 'substring' must be used
+[WARNING] java-errors-benchmark/src/main/java/app/PersonRanking.java:[18,20] [MissingOverride] compareTo implements method in Comparable; expected @Override
+[WARNING] java-errors-benchmark/src/main/java/app/ItemAppender.java:[12,25] [ModifyCollectionInEnhancedForLoop] Modifying a collection while iterating over it in a loop may cause a ConcurrentModificationException to be thrown or lead to undefined behavior.
+[WARNING] java-errors-benchmark/src/main/java/app/MenuHandler.java:[13,13] [FallThrough] Execution may fall through from the previous case; add a `// fall through` comment before this line if it was deliberate

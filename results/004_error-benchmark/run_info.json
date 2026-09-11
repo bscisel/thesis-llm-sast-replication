@@ -1,0 +1,33 @@
+{
+  "run": "004_error-benchmark",
+  "timestamp": "2026-08-09_17-41-22",
+  "jdk": {
+    "java_home": "/usr/lib/jvm/java-1.21.0-openjdk-amd64",
+    "version": "openjdk version \"21.0.11\" 2026-04-21"
+  },
+  "target_project": {
+    "name": "Java Errors Benchmark",
+    "key": "java-errors-benchmark",
+    "directory": "java-errors-benchmark",
+    "maven_projects": ""
+  },
+  "status": "success",
+  "failed_tools": [],
+  "tools": {
+    "SpotBugs": {
+      "findings": "12",
+      "duration_s": 9,
+      "status": "ok"
+    },
+    "Error Prone": {
+      "findings": "15",
+      "duration_s": 3,
+      "status": "ok"
+    },
+    "SonarQube": {
+      "findings": "16",
+      "duration_s": 80,
+      "status": "ok"
+    }
+  }
+}

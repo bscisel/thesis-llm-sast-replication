@@ -1,0 +1,1362 @@
+{
+  "model": "claude-opus-5",
+  "tool": "spotbugs",
+  "num_runs": 3,
+  "runs_per_invocation": 3,
+  "source_root": "jetty.project",
+  "call_parameters": {
+    "temperature": null,
+    "concurrency": 3,
+    "response_format": "json_schema",
+    "max_tokens": 8192,
+    "max_retries": 6,
+    "base_url": "https://api.anthropic.com"
+  },
+  "system_prompt_variant": "jetty",
+  "system_prompt_sha256": "b5b634e0a9109c59",
+  "user_prompt_sha256": "14894866e018872e",
+  "timestamp": "2026-08-15T07:43:36.328703+00:00",
+  "updated_at": "2026-08-15T07:43:36.328703+00:00",
+  "findings": [
+    {
+      "finding_id": 0,
+      "type": "PERM_SUPER_NOT_CALLED_IN_GETPERMISSIONS",
+      "sourcefile": "WebAppClassLoader.java",
+      "start_line": "333",
+      "message": "Custom class loader does not call its superclass's getPermissions()",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The flagged line itself contains `super.getPermissions(cs)`, so the tool's factual claim — that this custom class loader's `getPermissions` never calls the superclass implementation — is contradicted by the shown code. The superclass permissions are returned whenever the context supplies no explicit collection; only when the server configuration explicitly provides a `PermissionCollection` for the web application is that used instead, and that collection comes from trusted server-side configuration rather than untrusted input. Since the property the rule reports (absence of a super call) is not present here, and the override path is a deliberate, trusted configuration mechanism rather than an attacker-reachable weakness, the alert does not identify a real defect in this code.",
+          "is_true_positive": false,
+          "confidence": 0.7,
+          "category": "SECURITY",
+          "issue_signature": "custom class loader omits superclass permissions in getPermissions",
+          "developer_explanation": "The check assumes this method never delegates to the parent implementation, but the very line it points at returns `super.getPermissions(cs)` whenever the context does not define its own permission collection. The alternative branch returns a permission collection supplied by trusted server configuration, which is the intended way to scope a web application, not an unvalidated override of the system policy. No change is needed here.",
+          "run": 1,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 5411,
+            "output_tokens": 1751,
+            "cache_creation_input_tokens": 2741,
+            "cache_read_input_tokens": 0
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 27.124
+        },
+        {
+          "reasoning": "In the flagged method the super implementation is invoked only on the branch where `_context.getPermissions()` returns null; when the context supplies a PermissionCollection, that collection is returned as-is and is never seeded with the permissions computed by `SecureClassLoader`/`URLClassLoader.getPermissions(cs)`. So on that path the class's permission set is built entirely independently of the code-source/policy-derived permissions, which is precisely the deviation SEC07-J describes, and the tool's pointer at the return expression is where that path is decided. The literal wording (\"does not call\") is imprecise because the call exists in one branch, but the substantive claim — the returned collection is not initialised from the superclass's permissions — holds for the shown code, so I treat this as a correct claim rather than a wrong one.",
+          "is_true_positive": true,
+          "confidence": 0.62,
+          "category": "SECURITY",
+          "issue_signature": "custom class loader returns permissions without merging superclass permissions",
+          "developer_explanation": "When the context supplies its own PermissionCollection, this method returns it directly and never merges in the permissions the parent SecureClassLoader/URLClassLoader would compute for the code source. That means classes defined by this loader can end up with a permission set that ignores the code-source and policy-derived permissions rather than extending them. If the intent is to add context-specific grants, start from `super.getPermissions(cs)` and add the context permissions to it; if the override is deliberate, document it so the deviation is explicit.",
+          "run": 2,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 5411,
+            "output_tokens": 4119,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 51.082
+        },
+        {
+          "reasoning": "Line 333 does contain a call to super.getPermissions(cs), but only on the fallback path: when _context.getPermissions() returns a non-null collection, that collection is returned as-is, so the permissions granted to classes defined by this loader are entirely independent of (and override) the system-wide policy — exactly the condition SEC07-J describes. The tool's wording (\"does not call its superclass's getPermissions()\") is imprecise because the call is present on one branch, but the substantive property it reports — a return path whose PermissionCollection is not initialised from the superclass — is genuinely present in the shown code. The counter-argument that Jetty's context permissions are deliberately configured by an administrator makes the pattern intentional, but it does not make the tool's factual observation about the returned collection wrong.",
+          "is_true_positive": true,
+          "confidence": 0.57,
+          "category": "SECURITY",
+          "issue_signature": "overridden class loader permissions not derived from superclass permissions",
+          "developer_explanation": "When the context supplies its own permission collection, that collection is returned directly and nothing from the parent class loader's permission logic (and hence the JVM policy file) is merged in, so classes loaded by this loader run with permissions that completely replace the system-wide policy rather than being constrained by it. If that is not intended, start from super.getPermissions(cs) and add the context-specific permissions to it before returning. If it is intended, document the deliberate policy override so future readers do not mistake it for an oversight.",
+          "run": 3,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 5411,
+            "output_tokens": 2867,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 39.476
+        }
+      ],
+      "original_finding_index": 103
+    },
+    {
+      "finding_id": 1,
+      "type": "EQ_CHECK_FOR_OPERAND_NOT_COMPATIBLE_WITH_THIS",
+      "sourcefile": "JettyHttpExchange.java",
+      "start_line": "96",
+      "message": "Equals checks for incompatible operand",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The equals(Object) method simply forwards the argument to _delegate.equals(obj), where _delegate is a JettyHttpExchangeDelegate — a type that is neither a supertype nor a subtype of JettyHttpExchange, so the effective comparison is against an incompatible type. Since the delegate's equals (unless it does something unusual, e.g. identity comparison inherited from Object) will only accept another delegate instance, this method can never return true for another JettyHttpExchange and is not even reflexive (x.equals(x) is false), violating the equals contract. The delegate class is not shown, but no plausible delegate implementation makes forwarding the raw argument produce a symmetric, reflexive equals for the outer wrapper. The tool's claim about the flagged line is materially correct.",
+          "is_true_positive": true,
+          "confidence": 0.86,
+          "category": "CORRECTNESS",
+          "issue_signature": "equals compares argument against an incompatible type",
+          "developer_explanation": "This equals implementation hands the argument straight to the wrapped delegate object, which compares it against delegate instances rather than against other wrapper instances. As a result two equivalent wrappers never compare equal, and an object is not even equal to itself, which breaks collections, contains() checks and any code relying on the equals contract. Either compare the argument's own delegate (after an instanceof check on this class) or drop the override entirely and rely on identity equality.",
+          "run": 1,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 3106,
+            "output_tokens": 945,
+            "cache_creation_input_tokens": 2741,
+            "cache_read_input_tokens": 0
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 14.286
+        },
+        {
+          "reasoning": "The equals method delegates directly to _delegate.equals(obj), so the comparison is between the argument and a JettyHttpExchangeDelegate instance — a class that is neither a supertype nor a subtype of JettyHttpExchange. Since the delegate does not (per the tool's bytecode analysis) treat a JettyHttpExchange as equal to itself, this method returns false even for x.equals(x), breaking reflexivity and symmetry of the equals contract, while hashCode is inherited from the delegate. The tool's claim about the flagged line is materially correct for the shown code; the only fact outside the snippet is the delegate's own equals implementation, which SpotBugs inspected when producing this report.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "CORRECTNESS",
+          "issue_signature": "equals compares against an incompatible operand type",
+          "developer_explanation": "This class's equals simply forwards the argument to the wrapped delegate's equals, which effectively asks whether the argument is that delegate object. Because a JettyHttpExchange is not the delegate, the method returns false even when comparing an instance with itself, violating the reflexivity and symmetry required by Object.equals and producing wrong results in collections. Implement equals to check that the argument is a JettyHttpExchange and compare the delegates (or drop the override entirely).",
+          "run": 2,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 3106,
+            "output_tokens": 935,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 12.508
+        },
+        {
+          "reasoning": "The equals method delegates to `_delegate.equals(obj)` where `_delegate` is a JettyHttpExchangeDelegate, a type that is neither a supertype nor subtype of JettyHttpExchange, so the comparison is always between an object of one class and a candidate of an unrelated class. Unless the delegate implements some cross-type equality (nothing suggests it does), this means even `x.equals(x)` returns false for a JettyHttpExchange, breaking reflexivity and symmetry of the equals contract. The tool's claim that this equals checks an incompatible operand type is materially correct for the shown code, even though the decisive delegate source is not visible; the delegation pattern itself already yields the asymmetry.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "CORRECTNESS",
+          "issue_signature": "equals compares against an unrelated, incompatible operand type",
+          "developer_explanation": "This equals implementation forwards the argument to an internal delegate object of a different class, so it effectively asks whether the caller's argument equals the delegate rather than whether the two exchanges are equal. In practice this means two exchanges are never equal \\u2014 not even an object compared with itself \\u2014 which breaks the reflexivity/symmetry rules that collections and other library code rely on. Either compare the delegates of two JettyHttpExchange instances (after an instanceof check on JettyHttpExchange) or drop the override and use identity equality.",
+          "run": 3,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 3106,
+            "output_tokens": 1104,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 13.949
+        }
+      ],
+      "original_finding_index": 124
+    },
+    {
+      "finding_id": 2,
+      "type": "EI_EXPOSE_STATIC_REP2",
+      "sourcefile": "JettyHttpServerProvider.java",
+      "start_line": "36",
+      "message": "May expose internal static state by storing a mutable object into a static field",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The flagged line is the body of a public static setter whose entire purpose is to let the embedding application inject its own Jetty Server instance for the SPI to share (createHttpsServer reads it and passes it on with shared=true). Retaining the caller's live Server object is exactly the intended semantics; defensively copying a Server would break the sharing contract and is not even meaningful for such a lifecycle-managed component. The asserted security consequence — an attacker mutating internal state through the retained reference — presupposes the ability to call this public static configuration API from inside the same JVM, a capability that already permits arbitrary manipulation of the server, so no additional weakness is created here.",
+          "is_true_positive": false,
+          "confidence": 0.75,
+          "category": "SECURITY",
+          "issue_signature": "externally supplied mutable object stored in static field",
+          "developer_explanation": "This setter is meant to hand a caller-owned Server instance to the provider so it can be shared, so keeping the reference is the intended behaviour rather than an accidental leak of internal state. Copying the Server would defeat the sharing contract and is not practical for a lifecycle-managed component. Since only code already running inside the JVM can invoke this public configuration method, the warning can be dismissed here.",
+          "run": 1,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 1905,
+            "output_tokens": 769,
+            "cache_creation_input_tokens": 2741,
+            "cache_read_input_tokens": 0
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 13.499
+        },
+        {
+          "reasoning": "The flagged line is the body of a public static setter whose entire declared purpose is to let the application hand its own Server instance to the provider so that createHttpsServer can reuse it as a shared server. The aliasing the rule reports is therefore intentional and necessary: a defensive copy of a Server would break the sharing contract (the caller's configured handlers, connectors and lifecycle would be lost). Moreover, anyone able to call this public static method already fully controls which Server the provider uses, so retaining the caller's reference grants no capability an attacker did not already possess, and the object stored is not sensitive internal state being leaked outward.",
+          "is_true_positive": false,
+          "confidence": 0.72,
+          "category": "SECURITY",
+          "issue_signature": "externally provided mutable object stored in static field",
+          "developer_explanation": "This setter exists precisely so an application can supply its own server instance to be shared by the created HTTP servers, so keeping the caller's reference is the intended behaviour, not an accidental leak. Copying the object would defeat the purpose, and any caller able to invoke this public static setter already controls the server completely, so no extra exposure is created. The alarm can be dismissed here.",
+          "run": 2,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 1905,
+            "output_tokens": 844,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 13.334
+        },
+        {
+          "reasoning": "The flagged line is the body of a public static setter whose declared purpose is to inject a shared Server instance into the provider, and the reference is later read in createHttpsServer and passed on with shared=true. Any caller that can invoke this public static setter already fully controls which Server is used, so retaining that caller's reference grants no capability the caller did not already have, and there is no internal state being handed out to untrusted code. Defensive copying, the rule's suggested remedy, is also meaningless for a live Server (a running component with a thread pool and handlers), so the asserted security consequence does not exist in this code. The structural pattern the rule matches is literally present, but the weakness it claims is not realistically reachable here.",
+          "is_true_positive": false,
+          "confidence": 0.72,
+          "category": "SECURITY",
+          "issue_signature": "externally supplied mutable object stored in static field",
+          "developer_explanation": "This setter exists precisely so that callers can hand the provider a pre-built server to share, and the stored reference is used as a shared server later. Anyone able to call this public static method already decides which server is used, so keeping their reference exposes nothing extra, and cloning a live server with its thread pool and handlers would not be meaningful. The alarm can be dismissed for this dependency-injection style API, though if global mutable state is a concern for other reasons, that is a design question rather than a security exposure.",
+          "run": 3,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 1905,
+            "output_tokens": 924,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 15.089
+        }
+      ],
+      "original_finding_index": 132
+    },
+    {
+      "finding_id": 3,
+      "type": "ES_COMPARING_PARAMETER_STRING_WITH_EQ",
+      "sourcefile": "HttpCookie.java",
+      "start_line": "869",
+      "message": "Comparison of String parameter using == or !=",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The flagged `obj1 == obj2` is only a fast-path/both-null check: it is immediately followed by explicit null checks and then a real content comparison via `obj1.equalsIgnoreCase(obj2)`, so reference equality never substitutes for content comparison here. The method therefore does not require callers to pass interned or constant strings, and its result is correct for any string arguments. The rule matched the syntactic `==` on String parameters, but the property it asserts (content comparison replaced by reference comparison, making behaviour depend on interning) is not present in this code.",
+          "is_true_positive": false,
+          "confidence": 0.93,
+          "category": "CORRECTNESS",
+          "issue_signature": "string parameters compared by reference instead of content",
+          "developer_explanation": "The reference comparison at the top of this helper is just a shortcut that also covers the case where both arguments are null; if it fails, the code falls through to explicit null checks and a proper case-insensitive content comparison. Behaviour does not depend on strings being interned, so this alarm can be safely dismissed.",
+          "run": 1,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 5061,
+            "output_tokens": 611,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 9.219
+        },
+        {
+          "reasoning": "The flagged `obj1 == obj2` is only a fast-path/both-null check; the method immediately follows it with explicit null checks and a real `obj1.equalsIgnoreCase(obj2)` content comparison, so distinct-but-equal strings are still compared correctly. The warning's underlying claim \\\"and therefore callers must pass interned or constant strings\\\" does not hold for this code, since no result depends on identity. This is the standard null-safe equality idiom, not a fragile reference comparison.",
+          "is_true_positive": false,
+          "confidence": 0.93,
+          "category": "CORRECTNESS",
+          "issue_signature": "string compared by reference identity instead of content",
+          "developer_explanation": "The `==` here is just a shortcut that returns true when both references are the same object (including when both are null); if they differ, the code falls through to explicit null handling and a proper case-insensitive content comparison. No caller is required to pass interned strings, and no equal-but-distinct strings are ever misjudged, so this alarm can be dismissed.",
+          "run": 2,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 5061,
+            "output_tokens": 579,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 9.514
+        },
+        {
+          "reasoning": "The flagged `obj1 == obj2` is only a fast-path/both-null check inside a null-safe helper: the very next lines handle the null cases and then delegate to `obj1.equalsIgnoreCase(obj2)` for actual content comparison. So the code does not rely on reference equality to determine string equality and does not require callers to pass interned or constant strings; the semantics are correct for any string arguments. The rule matched the syntactic `==` on String parameters, but the property it asserts (content comparison replaced by reference comparison, fragile for non-interned callers) is not present here.",
+          "is_true_positive": false,
+          "confidence": 0.94,
+          "category": "CORRECTNESS",
+          "issue_signature": "string parameter compared with reference equality instead of equals",
+          "developer_explanation": "The `==` check here is just a shortcut that returns true when both references are identical (including both being null), and the method still falls through to a proper case-insensitive content comparison for all other inputs. Callers are never required to pass interned or constant strings, so behaviour is correct for arbitrary strings. This alert can be safely dismissed or suppressed for this helper.",
+          "run": 3,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 5061,
+            "output_tokens": 609,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 9.445
+        }
+      ],
+      "original_finding_index": 144
+    },
+    {
+      "finding_id": 4,
+      "type": "AT_NONATOMIC_OPERATIONS_ON_SHARED_VARIABLE",
+      "sourcefile": "HttpParser.java",
+      "start_line": "1366",
+      "message": "Operation on shared variable is not atomic",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The flagged `_length++` is plain mutation of parser instance state inside a per-connection HTTP parsing state machine; nothing in the shown code involves locks, volatile fields, or any other thread-sharing mechanism — the surrounding code freely mutates `_string`, `_valueString`, `_header`, `_field`, `_state` etc. without any synchronization, which is only sound because a parser instance is driven by one thread at a time. The tool's notion of 'shared variable' here is merely 'instance field touched by more than one method', which is not the same as shared between threads. Since the class is not designed or used for concurrent access, the claimed race and the prescribed remedy (atomic types, locks) do not apply; making `_length` an AtomicInteger would add cost without fixing any real hazard. Definitive proof of the class's threading contract lies outside the snippet (field declarations and callers), but the total absence of any synchronization idiom in 300 lines of state mutation strongly indicates single-threaded ownership.",
+          "is_true_positive": false,
+          "confidence": 0.82,
+          "category": "CONCURRENCY",
+          "issue_signature": "non-atomic compound update of a field assumed shared between threads",
+          "developer_explanation": "This alarm assumes the counter field is accessed concurrently by several threads, but this parser keeps all of its state in plain, unsynchronized instance fields and is driven by a single thread per connection, so the increment can never interleave with another thread's update. Adding atomic types or locks here would only add overhead without removing any real hazard. The warning can be dismissed for this class.",
+          "run": 1,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 6807,
+            "output_tokens": 911,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 13.168
+        },
+        {
+          "reasoning": "The flagged statement `_length++` is a plain instance-field increment inside a per-connection HTTP parser; nothing in the shown code involves threads, synchronization, volatile declarations, or publication of this object to other threads — the detector's notion of \"shared\" here is merely that the field is touched by more than one method. Jetty's HttpParser is a stateful, single-threaded parser instance driven by one connection thread at a time, and all the surrounding state (`_state`, `_string`, `_valueString`, `_field`) is mutated in the same unsynchronized fashion, so an atomic type or lock on `_length` alone would be meaningless. The decisive evidence about actual cross-thread usage would lie outside this snippet (the field declaration and callers), but nothing in the visible code supports a multithreaded access pattern, so the asserted race condition does not exist here.",
+          "is_true_positive": false,
+          "confidence": 0.78,
+          "category": "CONCURRENCY",
+          "issue_signature": "non-atomic compound update of a field shared between threads",
+          "developer_explanation": "This flags the increment of a parser counter as a thread-unsafe read-modify-write, but this parser object holds an entire stream of mutable parsing state that is only ever driven by a single thread for a given connection, and there is no synchronization or volatile usage anywhere around it. Making just this one counter atomic would not make the class thread-safe and would add cost to a hot parsing path. The alarm can be dismissed as long as parser instances continue to be confined to one thread at a time.",
+          "run": 2,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 6807,
+            "output_tokens": 1613,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 22.016
+        },
+        {
+          "reasoning": "The flagged `_length++` is an ordinary instance field increment inside a per-connection HTTP parser whose shown code contains no synchronization, no volatile fields, and no thread handoff — the whole parse state machine (`_state`, `_fieldState`, `_string`, `_valueString`, `_length`) is plain mutable instance state driven by a single caller thread. \"Shared variable\" in this detector only means the field is touched by more than one method, which is not the same as being shared between threads; Jetty's HttpParser instance is confined to one connection/thread at a time, so no interleaving on `_length` is possible. The decisive evidence about threading confinement lies partly outside the snippet (callers and class documentation), but nothing in the shown code suggests concurrent access, and adding locks or an atomic type here would only add cost without fixing any real race.",
+          "is_true_positive": false,
+          "confidence": 0.78,
+          "category": "CONCURRENCY",
+          "issue_signature": "non-atomic compound update of a field shared across methods",
+          "developer_explanation": "This flags the plain `_length++` increment as a potential race, on the assumption that the field is reachable from multiple threads. The parser instance holds a single connection's parse state and is only ever driven by one thread at a time, with no synchronization anywhere in the class, so there is no concurrent access to make the increment unsafe; converting it to an atomic type or guarding it with a lock would add overhead with no benefit. This alarm can be dismissed.",
+          "run": 3,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 6807,
+            "output_tokens": 1203,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 16.975
+        }
+      ],
+      "original_finding_index": 172
+    },
+    {
+      "finding_id": 5,
+      "type": "VA_FORMAT_STRING_USES_NEWLINE",
+      "sourcefile": "HttpTester.java",
+      "start_line": "636",
+      "message": "Format string should use %n rather than \\n",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The flagged line does contain a literal \\n inside a String.format format string, exactly the pattern the rule describes, so the tool's factual claim about the code is correct. The output is a human-readable debug rendering of the HTTP message rather than data written to the wire, so there is no protocol requirement forcing \\n (HTTP would require \\r\\n anyway), meaning nothing in the shown code justifies the literal newline over %n. The issue is purely stylistic/portability-of-output and affects no functional behaviour, but severity is not a criterion for the verdict.",
+          "is_true_positive": true,
+          "confidence": 0.72,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "literal newline in format string instead of platform line separator",
+          "developer_explanation": "This format string embeds a literal \\n instead of the %n conversion, so the produced text always uses a Unix line ending regardless of the platform. Since this is a human-readable debug rendering rather than protocol output that must use CRLF, using %n would give the platform-appropriate separator and match common formatting practice. Replace the two \\n occurrences with %n if platform-consistent output is desired.",
+          "run": 1,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 2819,
+            "output_tokens": 941,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 15.758
+        },
+        {
+          "reasoning": "The flagged line's format string literally contains a hard-coded \\n, so the tool's factual claim about the code is correct. The method is a debug/display toString(), not code that emits an HTTP wire message (generation is done elsewhere via the generator), so there is no protocol requirement forcing a specific line terminator here; %n would give the platform-appropriate separator. This is a portability/style concern only \\u2014 the output is otherwise as intended \\u2014 but the warning's claim holds for this code.",
+          "is_true_positive": true,
+          "confidence": 0.72,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "hard-coded newline escape in format string instead of %n",
+          "developer_explanation": "The format string in this toString() hard-codes \\n instead of using %n, so the produced text always uses a Unix line ending regardless of platform. Since this string is only a human-readable rendering (not the HTTP wire format, which would need CRLF anyway), switching to %n would make the debug output match the platform's line separator. It is a small portability/consistency fix, not a behavioural bug.",
+          "run": 2,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 2819,
+            "output_tokens": 917,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 13.5
+        },
+        {
+          "reasoning": "The flagged line passes a literal \"\\n\" inside a String.format format string, which is exactly the pattern the rule describes, so the factual claim is correct for this code. The method is a debug-oriented toString(), not code that emits bytes on the wire (the actual HTTP serialisation happens in generate()), so there is no protocol requirement here that would justify a hard-coded \\n over the platform-neutral %n. The issue is purely stylistic/portability of displayed output, but the rule's claim about the code is materially accurate.",
+          "is_true_positive": true,
+          "confidence": 0.65,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "hard-coded newline escape in format string instead of %n",
+          "developer_explanation": "The format string in this toString() embeds a literal \\n instead of the %n conversion, so the produced text always uses a Unix line ending regardless of platform. Since this string is only used for display/debugging and not for HTTP wire output, switching to %n would give platform-appropriate line separators. If a fixed \\n is intentional here, consider building the string with concatenation instead so the intent is explicit.",
+          "run": 3,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 2819,
+            "output_tokens": 828,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 13.077
+        }
+      ],
+      "original_finding_index": 201
+    },
+    {
+      "finding_id": 6,
+      "type": "RV_NEGATING_RESULT_OF_COMPARETO",
+      "sourcefile": "QuotedQualityCSV.java",
+      "start_line": "335",
+      "message": "Negating the result of compareTo()/compare()",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The negated call is `Integer.compare(o._index, _index)`, and `Integer.compare` is specified to return only -1, 0, or 1, so the Integer.MIN_VALUE overflow scenario the rule cites cannot occur here. The rule's factual observation (a compare result is negated) is literally present, but the consequence it asserts — that negation may fail to flip the sign — is ruled out by the shown code, since the operand of the negation is a JDK method with a bounded return contract. Semantically the expression is also correct: `-Integer.compare(o._index, _index)` equals `Integer.compare(_index, o._index)`, matching the comment 'sort index lowest first'.",
+          "is_true_positive": false,
+          "confidence": 0.76,
+          "category": "CORRECTNESS",
+          "issue_signature": "negated result of a comparison method may not flip sign",
+          "developer_explanation": "This alert is about negating a comparison result, which can break when the result happens to be Integer.MIN_VALUE. That cannot happen here because Integer.compare is documented to return only -1, 0, or 1, so the negation always flips the sign correctly and the ordering (lowest index first) is what the comment says. You could write Integer.compare(_index, o._index) for clarity, but the current code is not buggy.",
+          "run": 1,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 3865,
+            "output_tokens": 1059,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 14.428
+        },
+        {
+          "reasoning": "The negated call is `Integer.compare(o._index, _index)`, and `Integer.compare` is a JDK method whose implementation returns only -1, 0, or 1, so it can never return `Integer.MIN_VALUE`; the sign-inversion hazard the rule describes cannot occur here. The negation therefore always produces a correct, consistent ordering (equivalent to `Integer.compare(_index, o._index)`, i.e. lowest index first as the comment states). The only residual point is stylistic — reversing the operands would read more clearly — but the concrete defect the warning asserts (a comparator that can fail to invert its result) is ruled out by the shown code.",
+          "is_true_positive": false,
+          "confidence": 0.66,
+          "category": "CORRECTNESS",
+          "issue_signature": "negated result of a comparison method may not invert sign",
+          "developer_explanation": "Negating a comparison result is only dangerous when the underlying method can return Integer.MIN_VALUE, because -Integer.MIN_VALUE is still negative. Integer.compare only ever returns -1, 0, or 1, so this negation always yields the intended ordering and there is no bug. If you want the code to read more obviously, you can swap the arguments and write Integer.compare(_index, o._index) instead, but the current behaviour is correct.",
+          "run": 2,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 3865,
+            "output_tokens": 1548,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 19.636
+        },
+        {
+          "reasoning": "The negated call is `Integer.compare(o._index, _index)`, and `Integer.compare` in the JDK is implemented as `(x < y) ? -1 : ((x == y) ? 0 : 1)`, so it can only ever return -1, 0 or 1 \\u2014 never Integer.MIN_VALUE. The specific harm the rule asserts (negation failing to flip the sign for MIN_VALUE) is therefore ruled out by the shown code, and the negation here is exactly equivalent to `Integer.compare(_index, o._index)`, so the comparator remains consistent and correct. The pattern matches the rule syntactically, but the consequence it states cannot occur for this operand, so the claim is not materially correct in this context; the only remaining point is a purely stylistic preference for swapping operands.",
+          "is_true_positive": false,
+          "confidence": 0.62,
+          "category": "CORRECTNESS",
+          "issue_signature": "negated return value of a comparison method",
+          "developer_explanation": "The concern behind this alert is that negating a comparison result breaks when that result is Integer.MIN_VALUE, because -MIN_VALUE is still negative. Here the negated expression is Integer.compare, which only ever yields -1, 0 or 1, so the negation is always safe and the ordering stays consistent. If you want to silence the alert you can simply swap the operands to Integer.compare(_index, o._index), which is behaviourally identical.",
+          "run": 3,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 3865,
+            "output_tokens": 1628,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 26.576
+        }
+      ],
+      "original_finding_index": 223
+    },
+    {
+      "finding_id": 7,
+      "type": "MS_PKGPROTECT",
+      "sourcefile": "Http3Fields.java",
+      "start_line": "37",
+      "message": "Field should be package protected",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "Line 37 declares `public static final HttpField[] STATUSES` — an array is a mutable object, so `final` only protects the reference, and any code anywhere can execute `Http3Fields.STATUSES[200] = ...` and permanently corrupt the pre-encoded status fields shared by every response in the JVM. The tool's factual claim (publicly reachable mutable static state that could be narrowed to package scope) is exactly true of this declaration, and the array's only visible uses in the file are internal (the static initializer and the constructor), so tightening visibility is meaningful. The classic \"malicious code\" framing is weak here since mutating it presupposes running arbitrary code in the same JVM, but the warning also names accidental modification, which is a genuine encapsulation hazard for a globally shared table.",
+          "is_true_positive": true,
+          "confidence": 0.75,
+          "category": "SECURITY",
+          "issue_signature": "public static final array exposes mutable shared state",
+          "developer_explanation": "This constant is a public array, and marking it final only fixes the reference \\u2014 any code in the JVM can overwrite its elements and permanently corrupt the shared pre-encoded status fields used for every response. Since the array appears to be used only within this class, reduce its visibility (package-private or private) or expose an accessor method that returns the element, so the table cannot be mutated from outside.",
+          "run": 1,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 4448,
+            "output_tokens": 1321,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 21.316
+        },
+        {
+          "reasoning": "The flagged field is `public static final HttpField[] STATUSES` — a Java array, so `final` protects only the reference, not the 599 slots, which any code with access to the class can overwrite. The static initializer fills it with the shared pre-encoded `:status` fields that every response encoding reads (line 89), so a stray write from anywhere would silently corrupt HTTP/3 status encoding for the whole JVM. The tool's factual claim — a publicly accessible mutable static field that should be narrowed in visibility — is materially correct for this code; the 'malicious code' framing is weak (in-process code already has full capability), but the accidental-modification and broken-encapsulation aspect is real.",
+          "is_true_positive": true,
+          "confidence": 0.82,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "public static final field exposing a mutable array",
+          "developer_explanation": "Declaring the status table as a public static final array only freezes the reference; every element remains writable by any code that can see the class, so a single stray assignment would permanently corrupt the shared pre-encoded :status fields used for all responses. Reduce the visibility of the array (package-private or private) and, if other packages need it, expose a lookup method or an immutable view instead of the raw array.",
+          "run": 2,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 4448,
+            "output_tokens": 1977,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 27.571
+        },
+        {
+          "reasoning": "The flagged field is `public static final HttpField[] STATUSES`, and a Java array is mutable regardless of the `final` modifier, so any code in any package can write `Http3Fields.STATUSES[i]` and permanently corrupt the shared status-field table for the whole JVM. The class lives in an `internal` package, so the wide `public` visibility is not needed for the intended API surface, and the field is only read within this file (line 89) apart from the static initializer. The tool's factual claim \\u2014 a mutable static object is publicly exposed and could be narrowed to package visibility \\u2014 is therefore materially correct for this code; the practical risk is accidental or careless mutation of shared state rather than a remotely reachable exploit.",
+          "is_true_positive": true,
+          "confidence": 0.8,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "public static final field exposes mutable array",
+          "developer_explanation": "Declaring the array as `final` only prevents reassigning the reference; the contents remain writable, so any code anywhere can overwrite an entry of this shared status table and silently change the pseudo-headers emitted for every response. Since the class is in an internal package and the array is only used inside this file, reduce its visibility (package-private or private) or expose an accessor that returns the individual entry instead of the raw array.",
+          "run": 3,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 4448,
+            "output_tokens": 1425,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 20.754
+        }
+      ],
+      "original_finding_index": 400
+    },
+    {
+      "finding_id": 8,
+      "type": "NM_SAME_SIMPLE_NAME_AS_INTERFACE",
+      "sourcefile": "InitialContextFactory.java",
+      "start_line": "34",
+      "message": "Class names shouldn't shadow simple name of implemented interface",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The shown code declares `public class InitialContextFactory implements javax.naming.spi.InitialContextFactory` in package `org.eclipse.jetty.jndi`, so the class simple name is literally identical to the simple name of the implemented interface in a different package. The claim behind the warning — name shadowing that forces fully-qualified references and can confuse readers — is factually true here, as evidenced by the need to write the interface fully qualified in the implements clause. Although the naming is conventional for JNDI factory implementations and arguably justified, the readability concern the rule describes is genuinely present in this code.",
+          "is_true_positive": true,
+          "confidence": 0.75,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "class name identical to implemented interface's simple name",
+          "developer_explanation": "This class has exactly the same simple name as the JNDI interface it implements, which lives in a different package; that is why the implements clause has to spell out the fully qualified interface name. Readers and future maintainers must check imports to know which type is meant, and a mistyped or non-overriding method can slip by unnoticed. If renaming is acceptable in your API, a distinct name would remove the ambiguity; otherwise this is a deliberate naming convention you may choose to suppress.",
+          "run": 1,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 2202,
+            "output_tokens": 422,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 9.837
+        },
+        {
+          "reasoning": "The declaration on line 34 literally reads `public class InitialContextFactory implements javax.naming.spi.InitialContextFactory`, so the class simple name is identical to that of the implemented interface in a different package — exactly the property the rule reports. The confusion the rule describes is already visible: the implements clause had to be fully qualified because the simple name is shadowed. Whether the team considers this acceptable for a JNDI factory is a matter of severity, not of the claim's correctness.",
+          "is_true_positive": true,
+          "confidence": 0.93,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "class name shadows simple name of implemented interface",
+          "developer_explanation": "This class has the same simple name as the interface it implements, which lives in a different package, so any reference to the name is ambiguous without checking imports (note that the implements clause itself had to be written fully qualified). That makes the code harder to read and increases the chance of accidentally referring to or declaring the wrong type. If backwards compatibility permits, rename the class to something distinct such as a Jetty-specific factory name.",
+          "run": 2,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 2202,
+            "output_tokens": 481,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 9.173
+        },
+        {
+          "reasoning": "The class declared at line 34 is org.eclipse.jetty.jndi.InitialContextFactory and it implements javax.naming.spi.InitialContextFactory — the simple names are identical while the packages differ, exactly the pattern the rule describes. The code even has to use the fully qualified interface name in the implements clause, confirming the shadowing. The claim is therefore materially correct for this code; whether the team would fix it (renaming a public API class) is a severity/effort question, not a criterion.",
+          "is_true_positive": true,
+          "confidence": 0.9,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "class name identical to simple name of implemented interface in another package",
+          "developer_explanation": "This class has the same simple name as the JNDI interface it implements, so any reference to \"InitialContextFactory\" in this file or in callers is ambiguous and requires checking imports or fully qualified names to resolve — the implements clause already has to spell out the full package. It also raises the risk of accidentally declaring a method that looks like an override but is not. If the name is not locked in as public API, consider renaming the class to something distinct; otherwise the confusion should at least be documented.",
+          "run": 3,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 2202,
+            "output_tokens": 393,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 7.6
+        }
+      ],
+      "original_finding_index": 480
+    },
+    {
+      "finding_id": 9,
+      "type": "OS_OPEN_STREAM",
+      "sourcefile": "AbstractForkedChild.java",
+      "start_line": "177",
+      "message": "Method may fail to close stream",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The code allocates a new FileInputStream inline as an argument to Properties.load(), and Properties.load(InputStream) is documented not to close the stream it reads from. There is no local reference, no try-with-resources, and no finally block, so the file descriptor is left open on every invocation of the method (including repeated invocations from the scanner listener on file change). The tool's claim that a stream is created and not closed on any path out of the method is materially correct for the shown code.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "input stream opened without being closed on all paths",
+          "developer_explanation": "The FileInputStream created here is handed to Properties.load(), which reads from it but never closes it, so the file handle stays open until garbage collection finalizes it. Since this method can be called repeatedly (e.g. every time the watched properties file changes), open descriptors can accumulate. Wrap the stream in a try-with-resources block and load the properties inside it.",
+          "run": 1,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 3460,
+            "output_tokens": 480,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 7.631
+        },
+        {
+          "reasoning": "Line 177 constructs a new FileInputStream inline and passes it to Properties.load(), which reads the stream but does not close it; no try-with-resources or finally block exists, so the file descriptor is never released on any path. This method is also called repeatedly from the scanner's file-change listener, so leaks accumulate over the lifetime of the process. The claim that the stream may not be closed is materially correct for the shown code.",
+          "is_true_positive": true,
+          "confidence": 0.96,
+          "category": "CORRECTNESS",
+          "issue_signature": "input stream never closed leaking file descriptor",
+          "developer_explanation": "The FileInputStream created here is handed to Properties.load(), which reads it but never closes it, so the underlying file handle stays open until garbage collection reclaims it. Because this method is invoked again each time the watched properties file changes, descriptors can accumulate in a long-running process. Wrap the stream in a try-with-resources block (or use Files.newInputStream in try-with-resources) so it is closed on every path.",
+          "run": 2,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 3460,
+            "output_tokens": 434,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 6.135
+        },
+        {
+          "reasoning": "Line 177 constructs a new FileInputStream inline and passes it to Properties.load(), which reads but does not close the stream; no reference is kept, so nothing can close it afterwards and it is only reclaimed when the garbage collector finalizes it. This method is invoked repeatedly from the file-change scanner listener (line 137), so descriptors can accumulate over the process lifetime. The fix is a try-with-resources block around the stream (or Files.newInputStream).",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "input stream created but never closed on all paths",
+          "developer_explanation": "The FileInputStream created when loading the webapp properties is handed to Properties.load(), which reads the data but leaves the stream open, and no reference is retained so it can never be closed explicitly. Since this method is called again each time the watched properties file changes, open file descriptors will pile up until the garbage collector happens to finalize them. Wrap the stream in a try-with-resources block (or use Files.newInputStream inside one) so it is closed deterministically.",
+          "run": 3,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 3460,
+            "output_tokens": 505,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 8.686
+        }
+      ],
+      "original_finding_index": 487
+    },
+    {
+      "finding_id": 10,
+      "type": "MS_SHOULD_BE_FINAL",
+      "sourcefile": "MavenServerConnector.java",
+      "start_line": "39",
+      "message": "Field isn't final but should be",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "Line 39 declares `public static String PORT_SYSPROPERTY = \"jetty.http.port\";` \\u2014 a publicly visible static field initialised with a constant literal, sitting directly beside three sibling constants that are declared `public static final`. Nothing in the shown class reassigns it, so it is effectively a constant that has been left mutable and globally writable; the tool's factual claim is therefore correct for this code. The 'malicious code' framing is overstated (an attacker able to write this field already runs in the same JVM), but the underlying claim \\u2014 mutable exported static that should be final \\u2014 holds. The only evidence that could overturn this would be a reassignment in code outside the snippet (e.g. a test or another class in the package), which I cannot see.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "public static field holding a constant not declared final",
+          "developer_explanation": "This public static field is initialised once with a constant string but is not declared final, so any code in the JVM can reassign it and change which system property is consulted for the port. The three constants declared right below it are all final, so this looks like an oversight. Unless something deliberately overwrites it at runtime, mark it `public static final`.",
+          "run": 1,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 3394,
+            "output_tokens": 1253,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 20.345
+        },
+        {
+          "reasoning": "The flagged line declares `public static String PORT_SYSPROPERTY = \"jetty.http.port\";` — a publicly visible, mutable static field initialised with a constant literal, sitting directly beside three sibling constants that are declared `public static final`. Nothing in the shown code reassigns it, so the field is effectively a constant that simply lacks the `final` modifier, and any code in any package can silently replace the system-property name used by this connector. The claim behind the warning (non-final public static field that should be final) is factually correct for this code; the only caveat is that reassignment from outside this file cannot be ruled out from the snippet, though the initialisation pattern and the final siblings strongly suggest it is meant to be constant.",
+          "is_true_positive": true,
+          "confidence": 0.82,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "mutable public static field that should be final",
+          "developer_explanation": "This public static field holds what is clearly a fixed constant, but it is not declared final, so any code anywhere can reassign it and change the system property this connector reads. The neighbouring constants in the same class are already declared final, so this looks like an oversight. Add `final` to the declaration (verify first that no other code in the project assigns to it).",
+          "run": 2,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 3394,
+            "output_tokens": 1156,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 18.078
+        },
+        {
+          "reasoning": "The flagged line declares `public static String PORT_SYSPROPERTY = \"jetty.http.port\";` — a constant string that is never reassigned anywhere in the shown code, while the adjacent constants (DEFAULT_PORT, DEFAULT_PORT_STR, DEFAULT_MAX_IDLE_TIME) are all declared final. The tool's factual claim, that this public static field is mutable and can be reassigned from any other class, is materially correct here. Code outside the snippet could in principle assign to it, which would make the warning less apt, but nothing in the shown class does and the naming and initialization make it plainly intended as a constant; the practical security angle is weak (an attacker able to run code in the JVM already has enough capability), yet the underlying encapsulation/constant-declaration defect is genuine.",
+          "is_true_positive": true,
+          "confidence": 0.78,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "mutable public static field that should be final",
+          "developer_explanation": "This public static string is used as a fixed constant but is not declared final, so any code in any package can reassign it and silently change which system property the connector looks up. Declaring it `public static final` documents the intent and prevents accidental or deliberate modification. The other constants right below it are already final, so this looks like an oversight.",
+          "run": 3,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 3394,
+            "output_tokens": 1195,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 18.333
+        }
+      ],
+      "original_finding_index": 523
+    },
+    {
+      "finding_id": 11,
+      "type": "MS_MUTABLE_COLLECTION_PKGPROTECT",
+      "sourcefile": "SelectiveJarResource.java",
+      "start_line": "52",
+      "message": "Field is a mutable collection which should be package protected",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The flagged field is a `public static final List<String>` initialised with `Arrays.asList(...)`, which returns a fixed-size but element-mutable list, so `DEFAULT_INCLUDES.set(0, ...)` from any package succeeds and permanently alters the shared default. The field is not defensively wrapped, and `copyTo()` assigns it directly to the instance field `_includes`, so a mutation would silently change include-matching behaviour for every user of the class. The tool's factual claim \\u2014 a publicly visible static final field holding a mutable collection \\u2014 is materially correct for this code, and the suggested remedies (package-private visibility or `Collections.unmodifiableList`/`List.of`) address it.",
+          "is_true_positive": true,
+          "confidence": 0.78,
+          "category": "SECURITY",
+          "issue_signature": "public static final field holding a mutable collection",
+          "developer_explanation": "This constant is exposed publicly but the list returned by `Arrays.asList` still allows its elements to be replaced, so any code in any package can overwrite the default include pattern and change behaviour for every caller. Since this list is handed straight to the instance's include list when none is set, such a change would be global and hard to trace. Wrap it in an immutable list (for example `List.of(\"**\")` or `Collections.unmodifiableList(...)`), or reduce the field's visibility.",
+          "run": 1,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 3638,
+            "output_tokens": 1189,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 16.381
+        },
+        {
+          "reasoning": "The flagged field is `public static final List<String> DEFAULT_INCLUDES = Arrays.asList(new String[]{\"**\"})`; `Arrays.asList` returns a fixed-size but still mutable view whose elements can be replaced via `set()`, so the tool's factual claim that a mutable collection is exposed in a public static final field is materially correct. The exposure is not merely theoretical in effect: `copyTo()` assigns this shared list directly to the instance field `_includes`, so any element mutation from any code holding the reference silently changes the include patterns for every user of the class. The sibling `DEFAULT_EXCLUDES` uses `Collections.emptyList()` and is genuinely immutable, which highlights that this one is the outlier. Wrapping in `Collections.unmodifiableList` or using `List.of(\"**\")` would remove the exposure.",
+          "is_true_positive": true,
+          "confidence": 0.8,
+          "category": "SECURITY",
+          "issue_signature": "mutable collection exposed in public static final field",
+          "developer_explanation": "This public constant holds a list created by Arrays.asList, which still allows its single element to be replaced by any caller. Because the list is handed straight to the instance include patterns when none are set, an accidental or hostile modification of that element would silently change which jar entries get copied for every user of the class. Use an immutable list (for example List.of(\"**\") or Collections.unmodifiableList(...)) so the constant cannot be altered.",
+          "run": 2,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 3638,
+            "output_tokens": 1373,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 19.244
+        },
+        {
+          "reasoning": "The flagged field is `public static final List<String> DEFAULT_INCLUDES = Arrays.asList(new String[]{\"**\"})`; `Arrays.asList` returns a fixed-size but element-mutable list, so any code with access can call `set(0, ...)` and permanently alter the shared default include pattern for every user of this class. The field is genuinely public, static, and holds a mutable collection, so the rule's factual claim is materially correct, and the corrupted value is actually used (assigned to `_includes` in `copyTo`), so a mutation would change behaviour. Unlike the neighbouring `DEFAULT_EXCLUDES`, which uses the immutable `Collections.emptyList()`, this constant is not protected; wrapping with `Collections.unmodifiableList` or `List.of(\"**\")` would fix it.",
+          "is_true_positive": true,
+          "confidence": 0.78,
+          "category": "SECURITY",
+          "issue_signature": "public static final field holding a mutable collection",
+          "developer_explanation": "This public constant holds a list created by `Arrays.asList`, which allows its existing elements to be replaced even though the field itself is final. Any code in the JVM \tcould overwrite the `\"**\"` pattern and silently change the default include behaviour for every consumer of this class. Use `List.of(\"**\")` or wrap the list in `Collections.unmodifiableList(...)`, as is already effectively done for the empty excludes constant.",
+          "run": 3,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 3638,
+            "output_tokens": 1429,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 19.263
+        }
+      ],
+      "original_finding_index": 537
+    },
+    {
+      "finding_id": 12,
+      "type": "DM_EXIT",
+      "sourcefile": "ShutdownService.java",
+      "start_line": "348",
+      "message": "Method invokes System.exit(...)",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "Line 348 does literally call System.exit(0), but it sits inside a ShutdownService whose stated purpose is to terminate the JVM on receipt of an authenticated \"stop\" command, and the call is gated by the configurable isExitVm() flag with an explanatory log message (\"Exiting JVM\"). The rule's concern \terminating the VM is an unintended side effect that makes the code unusable when embedded \tdoes not hold here: when exitVm is false the components are merely stopped and the VM keeps running, so callers who embed Jetty are already protected by configuration. The tool's suggested alternative (throwing a RuntimeException) would not implement the requested behaviour at all, so the flagged pattern is justified and is not the problem the rule describes.",
+          "is_true_positive": false,
+          "confidence": 0.72,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "call to System.exit terminating the entire JVM",
+          "developer_explanation": "This call terminates the JVM, but that is exactly the documented purpose of this shutdown command handler, and it only runs when the operator has enabled the exit-VM option and sent a correctly keyed stop/exit command. When that option is off, the service just stops the registered components and leaves the VM alive, so embedding Jetty is not compromised. No change is needed; the alert can be suppressed for this method.",
+          "run": 1,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 4586,
+            "output_tokens": 980,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 15.95
+        },
+        {
+          "reasoning": "The flagged call sits in a shutdown-command handler whose entire purpose is to terminate the JVM on request, and it is explicitly gated by the configurable isExitVm() flag with an accompanying \"Kill JVM\" log line. The rule's factual observation (System.exit is invoked) is literally true, but the problem it asserts — an inappropriate VM shutdown that makes the code unusable when embedded — does not hold here, since callers opt in via configuration and non-exit commands ('stop' with exitVm false, 'status', 'pid') leave the VM running. This is exactly the kind of context where terminating the process is the intended, documented behaviour rather than a bad practice.",
+          "is_true_positive": false,
+          "confidence": 0.78,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "call to System.exit terminating the entire virtual machine",
+          "developer_explanation": "The alert simply notes that this code calls System.exit, which ends the whole JVM. Here that is the deliberate purpose of the shutdown command handler, and it only happens for commands that explicitly request VM exit or when the exitVm option is enabled, so embedded users who do not opt in are unaffected. No change is needed; the warning can be suppressed for this class.",
+          "run": 2,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 4586,
+            "output_tokens": 733,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 12.532
+        },
+        {
+          "reasoning": "The flagged call is inside a shutdown-command handler that only runs after a client presents the correct stop key and only when the explicitly configured isExitVm() flag is true, with a log line \"Exiting JVM\" immediately preceding it. Terminating the JVM is precisely the documented purpose of this service (it even prints STOP.PORT/STOP.KEY/STOP.EXIT for scripting), so the pattern the rule flags is deliberate and gated, not an accidental hard-stop that would prevent the code from being embedded \the supsupported by supported by the exitVm=false path. The tool's factual observation (System.exit is called, terminating the VM) is literally true, but the problem it describes — an inappropriate, non-negotiable VM shutdown that hampers reuse by other code — does not hold here because the behaviour is configuration-controlled and is the feature itself.",
+          "is_true_positive": false,
+          "confidence": 0.78,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "explicit jvm termination call in library code",
+          "developer_explanation": "This call ends the JVM, but that is exactly what this shutdown-command handler is for: it only runs after a caller authenticates with the stop key and only when the exit-VM option has been switched on, and the alternative path (exitVm=false) simply stops the components without exiting. Embedding users who do not want the process killed leave that flag off, so the usual concern about a library unilaterally terminating its host does not apply. This alert can be suppressed for this class.",
+          "run": 3,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 4586,
+            "output_tokens": 836,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 14.476
+        }
+      ],
+      "original_finding_index": 740
+    },
+    {
+      "finding_id": 13,
+      "type": "DMI_RANDOM_USED_ONLY_ONCE",
+      "sourcefile": "DefaultSessionIdManager.java",
+      "start_line": "356",
+      "message": "Random object created and used only once",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The flagged line calls `setSeed`/`nextLong` on the field `_random`, which is a long-lived instance field (assigned once at lines 346/351 and reused for every session id in `newSessionId`, and only cleared in `doStop`). No `Random` object is allocated and discarded on line 356, so the rule's premise — a Random created, used for a single value, then thrown away — is materially wrong here; the field is in fact a `SecureRandom` in the normal path. This matches the known false-positive pattern where the detector misattributes uses of a stored Random field, notably a reseeding call.",
+          "is_true_positive": false,
+          "confidence": 0.85,
+          "category": "SECURITY",
+          "issue_signature": "random number generator instantiated and used for a single value",
+          "developer_explanation": "This line does not create a new random generator; it reseeds the long-lived generator held in the instance field, which is created once during startup (a SecureRandom unless that fails) and reused for every generated session id. Since the object is not allocated per use and is not discarded, the concern about throwing away a generator after one number, and the resulting guessability, does not apply here. The alert can be dismissed.",
+          "run": 1,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 5006,
+            "output_tokens": 1731,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 25.394
+        },
+        {
+          "reasoning": "Line 356 does not create any Random object; it calls setSeed/nextLong on the long-lived field `_random`, which was created earlier (line 346/351) and is reused for every session id in newSessionId(). The only `new Random()` in this method is stored in the field and kept for the lifetime of the manager (cleared only in doStop), so nothing is \"created, used once and discarded\" here, and the preferred path allocates a SecureRandom. The reseeding call flagged is deliberate re-seeding of the retained generator, exactly the pattern the rule recommends, so the rule's factual claim is wrong for this code.",
+          "is_true_positive": false,
+          "confidence": 0.88,
+          "category": "SECURITY",
+          "issue_signature": "random number generator instantiated for a single value",
+          "developer_explanation": "This alarm claims a random generator is created, used for one value, and thrown away, but here the generator is a field that is created once at startup (a SecureRandom when available) and reused for every session id. The flagged line just re-seeds that existing generator, which is the recommended reuse pattern rather than a per-use allocation, so the warning can be dismissed.",
+          "run": 2,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 5006,
+            "output_tokens": 1668,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 24.022
+        },
+        {
+          "reasoning": "The flagged line 356 does not create a Random object at all: it calls `setSeed` on the long-lived field `_random`, which is instantiated once in the `if (_random == null)` branch and reused by `newSessionId` for every id generated. Thus the rule's factual claim — that a Random is constructed, used for a single number, and then discarded — is materially wrong for this code; the object is stored in a field and reused, and this branch is merely a periodic reseed. The `new SecureRandom()`/`new Random()` constructions in the same method are also assigned to the field rather than discarded, so no throwaway Random exists here.",
+          "is_true_positive": false,
+          "confidence": 0.85,
+          "category": "SECURITY",
+          "issue_signature": "random number generator instantiated and used for a single value",
+          "developer_explanation": "This line reseeds the shared generator held in the instance field; it does not allocate a new generator and throw it away. The generator is created once when the manager starts and reused for every session id, so the concern about repeatedly constructing throwaway generators (and the weak, guessable values that would result) does not apply here and the alert can be dismissed.",
+          "run": 3,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 5006,
+            "output_tokens": 1395,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 19.487
+        }
+      ],
+      "original_finding_index": 773
+    },
+    {
+      "finding_id": 14,
+      "type": "NP_BOOLEAN_RETURN_NULL",
+      "sourcefile": "JettyLoggerConfiguration.java",
+      "start_line": "79",
+      "message": "Method with Boolean return type returns explicit null",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The flagged null is returned from a lambda implementing a generic function passed to JettyLoggerFactory.walkParentLoggerNames, where null is the deliberate sentinel meaning \"no value configured for this logger name, keep walking parents\"; the identical pattern is used for JettyLevel at lines 109-113. The result is captured in a Boolean variable and immediately null-checked at line 82 (`hideStacks != null ? hideStacks : DEFAULT_HIDE_STACKS`), so the unboxing NullPointerException the rule predicts cannot arise from the code shown. The lambda is not a method callers can invoke in a boolean context; it is only invoked through the generic walk helper, which is typed to accept null. The claim's fact (an explicit null from a Boolean-typed return) is literally present, but the consequence it asserts is ruled out here.",
+          "is_true_positive": false,
+          "confidence": 0.76,
+          "category": "CORRECTNESS",
+          "issue_signature": "boxed Boolean-returning method returns explicit null",
+          "developer_explanation": "The null returned by this lambda is the intended \"not found\" signal for the parent-logger-name walk, exactly as the level lookup does with a null JettyLevel, and the only consumer immediately checks for null and falls back to the default. There is no path where this value gets auto-unboxed into a primitive boolean, so no NullPointerException can result. This alarm can be dismissed, or suppressed if you want to keep the build clean.",
+          "run": 1,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 4527,
+            "output_tokens": 1019,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 17.784
+        },
+        {
+          "reasoning": "The flagged null is returned from a lambda implementing a generic function passed to JettyLoggerFactory.walkParentLoggerNames, where null is the sentinel meaning \"no property found for this logger name\", and the visible call site at line 82 assigns the result to a Boolean and explicitly null-checks it (`hideStacks != null ? hideStacks : DEFAULT_HIDE_STACKS`). The rule's stated consequence \\u2014 a caller treating the result as primitive boolean and unboxing null into a NullPointerException \\u2014 is ruled out by the shown code, since the lambda is only reachable through the generic walk method whose contract requires null to signal \"keep walking\". This is not a case of the problem merely being rare; the only invocation path shown makes the null-sentinel usage the intended and safe design. Note that walkParentLoggerNames itself is outside the snippet, but its generic return being assigned to a null-checked Boolean makes its null-tolerant contract evident.",
+          "is_true_positive": false,
+          "confidence": 0.82,
+          "category": "CORRECTNESS",
+          "issue_signature": "boxed Boolean-returning method returns explicit null",
+          "developer_explanation": "This lambda returns null deliberately as the \"not configured at this level\" signal for the parent-logger-name walk, and the result is immediately null-checked before being converted to a primitive boolean with a default. There is no path here where the null gets auto-unboxed into a NullPointerException, so this alarm can be dismissed; if you want to silence it, the alternative would be returning an Optional or a dedicated sentinel, which would only complicate the code.",
+          "run": 2,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 4527,
+            "output_tokens": 1022,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 15.366
+        },
+        {
+          "reasoning": "The flagged `return null` is inside a lambda implementing a generic function passed to `JettyLoggerFactory.walkParentLoggerNames`, where null is the sentinel meaning \"no value configured for this logger name, keep walking parents\"; the type is `Boolean` only because the generic parameter was instantiated with Boolean, not because someone declared a tri-state boolean API. The single result is immediately null-checked at line 82 (`hideStacks != null ? hideStacks : DEFAULT_HIDE_STACKS`), and the lambda cannot be invoked in a context that auto-unboxes it as a primitive `boolean`, so the NullPointerException consequence the rule asserts is ruled out by the shown code. The decisive evidence about the walk helper's contract lies outside the snippet, but the surrounding usage (identical pattern with `JettyLevel` at lines 109-127, where null likewise means \"not found\") makes the intent clear.",
+          "is_true_positive": false,
+          "confidence": 0.82,
+          "category": "CORRECTNESS",
+          "issue_signature": "method with Boolean return type returns explicit null",
+          "developer_explanation": "This lambda returns null deliberately to tell the parent-name walker that no `.STACKS` property was found for that key, exactly as the level lookup below does with a null JettyLevel. The single caller stores the result in a `Boolean` and immediately substitutes the default when it is null, and nothing unboxes the lambda's result into a primitive, so there is no unboxing NullPointerException risk here. This alarm can be safely dismissed or suppressed.",
+          "run": 3,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 4527,
+            "output_tokens": 952,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 15.039
+        }
+      ],
+      "original_finding_index": 808
+    },
+    {
+      "finding_id": 15,
+      "type": "UL_UNRELEASED_LOCK_EXCEPTION_PATH",
+      "sourcefile": "Blocker.java",
+      "start_line": "449",
+      "message": "Method does not release lock on all exception paths",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "In close(), the finally block executes `_completed = null;` and `_idle.signalAll();` before `_lock.unlock()`, so the unlock is not guaranteed to be reached from every path after the lock is acquired — if any of those preceding statements throws, the ReentrantLock is never released and every subsequent caller of callback()/runnable() would block forever. SpotBugs' factual claim about the shown structure is therefore correct: this deviates from the lock/try/finally-unlock idiom in a way that leaves an exception path with the lock still held. The practical risk is small because signalAll() on a Condition whose lock is held will not raise IllegalMonitorStateException, so only an Error (e.g. StackOverflowError/OutOfMemoryError) would trigger it; that is a question of likelihood, not of possibility, and the shown code does not rule the path out. Making unlock() the sole statement of the finally block (moving the state reset and signalAll into the try) removes the exposure entirely.",
+          "is_true_positive": true,
+          "confidence": 0.62,
+          "category": "CONCURRENCY",
+          "issue_signature": "lock not released on all exception paths",
+          "developer_explanation": "In this close() method the lock release is the last statement of the finally block, after clearing the state and signalling the condition. If either of those preceding statements ever fails, the lock is never released and every thread that later tries to acquire the shared blocker will hang permanently. Move the state reset and the signalAll() into the try block so that unlock() is the only thing the finally block does.",
+          "run": 1,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 3761,
+            "output_tokens": 2366,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 34.616
+        },
+        {
+          "reasoning": "In close(), the only statements executed inside the finally block before `_lock.unlock()` are a plain field assignment (`_completed = null`) and `_idle.signalAll()` on a Condition obtained from that very same `_lock`, which the thread demonstrably holds at that point; `signalAll()` only throws IllegalMonitorStateException when the lock is not held, so no reachable exception path skips the unlock. The detector flags the structural pattern (work performed inside finally before the release) rather than an actually realizable escape, so the asserted property — the lock stays held on some exception path — is not present in this code. Only asynchronous errors such as OutOfMemoryError could theoretically bypass the unlock, which is true of essentially any unlock statement and is not what the rule claims.",
+          "is_true_positive": false,
+          "confidence": 0.6,
+          "category": "CONCURRENCY",
+          "issue_signature": "explicit lock not released on all exception paths",
+          "developer_explanation": "The lock here is released in the finally block, and the only code running before the release is a field assignment and a signalAll() on a condition belonging to the same lock, which the thread is holding at that moment. Neither of those can throw under these conditions, so there is no path out of the method that leaves the lock held. You could still move the unlock to be the last statement or wrap it in its own nested finally for extra robustness, but the reported leak cannot actually occur.",
+          "run": 2,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 3761,
+            "output_tokens": 2212,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 29.065
+        },
+        {
+          "reasoning": "In close(), the lock is acquired outside the try and released in the finally, but two statements (`_completed = null;` and `_idle.signalAll();`) execute inside the finally *before* `_lock.unlock()`, and that region is not itself protected. If `_idle.signalAll()` threw (e.g. a StackOverflowError or other Error at that call), the method would exit with the ReentrantLock still held, permanently blocking every other thread that calls `callback()`/`runnable()` on this shared blocker. The realistic checked failure mode, IllegalMonitorStateException, is excluded here because the lock is demonstrably held, so the escape path is narrow — but the tool's factual claim about the bytecode structure is accurate, and narrowness of the window is a frequency argument, not a correctness one. The safe form is to keep unlock as the only statement in the outer finally, nesting the state reset and signal in an inner try.",
+          "is_true_positive": true,
+          "confidence": 0.55,
+          "category": "CONCURRENCY",
+          "issue_signature": "lock not released on all exception paths",
+          "developer_explanation": "The unlock call is the last of three statements in the finally block; if either of the preceding statements (in particular the condition signal) were to throw, the method would return with the lock still held, which would leave every subsequent acquirer of this shared blocker blocked forever. In practice only an Error could trigger this, but the robust form is to make the unlock the sole statement of the outer finally and wrap the state reset and signalAll in a nested try inside it.",
+          "run": 3,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 3761,
+            "output_tokens": 2896,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 37.442
+        }
+      ],
+      "original_finding_index": 838
+    },
+    {
+      "finding_id": 16,
+      "type": "IT_NO_SUCH_ELEMENT",
+      "sourcefile": "BlockingArrayQueue.java",
+      "start_line": "919",
+      "message": "Iterator next() method cannot throw NoSuchElementException",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The flagged next() simply reads `_elements[_cursor++]` with no bounds check, so when the iterator is exhausted it throws ArrayIndexOutOfBoundsException rather than the NoSuchElementException required by the Iterator contract; the same holds for previous(). The tool's claim — that this next() is incapable of throwing NoSuchElementException — is literally true of the shown code. Client code that follows the standard contract and catches NoSuchElementException (or generic iteration frameworks relying on it) would see an unexpected runtime exception instead.",
+          "is_true_positive": true,
+          "confidence": 0.9,
+          "category": "CORRECTNESS",
+          "issue_signature": "iterator next() cannot throw NoSuchElementException when exhausted",
+          "developer_explanation": "The iterator's next() reads directly from the backing array without checking that an element remains, so calling it past the end produces an ArrayIndexOutOfBoundsException instead of the NoSuchElementException that the Iterator/ListIterator contract mandates. Any caller written against the standard contract will not handle that exception. Add an explicit bounds check in next() (and in previous()) and throw NoSuchElementException when there is nothing left to return.",
+          "run": 1,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 3426,
+            "output_tokens": 694,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 9.312
+        },
+        {
+          "reasoning": "The flagged next() implementation indexes into _elements with a post-incremented cursor and performs no bounds or hasNext() check, so exhausting the iterator produces an ArrayIndexOutOfBoundsException rather than the NoSuchElementException required by the Iterator contract. The class explicitly implements ListIterator, so the contract applies, and no other guard is visible in next() itself. The tool's claim — that next() cannot throw NoSuchElementException — is literally true of this code, and clients (or generic iteration utilities) that rely on the specified exception would break.",
+          "is_true_positive": true,
+          "confidence": 0.9,
+          "category": "CORRECTNESS",
+          "issue_signature": "iterator next() does not throw NoSuchElementException when exhausted",
+          "developer_explanation": "This iterator's next() reads directly from the backing array without checking whether elements remain, so calling it past the end raises ArrayIndexOutOfBoundsException instead of the NoSuchElementException that the Iterator/ListIterator contract specifies. Code that iterates without calling hasNext(), or that catches NoSuchElementException to detect exhaustion, will behave unexpectedly. Add a bounds check in next() (and similarly in previous()) and throw NoSuchElementException when there is nothing left to return.",
+          "run": 2,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 3426,
+            "output_tokens": 795,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 10.748
+        },
+        {
+          "reasoning": "The flagged `next()` simply returns `_elements[_cursor++]` with no bounds check, so when the iterator is exhausted it throws ArrayIndexOutOfBoundsException rather than the NoSuchElementException required by the Iterator contract; no other statement in the method can produce NoSuchElementException. The tool's claim — that this next() implementation cannot throw NoSuchElementException — is literally true of the shown code. Callers written against the standard Iterator contract (e.g. loops relying on NoSuchElementException, or generic iteration utilities) would see an unexpected exception type.",
+          "is_true_positive": true,
+          "confidence": 0.9,
+          "category": "CORRECTNESS",
+          "issue_signature": "iterator next() throws wrong exception when exhausted",
+          "developer_explanation": "This iterator's next() reads directly from the backing array without checking whether elements remain, so calling it past the end raises an ArrayIndexOutOfBoundsException instead of the NoSuchElementException that the Iterator contract mandates. Any caller that iterates without hasNext() or catches NoSuchElementException will behave unexpectedly. Add a bounds check at the start of next() (and likewise in previous()) and throw NoSuchElementException when there is nothing left to return.",
+          "run": 3,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 3426,
+            "output_tokens": 724,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 9.233
+        }
+      ],
+      "original_finding_index": 844
+    },
+    {
+      "finding_id": 17,
+      "type": "NM_CLASS_NOT_EXCEPTION",
+      "sourcefile": "ExceptionUtil.java",
+      "start_line": "304",
+      "message": "Class is not derived from an Exception, even though it is named as such",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The flagged nested class is declared `public static class MultiException` with no extends clause, so it derives from Object while its name ends with \"Exception\". That is exactly the condition the rule reports, and the naming is genuinely misleading here because the class is an accumulator/holder of throwables (its `add`, `ifExceptionThrow*` methods delegate to the utility methods) and cannot be thrown or caught, even though a predecessor of the same name in older Jetty versions was throwable. The claim is materially correct for the shown code; whether the team chooses to rename it is a separate question of effort, not of correctness.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "class named like an exception but not derived from throwable",
+          "developer_explanation": "This nested class is called MultiException but does not extend Throwable/Exception \ftheldb it is a plain holder that accumulates failures and rethrows them via helper methods. Readers (and IDE completion) will reasonably assume something named \"...Exception\" can be thrown or caught, which is not the case here, and this is doubly confusing because an earlier class of the same name in this project was throwable. Consider renaming it to something like ExceptionCollector or MultiExceptionCollector, or making it actually extend Exception.",
+          "run": 1,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 6066,
+            "output_tokens": 663,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 10.815
+        },
+        {
+          "reasoning": "The shown code declares `public static class MultiException` with no `extends` clause, so it is a plain Object subclass whose name ends in \"Exception\"; it merely accumulates a Throwable and rethrows it via helper methods. The tool's factual claim — a class named as an exception that is not derived from Throwable/Exception — is literally and materially correct for this declaration, and the naming genuinely invites readers to think they can `throw` or `catch` it. Whether the confusion is severe is not a criterion; the claim itself holds.",
+          "is_true_positive": true,
+          "confidence": 0.8,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "class named like an exception but not derived from Throwable",
+          "developer_explanation": "This nested class is named as if it were an exception type, but it does not extend Throwable or Exception \riple failures; it is really a collector/aggregator that holds a Throwable and rethrows it. Readers may reasonably assume they can throw or catch it, or that it appears in stack traces, which it cannot. Consider a name that reflects its role (for example a \"collector\" or \"aggregator\" suffix) to avoid the confusion.",
+          "run": 2,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 6066,
+            "output_tokens": 609,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 10.214
+        },
+        {
+          "reasoning": "The flagged class `MultiException` is declared as `public static class MultiException` with no `extends` clause, so it is a plain Object subclass whose name nevertheless ends in \"Exception\". The tool's factual claim is therefore materially correct for the shown code, and the confusion it describes is real: the class is an accumulator of throwables (with `add`, `ifExceptionThrow`, `callAndCatch`) that cannot be thrown or caught, yet its name strongly suggests it is a throwable — indeed the older Jetty type of the same name was an exception. The naming is deliberate legacy continuity, but that does not make the claim wrong; it is precisely the kind of misleading name the rule targets.",
+          "is_true_positive": true,
+          "confidence": 0.75,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "class named like an exception but not a throwable",
+          "developer_explanation": "This class is named as if it were a throwable but it does not extend Throwable or Exception; it is really a collector that accumulates failures and then throws a combined one. Readers (and IDE/code completion users) may reasonably assume they can throw or catch it, which they cannot. Consider a name that reflects its role, such as a multi-exception collector/accumulator/builder, or document the deviation clearly if the legacy name must be kept.",
+          "run": 3,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 6066,
+            "output_tokens": 673,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 10.106
+        }
+      ],
+      "original_finding_index": 860
+    },
+    {
+      "finding_id": 18,
+      "type": "CN_IDIOM",
+      "sourcefile": "LazyList.java",
+      "start_line": "60",
+      "message": "Class implements Cloneable but does not define or use clone method",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The class declares `implements Cloneable` but contains only static utility methods, a private constructor, and a static `clone(Object)` helper — there is no instance `clone()` override of `Object.clone()`. So the tool's claim is factually correct for this code: Cloneable is declared without any clone method being defined or used. Because the class cannot even be instantiated (private constructor), the Cloneable (and Serializable) declaration is meaningless leftover that misleads readers; the static `clone(Object)` is a different, unrelated API.",
+          "is_true_positive": true,
+          "confidence": 0.9,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "class declares Cloneable without defining a clone method",
+          "developer_explanation": "This utility class declares that it implements Cloneable, but it never overrides Object.clone(); the only clone-named member is an unrelated static helper that copies a lazy-list representation. Since the class has a private constructor and only static methods, instances are never created, so the Cloneable (and Serializable) declaration serves no purpose and only confuses readers. Remove `implements Cloneable` (and likely Serializable) from the class declaration.",
+          "run": 1,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 7888,
+            "output_tokens": 600,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 10.0
+        },
+        {
+          "reasoning": "LazyList declares `implements Cloneable, Serializable` but contains only static methods and a private constructor; there is no instance `clone()` override anywhere in the complete 449-line file. The only clone-like member is `public static Object clone(Object list)`, which is a static utility, not an implementation of `Object.clone()`, so the Cloneable marker interface has no effect. The tool's factual claim — the class declares Cloneable but neither defines nor uses an instance clone method — is materially correct for this code, and the declaration is meaningless dead API surface on a non-instantiable utility class.",
+          "is_true_positive": true,
+          "confidence": 0.92,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "class declares Cloneable without overriding clone",
+          "developer_explanation": "This utility class declares that it implements Cloneable, but it has a private constructor, only static members, and never overrides Object.clone(). The static clone(Object) helper is unrelated to the Cloneable contract, so the interface declaration is misleading and does nothing \\u2014 it just suggests to readers that instances can be copied. Remove `implements Cloneable` (and likely Serializable too) from a class that can never be instantiated.",
+          "run": 2,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 7888,
+            "output_tokens": 640,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 9.809
+        },
+        {
+          "reasoning": "The class declares `implements Cloneable, Serializable` but is a pure static utility class with a private constructor and no instance `clone()` override; the only `clone` present is `public static Object clone(Object list)`, which is not an override of `Object.clone()` and does not satisfy the Cloneable contract. Thus the tool's factual claim \\u2014 Cloneable is implemented without defining or using clone() \\u2014 is materially correct for the shown code. Since instances can never be created outside the class, both Cloneable and Serializable are meaningless declarations that should be removed.",
+          "is_true_positive": true,
+          "confidence": 0.9,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "class implements Cloneable without overriding clone",
+          "developer_explanation": "This utility class declares that it implements Cloneable, but it has only static methods and a private constructor, and it never overrides Object.clone(). The static clone(Object) helper is unrelated to the Cloneable contract, so the interface declaration (and Serializable alongside it) is misleading and serves no purpose \\u2014 it suggests instances can be cloned when none can even be created. Drop the `implements Cloneable, Serializable` clause.",
+          "run": 3,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 7888,
+            "output_tokens": 640,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 8.718
+        }
+      ],
+      "original_finding_index": 880
+    },
+    {
+      "finding_id": 19,
+      "type": "SE_COMPARATOR_SHOULD_BE_SERIALIZABLE",
+      "sourcefile": "TopologicalSort.java",
+      "start_line": "183",
+      "message": "Comparator doesn't implement Serializable",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "InitialOrderComparator literally implements Comparator without implementing Serializable, and it is in fact passed to a TreeSet constructor at line 148, so the precondition the rule names (comparator used to build an ordered collection) holds in this very file. The class holds only a HashMap of indexes, so making it Serializable would be trivial defensive programming as the rule suggests. The stated consequence is conditional and, while the particular TreeSet here is a local variable that is never serialized, the factual claim about the class and the recognized bad practice it names are correct for the shown code. This is a low-impact bad-practice finding rather than a behavioural bug, but the claim itself is materially accurate.",
+          "is_true_positive": true,
+          "confidence": 0.62,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "comparator class does not implement Serializable",
+          "developer_explanation": "This comparator class implements Comparator but not Serializable, and it is used to construct a sorted collection (a TreeSet). Any sorted collection built with a non-serializable comparator cannot itself be serialized, so as a defensive measure the comparator should declare `implements Serializable` (it only holds a HashMap of indexes, so this costs nothing). In this file the sorted set is local and never serialized, so the practical impact is minimal.",
+          "run": 1,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 3824,
+            "output_tokens": 1283,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 16.793
+        },
+        {
+          "reasoning": "The flagged class is a private static nested comparator whose only uses are shown in this file: it is instantiated inside sort(...) and passed to a local TreeSet inside the private visit(...) method, and neither the comparator nor the TreeSet ever escapes the method or is stored in any field, so no serializable collection can ever capture it. The fact stated (implements Comparator, does not implement Serializable) is literally true, but the consequence the rule asserts \fnot be serializable \\u2014 is ruled out by the code shown, and its state is a HashMap of an unbounded generic type T that need not be serializable anyway. Since all construction sites and usages of this private class are visible in the snippet, the defensive-programming rationale has nothing to apply to here.",
+          "is_true_positive": false,
+          "confidence": 0.7,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "comparator class does not implement Serializable",
+          "developer_explanation": "This comparator is a private helper that is created and used entirely inside a single sort/visit call chain; the sorted set built from it is a local variable that is never stored or serialized. Making it Serializable would add no value here, especially since its state is a map of an arbitrary generic type that may itself not be serializable. The alarm can be safely dismissed for this class.",
+          "run": 2,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 3824,
+            "output_tokens": 1168,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 18.02
+        },
+        {
+          "reasoning": "The flagged class is a `private static` nested comparator that is only instantiated inside `sort(...)` and handed to a local `TreeSet` in `visit(...)` which is discarded before either sort method returns; the comparator instance never escapes the class and no ordered collection built with it is ever stored, published, or serialized. The rule's factual premise (it implements Comparator without Serializable) is literally true, but the consequence it states — that a TreeMap/TreeSet built with it would fail to serialize — cannot arise in the shown code. Additionally, the comparator's state is a `Map<T, Integer>` over an unbounded type parameter, so declaring it Serializable would not actually guarantee serializability anyway. Judging the whole claim, including the consequence it asserts, this is not a real defect here.",
+          "is_true_positive": false,
+          "confidence": 0.63,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "comparator class does not implement Serializable",
+          "developer_explanation": "This comparator is a private helper created and used entirely inside the sort methods: the sorted set built from it is a local variable that is thrown away before the method returns, so nothing holding this comparator is ever serialized. Marking it Serializable would add no value here, and it could not guarantee serializability regardless since its internal map is keyed by an unbounded generic type. This alarm can be safely dismissed for this class.",
+          "run": 3,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 3824,
+            "output_tokens": 1117,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 15.415
+        }
+      ],
+      "original_finding_index": 902
+    }
+  ]
+}

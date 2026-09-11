@@ -1,0 +1,192 @@
+{
+  "source_run": "002_jetty-population",
+  "output_run": "003_jetty-stage-1",
+  "seed": 20260503,
+  "method": "stratified",
+  "tools": {
+    "spotbugs": {
+      "source_total_findings": 1821,
+      "excluded_test_count": 0,
+      "excluded_module_count": 2,
+      "sampled_findings": 100,
+      "output": "results/003_jetty-stage-1/static_analysis/processed/spotbugs.json",
+      "strata": [
+        {
+          "category": "CORRECTNESS",
+          "cap": 6,
+          "available": 6,
+          "sampled": 6
+        },
+        {
+          "category": "SECURITY",
+          "cap": 3,
+          "available": 3,
+          "sampled": 3
+        },
+        {
+          "category": "PERFORMANCE",
+          "cap": 17,
+          "available": 17,
+          "sampled": 17
+        },
+        {
+          "category": "MT_CORRECTNESS",
+          "cap": 34,
+          "available": 149,
+          "sampled": 34
+        },
+        {
+          "category": "BAD_PRACTICE",
+          "cap": 29,
+          "available": 185,
+          "sampled": 29
+        },
+        {
+          "category": "MALICIOUS_CODE",
+          "cap": 11,
+          "available": 690,
+          "sampled": 11
+        }
+      ]
+    },
+    "error_prone": {
+      "source_total_findings": 1023,
+      "excluded_test_count": 0,
+      "excluded_module_count": 0,
+      "sampled_findings": 100,
+      "output": "results/003_jetty-stage-1/static_analysis/processed/error_prone.json",
+      "strata": [
+        {
+          "type": "FutureReturnValueIgnored",
+          "cap": 17,
+          "available": 29,
+          "sampled": 17
+        },
+        {
+          "type": "MissingCasesInEnumSwitch",
+          "cap": 12,
+          "available": 12,
+          "sampled": 12
+        },
+        {
+          "type": "ReferenceEquality",
+          "cap": 10,
+          "available": 17,
+          "sampled": 10
+        },
+        {
+          "type": "IntLongMath",
+          "cap": 10,
+          "available": 10,
+          "sampled": 10
+        },
+        {
+          "type": "SameNameButDifferent",
+          "cap": 10,
+          "available": 17,
+          "sampled": 10
+        },
+        {
+          "type": "OperatorPrecedence",
+          "cap": 10,
+          "available": 16,
+          "sampled": 10
+        },
+        {
+          "type": "BanJNDI",
+          "cap": 3,
+          "available": 48,
+          "sampled": 3
+        },
+        {
+          "type": "MissingOverride",
+          "cap": 8,
+          "available": 66,
+          "sampled": 8
+        },
+        {
+          "type": "UnnecessaryParentheses",
+          "cap": 4,
+          "available": 42,
+          "sampled": 4
+        },
+        {
+          "type": "UnusedVariable",
+          "cap": 3,
+          "available": 16,
+          "sampled": 3
+        },
+        {
+          "type": "MissingSummary",
+          "cap": 3,
+          "available": 562,
+          "sampled": 3
+        },
+        {
+          "type": "__remaining__",
+          "cap": 10,
+          "available": 933,
+          "sampled": 10
+        }
+      ]
+    },
+    "sonarqube": {
+      "source_total_findings": 7734,
+      "excluded_test_count": 8626,
+      "excluded_module_count": 6,
+      "sampled_findings": 100,
+      "output": "results/003_jetty-stage-1/static_analysis/processed/sonarqube.json",
+      "strata": [
+        {
+          "issue_type": "VULNERABILITY",
+          "severity": "BLOCKER",
+          "cap": 2,
+          "available": 2,
+          "sampled": 2
+        },
+        {
+          "issue_type": "BUG",
+          "severity": "BLOCKER",
+          "cap": 21,
+          "available": 21,
+          "sampled": 21
+        },
+        {
+          "issue_type": "BUG",
+          "severity": "CRITICAL",
+          "cap": 2,
+          "available": 2,
+          "sampled": 2
+        },
+        {
+          "issue_type": "BUG",
+          "severity": "MAJOR",
+          "cap": 35,
+          "available": 123,
+          "sampled": 35
+        },
+        {
+          "issue_type": "CODE_SMELL",
+          "severity": "BLOCKER",
+          "cap": 22,
+          "available": 51,
+          "sampled": 22
+        },
+        {
+          "issue_type": "CODE_SMELL",
+          "severity": "CRITICAL",
+          "cap": 13,
+          "available": 771,
+          "sampled": 13
+        },
+        {
+          "issue_type": "CODE_SMELL",
+          "severity": "MAJOR",
+          "cap": 5,
+          "available": 2133,
+          "sampled": 5
+        }
+      ]
+    }
+  }
+}

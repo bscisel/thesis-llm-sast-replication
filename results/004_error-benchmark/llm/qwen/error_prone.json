@@ -1,0 +1,996 @@
+{
+  "model": "qwen3.5:9b",
+  "tool": "error-prone",
+  "num_runs": 3,
+  "runs_per_invocation": 3,
+  "source_root": "java-errors-benchmark",
+  "call_parameters": {
+    "temperature": null,
+    "concurrency": 1,
+    "response_format": "json_schema",
+    "num_ctx": 32768,
+    "request_timeout_s": 900,
+    "base_url": "http://localhost:11434"
+  },
+  "system_prompt_variant": "benchmark",
+  "system_prompt_sha256": "b5b634e0a9109c59",
+  "user_prompt_sha256": "3963ac13371abed5",
+  "timestamp": "2026-08-10T16:26:11.983276+00:00",
+  "updated_at": "2026-08-10T20:16:45.522917+00:00",
+  "findings": [
+    {
+      "finding_id": 0,
+      "type": "EqualsGetClass",
+      "sourcefile": "PersonMatcher.java",
+      "start_line": "28",
+      "message": "Prefer instanceof to getClass when implementing Object#equals.",
+      "tool_specific": {
+        "column": "24"
+      },
+      "runs": [
+        {
+          "reasoning": "Line 32 uses getClass() != obj.getClass() inside the overridden equals method, which restricts object equality based on runtime class identity rather than structural compatibility via instanceof.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "object equals uses getClass instead of instanceof",
+          "developer_explanation": "Using getClass() enforces a strict type identity check that can prevent valid structural equality with subclasses later in the hierarchy or interfaces. The standard recommendation is to use instanceof for object comparison unless you explicitly need class-identity discrimination (which should be documented).",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 9858,
+            "output_tokens": 148
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 37190,
+          "latency_s": 80.345
+        },
+        {
+          "reasoning": "The snippet shows a static nested Person class implementing Object#equals without any visible generic parameters or interface implementations that would require covariant equality checks. While Error Prone flags this pattern generally to avoid issues with inheritance and generics, strict type identity via getClass() is valid behavior here for simple value types where polymorphic contract compatibility isn't enforced by the code's context.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "checks class identity rather than instanceof in equals method",
+          "developer_explanation": "You can safely ignore this warning because your Person class does not implement any interfaces nor is it part of a generic hierarchy that would require covariant equality. Strict type matching via getClass() works correctly for simple value objects, so the tool's concern about potential contract violations from inheritance or generics does not apply in this specific context.",
+          "run": 2,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 13793,
+            "output_tokens": 202
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 54461,
+          "latency_s": 104.757,
+          "retry_of_truncated": true,
+          "retry_attempts": 1,
+          "superseded": {
+            "run": 2,
+            "error": "parse_failed",
+            "raw": "",
+            "served_model": "qwen3.5:9b",
+            "usage": {
+              "input_tokens": 2423,
+              "output_tokens": 5357
+            },
+            "stop_reason": "stop",
+            "thinking_chars": 25865,
+            "latency_s": 55.212
+          }
+        },
+        {
+          "reasoning": "The code uses `getClass() != obj.getClass()` in an Object#equals implementation, which matches the syntactic pattern the EqualsGetClass rule flags. While both patterns can work correctly if all subclasses properly override equals using their own type checks, Error Prone's warning reflects standard Java guidance that instanceof is safer for polymorphic hierarchies and cross-subclass equality scenarios. Since we cannot verify subclass relationships from this snippet alone or confirm no external frameworks create instances across inheritance boundaries, the claim about potential correctness issues remains theoretically valid.",
+          "is_true_positive": true,
+          "confidence": 0.9,
+          "category": "CORRECTNESS",
+          "issue_signature": "prefer instanceof over getClass in equals implementation",
+          "developer_explanation": "Your Person.equals() uses `getClass()` for type checking instead of the recommended `instanceof` approach. While this may work now with your current codebase, it could cause issues if subclasses are added later or if frameworks create instances across different class hierarchies where equality should be recognized but won't be.",
+          "run": 3,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 3357,
+            "output_tokens": 230
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 5122,
+          "latency_s": 12.221
+        }
+      ]
+    },
+    {
+      "finding_id": 1,
+      "type": "StringBuilderInitWithChar",
+      "sourcefile": "TextAssembler.java",
+      "start_line": "5",
+      "message": "StringBuilder does not have a char constructor; this invokes the int constructor.",
+      "tool_specific": {
+        "column": "28"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning correctly identifies that new StringBuilder('a') invokes the int constructor because there's no char overload, passing the character's ASCII numeric value as capacity instead of intended length/content",
+          "is_true_positive": true,
+          "confidence": 1.0,
+          "category": "CORRECTNESS",
+          "issue_signature": "string builder initialized by character interpreted as integer",
+          "developer_explanation": "Passing 'a' to the StringBuilder constructor doesn't create a buffer starting with that letter; it uses its ASCII code (97) as initial capacity. This creates an empty buffer of unintended size rather than one containing your desired content, likely not what you wanted.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 3437,
+            "output_tokens": 154
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 6688,
+          "latency_s": 16.073
+        },
+        {
+          "reasoning": "The code compiles in modern Java versions due to implicit widening of the char literal 'a' into an int capacity argument, resulting in a buffer size equal to the ASCII value (97) rather than being intended as creating a single-character builder. The tool's claim that this invokes the int constructor is factually correct for the code behavior shown.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "StringBuilder initialized with char literal invoking incorrect capacity overload via implicit widening conversion causing unintended buffer size allocation and potentially confusing semantics for user expectations that differ from Java's primitive argument promotion rules.",
+          "developer_explanation": "This code compiles but passes the character value 'a' as an integer to set initial capacity, resulting in a builder allocated with roughly 97 characters instead of what you likely intended. Replace this call by using new StringBuilder(0) for empty default or explicitly specifying your desired capacity number (like 1), rather than relying on implicit conversion that leads to unexpected allocation size.",
+          "run": 2,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 9804,
+            "output_tokens": 237
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 36396,
+          "latency_s": 83.778
+        },
+        {
+          "reasoning": "The code passes a character literal ('a') to StringBuilder, which does not have a corresponding constructor; it matches none exactly so implicitly invokes the int argument via integer promotion (char 'a' promotes to its unicode value). This invocation likely results in an initial capacity of 97 with empty content rather than initializing the buffer with the character 'a', leading to unexpected behavior relative to typical developer intent.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "string builder initialized with character invokes integer constructor",
+          "developer_explanation": "Passing 'a' (or any char literal) to StringBuilder's single-argument constructor is valid Java but misleading; it uses the code's ASCII/Unicode value as an integer capacity instead of content. If you intended to store a string containing this letter, use `new StringBuilder(\"a\")` or append characters later.",
+          "run": 3,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 7292,
+            "output_tokens": 210
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 23849,
+          "latency_s": 56.696
+        }
+      ]
+    },
+    {
+      "finding_id": 2,
+      "type": "DeadException",
+      "sourcefile": "ValueProcessor.java",
+      "start_line": "11",
+      "message": "Exception created but not thrown",
+      "tool_specific": {
+        "column": "13"
+      },
+      "runs": [
+        {
+          "reasoning": "The code creates an IllegalArgumentException object inside the if block without throwing it before returning from process(), so execution continues and prints a success message even when invalid input (e.g., -1) is provided.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "exception created without throwing or catching it in same scope",
+          "developer_explanation": "This warning shows that your validation logic creates an error signal but discards it instead of aborting on invalid input; the program accepts negative values and prints misleading output. You should add a throw keyword at line 12 to stop execution immediately, ensuring correct behavior for users.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 13458,
+            "output_tokens": 162
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 59510,
+          "latency_s": 121.422
+        },
+        {
+          "reasoning": "Line 11 instantiates a new IllegalArgumentException object but fails to throw it immediately within the block where control flow continues past line 12 without catching or propagating this error state.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "unchecked exception instantiated without throw or catch",
+          "developer_explanation": "The tool warns that you created an IllegalArgumentException but did not use the 'throw' keyword, which means invalid input values are accepted and processing continues as if no error occurred. Since unchecked exceptions typically signal a failure condition that should be handled by throwing (or catching), simply allocating this object discards it to memory instead of stopping execution or handling the case appropriately.",
+          "run": 2,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 8840,
+            "output_tokens": 172
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 32863,
+          "latency_s": 71.951
+        },
+        {
+          "reasoning": "The method process creates an IllegalArgumentException instance inside the conditional check for invalid input but does not propagate it using 'throw', causing execution to continue with incorrect data accepted.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "exception instance created without being thrown",
+          "developer_explanation": "When you create a validation exception but do not throw it, the method ignores invalid input and proceeds as if everything was valid. Callers often expect failure fast on bad arguments; silently ignoring them can hide errors that cause incorrect downstream behavior or data corruption.",
+          "run": 3,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 5617,
+            "output_tokens": 145
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 17658,
+          "latency_s": 37.716
+        }
+      ]
+    },
+    {
+      "finding_id": 3,
+      "type": "NarrowingCompoundAssignment",
+      "sourcefile": "DiscountCalculator.java",
+      "start_line": "6",
+      "message": "Compound assignments from double to int hide lossy casts",
+      "tool_specific": {
+        "column": "11"
+      },
+      "runs": [
+        {
+          "reasoning": "The flagged line multiplies an integer variable by a double literal using compound assignment (`c *= 0.33`), which implicitly casts the resulting floating-point product back into int and discards any fractional precision without explicit casting. This masks potential data loss that could affect calculations depending on high-precision values or expected behavior in subsequent logic.",
+          "is_true_positive": true,
+          "confidence": 1.0,
+          "category": "CORRECTNESS",
+          "issue_signature": "compound assignment hiding implicit precision truncation via narrowing cast",
+          "developer_explanation": "Multiplying an integer by a double in Java automatically converts the result back to int and chops off decimal places (e.g., 10 * 0.33 = 3). This silently discards data, which can lead to unexpected behavior if precise values were expected. If truncation is not intended explicitly, use a double variable or cast the value intentionally.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 5043,
+            "output_tokens": 208
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 13779,
+          "latency_s": 32.984
+        },
+        {
+          "reasoning": "The code snippet contains `c *= 0.33` which mixes an int variable with a double literal inside a compound assignment operator, implicitly truncating the floating-point result into an integer without any explicit casting syntax.",
+          "is_true_positive": true,
+          "confidence": 1.0,
+          "category": "CORRECTNESS",
+          "issue_signature": "compound assignments hide implicit narrowing conversions from double to int",
+          "developer_explanation": "This warning is correct because your code silently truncates the decimal part of a calculation when assigning back into an integer variable using compound assignment. Using explicit casts or BigDecimal makes it clear that you are intentionally dropping precision, preventing potential logic errors in mathematical or financial calculations where exact values matter.",
+          "run": 2,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 11754,
+            "output_tokens": 166
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 45071,
+          "latency_s": 103.565
+        },
+        {
+          "reasoning": "The shown code performs `c *= 0.33` where c is int and 0.33 is a double literal, which implicitly converts the result back to int via truncation. The warning correctly identifies that compound assignments between numeric types of different precision can hide potential data loss issues through implicit casts.",
+          "is_true_positive": true,
+          "confidence": 1.0,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "compound assignment hides losing cast from double to int",
+          "developer_explanation": "This code performs an operation that silently truncates the decimal result back to a whole number without explicitly showing you this is happening. If someone expects `c` to equal 3, they'll get that by accident but won't realize precision was lost during multiplication. Consider using explicit casting like `(int)(c * 0.33)` for clarity about what's intended.",
+          "run": 3,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 2658,
+            "output_tokens": 204
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2536,
+          "latency_s": 8.949
+        }
+      ]
+    },
+    {
+      "finding_id": 4,
+      "type": "BoxedPrimitiveEquality",
+      "sourcefile": "NumberComparison.java",
+      "start_line": "7",
+      "message": "Comparison using reference equality instead of value equality. Reference equality of boxed primitive types is usually not useful, as they are value objects, and it is bug-prone, as instances are cached for some values but not others.",
+      "tool_specific": {
+        "column": "33"
+      },
+      "runs": [
+        {
+          "reasoning": "Line 7 compares two Integer objects initialized to literals (value 1024) that fall outside the standard Java integer cache range (-128 to +127). This typically creates distinct object instances in most JVMs, causing reference equality to return false even when values are numerically equal. The code likely intends a value comparison, but using == on boxed types relies on implementation details and can produce incorrect results for such numbers.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "comparison using reference equality instead of value equality",
+          "developer_explanation": "Comparing Integer objects with the == operator checks their memory addresses rather than numerical values. Since standard Java implementations only cache small integers between -128 and +127, numbers like your example here will be distinct instances for identical literals on most JVMs, causing reference equality to fail while value comparison would succeed.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 12524,
+            "output_tokens": 218
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 47581,
+          "latency_s": 111.819
+        },
+        {
+          "reasoning": "Line 7 performs a reference equality comparison between two Integer instances initialized to the non-cached literal value 1024, relying on object identity rather than numerical equivalence semantics as typically intended for boxed primitive types.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "comparison using reference equality on boxed primitive types",
+          "developer_explanation": "The `==` operator checks object references instead of numerical values when comparing Integer wrappers like in this snippet. Since Integers represent numbers and you likely intend to check for value equality, relying on identity comparison here can lead to incorrect logic results or confusion with implementation details like automatic caching. Use `.equals()` (or unpacking) to compare the numeric values directly as intended.",
+          "run": 2,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 15991,
+            "output_tokens": 182
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 65351,
+          "latency_s": 148.592
+        },
+        {
+          "reasoning": "The code compares two Integer objects (value 1024) using == operator for reference equality instead of .equals() for value comparison. Since 1024 is outside the standard JVM integer cache range (-128 to +127), these are distinct object instances, making num1 == num2 return false even though their numeric values should be considered equal—this violates typical developer intent and can introduce logic bugs.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "comparison using reference equality for boxed primitives instead of value comparison",
+          "developer_explanation": "Comparing Integer objects with == checks object identity rather than numeric values. For numbers outside the cache range (like 1024), different literals create distinct instances, so this returns false even when you want to check if two values are numerically equal. Use .equals() instead: it correctly compares the underlying int values and behaves predictably for all cases.",
+          "run": 3,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 2683,
+            "output_tokens": 229
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2488,
+          "latency_s": 8.326
+        }
+      ]
+    },
+    {
+      "finding_id": 5,
+      "type": "ReferenceEquality",
+      "sourcefile": "NumberComparison.java",
+      "start_line": "7",
+      "message": "Comparison using reference equality instead of value equality",
+      "tool_specific": {
+        "column": "33"
+      },
+      "runs": [
+        {
+          "reasoning": "The code uses '==' to compare two Integer objects created from autoboxed literal values of 1024, which is outside Java's standard Integer caching range (-128 to +127). This means num1 and num2 are separate object references even though they hold the same numeric value. Using == here compares object identity rather than comparing their actual integer values.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "comparison by reference equality instead of value for wrapper objects",
+          "developer_explanation": "When using Integer or other Number types as object wrappers (not primitives), you should use .equals() to compare their numeric values rather than ==, which only checks if they're the same object in memory. This produces correct results regardless of JVM caching behavior and makes your intent explicit.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 2783,
+            "output_tokens": 200
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3175,
+          "latency_s": 9.773
+        },
+        {
+          "reasoning": "The code compares two Integer objects created from literals greater than 127 (1024), which typically result in distinct heap references on standard JVMs as they fall outside the default caching range of -128 to +127.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "comparison using reference equality on object instances",
+          "developer_explanation": "Using == with Integer objects for numeric comparison is unsafe because distinct heap references are usually allocated for values outside the small integer cache range (-128 to +127). If your intent was to compare numbers, .equals() should be used instead of identity checks on wrapper types.",
+          "run": 2,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 6835,
+            "output_tokens": 172
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 22197,
+          "latency_s": 51.042
+        },
+        {
+          "reasoning": "The flagged line uses == to compare two Integer instances that both hold the value 1024, which checks object identity rather than their numeric equivalence since these autoboxed objects exceed Java's cache range and are distinct references. This pattern can produce incorrect results when code runs on different JVM implementations or if Integer sources differ elsewhere in a project. Therefore the tool's claim about reference vs value equality is materially correct here.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "comparison using object identity instead of equals method on wrapper types",
+          "developer_explanation": "Comparing Integer objects with == checks their internal references rather than the numeric values they represent, which may return unexpected results when dealing with numbers outside Java's small-value cache or in different runtime environments. To correctly express equality between two Integers regardless of how those instances were allocated, use .equals() on both sides or unwrap them to int primitives first.",
+          "run": 3,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 7568,
+            "output_tokens": 222
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 28301,
+          "latency_s": 58.706
+        }
+      ]
+    },
+    {
+      "finding_id": 6,
+      "type": "StringCaseLocaleUsage",
+      "sourcefile": "TypeNameFormatter.java",
+      "start_line": "10",
+      "message": "Specify a `Locale` when calling `String#to{Lower,Upper}Case`. (Note: there are multiple suggested fixes; the third may be most appropriate if you're dealing with ASCII Strings.)",
+      "tool_specific": {
+        "column": "49"
+      },
+      "runs": [
+        {
+          "reasoning": "The flagged line calls `toUpperCase()` without an explicit Locale parameter, which follows the syntactic pattern that Error Prone's rule targets for portability concerns.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "implicit locale in string case conversion call",
+          "developer_explanation": "This warning is valid because omitting the Locale parameter makes your code's behavior dependent on system settings and environment configuration. While this specific example uses only ASCII strings that won't show issues immediately, Java's Unicode normalization has well-documented edge cases (like Turkish dotted i/dotless I) where wrong locale produces visibly different output.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 3669,
+            "output_tokens": 162
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 7371,
+          "latency_s": 16.575
+        },
+        {
+          "reasoning": "Line 10 calls `toUpperCase()` without passing an explicit `Locale` argument and relies instead on the system's default setting (e.g., potentially Turkish or US). Java best practices recommend always specifying an explicit Locale to avoid environment-dependent case mapping behavior that can occur even for some Unicode characters, making this a portability issue rather than merely style. Although current hardcoded ASCII literals do not immediately trigger different outputs across locales, omitting the argument still violates consistency requirements and removes hidden dependencies on execution system configuration.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "string case conversion without explicit locale",
+          "developer_explanation": "This code uses `String.toUpperCase()` with the default system Locale instead of specifying one explicitly (e.g., `Locale.ROOT`). Doing so ensures that your string transformations behave consistently regardless of whether someone runs this on a computer or CI server configured in Turkish, English, or any other locale setting.",
+          "run": 2,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 12944,
+            "output_tokens": 223
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 52753,
+          "latency_s": 114.792
+        },
+        {
+          "reasoning": "The code calls `toUpperCase()` without specifying a Locale which relies on system default settings that can vary across environments or affect non-ASCII Unicode character mappings differently depending on locale configuration.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "string case change without explicit locale specified",
+          "developer_explanation": "Using implicit default locale means your string transformations can produce different results on systems with different environment settings (e.g., Turkish vs US). This breaks consistency across deployments. Fix this by adding an explicit `Locale` like `Locale.ROOT` to ensure consistent behavior regardless of the JVM configuration.",
+          "run": 3,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 20710,
+            "output_tokens": 156
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 89733,
+          "latency_s": 199.476
+        }
+      ]
+    },
+    {
+      "finding_id": 7,
+      "type": "EqualsHashCode",
+      "sourcefile": "PersonRegistry.java",
+      "start_line": "21",
+      "message": "Classes that override equals should also override hashCode.",
+      "tool_specific": {
+        "column": "24"
+      },
+      "runs": [
+        {
+          "reasoning": "The Person class overrides equals(Object) at line 21 using logical attribute comparison but omits a hashCode override, violating the Java object equality contract.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "class overrides equals without overriding hashcode",
+          "developer_explanation": "This class uses custom logic for its `equals` method but relies on the default identity-based hash code from Object.java. If you ever store these Person instances in collections like HashMap or HashSet, equal objects may be stored as distinct keys because their hashes differ. To fix this, implement a corresponding hashCode() method using the same attributes (`name`, `age`).",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 11110,
+            "output_tokens": 166
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 43778,
+          "latency_s": 93.451
+        },
+        {
+          "reasoning": "The Person class overrides the equals method with logic that compares field values, implying content-based equality, but relies on the default identity-based implementation of hashCode provided by Object.",
+          "is_true_positive": true,
+          "confidence": 1.0,
+          "category": "CORRECTNESS",
+          "issue_signature": "overridden equals without overriding hashCode",
+          "developer_explanation": "You defined logical equality based on name and age fields but did not update the hash code implementation to match that logic. This violates Java's standard contract which requires equal objects to have identical hash codes, causing potential lookups to fail unexpectedly when this class is used in collections like HashMap or HashSet.",
+          "run": 2,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 7312,
+            "output_tokens": 153
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 23946,
+          "latency_s": 53.821
+        },
+        {
+          "reasoning": "The Person class overrides equals(Object obj) to compare fields but does not override hashCode(), retaining the default identity-based implementation from Object. This violates the Java contract requiring consistent hash codes for equal objects, which leads to incorrect behavior when used with standard collections like HashSet or HashMap.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "overrides equals without overriding hashCode",
+          "developer_explanation": "You are checking equality based on name and age but relying on default hash codes that depend on memory address rather than content. If you store Person objects in a collection like HashSet or use them as keys for HashMap later, logically equal instances will be treated as distinct due to mismatched hashes. You must implement hashCode() using the same logic as equals() now to ensure predictable collection behavior.",
+          "run": 3,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 6835,
+            "output_tokens": 192
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 21379,
+          "latency_s": 48.948
+        }
+      ]
+    },
+    {
+      "finding_id": 8,
+      "type": "EqualsGetClass",
+      "sourcefile": "PersonRegistry.java",
+      "start_line": "21",
+      "message": "Prefer instanceof to getClass when implementing Object#equals.",
+      "tool_specific": {
+        "column": "24"
+      },
+      "runs": [
+        {
+          "reasoning": "This code implements Object#equals without any subclasses involved, no serialization logic present, and both instance.getClass() checks would behave identically here - the equals semantics are correct regardless of using instanceof or getClass(). The EqualsGetClass rule describes a concern that applies primarily in complex inheritance hierarchies where covariant vs. invariant equality matters.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "using getClass instead of instanceof for equals checks on Object parameter",
+          "developer_explanation": "This warning can be safely dismissed here because your Person class has no subclasses shown and contains no serialization concerns that would make type identity checking problematic. Both approaches produce correct equality semantics in this simple case - the difference only matters when you have inheritance hierarchies where subclass behavior affects parent comparisons.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 4253,
+            "output_tokens": 191
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 10920,
+          "latency_s": 22.043
+        },
+        {
+          "reasoning": "The code implements Object#equals using getClass() to check type equality before casting, which prevents instances of subclasses or proxies from being considered equal if they share the same fields but differ by implementation class. This pattern violates standard equals contract expectations for extensibility and proxy scenarios common in Java applications (e.g., Hibernate LazyInitialization), potentially breaking transitivity with polymorphic hierarchies.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "prefer instanceof to getClass for equals method type checks",
+          "developer_explanation": "This warning flags a common pattern where using getClass() prevents subclasses from being treated as logically equal based on their state alone, which can break equality contracts in extensible systems. Switching to instanceof allows the class hierarchy to respect logical content equality across implementations or proxies without needing extra overrides.",
+          "run": 2,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 14966,
+            "output_tokens": 198
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 62037,
+          "latency_s": 136.256
+        },
+        {
+          "reasoning": "The code uses `getClass()` to enforce strict type identity in an equals implementation, which is a valid design choice for POJOs without inheritance and ensures subclasses aren't structurally considered equal. Since no subclass exists or intended covariance needs are shown, using `instanceof` as suggested would change behavior (allow covariant equality) unnecessarily here; the tool's claim that this usage represents a correctness risk in this specific context is not materially correct.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "strict type identity check preferred over instanceof pattern",
+          "developer_explanation": "This warning flags a common coding style preference rather than an actual bug in your current code structure. Using `getClass()` is valid when you need strict class-based equality and have no inheritance or covariance concerns, which matches the snippet's intent here. You can safely remove this warning as long as future design does not involve overriding equals behavior for subclasses.",
+          "run": 3,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 14234,
+            "output_tokens": 222
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 56915,
+          "latency_s": 122.212
+        }
+      ]
+    },
+    {
+      "finding_id": 9,
+      "type": "SelfEquals",
+      "sourcefile": "PersonRegistry.java",
+      "start_line": "29",
+      "message": "Testing an object for equality with itself will always be true.",
+      "tool_specific": {
+        "column": "52"
+      },
+      "runs": [
+        {
+          "reasoning": "Line 29 calls .equals() on the field name using unqualified access which resolves to this instance’s class member (no local variable named 'name' shadows that), so both receiver and argument refer to the same object. This means comparing the current person’s own string content against itself rather than against the other person passed via obj, causing equals to ignore differences in names between distinct instances.",
+          "is_true_positive": true,
+          "confidence": 1.0,
+          "category": "CORRECTNESS",
+          "issue_signature": "object compared with its own reference inside equality check",
+          "developer_explanation": "The equals method compares the person’s name field against itself instead of comparing this instance's name to the other object's name passed as parameter. This will always return true for names even when two people have different names, violating the contract that distinct objects should be considered not equal if their content differs.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 16442,
+            "output_tokens": 203
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 65597,
+          "latency_s": 141.363
+        },
+        {
+          "reasoning": "The tool's claim that testing an object for equality with itself will always be true matches the reality here: line 29 uses field 'name' as both receiver and argument expression in a self-equality check (both resolve to this instance's name reference). This tautological comparison adds no discrimination between two objects differing only by their name values. Since Person equals contract implies full state comparison, ignoring other object's name attribute leads to incorrect return value when ages match but names differ.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "comparison against identical reference returns constant truth",
+          "developer_explanation": "This warning identifies a logic bug in your equals() method implementation where the same field is used for both sides of an equality check. This always yields true if non-null and ignores comparing name values from different Person objects, potentially treating distinct people as equal when they have the same age but different names.",
+          "run": 2,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 22877,
+            "output_tokens": 220
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 97754,
+          "latency_s": 208.836
+        },
+        {
+          "reasoning": "Line 29 compares name.equals(name) where both sides refer to the same field within this Person object, which is indeed redundant self-comparison that always returns true by reflexivity.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "comparing own object reference for equality in equals method",
+          "developer_explanation": "The bug is that name.equals(name) compares the field against itself instead of person.name from another Person instance you cast to obj. This means any two People will pass the name comparison regardless of their actual names, breaking proper equals semantics.",
+          "run": 3,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 3606,
+            "output_tokens": 150
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 6200,
+          "latency_s": 14.432
+        }
+      ]
+    },
+    {
+      "finding_id": 10,
+      "type": "UnusedVariable",
+      "sourcefile": "ValueReporter.java",
+      "start_line": "10",
+      "message": "This assignment to the local variable 'x' is never read.",
+      "tool_specific": {
+        "column": "13"
+      },
+      "runs": [
+        {
+          "reasoning": "The variable 'x' declared at line 10 is directly accessed in System.out.println(x) on line 12 within its method scope, which counts as reading the value before the function returns.",
+          "is_true_positive": false,
+          "confidence": 1.0,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "unused local variable",
+          "developer_explanation": "You can safely ignore this warning because 'x' is read on line 12 inside the print statement. The tool claims it's unused but your code actually prints its value, so no dead code exists here.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 13718,
+            "output_tokens": 144
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 50460,
+          "latency_s": 119.943
+        },
+        {
+          "reasoning": "The variable 'x' initialized on Line 10 is read later when passed as an argument to System.out.println(x) on Line 12 within the same method scope, making it used rather than unused. The tool's claim that this assignment is never read contradicts the visible usage in the snippet.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "local variable declared but unreferenced",
+          "developer_explanation": "This warning can be safely dismissed because line 12 explicitly reads the value of x by passing it to println(x). The tool's UnusedVariable rule might incorrectly flag variables that are initialized and then used later in method calls if its usage tracking considers only certain expressions as 'reads' or misinterprets side-effect based arguments. Since the code works correctly, this is a false positive noise from static analysis.",
+          "run": 2,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 20913,
+            "output_tokens": 208
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 80563,
+          "latency_s": 184.122
+        },
+        {
+          "reasoning": "The code shows that 'x' declared on line 10 in printSum() is later referenced by System.out.println(x) at line 12 within the same method scope, directly contradicting the tool's claim.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "assignment to unread local variable declaration",
+          "developer_explanation": "The warning claims 'x' is never read because it flags the initialization statement on line 10. However your method prints x's value at line 12, so you are referencing the identifier and using it later in code execution.",
+          "run": 3,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 16431,
+            "output_tokens": 157
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 59209,
+          "latency_s": 131.402
+        }
+      ]
+    },
+    {
+      "finding_id": 11,
+      "type": "ReturnValueIgnored",
+      "sourcefile": "TextTrimmer.java",
+      "start_line": "6",
+      "message": "Return value of 'substring' must be used",
+      "tool_specific": {
+        "column": "20"
+      },
+      "runs": [
+        {
+          "reasoning": "The code on line 6 invokes substring() but discards its result without storing it in a variable or passing it to another method, leaving s pointing at the original string content.",
+          "is_true_positive": true,
+          "confidence": 1.0,
+          "category": "CORRECTNESS",
+          "issue_signature": "unused method return value",
+          "developer_explanation": "The warning is correct because calling substring() creates a new String but does not assign it to update s or use the result elsewhere. Since Java strings are immutable, ignoring this return means your code prints 'abcdef' instead of the intended slice if that was your goal.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 6057,
+            "output_tokens": 149
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 18887,
+          "latency_s": 37.999
+        },
+        {
+          "reasoning": "The flagged line calls substring() but discards the result while using original string s later, indicating an oversight where state was not updated when needed or computation wasted; Error Prone correctly identifies that ignoring return values typically represents a logic flaw rather than just waste.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "method invocation result not used in logic flow",
+          "developer_explanation": "This code calls substring() but discards the returned string immediately without storing or using it later, meaning any intended processing of trimmed text is lost. This usually signals a mistake where you should assign the new value to update 's' for correct behavior; only discard if no further use and side effects not needed.",
+          "run": 2,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 14708,
+            "output_tokens": 178
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 59802,
+          "latency_s": 121.896
+        },
+        {
+          "reasoning": "The call to s.substring(3) on line 6 discards its returned string without storing it in a variable or using it, while printing the original 's' value which remains unchanged since Strings are immutable.",
+          "is_true_positive": true,
+          "confidence": 1.0,
+          "category": "CORRECTNESS",
+          "issue_signature": "ignored return value from method call",
+          "developer_explanation": "The code calls substring() but ignores its result - since Java Strings are immutable and this is a String not an instance with side effects or mutable state being modified elsewhere. If the intent was to use only part of the string starting at index 3, you need to assign it: s = s.substring(3) before printing.",
+          "run": 3,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 2780,
+            "output_tokens": 171
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3185,
+          "latency_s": 8.61
+        }
+      ]
+    },
+    {
+      "finding_id": 12,
+      "type": "MissingOverride",
+      "sourcefile": "PersonRanking.java",
+      "start_line": "18",
+      "message": "compareTo implements method in Comparable; expected @Override",
+      "tool_specific": {
+        "column": "20"
+      },
+      "runs": [
+        {
+          "reasoning": "The code implements Comparable<Person> and provides its own compareTo implementation without an @Override annotation. However, this isn't a correctness issue because the method signature matches an abstract interface contract rather than overriding any concrete parent class method - in strict JVM terms no actual override is happening here even though Error Prone treats all cases uniformly with MissingOverride rule.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "missing annotation on interface method implementation",
+          "developer_explanation": "This warning is technically incorrect for this code because when implementing Comparable<Person>, you are defining a new contract fulfillment rather than overriding any existing parent class behavior. The @Override annotation isn't required by Java's semantics here - the code will run identically with or without it. While Error Prone recommends adding such annotations as convention, omitting one from an interface implementation isn't actually a bug; this is just following different style guidelines.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 6646,
+            "output_tokens": 218
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 26201,
+          "latency_s": 43.861
+        },
+        {
+          "reasoning": "The code implements an interface member of Comparable directly without @Override annotation, which Error Prone's MIS rule flags because the tool enforces explicit annotations on all inherited/contracted members for maintainability/readability standards; missing it affects intent clarity and adherence to common Java coding conventions per best practices.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "method implementing interface member lacking explicit override annotation",
+          "developer_explanation": "This warning indicates that you should annotate the compareTo method with @Override when fulfilling an inherited contract from Comparable<Person>. Although Java allows omitting it on interfaces, Error Prone considers this a maintainability improvement to explicitly declare intent and prevent future shadowing or signature confusion. Adding the annotation makes your code clearer for readers and aligns with widely adopted Java coding standards.",
+          "run": 2,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 19070,
+            "output_tokens": 197
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 84239,
+          "latency_s": 159.427
+        },
+        {
+          "reasoning": "The method implements the Comparable interface contract explicitly without marking intent via @Override; while syntactically valid and not altering runtime behavior, missing this marker reduces source code clarity for future API evolutions or inspections which qualifies as a maintainability issue flagged correctly by Error Prone.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "missing @Override annotation on implemented method",
+          "developer_explanation": "Error Prone warns about missing @Override to help maintain API clarity even when it is not enforced by the compiler in all contexts like this one. Adding this marker documents your contract implementation intent, making future refactoring or signature changes easier to catch and reducing risk of accidental overrides if the interface evolves.",
+          "run": 3,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 18112,
+            "output_tokens": 178
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 78387,
+          "latency_s": 144.094
+        }
+      ]
+    },
+    {
+      "finding_id": 13,
+      "type": "ModifyCollectionInEnhancedForLoop",
+      "sourcefile": "ItemAppender.java",
+      "start_line": "12",
+      "message": "Modifying a collection while iterating over it in a loop may cause a ConcurrentModificationException to be thrown or lead to undefined behavior.",
+      "tool_specific": {
+        "column": "25"
+      },
+      "runs": [
+        {
+          "reasoning": "The flagged line adds an element to the ArrayList while iterating over it with an enhanced for loop, which will throw ConcurrentModificationException at runtime because Java's fail-fast iterators detect structural modifications.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "collection modified during iteration causes exception",
+          "developer_explanation": "Adding items to a list while iterating over it with an enhanced for loop will crash at runtime due to ConcurrentModificationException in standard Java ArrayList behavior. This breaks the program's intended execution flow because exceptions thrown mid-iteration prevent all remaining elements from being processed.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 2973,
+            "output_tokens": 151
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 4054,
+          "latency_s": 9.047
+        },
+        {
+          "reasoning": "The code modifies an ArrayList directly within its own enhanced for-loop iteration. This will cause ConcurrentModificationException at runtime because the iterator used by foreach tracks modification counts that become inconsistent when add() is called, which matches exactly what Error Prone warns about.",
+          "is_true_positive": true,
+          "confidence": 1.0,
+          "category": "CORRECTNESS",
+          "issue_signature": "modifying collection during foreach iteration may throw exception",
+          "developer_explanation": "This is a real correctness bug: adding elements to the list while iterating over it will crash with ConcurrentModificationException at runtime. Fix this by either copying the list before modification, collecting indices first and modifying afterward, or using ListIterator if you must modify during traversal.",
+          "run": 2,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 2754,
+            "output_tokens": 168
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2778,
+          "latency_s": 7.094
+        },
+        {
+          "reasoning": "The shown code adds an element to the list (`list.add(",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "collection modified during enhanced for loop iteration causes failure",
+          "developer_explanation": "You are adding items to a list while using an enhanced-for-loop over it; standard Java iterators fail-fast on structural changes and this will throw ConcurrentModificationException at runtime, terminating your program unexpectedly. To fix this, either iterate over a copy of the collection or use index-based access instead.",
+          "run": 3,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 10038,
+            "output_tokens": 136
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 39064,
+          "latency_s": 72.55
+        }
+      ]
+    },
+    {
+      "finding_id": 14,
+      "type": "FallThrough",
+      "sourcefile": "MenuHandler.java",
+      "start_line": "13",
+      "message": "Execution may fall through from the previous case; add a `// fall through` comment before this line if it was deliberate",
+      "tool_specific": {
+        "column": "13"
+      },
+      "runs": [
+        {
+          "reasoning": "The static analysis tool flags line 13 where the default clause begins, claiming execution may implicitly flow into it from a previous switch case without an explicit break/return statement in between to terminate control within that branch.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "implicit fall through across target labels in switch block",
+          "developer_explanation": "Your switch case logic lacks an explicit break statement after the print('User 1') code before reaching the default clause. This means if userChoice matches a value associated with that branch (or another reachable path), execution could continue into and run 'Invalid option' unexpectedly, potentially causing incorrect output unless you explicitly terminate control flow there or confirm it was intentional.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 27270,
+            "output_tokens": 173
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 114891,
+          "latency_s": 234.048
+        },
+        {
+          "reasoning": "The code snippet shows a switch structure where statements following `case` labels (e.g., at line ?) lack an explicit `break`, allowing execution to continue into subsequent blocks such as the `default:` label marked on line 13 if no terminating statement exists before it. This pattern represents an unintended control flow issue unless documented otherwise, which matches the tool's claim of potential fallthrough from previous case.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "implicit fallthrough between switch cases without termination statement",
+          "developer_explanation": "This warning is a genuine bug: the code omits `break` statements after handling specific values (like case 0), so execution could continue into the next block or default logic unintentionally. You should add an explicit `break;` to isolate each case's behavior, unless you deliberately designed C-style fallthrough semantics—if intended, document it with a comment and verify logic handles multiple cases correctly.",
+          "run": 2,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 16088,
+            "output_tokens": 228
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 59977,
+          "latency_s": 129.264
+        },
+        {
+          "reasoning": "The flag points to a default label placed after case 1 without a break statement in between on line 12, which means when userChoice equals 1, execution will fall through and execute the default branch code as well - an unintended behavior for switch logic.",
+          "is_true_positive": true,
+          "confidence": 0.98,
+          "category": "CORRECTNESS",
+          "issue_signature": "switch case without break causes unintended fallthrough",
+          "developer_explanation": "Your code allows execution to flow from the 'case 1' branch directly into the default block when userChoice is 1, because there's no break statement between them. This means both \"User 1\" and \"Invalid option\" will print for choice value of 1, which doesn't match typical menu handling logic.",
+          "run": 3,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 2712,
+            "output_tokens": 184
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2235,
+          "latency_s": 6.658
+        }
+      ]
+    }
+  ],
+  "retry_history": [
+    {
+      "at": "2026-08-10T20:16:45.522917+00:00",
+      "reason": "failed_runs",
+      "kinds": [
+        "pusta odpowiedź"
+      ],
+      "attempted": 1,
+      "repaired": 1,
+      "still_missing": 0,
+      "max_attempts": 3,
+      "configuration_changed": false
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+model;lost_tp;lost_tp_share;recall
+Claude Opus 5;1;0,023;0,977
+Claude Sonnet 5;1;0,023;0,977
+GPT-5.6 Terra;2;0,047;0,953
+GPT-5.6 Luna;1;0,023;0,977
+gpt-oss-120b;5;0,116;0,884
+gpt-oss-20b;3;0,070;0,930
+Qwen3.5 9B;7;0,163;0,837

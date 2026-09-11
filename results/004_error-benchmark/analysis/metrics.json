@@ -1,0 +1,117 @@
+{
+  "run": "004_error-benchmark",
+  "models": {
+    "claude": "claude-opus-5",
+    "gpt": "gpt-5.6-terra",
+    "qwen": "qwen3.5:9b",
+    "oss": "openai/gpt-oss-120b",
+    "luna": "gpt-5.6-luna",
+    "oss20": "openai/gpt-oss-20b",
+    "sonnet": "claude-sonnet-5"
+  },
+  "settings": {
+    "iterations": 10000,
+    "seed": 20260803,
+    "alpha": 0.05,
+    "resampling": "rule"
+  },
+  "findings": 43,
+  "true_positives": 43,
+  "overview": {
+    "claude-opus-5": {
+      "tp": 42,
+      "fp": 0,
+      "tn": 0,
+      "fn": 1,
+      "precision": 1.0,
+      "recall": 0.9767441860465116,
+      "f1": 0.988235294117647,
+      "accuracy": 0.9767441860465116
+    },
+    "gpt-5.6-terra": {
+      "tp": 41,
+      "fp": 0,
+      "tn": 0,
+      "fn": 2,
+      "precision": 1.0,
+      "recall": 0.9534883720930233,
+      "f1": 0.9761904761904763,
+      "accuracy": 0.9534883720930233
+    },
+    "qwen3.5:9b": {
+      "tp": 36,
+      "fp": 0,
+      "tn": 0,
+      "fn": 7,
+      "precision": 1.0,
+      "recall": 0.8372093023255814,
+      "f1": 0.9113924050632911,
+      "accuracy": 0.8372093023255814
+    },
+    "openai/gpt-oss-120b": {
+      "tp": 38,
+      "fp": 0,
+      "tn": 0,
+      "fn": 5,
+      "precision": 1.0,
+      "recall": 0.8837209302325582,
+      "f1": 0.9382716049382717,
+      "accuracy": 0.8837209302325582
+    },
+    "gpt-5.6-luna": {
+      "tp": 42,
+      "fp": 0,
+      "tn": 0,
+      "fn": 1,
+      "precision": 1.0,
+      "recall": 0.9767441860465116,
+      "f1": 0.988235294117647,
+      "accuracy": 0.9767441860465116
+    },
+    "openai/gpt-oss-20b": {
+      "tp": 40,
+      "fp": 0,
+      "tn": 0,
+      "fn": 3,
+      "precision": 1.0,
+      "recall": 0.9302325581395349,
+      "f1": 0.963855421686747,
+      "accuracy": 0.9302325581395349
+    },
+    "claude-sonnet-5": {
+      "tp": 42,
+      "fp": 0,
+      "tn": 0,
+      "fn": 1,
+      "precision": 1.0,
+      "recall": 0.9767441860465116,
+      "f1": 0.988235294117647,
+      "accuracy": 0.9767441860465116
+    },
+    "raw_report": {
+      "tp": 43,
+      "fp": 0,
+      "tn": 0,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "accuracy": 1.0
+    },
+    "naive_classifier": {
+      "tp": 0,
+      "fp": 0,
+      "tn": 0,
+      "fn": 43,
+      "precision": null,
+      "recall": 0.0,
+      "f1": null,
+      "accuracy": 0.0
+    }
+  },
+  "clustering": {
+    "clusters": 41,
+    "mean_size": 1.048780487804878,
+    "icc": 0.0
+  }
+}

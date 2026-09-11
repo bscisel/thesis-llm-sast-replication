@@ -1,0 +1,1151 @@
+{
+  "model": "openai/gpt-oss-20b",
+  "tool": "error-prone",
+  "num_runs": 3,
+  "runs_per_invocation": 3,
+  "source_root": "java-errors-benchmark",
+  "call_parameters": {
+    "temperature": null,
+    "concurrency": 30,
+    "response_format": "json_schema",
+    "max_tokens": 8192,
+    "max_retries": 6,
+    "base_url": "https://openrouter.ai/api/v1",
+    "provider": "deepinfra/bf16",
+    "allow_fallbacks": false,
+    "require_parameters": true,
+    "cache_control": false
+  },
+  "system_prompt_variant": "benchmark",
+  "system_prompt_sha256": "b5b634e0a9109c59",
+  "user_prompt_sha256": "3963ac13371abed5",
+  "timestamp": "2026-08-09T18:23:19.597532+00:00",
+  "updated_at": "2026-08-09T18:23:19.597532+00:00",
+  "findings": [
+    {
+      "finding_id": 0,
+      "type": "EqualsGetClass",
+      "sourcefile": "PersonMatcher.java",
+      "start_line": "28",
+      "message": "Prefer instanceof to getClass when implementing Object#equals.",
+      "tool_specific": {
+        "column": "24"
+      },
+      "runs": [
+        {
+          "reasoning": "The equals method uses getClass to verify that the passed object is the same runtime class. Since Person is a static nested class not intended for subclassing, this comparison behaves equivalently to instanceof and does not violate the equals contract. Therefore, the tool’s claim pertains only to a style preference rather than an actual bug in the shown code.",
+          "is_true_positive": false,
+          "confidence": 0.9,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "use getclass in equals",
+          "developer_explanation": "The warning suggests replacing the getClass check with instanceof in the equals method. In this context that change would have no effect on correctness because Person is not expected to be subclassed. Since the equals logic already works as intended, this warning can be safely ignored.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2363,
+            "output_tokens": 1594,
+            "reasoning_tokens": 1677,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00029405
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 6696,
+          "latency_s": 13.635
+        },
+        {
+          "reasoning": "The code uses getClass() to verify the type of the argument in equals, which is a valid and correct pattern that preserves the contract of equals, so the warning is unfounded.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "getClass check in equals method",
+          "developer_explanation": "The equals method correctly checks that the other object is exactly the same class using getClass(), which ensures symmetry and transitivity. This is acceptable for a non-final class and does not introduce any bug, so the warning can be ignored.",
+          "run": 2,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2363,
+            "output_tokens": 1047,
+            "reasoning_tokens": 1068,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00021747
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 4251,
+          "latency_s": 10.041
+        },
+        {
+          "reasoning": "The code uses getClass() in equals, while the Person class is not declared final and could be subclassed in the same package. This would cause subclass instances to be considered unequal to a Person instance, breaking symmetry if subclassing is desired. Since the author likely intended Person to be a concrete, non‑extendable type, this behavior is acceptable. Therefore the alert is a false positive.",
+          "is_true_positive": false,
+          "confidence": 0.7,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "use of getClass in equals",
+          "developer_explanation": "The warning suggests replacing getClass() with instanceof in equals to allow subclasses to compare. In this code, Person is a static nested class that isn’t intended for inheritance, so using getClass() is fine and keeps equality strict. You can safely ignore the warning or make the class final to silence it.",
+          "run": 3,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2363,
+            "output_tokens": 1842,
+            "reasoning_tokens": 2045,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00032877
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 8129,
+          "latency_s": 15.972
+        }
+      ]
+    },
+    {
+      "finding_id": 1,
+      "type": "StringBuilderInitWithChar",
+      "sourcefile": "TextAssembler.java",
+      "start_line": "5",
+      "message": "StringBuilder does not have a char constructor; this invokes the int constructor.",
+      "tool_specific": {
+        "column": "28"
+      },
+      "runs": [
+        {
+          "reasoning": "Line 5 creates a StringBuilder with a char literal, which the compiler interprets as an int, invoking the capacity constructor. This means the builder starts empty instead of containing the character, so the code behaves differently than likely intended.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "incorrect stringbuilder constructor usage",
+          "developer_explanation": "The code calls new StringBuilder('a'), but StringBuilder has no constructor that takes a char. The char literal is treated as an int, so the builder is created empty with an initial capacity of 97. As a result, only \"bc\" is printed, probably not the intended output. Replace the line with new StringBuilder(\"a\") or append the character afterwards.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2078,
+            "output_tokens": 534,
+            "reasoning_tokens": 407,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.0001371
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1624,
+          "latency_s": 4.316
+        },
+        {
+          "reasoning": "The code calls new StringBuilder('a'), yet StringBuilder has no char constructor; the char literal is promoted to an int, invoking the capacity constructor, so the builder starts empty. This implies the developer likely intended to initialize with the character itself, making the output incorrect.",
+          "is_true_positive": true,
+          "confidence": 0.99,
+          "category": "CORRECTNESS",
+          "issue_signature": "stringbuilder init using char literal",
+          "developer_explanation": "new StringBuilder('a') actually calls the int constructor and creates an empty builder with capacity 97. The builder will not contain the character 'a', so subsequent output will miss it. Replace with new StringBuilder(\"a\") or use sb.append('a') to get the intended result.",
+          "run": 2,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2078,
+            "output_tokens": 637,
+            "reasoning_tokens": 527,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00015152
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2102,
+          "latency_s": 5.151
+        },
+        {
+          "reasoning": "It calls new StringBuilder('a') which passes a char literal. Java has no such constructor, so the int constructor is invoked, leaving the builder empty.",
+          "is_true_positive": true,
+          "confidence": 0.99,
+          "category": "CORRECTNESS",
+          "issue_signature": "stringbuilder initialized with char instead of string",
+          "developer_explanation": "The code uses a char literal to construct a StringBuilder, but StringBuilder only has a constructor that takes an int (for capacity). As a result, the builder is created empty with a capacity of 97 (the ASCII value of 'a'), and the output will be \"bc\" instead of \"abc\". Replace the constructor argument with a string, e.g., new StringBuilder(\"a\"), to get the intended behavior.",
+          "run": 3,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2078,
+            "output_tokens": 722,
+            "reasoning_tokens": 624,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00016342
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2459,
+          "latency_s": 6.363
+        }
+      ]
+    },
+    {
+      "finding_id": 2,
+      "type": "DeadException",
+      "sourcefile": "ValueProcessor.java",
+      "start_line": "11",
+      "message": "Exception created but not thrown",
+      "tool_specific": {
+        "column": "13"
+      },
+      "runs": [
+        {
+          "reasoning": "The method constructs an IllegalArgumentException inside an if block but never throws it, leaving the object unused. This is an active misuse of exception creation, indicating a likely coding mistake rather than a harmless side effect.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "exception created but not thrown",
+          "developer_explanation": "The code builds a new IllegalArgumentException when the value is negative but never throws it. That means the error condition is ignored and the caller will continue with normal execution. Replace the construction with a throw statement so that invalid input is properly rejected and the intended error handling occurs. ",
+          "run": 1,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2109,
+            "output_tokens": 571,
+            "reasoning_tokens": 510,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00014321
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2032,
+          "latency_s": 5.492
+        },
+        {
+          "reasoning": "The code creates a new IllegalArgumentException on line 11 but never passes it to throw or otherwise use it, so the exception object is never thrown or accessed.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "exception created but not thrown",
+          "developer_explanation": "The method builds an IllegalArgumentException but never actually throws it or uses it, meaning callers cannot detect that a negative value was passed. If the intention is to signal an error, the line should be changed to throw the exception instead of merely constructing it.",
+          "run": 2,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2109,
+            "output_tokens": 671,
+            "reasoning_tokens": 649,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00015721
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2558,
+          "latency_s": 6.646
+        },
+        {
+          "reasoning": "Line 11 creates an IllegalArgumentException object but never throws it, so the exception is effectively dead and the intended error handling is missing.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "exception created but not thrown",
+          "developer_explanation": "The code constructs an IllegalArgumentException when a negative value is passed, but it never propagates that exception. This means the method still completes normally, which is likely not what you intended. Throw the exception (e.g., with `throw new IllegalArgumentException(...)`) or remove the unused construction.",
+          "run": 3,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2109,
+            "output_tokens": 602,
+            "reasoning_tokens": 543,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00014755
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2136,
+          "latency_s": 5.945
+        }
+      ]
+    },
+    {
+      "finding_id": 3,
+      "type": "NarrowingCompoundAssignment",
+      "sourcefile": "DiscountCalculator.java",
+      "start_line": "6",
+      "message": "Compound assignments from double to int hide lossy casts",
+      "tool_specific": {
+        "column": "11"
+      },
+      "runs": [
+        {
+          "reasoning": "The code assigns an int variable `c` and then uses the compound assignment `c *= 0.33;`. The right-hand side is a double expression, so the compound assignment implicitly casts the result back to int, truncating any fractional part. This hidden lossy cast is exactly what Error Prone reports.\n",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "lossy cast hidden by compound assignment",
+          "developer_explanation": "The statement `c *= 0.33;` is equivalent to `c = (int)(c * 0.33);`. The fractional part of the product is discarded, so the value of `c` after the operation will be 3 instead of the expected 3.3. If you intend to keep the decimal value, change the variable type to double or use an explicit cast that matches the desired rounding.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2070,
+            "output_tokens": 617,
+            "reasoning_tokens": 450,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00014848
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1775,
+          "latency_s": 5.859
+        },
+        {
+          "reasoning": "The statement c *= 0.33; performs a double multiplication followed by an implicit cast to int, discarding the fractional part. This lossy cast is what the warning identifies, and it changes the value from the expected 3.3 to 3.",
+          "is_true_positive": true,
+          "confidence": 0.9,
+          "category": "CORRECTNESS",
+          "issue_signature": "lossy cast in compound assignment",
+          "developer_explanation": "Because c is declared as int, the compound assignment c *= 0.33 truncates the double result to an integer. If the intended behavior is to keep the decimal part, change c to a double or insert an explicit cast: c = (int)(c * 0.33);.",
+          "run": 2,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2070,
+            "output_tokens": 659,
+            "reasoning_tokens": 531,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00015436
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2108,
+          "latency_s": 6.527
+        },
+        {
+          "reasoning": "The code assigns to an int variable 'c' using the compound multiplication operator with a double literal (0.33), which implicitly casts the double result back to int, discarding the fractional part.",
+          "is_true_positive": true,
+          "confidence": 0.9,
+          "category": "CORRECTNESS",
+          "issue_signature": "lossy cast hidden in compound assignment",
+          "developer_explanation": "In the statement `c *= 0.33;`, the multiplication produces a double value but the assignment back to `c` casts it to an int, truncating any fractional part. This implicit cast can hide a loss of precision and may not be what the programmer intended. Explicitly cast the result, e.g., `c = (int)(c * 0.33);`, or use a double for the discount calculation if fractional values are needed.",
+          "run": 3,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2070,
+            "output_tokens": 638,
+            "reasoning_tokens": 506,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00015142
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1995,
+          "latency_s": 5.023
+        }
+      ]
+    },
+    {
+      "finding_id": 4,
+      "type": "BoxedPrimitiveEquality",
+      "sourcefile": "NumberComparison.java",
+      "start_line": "7",
+      "message": "Comparison using reference equality instead of value equality. Reference equality of boxed primitive types is usually not useful, as they are value objects, and it is bug-prone, as instances are cached for some values but not others.",
+      "tool_specific": {
+        "column": "33"
+      },
+      "runs": [
+        {
+          "reasoning": "The code compares two Integer objects with ==. Both are boxed from the primitive literal 1024, which is outside Java's Integer cache range, so each boxing creates a distinct object and the == comparison will be false, which is likely not what the programmer intended.",
+          "is_true_positive": true,
+          "confidence": 0.9,
+          "category": "CORRECTNESS",
+          "issue_signature": "wrong equality check of boxed primitives",
+          "developer_explanation": "You're using reference equality (==) to compare two Integer values, which is incorrect because Integer instances are not guaranteed to be the same object unless the value is cached. This will cause the comparison to be false for values that are not cached, such as 1024. Use num1.equals(num2) or compare their primitive values with num1.intValue() == num2.intValue() instead.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2138,
+            "output_tokens": 619,
+            "reasoning_tokens": 477,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.0001508
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1883,
+          "latency_s": 7.291
+        },
+        {
+          "reasoning": "The code uses '==' to compare two Integer objects holding the value 1024, which is outside Java's Integer cache range. As a result, num1 and num2 are distinct objects and '==' returns false, whereas the intended value comparison would be true.",
+          "is_true_positive": true,
+          "confidence": 0.99,
+          "category": "CORRECTNESS",
+          "issue_signature": "reference equality of boxed integers",
+          "developer_explanation": "This comparison checks if the two Integer instances are the same object, which they are not when the value is outside the cache range. This will print 'false', not the expected true. Use .equals() for value comparison to get the correct result.",
+          "run": 2,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2138,
+            "output_tokens": 435,
+            "reasoning_tokens": 308,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00012504
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1221,
+          "latency_s": 4.16
+        },
+        {
+          "reasoning": "The code uses '==' to compare two Integer objects, which compares references rather than values. Since 1024 is outside the cached range, num1 and num2 are distinct objects, so the comparison is incorrect for value equality.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "reference comparison of boxed primitives",
+          "developer_explanation": "The statement prints the result of a reference comparison instead of a value comparison. That means the output will be false even though the numeric values are equal. Replace the '==' with 'num1.equals(num2)' or compare int values to get the intended result.",
+          "run": 3,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2138,
+            "output_tokens": 696,
+            "reasoning_tokens": 639,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00016158
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2524,
+          "latency_s": 5.56
+        }
+      ]
+    },
+    {
+      "finding_id": 5,
+      "type": "ReferenceEquality",
+      "sourcefile": "NumberComparison.java",
+      "start_line": "7",
+      "message": "Comparison using reference equality instead of value equality",
+      "tool_specific": {
+        "column": "33"
+      },
+      "runs": [
+        {
+          "reasoning": "The code creates two distinct Integer objects holding 1024, so num1 == num2 compares object references rather than numeric values, producing false even though the numbers are equal. This mismatches the likely intent of value comparison.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "reference equality used for object comparison",
+          "developer_explanation": "Using `==` on Integer objects checks whether the references are the same, not whether the numeric values are equal. In this example it will print `false` even though both numbers are 1024. Replace the comparison with `num1.equals(num2)` or unbox to int: `num1.intValue() == num2.intValue()` if you need primitive comparison.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2062,
+            "output_tokens": 817,
+            "reasoning_tokens": 740,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00017624
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2905,
+          "latency_s": 7.052
+        },
+        {
+          "reasoning": "The code compares two Integer objects with the == operator, which tests reference identity, and because the value 1024 is outside the Integer cache range, num1 and num2 are distinct instances, so the comparison will always be false. Using reference equality for Integer values can cause logic errors when the intended comparison is based on numeric value.",
+          "is_true_positive": true,
+          "confidence": 0.99,
+          "category": "CORRECTNESS",
+          "issue_signature": "object reference equality comparison",
+          "developer_explanation": "The statement uses == to compare two Integer objects, which checks if they are the same instance. Since 1024 is not cached, the objects are different, so the comparison will always yield false even though the numeric values are equal. Replace the == with num1.equals(num2) to compare by value.",
+          "run": 2,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2062,
+            "output_tokens": 877,
+            "reasoning_tokens": 825,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00018464
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3249,
+          "latency_s": 7.675
+        },
+        {
+          "reasoning": "The two Integer variables are autoboxed from the literal 1024, which is outside the Integer cache range, so num1 and num2 reference distinct objects. Using == therefore evaluates to false even though the values are equal.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "reference equality instead of value equality",
+          "developer_explanation": "num1 and num2 are different Integer objects, so comparing them with == will always be false. If you want to compare the numeric values, use num1.equals(num2).",
+          "run": 3,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2062,
+            "output_tokens": 472,
+            "reasoning_tokens": 386,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00012794
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1514,
+          "latency_s": 4.086
+        }
+      ]
+    },
+    {
+      "finding_id": 6,
+      "type": "StringCaseLocaleUsage",
+      "sourcefile": "TypeNameFormatter.java",
+      "start_line": "10",
+      "message": "Specify a `Locale` when calling `String#to{Lower,Upper}Case`. (Note: there are multiple suggested fixes; the third may be most appropriate if you're dealing with ASCII Strings.)",
+      "tool_specific": {
+        "column": "49"
+      },
+      "runs": [
+        {
+          "reasoning": "The string literal \"String\" contains the letter 'i', which is mapped differently in locales such as Turkish. Calling toUpperCase() without specifying a locale will therefore depend on the JVM's default locale and may yield \"STRİNG\" instead of the expected \"STRING\". This is a real correctness issue.",
+          "is_true_positive": true,
+          "confidence": 0.98,
+          "category": "CORRECTNESS",
+          "issue_signature": "locale-sensitive string conversion",
+          "developer_explanation": "The method uses toUpperCase() without a locale, meaning the conversion will use the system's default locale. In some locales, like Turkish, the letter 'i' converts to a different uppercase character (İ), leading to unexpected results. To guarantee consistent behavior across environments, change the call to toUpperCase(Locale.ROOT).",
+          "run": 1,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2225,
+            "output_tokens": 949,
+            "reasoning_tokens": 908,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00019961
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3623,
+          "latency_s": 8.594
+        },
+        {
+          "reasoning": "The code calls String.toUpperCase() without a Locale, which changes the result under locales like Turkish. Consequently, the program may print \"STRİNG\" instead of \"STRING\" depending on the JVM's default locale, violating the intended behavior.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "locale-sensitive string case conversion",
+          "developer_explanation": "Calling toUpperCase() without specifying a Locale can give different results in some locales such as Turkish, where the letter 'i' becomes 'İ'. This means your program may output unexpected strings. Change the call to types[0].toUpperCase(Locale.ROOT) (or a suitable locale) so the output is consistent regardless of system settings.",
+          "run": 2,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2225,
+            "output_tokens": 625,
+            "reasoning_tokens": 501,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00015425
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1991,
+          "latency_s": 5.523
+        },
+        {
+          "reasoning": "The code uses a literal string array with ASCII characters, so the result of toUpperCase without a locale is deterministic and safe; the error-prone rule therefore raises a concern that does not actually affect this program.",
+          "is_true_positive": false,
+          "confidence": 0.9,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "locale unsafe string case conversion",
+          "developer_explanation": "In this snippet the strings are simple ASCII literals, so calling toUpperCase without a locale will not produce wrong results. The warning can be safely ignored here, though adding Locale.ROOT would still be good practice if the code were reused with other strings. No functional bug exists in this context.",
+          "run": 3,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2225,
+            "output_tokens": 1104,
+            "reasoning_tokens": 1088,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00022131
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 4327,
+          "latency_s": 10.706
+        }
+      ]
+    },
+    {
+      "finding_id": 7,
+      "type": "EqualsHashCode",
+      "sourcefile": "PersonRegistry.java",
+      "start_line": "21",
+      "message": "Classes that override equals should also override hashCode.",
+      "tool_specific": {
+        "column": "24"
+      },
+      "runs": [
+        {
+          "reasoning": "The Person class overrides equals but does not declare a matching hashCode method, violating the contract that equal objects must have equal hash codes.",
+          "is_true_positive": true,
+          "confidence": 0.98,
+          "category": "CORRECTNESS",
+          "issue_signature": "missing hashcode with equals override",
+          "developer_explanation": "Your Person class implements equals without a corresponding hashCode method. According to the Java contract, equal objects must return the same hash code; otherwise, hash-based collections may behave incorrectly. Add a hashCode implementation that uses the same fields.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2275,
+            "output_tokens": 344,
+            "reasoning_tokens": 266,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00011641
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1059,
+          "latency_s": 3.519
+        },
+        {
+          "reasoning": "The Person class overrides equals but provides no hashCode method, violating Java's equals/hashCode contract. This can lead to incorrect behavior when Person instances are used in hash-based collections.",
+          "is_true_positive": true,
+          "confidence": 0.9,
+          "category": "CORRECTNESS",
+          "issue_signature": "missing hashcode for overridden equals",
+          "developer_explanation": "Your Person class implements equals but omits hashCode. If any Person objects are stored in a HashSet, HashMap key, or any hash-based structure, equal objects may end up in different buckets, breaking collection semantics. Add a hashCode implementation that reflects the same fields used in equals to satisfy the contract and avoid subtle bugs.",
+          "run": 2,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2275,
+            "output_tokens": 451,
+            "reasoning_tokens": 354,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00013139
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1393,
+          "latency_s": 3.595
+        },
+        {
+          "reasoning": "The Person class overrides equals but does not override hashCode, violating Java's equality contract. This is a real correctness issue because equals and hashCode must be consistent to work correctly with hash-based collections.",
+          "is_true_positive": true,
+          "confidence": 0.9,
+          "category": "CORRECTNESS",
+          "issue_signature": "missing hashcode override",
+          "developer_explanation": "Your Person class implements equals but not hashCode. If Person instances ever end up in hash tables or sets, the contract between equals and hashCode will be broken, leading to incorrect behavior. Add a hashCode method that matches the fields used in equals.",
+          "run": 3,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2275,
+            "output_tokens": 694,
+            "reasoning_tokens": 672,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00016541
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2678,
+          "latency_s": 5.478
+        }
+      ]
+    },
+    {
+      "finding_id": 8,
+      "type": "EqualsGetClass",
+      "sourcefile": "PersonRegistry.java",
+      "start_line": "21",
+      "message": "Prefer instanceof to getClass when implementing Object#equals.",
+      "tool_specific": {
+        "column": "24"
+      },
+      "runs": [
+        {
+          "reasoning": "The Person class is a private static nested class that cannot be subclassed, so using getClass() for equality comparison is appropriate and does not violate symmetry or transitivity. The warning suggesting instanceof is unnecessary here.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "prefer instanceof over getclass in equals",
+          "developer_explanation": "This alert can be safely ignored. The Person class is private and cannot have subclasses, so comparing classes with getClass() is correct and preserves the equals contract. The equals implementation is fine.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2283,
+            "output_tokens": 1772,
+            "reasoning_tokens": 1976,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00031657
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 7842,
+          "latency_s": 16.374
+        },
+        {
+          "reasoning": "The equals method compares classes by calling getClass(), which correctly enforces type identity and is perfectly valid for a final nested class. The warning suggests using instanceof instead, but there is no safety or correctness issue in the shown code.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "use instanceof instead of getClass in equals",
+          "developer_explanation": "This static analysis alarm recommends replacing the getClass() check with instanceof, but the current getClass() usage is perfectly fine and does not introduce any bugs. If you have no subclasses of Person and you want strict type equality, you can safely ignore this suggestion.",
+          "run": 2,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2283,
+            "output_tokens": 584,
+            "reasoning_tokens": 501,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00015025
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1994,
+          "latency_s": 5.576
+        },
+        {
+          "reasoning": "The code uses getClass() in Person.equals() but Person is a package‑private static nested class with no subclasses, so the symmetry problem this rule flags will never occur here.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "equals uses getClass for type check",
+          "developer_explanation": "In the current code Person is not subclassed, so using getClass() does not break equals semantics. The warning is safe to ignore for now, though if you later add subclasses you might want to switch to instanceof or adjust the equals logic.",
+          "run": 3,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2283,
+            "output_tokens": 740,
+            "reasoning_tokens": 714,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00017209
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2832,
+          "latency_s": 6.872
+        }
+      ]
+    },
+    {
+      "finding_id": 9,
+      "type": "SelfEquals",
+      "sourcefile": "PersonRegistry.java",
+      "start_line": "29",
+      "message": "Testing an object for equality with itself will always be true.",
+      "tool_specific": {
+        "column": "52"
+      },
+      "runs": [
+        {
+          "reasoning": "The flagged line uses name.equals(name), comparing the field to itself, which is always true, so the equals method reports true when the ages match regardless of the other object’s name.",
+          "is_true_positive": true,
+          "confidence": 1.0,
+          "category": "CORRECTNESS",
+          "issue_signature": "self reference used in equality comparison",
+          "developer_explanation": "The equals method always returns true for name.equals(name), which ignores the other object's name and treats different names as equal if ages match. This leads to incorrect equality semantics. Replace name.equals(name) with name.equals(person.name) to correctly compare the two objects.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2285,
+            "output_tokens": 722,
+            "reasoning_tokens": 672,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00016963
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2674,
+          "latency_s": 6.734
+        },
+        {
+          "reasoning": "The equals method returns \"age == person.age && name.equals(name)\", comparing the field name to itself which is always true, so the equals implementation is incorrect.",
+          "is_true_positive": true,
+          "confidence": 0.99,
+          "category": "CORRECTNESS",
+          "issue_signature": "self equality comparison in equals method",
+          "developer_explanation": "Your equals method currently compares a Person’s name to itself, which will always evaluate to true. This means the equality check doesn’t properly compare the two Person instances. Replace the call with \"name.equals(person.name)\" so the method correctly compares the name of the two objects.",
+          "run": 2,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2285,
+            "output_tokens": 497,
+            "reasoning_tokens": 406,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00013813
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1609,
+          "latency_s": 4.971
+        },
+        {
+          "reasoning": "The method returns `age == person.age && name.equals(name)`, which compares the `name` field to itself. This self-comparison will always be true (or throw an NPE if `name` is null), so the equality check of the two Person objects is incorrect.",
+          "is_true_positive": true,
+          "confidence": 0.99,
+          "category": "CORRECTNESS",
+          "issue_signature": "self comparison of field in equals",
+          "developer_explanation": "Your equals implementation mistakenly compares the name field with itself instead of with the other object's name. This causes the method to report equality even when the two Person instances differ in name, and it can also lead to a NullPointerException if name is null. Replace `name.equals(name)` with `name.equals(person.name)` to correctly compare the two objects.",
+          "run": 3,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2285,
+            "output_tokens": 881,
+            "reasoning_tokens": 791,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00019189
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3116,
+          "latency_s": 8.711
+        }
+      ]
+    },
+    {
+      "finding_id": 10,
+      "type": "UnusedVariable",
+      "sourcefile": "ValueReporter.java",
+      "start_line": "10",
+      "message": "This assignment to the local variable 'x' is never read.",
+      "tool_specific": {
+        "column": "13"
+      },
+      "runs": [
+        {
+          "reasoning": "The variable x is initialized to 1 on line 10, but the very next statement on line 11 assigns x =+ 2, so the initial value is never read before being overwritten.",
+          "is_true_positive": true,
+          "confidence": 1.0,
+          "category": "CORRECTNESS",
+          "issue_signature": "unused assignment to local variable",
+          "developer_explanation": "The initial assignment of x to 1 is useless because x is immediately overwritten by the next statement. If the intent was to add 2 to the existing value, the correct syntax is `x += 2;` or `x = x + 2;`. Remove the first assignment or change the second statement to use the current value.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2158,
+            "output_tokens": 616,
+            "reasoning_tokens": 485,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00015098
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1921,
+          "latency_s": 5.274
+        },
+        {
+          "reasoning": "The code assigns 1 to x on line 10, then immediately overwrites x with the value +2 on line 11. Since the first value is never read before the overwrite, the assignment on line 10 is indeed unused and the warning is correct.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "unused variable assignment",
+          "developer_explanation": "The first assignment to x (line 10) has no effect because x is overwritten before any use. This likely indicates a coding mistake, such as intending to use `x += 2` instead of `x =+ 2`. Removing the redundant assignment or correcting the operation will make the code clearer and eliminate the unnecessary write.",
+          "run": 2,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2158,
+            "output_tokens": 563,
+            "reasoning_tokens": 412,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00014356
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1629,
+          "latency_s": 5.334
+        },
+        {
+          "reasoning": "The variable x is given the value 1 in line 10, but the next line assigns it +2 before x is ever read in the System.out.println, so the initial assignment is unused.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "unused variable assignment",
+          "developer_explanation": "Line 10 assigns 1 to x but that value is immediately overwritten by the next line, so the 1 is never used. This usually indicates a mistake; remove the initial assignment or change the code to use the intended value.",
+          "run": 3,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2158,
+            "output_tokens": 1150,
+            "reasoning_tokens": 1120,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00022574
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 4444,
+          "latency_s": 7.911
+        }
+      ]
+    },
+    {
+      "finding_id": 11,
+      "type": "ReturnValueIgnored",
+      "sourcefile": "TextTrimmer.java",
+      "start_line": "6",
+      "message": "Return value of 'substring' must be used",
+      "tool_specific": {
+        "column": "20"
+      },
+      "runs": [
+        {
+          "reasoning": "The code calls String.substring(3) but never uses the returned String, leaving variable s unchanged; this indicates a bug in most contexts.",
+          "is_true_positive": true,
+          "confidence": 0.9,
+          "category": "CORRECTNESS",
+          "issue_signature": "ignored return value",
+          "developer_explanation": "You call s.substring(3) but discard the result, so the original string remains unchanged. If the intention was to trim the string, assign the result back to s, e.g., s = s.substring(3).",
+          "run": 1,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2064,
+            "output_tokens": 384,
+            "reasoning_tokens": 325,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00011568
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1277,
+          "latency_s": 3.911
+        },
+        {
+          "reasoning": "The code invokes s.substring(3) and immediately ignores the return value, so the operation has no effect on subsequent program state.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "unused string substring result",
+          "developer_explanation": "Calling s.substring(3) returns a new string but the result is thrown away, leaving s unchanged. If the intention was to trim the string, assign the result back to s: s = s.substring(3);.",
+          "run": 2,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2064,
+            "output_tokens": 713,
+            "reasoning_tokens": 676,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00016174
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2679,
+          "latency_s": 6.551
+        },
+        {
+          "reasoning": "s.substring(3) returns a new string that is never assigned back to s, so the value is ignored, causing the program to print the original string instead of the trimmed one.",
+          "is_true_positive": true,
+          "confidence": 0.9,
+          "category": "CORRECTNESS",
+          "issue_signature": "unused return value of substring",
+          "developer_explanation": "The call to substring creates a new string but the result is never used. This means the variable s keeps its original value and the trim does nothing. Assign the result back to s (e.g., s = s.substring(3)) if you intended to trim the string.",
+          "run": 3,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2064,
+            "output_tokens": 399,
+            "reasoning_tokens": 280,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00011778
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1100,
+          "latency_s": 4.225
+        }
+      ]
+    },
+    {
+      "finding_id": 12,
+      "type": "MissingOverride",
+      "sourcefile": "PersonRanking.java",
+      "start_line": "18",
+      "message": "compareTo implements method in Comparable; expected @Override",
+      "tool_specific": {
+        "column": "20"
+      },
+      "runs": [
+        {
+          "reasoning": "The class Person implements Comparable<Person> and provides a public int compareTo(Person obj) method, which correctly implements the interface method. Therefore, the code compiles and runs correctly; the missing @Override annotation is purely a stylistic choice.",
+          "is_true_positive": false,
+          "confidence": 0.99,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "missing override annotation",
+          "developer_explanation": "This warning is harmless. The @Override annotation is optional for interface methods, so omitting it does not affect correctness or security. You can ignore the warning or add @Override for clarity if you prefer, but the code functions as intended.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2190,
+            "output_tokens": 389,
+            "reasoning_tokens": 311,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00012016
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1234,
+          "latency_s": 3.941
+        },
+        {
+          "reasoning": "The class Person implements Comparable<Person> and the method compareTo has the correct signature. According to the Java Language Specification, this method implements an interface method, and the tool correctly identifies that the @Override annotation is recommended.",
+          "is_true_positive": true,
+          "confidence": 0.9,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "missing override annotation",
+          "developer_explanation": "Your compareTo method implements an interface method but lacks the @Override annotation. Adding @Override helps the compiler confirm you are overriding correctly, improves readability, and protects against accidental signature mismatches. Add @Override before the method declaration.",
+          "run": 2,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2190,
+            "output_tokens": 691,
+            "reasoning_tokens": 656,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00016244
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2616,
+          "latency_s": 5.095
+        },
+        {
+          "reasoning": "The Person class implements Comparable<Person> and defines a compareTo method, but it does not annotate it with @Override.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "missing @override annotation on interface method",
+          "developer_explanation": "Adding the @Override annotation to the compareTo method makes it clear that this method is intended to override an interface method and helps the compiler detect signature mismatches or accidental overloads. Update the method declaration to \"@Override public int compareTo(Person obj)\".",
+          "run": 3,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2190,
+            "output_tokens": 937,
+            "reasoning_tokens": 1020,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00019688
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 4047,
+          "latency_s": 6.758
+        }
+      ]
+    },
+    {
+      "finding_id": 13,
+      "type": "ModifyCollectionInEnhancedForLoop",
+      "sourcefile": "ItemAppender.java",
+      "start_line": "12",
+      "message": "Modifying a collection while iterating over it in a loop may cause a ConcurrentModificationException to be thrown or lead to undefined behavior.",
+      "tool_specific": {
+        "column": "25"
+      },
+      "runs": [
+        {
+          "reasoning": "The code uses a for‑each loop over a List and inside that loop it calls list.add(\"x\"), which mutates the collection while its iterator is in use, triggering a ConcurrentModificationException at execution.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "modifying collection in enhanced for loop",
+          "developer_explanation": "The loop iterates over 'list' using its iterator. Adding an element inside the loop changes the collection’s structure, causing the iterator to throw a ConcurrentModificationException on the next call. To fix this, add elements after the loop, use a ListIterator and its add method, or iterate over a copy of the list.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2171,
+            "output_tokens": 618,
+            "reasoning_tokens": 526,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00015165
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2088,
+          "latency_s": 5.498
+        },
+        {
+          "reasoning": "The code iterates over an ArrayList with a for‑each loop and adds an element to that same list inside the loop. Modifying the list structurally while an Iterator is in use causes a ConcurrentModificationException during the next iteration.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "collection modified during enhanced for loop",
+          "developer_explanation": "When you add an element to the list while iterating over it, Java’s internal iterator detects the change and throws a ConcurrentModificationException. This means the program will crash at runtime. To fix the code, avoid modifying the list inside the loop—perhaps collect the additions in a separate list and add them after the loop completes.",
+          "run": 2,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2171,
+            "output_tokens": 491,
+            "reasoning_tokens": 400,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00013387
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1587,
+          "latency_s": 3.865
+        },
+        {
+          "reasoning": "The code adds an element to the list inside the enhanced for loop (line 12), modifying the collection while the iterator is in use. This action triggers a ConcurrentModificationException or leads to undefined behaviour, which makes the warning a real issue.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "modifying collection during enhanced for loop",
+          "developer_explanation": "Adding to the list while it is being iterated causes a ConcurrentModificationException, interrupting the loop. To avoid this, collect additions separately and add them after the loop, or iterate over a copy of the list.",
+          "run": 3,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2171,
+            "output_tokens": 534,
+            "reasoning_tokens": 476,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00013989
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1883,
+          "latency_s": 4.412
+        }
+      ]
+    },
+    {
+      "finding_id": 14,
+      "type": "FallThrough",
+      "sourcefile": "MenuHandler.java",
+      "start_line": "13",
+      "message": "Execution may fall through from the previous case; add a `// fall through` comment before this line if it was deliberate",
+      "tool_specific": {
+        "column": "13"
+      },
+      "runs": [
+        {
+          "reasoning": "The switch statement lacks a break after case 1, so execution falls into the default case. This behavior is unintended unless explicitly documented.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "case fall through",
+          "developer_explanation": "Case 1 doesn’t have a break, so it will execute the code in the default section and print \"Invalid option\" after \"User 1\". Add a break statement (or comment the fall‑through if it is deliberate) to avoid the unintended output.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2157,
+            "output_tokens": 504,
+            "reasoning_tokens": 418,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00013527
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1636,
+          "latency_s": 5.17
+        },
+        {
+          "reasoning": "The code shows that after the case 1 block there is no break statement, so execution will continue into the following default case, printing \"Invalid option\" as a second message. Since nothing in the snippet indicates an intentional fall‑through, the program will produce an unintended output for userChoice = 1. This demonstrates a real logical error, not a tooling artifact.",
+          "is_true_positive": true,
+          "confidence": 0.99,
+          "category": "CORRECTNESS",
+          "issue_signature": "case fallthrough without break",
+          "developer_explanation": "The method will print both \"User 1\" and \"Invalid option\" when the user selects option 1 because the switch case for 1 does not end with a break. This likely isn’t what you intended. Add a break after the case 1 block (or place a // fall through comment if doing so is deliberate).",
+          "run": 2,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2157,
+            "output_tokens": 706,
+            "reasoning_tokens": 578,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00016355
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2270,
+          "latency_s": 7.155
+        },
+        {
+          "reasoning": "The code has no break after case 1, so execution falls through to the default block, which prints \"Invalid option\" after \"User 1\". This is an unintended fall-through that the warning correctly flags.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "fall-through in switch statement",
+          "developer_explanation": "There's a missing break after case 1, so the program will also execute the default case and print \"Invalid option\". Add a break statement or a \"// fall through\" comment if this behavior is intentional.",
+          "run": 3,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2157,
+            "output_tokens": 519,
+            "reasoning_tokens": 435,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00013737
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1718,
+          "latency_s": 4.132
+        }
+      ]
+    }
+  ]
+}

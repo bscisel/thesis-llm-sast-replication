@@ -1,0 +1,1362 @@
+{
+  "model": "gpt-5.6-luna",
+  "tool": "spotbugs",
+  "num_runs": 3,
+  "runs_per_invocation": 3,
+  "source_root": "jetty.project",
+  "call_parameters": {
+    "temperature": null,
+    "concurrency": 30,
+    "response_format": "json_schema",
+    "max_completion_tokens": 8192,
+    "max_retries": 6,
+    "reasoning_effort": "default"
+  },
+  "system_prompt_variant": "jetty",
+  "system_prompt_sha256": "b5b634e0a9109c59",
+  "user_prompt_sha256": "14894866e018872e",
+  "timestamp": "2026-08-15T08:10:54.517013+00:00",
+  "updated_at": "2026-08-15T08:10:54.517013+00:00",
+  "findings": [
+    {
+      "finding_id": 0,
+      "type": "PERM_SUPER_NOT_CALLED_IN_GETPERMISSIONS",
+      "sourcefile": "WebAppClassLoader.java",
+      "start_line": "333",
+      "message": "Custom class loader does not call its superclass's getPermissions()",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "SECURITY",
+          "confidence": 0.96,
+          "developer_explanation": "When the context supplies a non-null permission collection, this method returns it without incorporating the permissions granted by the superclass and system policy. Classes loaded by this loader can therefore lose or bypass systemwide policy permissions; the implementation should obtain the superclass collection and merge the context-specific permissions into it, unless this deliberate policy replacement is explicitly guaranteed and acceptable.",
+          "is_true_positive": true,
+          "issue_signature": "custom class loader bypasses system policy permissions",
+          "reasoning": "The shown method calls super.getPermissions(cs) only when the context permission collection is null; otherwise it returns the context collection directly. Thus the superclass policy permissions are excluded on the non-null path, allowing classes defined by this loader to have permissions independent of the system policy. That is the security weakness described by the warning, even if the context-specific collection is intentional.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 5383,
+            "output_tokens": 484,
+            "reasoning_tokens": 290,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 5.118
+        },
+        {
+          "category": "SECURITY",
+          "confidence": 0.97,
+          "developer_explanation": "When the context supplies a permission collection, this method returns it directly and never incorporates the permissions granted by the system policy. Call super.getPermissions(cs) unconditionally and add or merge the context-specific permissions, unless the application deliberately guarantees that the context collection already contains all required policy permissions.",
+          "is_true_positive": true,
+          "issue_signature": "custom class loader bypasses system permissions",
+          "reasoning": "The method calls super.getPermissions(cs) only when the context permission collection is null; otherwise it returns the context collection without consulting the superclass. Consequently, classes loaded with a non-null context collection can receive permissions independent of the system policy, which is the security weakness described by the warning. The surrounding snippet does not show that the context collection is guaranteed to include the system policy permissions.",
+          "run": 2,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 5383,
+            "output_tokens": 456,
+            "reasoning_tokens": 271,
+            "cached_input_tokens": 5380
+          },
+          "stop_reason": "stop",
+          "latency_s": 4.809
+        },
+        {
+          "category": "SECURITY",
+          "confidence": 0.94,
+          "developer_explanation": "When the context supplies a non-null permission collection, this method returns it without incorporating the permissions from the superclass, so the system policy may be bypassed for classes loaded by this loader. Build on the superclass collection and add the context-specific permissions, or explicitly document and justify a replacement policy if that behavior is intentional.",
+          "is_true_positive": true,
+          "issue_signature": "custom class loader bypasses superclass permissions",
+          "reasoning": "The shown method calls the superclass only when the context permission collection is null; otherwise it returns the context collection directly. That non-null branch can omit permissions granted by the system policy, which is the security weakness described by the warning. The conditional fallback does not ensure superclass permissions are initialized and preserved for all loaded classes.",
+          "run": 3,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 5383,
+            "output_tokens": 951,
+            "reasoning_tokens": 767,
+            "cached_input_tokens": 5380
+          },
+          "stop_reason": "stop",
+          "latency_s": 8.3
+        }
+      ],
+      "original_finding_index": 103
+    },
+    {
+      "finding_id": 1,
+      "type": "EQ_CHECK_FOR_OPERAND_NOT_COMPATIBLE_WITH_THIS",
+      "sourcefile": "JettyHttpExchange.java",
+      "start_line": "96",
+      "message": "Equals checks for incompatible operand",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.98,
+          "developer_explanation": "This wrapper forwards equality checks to its delegate, so it can report equality with a delegate object even though the delegate does not consider the wrapper equal. That breaks the symmetry required by equals; restrict equality to compatible exchange types or implement matching equality semantics on both sides.",
+          "is_true_positive": true,
+          "issue_signature": "equals accepts incompatible operand",
+          "reasoning": "The shown equals method directly passes its argument to a different type's equals implementation, and the warning indicates that implementation recognizes JettyHttpExchangeDelegate operands. Consequently, a JettyHttpExchange can compare equal to its delegate while the delegate can reject the wrapper, violating equals symmetry and potentially causing inconsistent collection behavior. The delegate implementation is outside the snippet, but the reported behavior and the forwarding code establish the incompatible-type comparison.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 3749,
+            "output_tokens": 596,
+            "reasoning_tokens": 411,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 5.591
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.97,
+          "developer_explanation": "The wrapper forwards the original object directly to an equality implementation that expects a JettyHttpExchangeDelegate, so comparisons involving JettyHttpExchange objects use an incompatible operand type. This can violate basic equality properties, including potentially making an exchange unequal to itself; the method should compare compatible wrapper objects and their delegates, or otherwise implement equality consistently.",
+          "is_true_positive": true,
+          "issue_signature": "equals checks incompatible operand type",
+          "reasoning": "The shown equals method passes its JettyHttpExchange argument directly to _delegate.equals instead of unwrapping a compatible JettyHttpExchange or checking the wrapper type itself. Because the delegate equality implementation checks for JettyHttpExchangeDelegate operands, the wrapper's equality domain is incompatible and can break symmetry or even self-equality, making this a real correctness issue.",
+          "run": 2,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 3749,
+            "output_tokens": 859,
+            "reasoning_tokens": 663,
+            "cached_input_tokens": 3746
+          },
+          "stop_reason": "stop",
+          "latency_s": 9.102
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.96,
+          "developer_explanation": "This wrapper forwards its equals call directly to a delegate, so the delegate receives a JettyHttpExchange object even though its equality logic is for JettyHttpExchangeDelegate operands. That can make equality asymmetric or cause separate exchange wrappers not to compare as intended; implement equality in terms of compatible JettyHttpExchange instances, or explicitly unwrap and compare delegates on both sides.",
+          "is_true_positive": true,
+          "issue_signature": "equals comparison with incompatible operand type",
+          "reasoning": "The shown equals implementation passes the JettyHttpExchange argument directly to _delegate.equals(Object), while the reported behavior says that equality checks for JettyHttpExchangeDelegate operands. Consequently, the wrapper can compare itself against an operand of a type incompatible with the delegate's equality contract, allowing asymmetric or otherwise inconsistent equality behavior. The delegate implementation is not shown, but the warning's stated operand check makes the reported contract problem materially applicable here.",
+          "run": 3,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 3749,
+            "output_tokens": 663,
+            "reasoning_tokens": 452,
+            "cached_input_tokens": 3746
+          },
+          "stop_reason": "stop",
+          "latency_s": 6.173
+        }
+      ],
+      "original_finding_index": 124
+    },
+    {
+      "finding_id": 2,
+      "type": "EI_EXPOSE_STATIC_REP2",
+      "sourcefile": "JettyHttpServerProvider.java",
+      "start_line": "36",
+      "message": "May expose internal static state by storing a mutable object into a static field",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.9,
+          "developer_explanation": "The public setter stores the caller's mutable Server instance directly, so subsequent changes made through that reference also change the provider's shared static state. This may be intentional for configuring a shared Jetty server, but the ownership and mutation risks should be documented or the API redesigned to avoid exposing shared mutable state.",
+          "is_true_positive": true,
+          "issue_signature": "mutable object stored in static field",
+          "reasoning": "The shown setter assigns the externally supplied mutable Server reference directly to the private static _server field, and later code uses that same instance. Consequently, callers retaining the reference can mutate the provider's shared state without going through this class, so the warning's encapsulation claim is materially correct even if the sharing is intentional. The issue is primarily maintainability and state ownership rather than a demonstrated attacker-reachable security vulnerability.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 2875,
+            "output_tokens": 707,
+            "reasoning_tokens": 512,
+            "cached_input_tokens": 0
+          },
+          "stop_reason": "stop",
+          "latency_s": 7.595
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.84,
+          "developer_explanation": "This alarm can be dismissed because the setter intentionally installs a caller-provided, mutable Jetty server as the shared server used by subsequently created HTTP servers. Copying a Server would change the intended sharing semantics and is not a meaningful defensive alternative here; callers that configure the server are expected to retain control of it.",
+          "is_true_positive": false,
+          "issue_signature": "mutable object stored in static field",
+          "reasoning": "The code deliberately stores the caller-supplied mutable Server in a private static field and later uses that same instance as a shared server. Although this creates the aliasing pattern reported by the rule, sharing a configured Jetty Server is the explicit purpose of setServer, and no untrusted input or security-sensitive invariant is shown. A defensive copy would not preserve the intended server identity and behavior, so the warning is a false positive in this context.",
+          "run": 2,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 2875,
+            "output_tokens": 1234,
+            "reasoning_tokens": 1024,
+            "cached_input_tokens": 2872
+          },
+          "stop_reason": "stop",
+          "latency_s": 11.775
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.91,
+          "developer_explanation": "The setter stores the caller’s mutable Server instance directly in shared static state, so the caller can later change the provider’s server configuration through the retained reference. This may be intentional for sharing a configured server, but the aliasing should be documented or replaced with a controlled ownership or configuration mechanism if independent state is required.",
+          "is_true_positive": true,
+          "issue_signature": "mutable object stored in static state",
+          "reasoning": "The shown code assigns a publicly supplied mutable Server reference directly to the private static _server field, while the caller can retain and mutate that same object. This is genuine representation exposure and can cause externally driven changes to the provider’s shared state, even though the API may intentionally support sharing a configured server. No attacker-specific security consequence is established by the snippet, so this is best categorized as a maintainability issue rather than a security weakness.",
+          "run": 3,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 2875,
+            "output_tokens": 715,
+            "reasoning_tokens": 512,
+            "cached_input_tokens": 0
+          },
+          "stop_reason": "stop",
+          "latency_s": 6.187
+        }
+      ],
+      "original_finding_index": 132
+    },
+    {
+      "finding_id": 3,
+      "type": "ES_COMPARING_PARAMETER_STRING_WITH_EQ",
+      "sourcefile": "HttpCookie.java",
+      "start_line": "869",
+      "message": "Comparison of String parameter using == or !=",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.99,
+          "developer_explanation": "This alarm can be safely dismissed because the reference comparison is only an optimization and is followed by a null check and case-insensitive content comparison. Equal string references necessarily have equal contents, while distinct strings with equal contents are still handled correctly.",
+          "is_true_positive": false,
+          "issue_signature": "string reference comparison instead of content comparison",
+          "reasoning": "The flagged reference comparison is an identity fast path, and every non-identical non-null pair is subsequently compared with equalsIgnoreCase. Since identical String references necessarily have identical contents and distinct equal strings are handled by the fallback, this method does not require callers to intern strings and does not produce incorrect results. The warning's underlying concern is therefore not present in this code context.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 4957,
+            "output_tokens": 322,
+            "reasoning_tokens": 148,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 4.092
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.98,
+          "developer_explanation": "This reference comparison is only a fast path for identical references, including the case where both values are null. When the references differ, the method performs the required case-insensitive content comparison, so callers do not need to provide interned strings and the alarm can be safely dismissed.",
+          "is_true_positive": false,
+          "issue_signature": "string comparison using reference equality",
+          "reasoning": "The shown method uses `==` only as an early identity and null shortcut, then calls `equalsIgnoreCase` whenever two non-null strings are distinct objects. Therefore it does not require callers to pass interned strings and does not compare string contents incorrectly. The warning's stated fragility is absent in this implementation, making it a false positive.",
+          "run": 2,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 4957,
+            "output_tokens": 427,
+            "reasoning_tokens": 252,
+            "cached_input_tokens": 4954
+          },
+          "stop_reason": "stop",
+          "latency_s": 4.174
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.99,
+          "developer_explanation": "This alarm can be safely dismissed because the reference comparison is only a fast path for identical references, including the case where both values are null. Non-null strings with different references are still compared by content using equalsIgnoreCase, so callers are not required to provide interned strings.",
+          "is_true_positive": false,
+          "issue_signature": "string reference comparison instead of content comparison",
+          "reasoning": "The flagged reference comparison is followed by null checks and a content-based equalsIgnoreCase comparison for all non-identical, non-null strings. Therefore, the method does not require callers to pass interned strings and does not incorrectly compare distinct String objects by reference. The reported issue is consequently a false positive in this context.",
+          "run": 3,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 4957,
+            "output_tokens": 360,
+            "reasoning_tokens": 189,
+            "cached_input_tokens": 4954
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.404
+        }
+      ],
+      "original_finding_index": 144
+    },
+    {
+      "finding_id": 4,
+      "type": "AT_NONATOMIC_OPERATIONS_ON_SHARED_VARIABLE",
+      "sourcefile": "HttpParser.java",
+      "start_line": "1366",
+      "message": "Operation on shared variable is not atomic",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CONCURRENCY",
+          "confidence": 0.91,
+          "developer_explanation": "This increment updates parser state that is used throughout the stateful parsing operation, but the shown code provides no indication that the parser instance is accessed by multiple threads. The parser is evidently designed for sequential state-machine use, so the increment does not require atomic synchronization in this context and the alarm can be dismissed unless callers share one instance concurrently.",
+          "is_true_positive": false,
+          "issue_signature": "unsynchronized compound update of shared state",
+          "reasoning": "The flagged operation is an increment of the parser's mutable `_length` field, but the shown method is a sequential state-machine parser whose other state fields are likewise read and written without synchronization. Nothing in the snippet indicates that one parser instance is concurrently accessed by multiple threads, so non-atomicity is not a real issue under the evident usage model. Callers outside the excerpt could change that conclusion, but based on the code shown this is most likely a false positive.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 5780,
+            "output_tokens": 450,
+            "reasoning_tokens": 236,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 5.146
+        },
+        {
+          "category": "CONCURRENCY",
+          "confidence": 0.91,
+          "developer_explanation": "The increment is non-atomic in isolation, but this parser state is held in the parser instance and the shown code provides no indication that one instance is processed concurrently by multiple threads. The alarm can be dismissed unless callers share a parser instance across threads; if they do, the entire parsing state, not just this increment, would need synchronization or thread confinement.",
+          "is_true_positive": false,
+          "issue_signature": "unsynchronized compound update of shared state",
+          "reasoning": "The flagged operation is `_length++` on mutable instance state within a parser method, and the shown code provides no evidence that the same parser instance is accessed concurrently by multiple threads. The surrounding fields demonstrate per-instance parsing state, for which serial invocation or thread confinement makes atomicity unnecessary. Therefore, the syntactic compound update does not establish the race claimed by the warning in this context, although outside callers could change that conclusion.",
+          "run": 2,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 5780,
+            "output_tokens": 492,
+            "reasoning_tokens": 283,
+            "cached_input_tokens": 5777
+          },
+          "stop_reason": "stop",
+          "latency_s": 5.133
+        },
+        {
+          "category": "CONCURRENCY",
+          "confidence": 0.87,
+          "developer_explanation": "The increment is only a parser-state update, and the surrounding parsing logic already accesses many mutable fields without synchronization. Unless the same parser instance is deliberately used concurrently—which is not indicated here—there is no cross-thread race to fix, so this alarm can be dismissed.",
+          "is_true_positive": false,
+          "issue_signature": "non-atomic compound update of shared state",
+          "reasoning": "The shown code updates _length as ordinary parser-local mutable state, alongside many other unsynchronized parsing fields, rather than as a counter that is evidently shared between threads. Although _length++ is technically a non-atomic read-modify-write, the warning's concurrency consequence requires concurrent use of the same parser instance, and that is not established by this excerpt. The construction and calling context would be decisive, but this is most likely a false positive for a stateful, single-threaded parser object.",
+          "run": 3,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 5780,
+            "output_tokens": 718,
+            "reasoning_tokens": 512,
+            "cached_input_tokens": 5777
+          },
+          "stop_reason": "stop",
+          "latency_s": 6.343
+        }
+      ],
+      "original_finding_index": 172
+    },
+    {
+      "finding_id": 5,
+      "type": "VA_FORMAT_STRING_USES_NEWLINE",
+      "sourcefile": "HttpTester.java",
+      "start_line": "636",
+      "message": "Format string should use %n rather than \\n",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.93,
+          "developer_explanation": "This method intentionally formats an HTTP-related textual representation with literal LF characters, and the neighboring request formatter uses the same convention. A platform-dependent separator from `%n` could make the representation vary across operating systems, so this alarm can be safely dismissed unless the output is specifically intended for platform-native text files.",
+          "is_true_positive": false,
+          "issue_signature": "literal newline in format string",
+          "reasoning": "The shown code deliberately uses literal `\\n` characters in an HTTP tester `toString()` representation, rather than writing platform-native text. Replacing them with `%n` would make the output vary by operating system and is not inherently preferable for a protocol-oriented or test-oriented representation, so the warning's general recommendation does not establish a real issue here.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 3545,
+            "output_tokens": 602,
+            "reasoning_tokens": 419,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 6.07
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.86,
+          "developer_explanation": "The format string embeds LF characters directly, so the rendered response uses LF regardless of the host platform. If this textual representation is intended to use normal platform line separators, replace the embedded newlines with %n; otherwise, document that LF-only output is deliberate.",
+          "is_true_positive": true,
+          "issue_signature": "platform-dependent line separator in format string",
+          "reasoning": "The shown code passes a format string containing literal \\n characters to String.format, which always produces LF rather than the platform-specific separator produced by %n. This can make the diagnostic string inconsistent with other platform-generated text, so the warning identifies a real portability and maintainability issue, although a deliberate LF-only representation could justify retaining it.",
+          "run": 2,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 3545,
+            "output_tokens": 685,
+            "reasoning_tokens": 512,
+            "cached_input_tokens": 3542
+          },
+          "stop_reason": "stop",
+          "latency_s": 6.619
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.91,
+          "developer_explanation": "This alarm can be safely dismissed because the method is producing a textual HTTP representation with deliberately fixed newline characters, rather than platform-dependent user-facing text. Replacing them with %n would make the result vary by operating system and could undermine stable protocol-oriented or test output.",
+          "is_true_positive": false,
+          "issue_signature": "platform-dependent newline in format string",
+          "reasoning": "The shown code deliberately embeds literal LF characters in an HTTP message representation returned by toString(). Using %n would change that representation on platforms whose line separator differs, so the claimed preference for a platform-specific separator is not materially correct in this protocol-oriented context. The warning identifies a generic portability pattern but does not establish that platform-dependent output is appropriate here.",
+          "run": 3,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 3545,
+            "output_tokens": 688,
+            "reasoning_tokens": 512,
+            "cached_input_tokens": 3542
+          },
+          "stop_reason": "stop",
+          "latency_s": 6.646
+        }
+      ],
+      "original_finding_index": 201
+    },
+    {
+      "finding_id": 6,
+      "type": "RV_NEGATING_RESULT_OF_COMPARETO",
+      "sourcefile": "QuotedQualityCSV.java",
+      "start_line": "335",
+      "message": "Negating the result of compareTo()/compare()",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.99,
+          "developer_explanation": "This alarm can be safely dismissed because Integer.compare is specified to return only -1, 0, or 1, so negating it cannot overflow or leave Integer.MIN_VALUE unchanged. The negation correctly reverses the comparison to order the indices from lowest to highest.",
+          "is_true_positive": false,
+          "issue_signature": "negated comparison result",
+          "reasoning": "The flagged expression negates Integer.compare(o._index, _index), and Integer.compare is guaranteed to return only -1, 0, or 1 rather than arbitrary integer differences. Therefore Integer.MIN_VALUE can never occur, and the negation correctly reverses the ordering so lower indices sort first. The warning's stated correctness concern is not present in this code.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 4293,
+            "output_tokens": 396,
+            "reasoning_tokens": 219,
+            "cached_input_tokens": 0
+          },
+          "stop_reason": "stop",
+          "latency_s": 4.617
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.99,
+          "developer_explanation": "This alarm can be dismissed because Integer.compare always returns -1, 0, or 1, so negating it cannot overflow or fail to reverse its sign. The expression correctly makes the index ordering ascending after the preceding comparisons tie.",
+          "is_true_positive": false,
+          "issue_signature": "negated comparison result",
+          "reasoning": "The flagged expression negates the result of Integer.compare, which is guaranteed to return only -1, 0, or 1 rather than Integer.MIN_VALUE. Therefore, negation safely reverses the comparison sign here, and the comparator correctly orders the index from lowest to highest as intended. The warning's stated overflow/sign-reversal concern does not apply to this code.",
+          "run": 2,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 4293,
+            "output_tokens": 308,
+            "reasoning_tokens": 137,
+            "cached_input_tokens": 4290
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.2
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.99,
+          "developer_explanation": "This alarm can be safely dismissed because Integer.compare() returns only -1, 0, or 1, so negating its result cannot overflow or mishandle Integer.MIN_VALUE. The expression also correctly reverses the comparison to order indices from lowest to highest.",
+          "is_true_positive": false,
+          "issue_signature": "negated comparison result may overflow",
+          "reasoning": "The flagged expression negates the result of Integer.compare, which is guaranteed to be -1, 0, or 1 and therefore can never be Integer.MIN_VALUE. Negation is consequently safe here, and it correctly reverses the operand order to provide the intended lowest-index-first ordering. The warning's claimed correctness risk does not exist for this specific comparison.",
+          "run": 3,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 4293,
+            "output_tokens": 340,
+            "reasoning_tokens": 164,
+            "cached_input_tokens": 4290
+          },
+          "stop_reason": "stop",
+          "latency_s": 4.006
+        }
+      ],
+      "original_finding_index": 223
+    },
+    {
+      "finding_id": 7,
+      "type": "MS_PKGPROTECT",
+      "sourcefile": "Http3Fields.java",
+      "start_line": "37",
+      "message": "Field should be package protected",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "SECURITY",
+          "confidence": 0.98,
+          "developer_explanation": "The field is publicly accessible while only its reference is final; callers can replace any element in the shared array after class initialization. Make the array package-private or otherwise prevent external mutation, such as by exposing immutable or defensive-copy access instead.",
+          "is_true_positive": true,
+          "issue_signature": "public static final mutable array exposure",
+          "reasoning": "The shown code declares a public static final HttpField array, and final protects only the array reference, not its elements. Code outside the package can therefore overwrite entries such as status mappings and alter the behavior of all subsequent Http3Fields instances, so restricting the field to package access is materially justified. The warning describes exposure of mutable static state, which fits the SECURITY category despite the class being in an internal package.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 4414,
+            "output_tokens": 334,
+            "reasoning_tokens": 154,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 4.191
+        },
+        {
+          "category": "SECURITY",
+          "confidence": 0.99,
+          "developer_explanation": "The field is publicly accessible, but the array contents remain mutable even though the reference is final. External code can replace entries and alter the status fields subsequently used by response construction; make the field package protected or otherwise prevent direct mutation and exposure.",
+          "is_true_positive": true,
+          "issue_signature": "public static final mutable array",
+          "reasoning": "`STATUSES` is declared `public static final` with an array type, so callers can directly replace individual elements despite the final reference. The class later trusts those entries when constructing response pseudo-headers, meaning external or accidental mutation can alter behavior. Restricting access to package scope would prevent unrelated packages from modifying the shared array.",
+          "run": 2,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 4414,
+            "output_tokens": 332,
+            "reasoning_tokens": 167,
+            "cached_input_tokens": 4411
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.584
+        },
+        {
+          "category": "SECURITY",
+          "confidence": 0.98,
+          "developer_explanation": "The field is a public static final array, and final prevents replacing the array reference but does not prevent callers from changing its elements. External code in the same JVM can therefore alter the shared status fields used when constructing responses; make the field package-private or expose only controlled access.",
+          "is_true_positive": true,
+          "issue_signature": "public static final mutable array",
+          "reasoning": "STATUSES is declared public static final but is an array whose elements remain writable by any code that can access the class. Those elements are subsequently read to generate response status fields, so external or accidental mutation can alter behavior globally. The warning's concern about exposing a mutable static object is therefore materially correct, even though the class is in an internal package.",
+          "run": 3,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 4414,
+            "output_tokens": 396,
+            "reasoning_tokens": 221,
+            "cached_input_tokens": 4411
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.591
+        }
+      ],
+      "original_finding_index": 400
+    },
+    {
+      "finding_id": 8,
+      "type": "NM_SAME_SIMPLE_NAME_AS_INTERFACE",
+      "sourcefile": "InitialContextFactory.java",
+      "start_line": "34",
+      "message": "Class names shouldn't shadow simple name of implemented interface",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.99,
+          "developer_explanation": "The class and the implemented interface have the identical simple name while residing in different packages, which can make references and type relationships confusing to readers. Consider giving the implementation a distinguishing name if compatibility requirements do not require this name; otherwise the warning can be documented as an intentional naming choice.",
+          "is_true_positive": true,
+          "issue_signature": "class shadows implemented interface name",
+          "reasoning": "The shown declaration names the class InitialContextFactory and explicitly implements javax.naming.spi.InitialContextFactory, so their simple names are identical despite different packages. This creates the ambiguity and maintenance risk described by the warning, even though the fully qualified interface name and @Override annotation make this particular implementation unambiguous to the compiler. The issue is therefore a real maintainability concern rather than an incorrect structural match.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 3045,
+            "output_tokens": 370,
+            "reasoning_tokens": 183,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 4.11
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.99,
+          "developer_explanation": "The class has the same simple name as the JNDI interface it implements, which can confuse readers and make type references harder to distinguish. Rename the implementation to a distinct name if compatibility permits; otherwise, the explicit fully qualified interface name documents the distinction but does not eliminate the naming concern.",
+          "is_true_positive": true,
+          "issue_signature": "class shadows implemented interface name",
+          "reasoning": "The shown class is named InitialContextFactory and explicitly implements javax.naming.spi.InitialContextFactory, so their simple names are identical across packages. This creates the naming ambiguity described by the warning, even though the fully qualified interface name currently removes import ambiguity in this file. The issue is therefore a real maintainability concern rather than a correctness or security defect.",
+          "run": 2,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 3045,
+            "output_tokens": 287,
+            "reasoning_tokens": 108,
+            "cached_input_tokens": 3042
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.005
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.99,
+          "developer_explanation": "The class has the same simple name as the interface it implements, so references to either type can be confusing and easy to mishandle during maintenance. Rename the implementation to a distinct name, if compatibility permits; otherwise, this is a deliberate naming compromise that should be documented and the warning can be accepted.",
+          "is_true_positive": true,
+          "issue_signature": "class shadows implemented interface name",
+          "reasoning": "The shown class is named `InitialContextFactory` and explicitly implements `javax.naming.spi.InitialContextFactory`, so their simple names are identical while their packages differ. This creates the ambiguity and maintenance risk described by the warning, even though the fully qualified interface name avoids ambiguity in this declaration. The issue is therefore a maintainability problem rather than a correctness or security defect.",
+          "run": 3,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 3045,
+            "output_tokens": 247,
+            "reasoning_tokens": 62,
+            "cached_input_tokens": 3042
+          },
+          "stop_reason": "stop",
+          "latency_s": 2.428
+        }
+      ],
+      "original_finding_index": 480
+    },
+    {
+      "finding_id": 9,
+      "type": "OS_OPEN_STREAM",
+      "sourcefile": "AbstractForkedChild.java",
+      "start_line": "177",
+      "message": "Method may fail to close stream",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.99,
+          "developer_explanation": "The method creates a FileInputStream inline and never closes it, so each successful or exceptional load can leave the file descriptor open. Use try-with-resources around the stream, such as `try (InputStream in = new FileInputStream(webAppPropsFile)) { props.load(in); }`.",
+          "is_true_positive": true,
+          "issue_signature": "unclosed file input stream",
+          "reasoning": "The shown code passes a newly created FileInputStream directly to Properties.load and never closes it. Properties.load does not take ownership of or close the supplied stream, so repeated calls or exceptions can leak file descriptors. This is a real incomplete-cleanup issue, even though the stream is not retained or returned.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 4001,
+            "output_tokens": 281,
+            "reasoning_tokens": 108,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.211
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.99,
+          "developer_explanation": "The FileInputStream is created inline and passed to Properties.load, but Properties.load does not close the stream. Use try-with-resources around the FileInputStream so it is closed on both successful and exceptional exits.",
+          "is_true_positive": true,
+          "issue_signature": "unclosed input stream",
+          "reasoning": "The shown code creates a FileInputStream at line 177 and neither retains nor closes it before loadWebAppProps returns. Properties.load reads from the stream but does not take ownership of closing it, so every successful call and any load failure can leave a file descriptor open. This is a real resource-cleanup defect and should be fixed with try-with-resources.",
+          "run": 2,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 4001,
+            "output_tokens": 304,
+            "reasoning_tokens": 138,
+            "cached_input_tokens": 3998
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.007
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.99,
+          "developer_explanation": "The FileInputStream created for loading the properties is never closed; Properties.load does not take ownership of or close the stream. Use try-with-resources around the FileInputStream so it is closed both after successful loading and when loading throws an exception.",
+          "is_true_positive": true,
+          "issue_signature": "unclosed file input stream",
+          "reasoning": "The code creates a new FileInputStream inline and passes it to Properties.load without retaining or closing it. Properties.load does not close the supplied stream, so every successful or exceptional invocation can leave the file descriptor open. This is a real incomplete-cleanup issue and should be fixed with try-with-resources.",
+          "run": 3,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 4001,
+            "output_tokens": 290,
+            "reasoning_tokens": 128,
+            "cached_input_tokens": 3998
+          },
+          "stop_reason": "stop",
+          "latency_s": 2.822
+        }
+      ],
+      "original_finding_index": 487
+    },
+    {
+      "finding_id": 10,
+      "type": "MS_SHOULD_BE_FINAL",
+      "sourcefile": "MavenServerConnector.java",
+      "start_line": "39",
+      "message": "Field isn't final but should be",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "SECURITY",
+          "confidence": 0.98,
+          "developer_explanation": "This field exposes a mutable public static reference, so code in another package can replace the property-name string and alter behavior wherever the field is read. Declare it as `public static final String` unless external reassignment is an intentional API feature.",
+          "is_true_positive": true,
+          "issue_signature": "mutable public static field",
+          "reasoning": "The shown code declares `PORT_SYSPROPERTY` as a public static `String` without `final`, allowing other code to replace the field value. Although `String` itself is immutable, the public field reference remains mutable and can be changed accidentally or maliciously, so the warning's claim applies. The field should be final if reassignment is not an intentional part of the API.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 3910,
+            "output_tokens": 631,
+            "reasoning_tokens": 457,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 6.341
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.98,
+          "developer_explanation": "This field is declared public and static but not final, even though it is initialized as a fixed constant and is named like one. Any code with access to the class can reassign it, potentially causing accidental behavior changes; declare it as `public static final String` unless deliberate runtime customization is required.",
+          "is_true_positive": true,
+          "issue_signature": "mutable public static constant",
+          "reasoning": "The shown declaration is a public static `String` initialized to a fixed literal but lacking `final`, so other code can reassign the shared field. That is the precise mutability problem reported, and the neighboring constants reinforce that this value is intended to be immutable. The snippet does not establish an attacker-controlled security consequence, so this is best categorized as a maintainability issue rather than SECURITY.",
+          "run": 2,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 3910,
+            "output_tokens": 701,
+            "reasoning_tokens": 512,
+            "cached_input_tokens": 3907
+          },
+          "stop_reason": "stop",
+          "latency_s": 6.683
+        },
+        {
+          "category": "SECURITY",
+          "confidence": 0.95,
+          "developer_explanation": "This public static field is a mutable reference even though it is named and initialized like a constant. Code in another package can replace the property name, potentially changing behavior wherever this field is used; declare it as `public static final String` unless deliberate external reconfiguration is part of the API.",
+          "is_true_positive": true,
+          "issue_signature": "mutable public static field",
+          "reasoning": "The shown code declares `PORT_SYSPROPERTY` as a public static `String` without `final`, so any code with access to the class can reassign it. Its uppercase constant-style name, literal initialization, and neighboring `public static final` constants indicate that it is intended to be immutable rather than runtime configuration. Making it final prevents accidental or unauthorized changes to the property name wherever the field is consumed; no shown code indicates that reassignment is intentional or required.",
+          "run": 3,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 3910,
+            "output_tokens": 713,
+            "reasoning_tokens": 512,
+            "cached_input_tokens": 3907
+          },
+          "stop_reason": "stop",
+          "latency_s": 6.456
+        }
+      ],
+      "original_finding_index": 523
+    },
+    {
+      "finding_id": 11,
+      "type": "MS_MUTABLE_COLLECTION_PKGPROTECT",
+      "sourcefile": "SelectiveJarResource.java",
+      "start_line": "52",
+      "message": "Field is a mutable collection which should be package protected",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "SECURITY",
+          "confidence": 0.99,
+          "developer_explanation": "The public static final field exposes an Arrays.asList-backed list, whose element can still be replaced through set(). Any code with access to this class can change the default include pattern and alter resource-copy behavior; expose an unmodifiable list instead, such as Collections.singletonList(\"**\"), unless mutation is intentionally part of the API.",
+          "is_true_positive": true,
+          "issue_signature": "public mutable collection exposure",
+          "reasoning": "DEFAULT_INCLUDES is public and references the mutable, fixed-size list returned by Arrays.asList, so callers can replace its element with set(). That mutation changes the defaults used by copyTo(), making the warning's claim about accidental or malicious modification materially correct; the field should be unmodifiable or non-public.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 4109,
+            "output_tokens": 683,
+            "reasoning_tokens": 507,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 6.827
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.98,
+          "developer_explanation": "The public static final field exposes an Arrays.asList-backed list, whose element can be replaced by any code holding the class reference. Make the list unmodifiable, such as with Collections.unmodifiableList, unless external mutation is an intentional API feature.",
+          "is_true_positive": true,
+          "issue_signature": "public mutable static collection",
+          "reasoning": "DEFAULT_INCLUDES is a public static final List backed by Arrays.asList, and that list permits element replacement through set(). Code in another package can therefore change the default include pattern and alter later copy behavior, so the warning identifies a real exposed-mutable-state issue; wrapping it as unmodifiable would address it without changing the intended default.",
+          "run": 2,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 4109,
+            "output_tokens": 584,
+            "reasoning_tokens": 418,
+            "cached_input_tokens": 4106
+          },
+          "stop_reason": "stop",
+          "latency_s": 5.706
+        },
+        {
+          "category": "SECURITY",
+          "confidence": 0.98,
+          "developer_explanation": "The public static final list is only reference-constant, not contents-constant: Arrays.asList permits replacing its element through set(). Any code with access to this class can therefore change the default inclusion pattern and affect resource copying; make the field non-public or expose an unmodifiable list instead.",
+          "is_true_positive": true,
+          "issue_signature": "public mutable collection exposure",
+          "reasoning": "DEFAULT_INCLUDES is a public static final List initialized with Arrays.asList, whose element can still be replaced via set(). Code in another package can mutate that shared list and change the defaults used by copyTo(), so the warning's exposed mutable-state claim is correct. The field should be package-private if external access is unnecessary, or wrapped in an unmodifiable list.",
+          "run": 3,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 4109,
+            "output_tokens": 622,
+            "reasoning_tokens": 442,
+            "cached_input_tokens": 4106
+          },
+          "stop_reason": "stop",
+          "latency_s": 5.984
+        }
+      ],
+      "original_finding_index": 537
+    },
+    {
+      "finding_id": 12,
+      "type": "DM_EXIT",
+      "sourcefile": "ShutdownService.java",
+      "start_line": "348",
+      "message": "Method invokes System.exit(...)",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.98,
+          "developer_explanation": "This class is explicitly a shutdown service, and the exitVm setting plus commands such as stopexit and exit show that terminating the JVM is an intentional supported behavior. The warning can therefore be dismissed for these calls; replacing them with an exception would break the shutdown contract rather than improve this code.",
+          "is_true_positive": false,
+          "issue_signature": "process termination via System.exit",
+          "reasoning": "The shown code deliberately invokes System.exit only in shutdown commands, with several paths controlled by the explicit exitVm configuration and others named stopexit or exit. Although System.exit terminates the entire JVM and is generally unsuitable for reusable code, that behavior is the stated purpose of this shutdown service and is not an accidental inability to propagate an error. Therefore the generic warning is a false positive in this context.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 4659,
+            "output_tokens": 414,
+            "reasoning_tokens": 223,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 4.598
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.93,
+          "developer_explanation": "This service is explicitly designed to process shutdown commands, and its configuration and command names make whole-VM termination an intentional part of its contract. The calls can therefore be safely retained; callers that must avoid JVM termination should disable VM exit and use the non-exiting shutdown behavior.",
+          "is_true_positive": false,
+          "issue_signature": "process-wide termination from reusable code",
+          "reasoning": "The shown code deliberately implements a shutdown service, gates ordinary stop commands with an exit-VM configuration, and provides explicitly named `stopexit` and `exit` commands. Although `System.exit(0)` does terminate the entire JVM, that behavior is the intended function here rather than an accidental or inappropriate termination that should be replaced with an exception.",
+          "run": 2,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 4659,
+            "output_tokens": 672,
+            "reasoning_tokens": 494,
+            "cached_input_tokens": 4656
+          },
+          "stop_reason": "stop",
+          "latency_s": 6.14
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.97,
+          "developer_explanation": "This service is explicitly designed to process shutdown commands, and exiting the JVM is an intentional operation for the exit-related commands and when JVM exit is enabled. Replacing the call with an exception would not provide equivalent shutdown behavior, so the warning can be safely dismissed in this context.",
+          "is_true_positive": false,
+          "issue_signature": "direct JVM termination from service code",
+          "reasoning": "The shown code invokes System.exit as an explicit, documented outcome of shutdown commands, with the ordinary stop path additionally guarded by the configured exitVm setting. Because this class is a dedicated shutdown service and intentionally supports commands that terminate the JVM, the global termination is justified here rather than an accidental or inappropriate control-flow escape. The warning's generic concern about making reusable code impossible to invoke does not materially apply to this purpose-built shutdown operation.",
+          "run": 3,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 4659,
+            "output_tokens": 879,
+            "reasoning_tokens": 679,
+            "cached_input_tokens": 4656
+          },
+          "stop_reason": "stop",
+          "latency_s": 7.782
+        }
+      ],
+      "original_finding_index": 740
+    },
+    {
+      "finding_id": 13,
+      "type": "DMI_RANDOM_USED_ONLY_ONCE",
+      "sourcefile": "DefaultSessionIdManager.java",
+      "start_line": "356",
+      "message": "Random object created and used only once",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "PERFORMANCE",
+          "confidence": 0.99,
+          "developer_explanation": "The random generator is stored in the instance field and is reused to generate session identifiers, so this statement does not create and discard a generator after one use. The call to nextLong() only obtains an additional seed value for the existing generator, and the warning can be safely dismissed in this context.",
+          "is_true_positive": false,
+          "issue_signature": "random generator used only once",
+          "reasoning": "The shown code uses the existing _random field, which is subsequently and repeatedly used in newSessionId(), rather than creating a Random object and discarding it after one value. Although nextLong() is called once within the reseeding expression, the generator itself is not used only once. Therefore, the warning's claimed one-use allocation pattern is not present here.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 5185,
+            "output_tokens": 474,
+            "reasoning_tokens": 293,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 5.085
+        },
+        {
+          "category": "PERFORMANCE",
+          "confidence": 0.99,
+          "developer_explanation": "This alarm can be dismissed because the generator is not created at the flagged line or discarded after one use. The same persistent generator is used repeatedly by newSessionId(), and this code intentionally obtains one value from it to reseed it during initialization.",
+          "is_true_positive": false,
+          "issue_signature": "random generator used only once",
+          "reasoning": "The flagged statement operates on the existing _random field, while initRandom() creates that generator only when it is null and later session-ID generation uses it repeatedly. Therefore, no Random object is created, used once, and discarded at line 356; the single nextLong() call is part of an intentional reseeding operation. The warning's claimed allocation and random-quality problem is not present in the shown code.",
+          "run": 2,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 5185,
+            "output_tokens": 361,
+            "reasoning_tokens": 180,
+            "cached_input_tokens": 0
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.508
+        },
+        {
+          "category": "PERFORMANCE",
+          "confidence": 0.99,
+          "developer_explanation": "The alarm can be safely dismissed because this line does not create a random-number generator; it reseeds the existing generator stored in the field. That generator is used repeatedly by session ID generation, so it is neither discarded after one use nor inefficiently recreated here.",
+          "is_true_positive": false,
+          "issue_signature": "random generator used only once",
+          "reasoning": "The shown code calls nextLong() and setSeed() on the already-existing _random field, rather than creating a Random object at the flagged line. _random is subsequently used repeatedly in newSessionId(), so the claim that the object is created, used once, and discarded is false. The warning is therefore a false positive, although the reseeding behavior itself is a separate question not described by this alert.",
+          "run": 3,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 5185,
+            "output_tokens": 455,
+            "reasoning_tokens": 271,
+            "cached_input_tokens": 5182
+          },
+          "stop_reason": "stop",
+          "latency_s": 5.19
+        }
+      ],
+      "original_finding_index": 773
+    },
+    {
+      "finding_id": 14,
+      "type": "NP_BOOLEAN_RETURN_NULL",
+      "sourcefile": "JettyLoggerConfiguration.java",
+      "start_line": "79",
+      "message": "Method with Boolean return type returns explicit null",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.98,
+          "developer_explanation": "The null return is intentional: it tells the parent-name search that no STACKS value was found for the current key. The enclosing method checks for null before using the result and supplies a default, so this lambda is not being unsafely unboxed; the warning can be dismissed in this context.",
+          "is_true_positive": false,
+          "issue_signature": "nullable Boolean returned from callback",
+          "reasoning": "The shown code deliberately returns null from the callback when no property exists, and the enclosing method explicitly checks hideStacks for null before returning or using it. Although an unchecked Boolean-to-boolean conversion could theoretically throw, this shown call path preserves the nullable result and prevents that unboxing, so the warning's claimed defect is not present here. The unseen implementation of walkParentLoggerNames could affect other behavior, but nothing shown indicates that it unboxes the callback result internally before returning it.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 4709,
+            "output_tokens": 371,
+            "reasoning_tokens": 164,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 4.645
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.95,
+          "developer_explanation": "The null return is used intentionally as a “no matching configuration found” sentinel for the parent-name search. The result is explicitly checked for null before it is returned as a primitive boolean, so this code does not unbox the null value and the alarm can be safely dismissed in this context.",
+          "is_true_positive": false,
+          "issue_signature": "nullable Boolean return value",
+          "reasoning": "The deciding fact is that the callback's Boolean result is assigned to a nullable reference and checked with `hideStacks != null` before the method returns a primitive boolean. Although the lambda returns null, the shown code uses that value deliberately to indicate that no parent configuration matched and does not unbox it, so the warning's stated NullPointerException consequence is ruled out here. The implementation of the walker is outside the excerpt, but nothing shown suggests the callback is independently consumed as a primitive boolean.",
+          "run": 2,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 4709,
+            "output_tokens": 512,
+            "reasoning_tokens": 306,
+            "cached_input_tokens": 4706
+          },
+          "stop_reason": "stop",
+          "latency_s": 5.63
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.98,
+          "developer_explanation": "The null return is intentional: it indicates that no setting exists for the current logger name so parent-name traversal can continue. The resulting Boolean is explicitly checked for null before being returned as a primitive boolean, so this code does not unbox null and can safely dismiss the alarm.",
+          "is_true_positive": false,
+          "issue_signature": "nullable Boolean used as traversal sentinel",
+          "reasoning": "The lambda explicitly returns null when no property is found, and the enclosing method checks the resulting Boolean for null before returning it as a primitive boolean. Therefore, the shown code does not automatically unbox a null value; null is an intentional sentinel for parent-name traversal. The warning's claimed NullPointerException risk is not present at this call site.",
+          "run": 3,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 4709,
+            "output_tokens": 370,
+            "reasoning_tokens": 194,
+            "cached_input_tokens": 4706
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.966
+        }
+      ],
+      "original_finding_index": 808
+    },
+    {
+      "finding_id": 15,
+      "type": "UL_UNRELEASED_LOCK_EXCEPTION_PATH",
+      "sourcefile": "Blocker.java",
+      "start_line": "449",
+      "message": "Method does not release lock on all exception paths",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.96,
+          "developer_explanation": "The lock is acquired immediately before a try block, and its finally block always calls unlock after the protected operations. The acquisition call itself does not require an unlock if it fails, so this warning can be safely dismissed for the shown code.",
+          "is_true_positive": false,
+          "issue_signature": "lock release omitted on exception path",
+          "reasoning": "The shown code places all operations after successful lock acquisition inside a try/finally whose cleanup calls _lock.unlock(). If _lock.lock() fails, the lock was not acquired and therefore cannot require release; under normal ReentrantLock behavior, the warning's claimed unreleased exception path does not exist. Although signalAll() appears before unlock(), it executes while the lock is held and does not normally throw in this valid ownership state.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 4232,
+            "output_tokens": 690,
+            "reasoning_tokens": 505,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 6.874
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.96,
+          "developer_explanation": "The lock is released in a finally block whenever _lock.lock() returns successfully, so the normal exception paths through the protected code are safely cleaned up. An exception thrown while attempting to acquire the lock does not leave this method holding the lock, so this warning can be dismissed for the shown code.",
+          "is_true_positive": false,
+          "issue_signature": "lock not released on exception path",
+          "reasoning": "The shown code calls _lock.lock() and immediately places the subsequent operations inside a try/finally whose finally block calls _lock.unlock(). Any exception after successful acquisition therefore reaches the unlock, while an exception from lock() itself does not imply that the lock was acquired. The warning's claimed unreleased-lock path is consequently not present in this method.",
+          "run": 2,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 4232,
+            "output_tokens": 629,
+            "reasoning_tokens": 448,
+            "cached_input_tokens": 4229
+          },
+          "stop_reason": "stop",
+          "latency_s": 7.187
+        },
+        {
+          "category": "CONCURRENCY",
+          "confidence": 0.93,
+          "developer_explanation": "The lock is released in a finally block, and the only operations before unlock are a field assignment and signaling a condition while the lock is definitely held. `Condition.signalAll()` cannot fail with an ownership exception in this context, so the reported unreleased-lock path is not realistically reachable and the warning can be dismissed.",
+          "is_true_positive": false,
+          "issue_signature": "lock not released on exception path",
+          "reasoning": "The shown code places `_lock.unlock()` in a finally block, with only `_completed = null` and `_idle.signalAll()` before it. The assignment cannot throw, and `signalAll()` is invoked by the thread holding the lock obtained immediately before the try block, so its ownership failure path is ruled out here. Therefore the method does release the lock on any realistic exception path, making this warning a false positive despite the syntactic pattern it detects.",
+          "run": 3,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 4232,
+            "output_tokens": 718,
+            "reasoning_tokens": 512,
+            "cached_input_tokens": 4229
+          },
+          "stop_reason": "stop",
+          "latency_s": 6.648
+        }
+      ],
+      "original_finding_index": 838
+    },
+    {
+      "finding_id": 16,
+      "type": "IT_NO_SUCH_ELEMENT",
+      "sourcefile": "BlockingArrayQueue.java",
+      "start_line": "919",
+      "message": "Iterator next() method cannot throw NoSuchElementException",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.99,
+          "developer_explanation": "When next() is called after the iterator is exhausted, this implementation indexes beyond the array and throws ArrayIndexOutOfBoundsException instead of the NoSuchElementException required by Iterator and ListIterator. Add an explicit bounds check and throw NoSuchElementException when the cursor reaches the array length.",
+          "is_true_positive": true,
+          "issue_signature": "iterator next omits NoSuchElementException",
+          "reasoning": "The next() method directly accesses _elements[_cursor++] without checking whether _cursor has reached _elements.length. An exhausted iterator therefore produces an ArrayIndexOutOfBoundsException rather than the NoSuchElementException required by the Iterator contract. This is a real correctness issue for callers that rely on the standard iterator behavior.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 4065,
+            "output_tokens": 246,
+            "reasoning_tokens": 71,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.305
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.99,
+          "developer_explanation": "When next() is called after the iterator is exhausted, this implementation indexes past the array and throws ArrayIndexOutOfBoundsException rather than the required NoSuchElementException. Add an explicit exhaustion check in next() and throw NoSuchElementException when no element remains.",
+          "is_true_positive": true,
+          "issue_signature": "iterator next omits exhaustion exception",
+          "reasoning": "The shown next() method directly accesses _elements[_cursor++] without checking whether _cursor has reached the array length. Therefore, calling next() when hasNext() is false produces an array-bounds exception instead of the NoSuchElementException required by the Iterator and ListIterator contracts. This is a real correctness and API-contract violation.",
+          "run": 2,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 4065,
+            "output_tokens": 250,
+            "reasoning_tokens": 79,
+            "cached_input_tokens": 4062
+          },
+          "stop_reason": "stop",
+          "latency_s": 2.662
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.99,
+          "developer_explanation": "When the cursor reaches the end of the snapshot array, this method indexes past the array and throws ArrayIndexOutOfBoundsException rather than the NoSuchElementException required by Iterator and ListIterator. Add an explicit exhaustion check in next() and throw NoSuchElementException before accessing the array.",
+          "is_true_positive": true,
+          "issue_signature": "iterator next lacks exhaustion exception",
+          "reasoning": "The shown next() method directly accesses _elements[_cursor++] without checking whether _cursor has reached _elements.length. After exhaustion, that access throws ArrayIndexOutOfBoundsException instead of NoSuchElementException, violating the Iterator contract. The warning therefore identifies a real correctness issue.",
+          "run": 3,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 4065,
+            "output_tokens": 247,
+            "reasoning_tokens": 82,
+            "cached_input_tokens": 4062
+          },
+          "stop_reason": "stop",
+          "latency_s": 2.691
+        }
+      ],
+      "original_finding_index": 844
+    },
+    {
+      "finding_id": 17,
+      "type": "NM_CLASS_NOT_EXCEPTION",
+      "sourcefile": "ExceptionUtil.java",
+      "start_line": "304",
+      "message": "Class is not derived from an Exception, even though it is named as such",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.96,
+          "developer_explanation": "The class is a mutable accumulator for throwables, not an exception that can itself be thrown, but its name strongly suggests otherwise. Rename it to indicate that it collects or aggregates exceptions, or use a name that does not end in “Exception,” while retaining the documentation describing its purpose.",
+          "is_true_positive": true,
+          "issue_signature": "exception-suffixed class that is not throwable",
+          "reasoning": "The shown code declares MultiException as a plain static class that does not extend Exception, Throwable, or another throwable type. Because its name ends in “Exception,” callers can reasonably expect it to be throwable, while the actual API is an accumulator with methods for collecting and later rethrowing failures. The warning therefore identifies a real maintainability and readability problem, even though the documentation partially explains the intended usage.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 5824,
+            "output_tokens": 517,
+            "reasoning_tokens": 323,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 5.275
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.93,
+          "developer_explanation": "This public class is named MultiException but does not extend Throwable, so callers may reasonably expect to catch or throw it when it is actually an exception accumulator. Rename it to a name such as an exception accumulator or handler, or make it an actual exception type if that is the intended API.",
+          "is_true_positive": true,
+          "issue_signature": "non-exception class named with exception suffix",
+          "reasoning": "The shown code declares MultiException as a plain static class rather than a subclass of Exception or Throwable. Although its documentation explains that it accumulates throwables and later throws one, the public name still strongly suggests that the class itself is an exception, which can confuse API users. This is therefore a genuine maintainability and readability issue, even though the implementation behavior is valid.",
+          "run": 2,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 5824,
+            "output_tokens": 640,
+            "reasoning_tokens": 453,
+            "cached_input_tokens": 5821
+          },
+          "stop_reason": "stop",
+          "latency_s": 6.006
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.96,
+          "developer_explanation": "This class is an accumulator for multiple Throwable instances, not an object intended to be thrown or caught, and its documentation explicitly explains that role. The name is therefore justified in this context, so the warning can be safely dismissed.",
+          "is_true_positive": false,
+          "issue_signature": "exception-suffixed non-exception class",
+          "reasoning": "The shown class is explicitly a stateful accumulator for multiple Throwable instances, with methods that collect and later rethrow them, rather than an exception object itself. Its documentation clearly describes this intended usage and constructs it as a helper, so the suffix does not create the confusion claimed by the warning in this context. This is therefore a false positive about naming rather than a real defect.",
+          "run": 3,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 5824,
+            "output_tokens": 395,
+            "reasoning_tokens": 220,
+            "cached_input_tokens": 5821
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.846
+        }
+      ],
+      "original_finding_index": 860
+    },
+    {
+      "finding_id": 18,
+      "type": "CN_IDIOM",
+      "sourcefile": "LazyList.java",
+      "start_line": "60",
+      "message": "Class implements Cloneable but does not define or use clone method",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.98,
+          "developer_explanation": "This utility class declares Cloneable but provides no instance clone method, so the marker interface is misleading and has no useful effect, especially because the constructor is private. Remove Cloneable unless instances are intended to be cloneable; in that case, add a proper instance clone implementation instead.",
+          "is_true_positive": true,
+          "issue_signature": "meaningless Cloneable implementation",
+          "reasoning": "The class implements Cloneable, has only a private constructor, and defines no instance clone method; its clone method is static and therefore does not implement the Cloneable convention. Consequently, Cloneable is effectively meaningless here and can mislead maintainers or consumers about the class's cloning support. The warning is therefore a true positive concerning maintainability.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 7096,
+            "output_tokens": 464,
+            "reasoning_tokens": 288,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 5.106
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.96,
+          "developer_explanation": "This is a utility class with a private constructor and no instance cloning behavior, so implementing Cloneable is misleading and provides no useful contract. Remove Cloneable unless it is being retained deliberately for binary or reflective compatibility; the static clone(Object) helper does not justify the interface.",
+          "is_true_positive": true,
+          "issue_signature": "cloneable implementation without clone method",
+          "reasoning": "The class declaration implements Cloneable, but the complete shown file contains no instance clone() method or use of Object.clone(); its clone(Object) method is static. Because the class is a non-instantiable utility class, the marker interface is unnecessary and misleading, making this a real maintainability issue rather than an incorrect structural match.",
+          "run": 2,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 7096,
+            "output_tokens": 676,
+            "reasoning_tokens": 503,
+            "cached_input_tokens": 7093
+          },
+          "stop_reason": "stop",
+          "latency_s": 6.239
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.98,
+          "developer_explanation": "This utility class has a private constructor and provides only static operations, so implementing Cloneable is unnecessary and misleading. Remove Cloneable unless instances are intended to support cloning; the static clone(Object) helper does not implement the Cloneable contract.",
+          "is_true_positive": true,
+          "issue_signature": "Cloneable without instance clone implementation",
+          "reasoning": "The class declares implements Cloneable but has no instance clone() method and its only clone-named method is a static helper accepting an object, not an implementation of the cloning contract. Because the constructor is private and the class is purely static, Cloneable provides no useful capability and misleadingly suggests that instances can be cloned. This is a real maintainability/API-design issue, so the warning is a true positive.",
+          "run": 3,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 7096,
+            "output_tokens": 452,
+            "reasoning_tokens": 270,
+            "cached_input_tokens": 7093
+          },
+          "stop_reason": "stop",
+          "latency_s": 4.296
+        }
+      ],
+      "original_finding_index": 880
+    },
+    {
+      "finding_id": 19,
+      "type": "SE_COMPARATOR_SHOULD_BE_SERIALIZABLE",
+      "sourcefile": "TopologicalSort.java",
+      "start_line": "183",
+      "message": "Comparator doesn't implement Serializable",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.97,
+          "developer_explanation": "This comparator is used only by a local TreeSet during sorting, and neither the comparator nor that collection is retained or serialized by the shown code. The warning can therefore be safely dismissed unless this class is later used in a serializable collection or serialization is introduced around this sorting path.",
+          "is_true_positive": false,
+          "issue_signature": "non-serializable comparator",
+          "reasoning": "The comparator is instantiated locally and used only with a temporary TreeSet that is immediately consumed, while the shown code provides no serialization path for either object. Although the comparator does not implement Serializable, that omission does not affect the behavior or serializability of any persisted collection here. The warning describes a general defensive practice rather than a real issue in this context; code outside the excerpt could change that conclusion, but none is shown here.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 4347,
+            "output_tokens": 430,
+            "reasoning_tokens": 236,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 4.832
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.95,
+          "developer_explanation": "This comparator is created locally and used only by a temporary TreeSet during sorting; neither the comparator nor that set is exposed or serialized by the shown code. Adding Serializable would provide no benefit here and could impose unnecessary serialization requirements on the map contents, so the warning can be safely dismissed.",
+          "is_true_positive": false,
+          "issue_signature": "non-serializable comparator",
+          "reasoning": "The comparator is used only as a local argument to a temporary TreeSet inside the sorting routine, and the shown code does not serialize or expose that collection. Although the class factually does not implement Serializable, the warning's stated concern about making an ordered collection serializable is not reachable in this context. Therefore, adding serialization support is unnecessary based on the shown code and this is a false positive.",
+          "run": 2,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 4347,
+            "output_tokens": 321,
+            "reasoning_tokens": 133,
+            "cached_input_tokens": 4344
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.426
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.96,
+          "developer_explanation": "This comparator is used only to construct a local TreeSet inside the sorting routine, and that set is consumed immediately rather than serialized or exposed. The warning can therefore be safely dismissed here; additionally, the comparator captures a map whose keys may not be serializable, so adding Serializable would not inherently make serialization safe.",
+          "is_true_positive": false,
+          "issue_signature": "non-serializable comparator used in ordered collection",
+          "reasoning": "The shown code uses the comparator only for a local TreeSet that is iterated immediately and never serialized or returned. Although a serializable TreeSet requires a serializable comparator, no serializable collection usage or reachable serialization path is shown here, so the warned consequence does not apply. The comparator also stores arbitrary T keys, which could independently prevent safe serialization.",
+          "run": 3,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 4347,
+            "output_tokens": 377,
+            "reasoning_tokens": 189,
+            "cached_input_tokens": 4344
+          },
+          "stop_reason": "stop",
+          "latency_s": 5.009
+        }
+      ],
+      "original_finding_index": 902
+    }
+  ]
+}

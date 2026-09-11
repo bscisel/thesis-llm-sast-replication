@@ -1,0 +1,3742 @@
+{
+  "model": "gpt-5.6-luna",
+  "tool": "sonarqube",
+  "num_runs": 1,
+  "runs_per_invocation": 1,
+  "source_root": "jetty.project",
+  "call_parameters": {
+    "temperature": null,
+    "concurrency": 10,
+    "response_format": "json_schema",
+    "max_completion_tokens": 8192,
+    "max_retries": 6,
+    "reasoning_effort": "default"
+  },
+  "system_prompt_variant": "jetty",
+  "system_prompt_sha256": "382740d7fcf34c9c",
+  "user_prompt_sha256": "71523495aedd174c",
+  "timestamp": "2026-08-16T17:00:47.948225+00:00",
+  "updated_at": "2026-08-16T17:00:47.948225+00:00",
+  "findings": [
+    {
+      "finding_id": 0,
+      "type": "java:S2095",
+      "sourcefile": "HttpProxy.java",
+      "start_line": "270",
+      "message": "Use try-with-resources or close this \"Connection\" in a \"finally\" clause.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.93,
+          "developer_explanation": "The connection acquired at this location may remain open when normal execution or an exception leaves the surrounding code. Use try-with-resources, or ensure the connection is closed in a finally block, so repeated requests cannot exhaust database or connection-pool resources.",
+          "is_true_positive": true,
+          "issue_signature": "unclosed database connection",
+          "reasoning": "The warning itself states that a Connection is not protected by try-with-resources or a finally-based close, which is the deciding indication of a resource leak. Such a leak can retain database or pool resources and eventually prevent further work; the exact control flow would need checking to confirm whether another path closes it, but absent that evidence this is most likely a real issue.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1986,
+            "output_tokens": 322,
+            "reasoning_tokens": 150,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.944
+        }
+      ],
+      "original_finding_index": 0
+    },
+    {
+      "finding_id": 1,
+      "type": "java:S2142",
+      "sourcefile": "InputStreamResponseListener.java",
+      "start_line": "354",
+      "message": "Either re-interrupt this method or rethrow the \"InterruptedException\" that can be caught here.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CONCURRENCY",
+          "confidence": 0.94,
+          "developer_explanation": "The method appears to catch an InterruptedException without preserving the thread's interrupted status or propagating the interruption. Restore the status with Thread.currentThread().interrupt() or rethrow the exception, unless the surrounding design explicitly handles interruption in an equivalent way.",
+          "is_true_positive": true,
+          "issue_signature": "swallowed thread interruption",
+          "reasoning": "The warning itself states that an InterruptedException can be caught without either re-interrupting the thread or rethrowing the exception, which is the deciding fact for a likely true positive. Swallowing interruption can prevent cancellation and shutdown signals from reaching callers or controlling code; the source would need to be checked to confirm whether an equivalent handling path exists. The issue is concurrency-related because thread interruption is a cross-thread cancellation mechanism.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1986,
+            "output_tokens": 360,
+            "reasoning_tokens": 176,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 4.438
+        }
+      ],
+      "original_finding_index": 1
+    },
+    {
+      "finding_id": 2,
+      "type": "java:S2095",
+      "sourcefile": "ProxyProtocolClientConnectionFactory.java",
+      "start_line": "543",
+      "message": "Use try-with-resources or close this \"Connection\" in a \"finally\" clause.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.9,
+          "developer_explanation": "A connection is apparently acquired without guaranteed cleanup, so exceptional or early-return paths may leave it open and eventually exhaust available connections. Ensure the connection is owned and closed with try-with-resources or in a finally block, unless another component demonstrably guarantees its closure.",
+          "is_true_positive": true,
+          "issue_signature": "unclosed connection resource",
+          "reasoning": "The warning itself states that a Connection lacks try-with-resources or guaranteed finally-block closure, which is a real resource-lifecycle defect and therefore a true positive on the available evidence. Certainty would require checking whether the connection is actually closed elsewhere or transferred to an owner responsible for cleanup, but the warning provides no such exception.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1989,
+            "output_tokens": 427,
+            "reasoning_tokens": 260,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 4.805
+        }
+      ],
+      "original_finding_index": 2
+    },
+    {
+      "finding_id": 3,
+      "type": "java:S2095",
+      "sourcefile": "Socks4Proxy.java",
+      "start_line": "232",
+      "message": "Use try-with-resources or close this \"Connection\" in a \"finally\" clause.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.91,
+          "developer_explanation": "The connection appears to have an execution path where it is not guaranteed to be closed. Wrap it in try-with-resources or ensure every exit path closes it, preventing leaked connections from accumulating and exhausting available resources.",
+          "is_true_positive": true,
+          "issue_signature": "unclosed connection resource",
+          "reasoning": "The warning itself states that a Connection is not closed and lacks guaranteed cleanup, which is the deciding fact for a resource-leak verdict. Such a leak can accumulate connections and eventually exhaust a connection pool or other system resources. Without source code, the exact control-flow path and whether cleanup occurs indirectly would need verification, but the reported claim is most likely materially correct.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1987,
+            "output_tokens": 641,
+            "reasoning_tokens": 477,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 7.185
+        }
+      ],
+      "original_finding_index": 3
+    },
+    {
+      "finding_id": 4,
+      "type": "java:S2095",
+      "sourcefile": "Socks5Proxy.java",
+      "start_line": "400",
+      "message": "Use try-with-resources or close this \"Connection\" in a \"finally\" clause.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.9,
+          "developer_explanation": "A database connection appears to be acquired without guaranteed cleanup, which can exhaust the connection pool or other resources over time. Ensure every execution path closes it, preferably by managing it with try-with-resources unless ownership and cleanup are definitively handled elsewhere.",
+          "is_true_positive": true,
+          "issue_signature": "unclosed database connection",
+          "reasoning": "The warning explicitly identifies a Connection that lacks a try-with-resources statement or guaranteed finally-block closure, which is a real resource-leak claim and is most likely correct. Without source code, certainty would require checking whether the connection is actually closed on every path or transferred to a component that owns its cleanup; absent that evidence, this is a true positive. The issue is a correctness problem because leaked connections can eventually prevent further database work.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1987,
+            "output_tokens": 361,
+            "reasoning_tokens": 175,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 4.545
+        }
+      ],
+      "original_finding_index": 4
+    },
+    {
+      "finding_id": 5,
+      "type": "java:S2142",
+      "sourcefile": "StandardDeployer.java",
+      "start_line": "153",
+      "message": "Either re-interrupt this method or rethrow the \"InterruptedException\" that can be caught here.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CONCURRENCY",
+          "confidence": 0.94,
+          "developer_explanation": "The caught interruption is apparently being consumed without restoring the thread's interrupted status or propagating the exception. That can prevent higher-level code and executors from noticing cancellation, so the handler should re-interrupt the thread or rethrow the exception unless it deliberately completes an equivalent interruption policy.",
+          "is_true_positive": true,
+          "issue_signature": "interrupted exception swallowed without restoration",
+          "reasoning": "The warning itself claims that an InterruptedException is caught without either re-interrupting the thread or rethrowing it, which is generally a real interruption-handling defect. Swallowing interruption can hide cancellation from callers or thread-management code; certainty would require checking whether the catch block performs an equivalent deliberate handling that the message does not reveal.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1985,
+            "output_tokens": 286,
+            "reasoning_tokens": 110,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.463
+        }
+      ],
+      "original_finding_index": 15
+    },
+    {
+      "finding_id": 6,
+      "type": "java:S6218",
+      "sourcefile": "ClientParser.java",
+      "start_line": "52",
+      "message": "Override equals, hashCode and toString to consider array's content in the method",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.87,
+          "developer_explanation": "If this type is intended to behave as a value, its automatically generated methods compare array components by identity and produce identity-based hash codes and string representations. Override the relevant methods using content-aware array operations such as Arrays.equals, Arrays.hashCode, and Arrays.toString; dismiss this only if identity semantics are explicitly intended.",
+          "is_true_positive": true,
+          "issue_signature": "array content ignored by value methods",
+          "reasoning": "The warning itself states that an array's content is not being considered by equals, hashCode, or toString, which is materially problematic for a value-like type because Java arrays use identity-based implementations. The issue is a correctness concern when instances are expected to represent equivalent array contents, although certainty would require checking whether identity-based array semantics were deliberately intended in the flagged class.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1973,
+            "output_tokens": 560,
+            "reasoning_tokens": 371,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 6.417
+        }
+      ],
+      "original_finding_index": 17
+    },
+    {
+      "finding_id": 7,
+      "type": "java:S1201",
+      "sourcefile": "HttpStatus.java",
+      "start_line": "196",
+      "message": "Either override Object.equals(Object), or rename the method to prevent any confusion.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.86,
+          "developer_explanation": "A method named equals that does not implement Object.equals(Object) can mislead readers and callers, who may expect normal equality semantics. Override Object.equals(Object) when this is intended to define equality; otherwise give the overload a more specific name.",
+          "is_true_positive": true,
+          "issue_signature": "equals method does not override Object.equals",
+          "reasoning": "The warning itself states that a method named equals does not override Object.equals(Object), which creates a real risk of confusion about equality semantics. Without the source, the exact method signature and whether the overload is intentional cannot be verified, but the naming concern described is materially valid even if the code otherwise behaves correctly.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1970,
+            "output_tokens": 423,
+            "reasoning_tokens": 260,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 5.037
+        }
+      ],
+      "original_finding_index": 24
+    },
+    {
+      "finding_id": 8,
+      "type": "java:S2259",
+      "sourcefile": "HttpTester.java",
+      "start_line": "493",
+      "message": "A \"NullPointerException\" could be thrown; \"header\" is nullable here.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.9,
+          "developer_explanation": "The value named \"header\" may be null when this line uses it, so execution can fail with a NullPointerException instead of completing normally. Ensure it is validated or assigned a non-null value before dereferencing it, or handle the null case explicitly.",
+          "is_true_positive": true,
+          "issue_signature": "possible null dereference",
+          "reasoning": "The warning itself states that \"header\" is nullable at the flagged use and that this can lead to a NullPointerException, which is a concrete correctness defect. Without source code, the remaining fact to verify would be whether an earlier guard or guaranteed non-null assignment makes the dereference unreachable with a null value; based on the reported symbolic-execution result, this is most likely a true positive.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1979,
+            "output_tokens": 252,
+            "reasoning_tokens": 72,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.968
+        }
+      ],
+      "original_finding_index": 25
+    },
+    {
+      "finding_id": 9,
+      "type": "java:S2259",
+      "sourcefile": "RFC6265CookieParser.java",
+      "start_line": "377",
+      "message": "A \"NullPointerException\" could be thrown; \"attributeName\" is nullable here.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.96,
+          "developer_explanation": "The value named in the warning may be null at the flagged use, so dereferencing or otherwise invoking an operation on it can cause a runtime failure. Ensure it is validated or handled before the use, or establish a non-null invariant earlier in the method.",
+          "is_true_positive": true,
+          "issue_signature": "null dereference of nullable value",
+          "reasoning": "The warning itself states that attributeName is nullable at the flagged location and that a NullPointerException could be thrown, which is a direct correctness defect. The surrounding code would need to be checked to confirm whether a dereference or equivalent null-sensitive operation occurs there and whether another guard dominates it, but absent such evidence this is most likely a true positive.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1983,
+            "output_tokens": 265,
+            "reasoning_tokens": 92,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.595
+        }
+      ],
+      "original_finding_index": 34
+    },
+    {
+      "finding_id": 10,
+      "type": "java:S2259",
+      "sourcefile": "RFC6265SetCookieParser.java",
+      "start_line": "185",
+      "message": "\"NullPointerException\" will be thrown when invoking method \"setAttribute()\".",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.87,
+          "developer_explanation": "The object on which setAttribute() is invoked can be null, so execution will fail with a NullPointerException instead of completing normally. Ensure that the receiver is initialized or add an appropriate null check before invoking the method.",
+          "is_true_positive": true,
+          "issue_signature": "method invocation on a null reference",
+          "reasoning": "The warning itself states that invoking setAttribute() will throw a NullPointerException, which is a direct correctness defect in the flagged execution path. Without source code, the receiver's initialization and any preceding null checks cannot be independently verified, but the explicit definite-exception claim makes this most likely a true positive.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1982,
+            "output_tokens": 285,
+            "reasoning_tokens": 128,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.44
+        }
+      ],
+      "original_finding_index": 40
+    },
+    {
+      "finding_id": 11,
+      "type": "java:S2095",
+      "sourcefile": "HTTP2Session.java",
+      "start_line": "2564",
+      "message": "Use try-with-resources or close this \"HTTP2Stream\" in a \"finally\" clause.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.84,
+          "developer_explanation": "The stream appears to have an execution path on which it is not closed, allowing underlying resources to remain allocated and potentially accumulate. Ensure ownership is explicit and close the stream with try-with-resources or in a finally block on every path, unless a surrounding component demonstrably owns and closes it.",
+          "is_true_positive": true,
+          "issue_signature": "unclosed resource on an exceptional path",
+          "reasoning": "The warning itself identifies an HTTP2Stream that lacks a guaranteed close, which directly describes a real resource-lifecycle defect. Without source code, the remaining uncertainty is whether the stream is actually closed elsewhere or deliberately transferred to another owner; that is the fact that would need verification. Absent such evidence, an unclosed stream can retain resources and cause exhaustion, so this is most likely a true positive.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1991,
+            "output_tokens": 439,
+            "reasoning_tokens": 248,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 4.891
+        }
+      ],
+      "original_finding_index": 45
+    },
+    {
+      "finding_id": 12,
+      "type": "java:S2095",
+      "sourcefile": "HTTP2CServerConnectionFactory.java",
+      "start_line": "78",
+      "message": "Use try-with-resources or close this \"Connection\" in a \"finally\" clause.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.88,
+          "developer_explanation": "The connection appears to be acquired without guaranteed closure on every execution path. Wrap it in try-with-resources or close it reliably in a finally block so repeated requests cannot exhaust connection resources and cause failures.",
+          "is_true_positive": true,
+          "issue_signature": "unclosed database connection",
+          "reasoning": "The warning itself identifies a Connection that lacks a guaranteed close and recommends try-with-resources or finally-based cleanup, which is a real resource-leak concern. Without source code, the exact control-flow path cannot be verified, but this standard warning is most likely correct because an unclosed connection can exhaust available resources and disrupt service.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1990,
+            "output_tokens": 336,
+            "reasoning_tokens": 181,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.785
+        }
+      ],
+      "original_finding_index": 49
+    },
+    {
+      "finding_id": 13,
+      "type": "java:S2583",
+      "sourcefile": "EncodableEntry.java",
+      "start_line": "145",
+      "message": "Change this condition so that it does not always evaluate to \"false\"",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.86,
+          "developer_explanation": "The condition at the reported location is believed to be unreachable as written because it always evaluates to false. Review the surrounding assignments and control flow, then remove the dead branch or correct the condition so the intended case can be handled.",
+          "is_true_positive": true,
+          "issue_signature": "condition that always evaluates to false",
+          "reasoning": "The warning itself explicitly claims that the condition always evaluates to false, which describes a real correctness issue because the guarded branch can never execute. Without source code, this cannot be proven independently, but the most likely interpretation is that symbolic execution found contradictory or fixed values in the preceding control flow. The exact cause would need confirmation by checking the condition's operands and their assignments at this line.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1984,
+            "output_tokens": 259,
+            "reasoning_tokens": 86,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.172
+        }
+      ],
+      "original_finding_index": 51
+    },
+    {
+      "finding_id": 14,
+      "type": "java:S2142",
+      "sourcefile": "ManagedSelector.java",
+      "start_line": "783",
+      "message": "Either re-interrupt this method or rethrow the \"InterruptedException\" that can be caught here.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CONCURRENCY",
+          "confidence": 0.91,
+          "developer_explanation": "The caught interruption is apparently being ignored rather than propagated or restored on the thread. That can prevent higher-level code and executor infrastructure from observing cancellation, so the handler should re-interrupt the thread or rethrow the exception unless this method is explicitly the boundary responsible for consuming interruption.",
+          "is_true_positive": true,
+          "issue_signature": "interrupted exception swallowed without restoration",
+          "reasoning": "The warning itself states that an InterruptedException is caught without either re-interrupting the thread or rethrowing the exception, which is the deciding fact and represents a real interruption-handling defect. Proper handling is needed so cancellation and shutdown signals remain visible to callers and thread-management code; certainty would require checking whether this catch is an intentional, documented interruption boundary.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1984,
+            "output_tokens": 357,
+            "reasoning_tokens": 178,
+            "cached_input_tokens": 0
+          },
+          "stop_reason": "stop",
+          "latency_s": 4.35
+        }
+      ],
+      "original_finding_index": 61
+    },
+    {
+      "finding_id": 15,
+      "type": "java:S2095",
+      "sourcefile": "ConnectorServer.java",
+      "start_line": "309",
+      "message": "Use try-with-resources or close this \"ServerSocket\" in a \"finally\" clause.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.9,
+          "developer_explanation": "The ServerSocket should be closed on every exit path, preferably by placing it in a try-with-resources statement or closing it in a finally block. Otherwise repeated failures or shutdowns can leave sockets and operating-system resources allocated, eventually preventing new connections or causing resource exhaustion.",
+          "is_true_positive": true,
+          "issue_signature": "unclosed server socket resource",
+          "reasoning": "The warning itself identifies a ServerSocket that is not protected by try-with-resources or guaranteed closure, which is a real resource-leak risk. Without the source, the remaining fact to verify is whether the socket is actually closed or deliberately transferred to another owner on every path; absent that evidence, the warning is most likely valid.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1987,
+            "output_tokens": 343,
+            "reasoning_tokens": 172,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.82
+        }
+      ],
+      "original_finding_index": 69
+    },
+    {
+      "finding_id": 16,
+      "type": "java:S5164",
+      "sourcefile": "ContextFactory.java",
+      "start_line": "67",
+      "message": "Call \"remove()\" on \"__threadClassLoader\".",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.88,
+          "developer_explanation": "The thread-local value is apparently left installed after use, so pooled threads can retain its class loader and associated objects indefinitely. Ensure the value is cleared with remove() in the appropriate cleanup path, typically a finally block; this conclusion would be certain after checking that the field is a ThreadLocal whose value is set during the operation.",
+          "is_true_positive": true,
+          "issue_signature": "uncleaned ThreadLocal state",
+          "reasoning": "The warning itself identifies a thread-local value and explicitly requests remove(), which indicates that cleanup is missing and makes this most likely a true positive. Retaining a class loader in a pooled thread can prevent class unloading and accumulate application state, so this is more than harmless style; the exact certainty would require checking how the value is set and whether it is already removed elsewhere.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1967,
+            "output_tokens": 532,
+            "reasoning_tokens": 342,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 5.858
+        }
+      ],
+      "original_finding_index": 71
+    },
+    {
+      "finding_id": 17,
+      "type": "java:S2119",
+      "sourcefile": "KeystoreGenerator.java",
+      "start_line": "59",
+      "message": "Save and re-use this \"Random\".",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "PERFORMANCE",
+          "confidence": 0.78,
+          "developer_explanation": "The random-number generator is apparently being created at a location that may execute repeatedly instead of being retained for reuse. Construct one generator at an appropriate longer-lived scope and reuse it; this avoids needless initialization and can prevent poorly varied sequences from repeated default seeding. If this code path is guaranteed to run only once, the warning would not materially apply.",
+          "is_true_positive": true,
+          "issue_signature": "random generator recreated instead of reused",
+          "reasoning": "The warning itself claims that a Random instance is created where it should be saved and reused, which is a valid performance concern when the containing operation can run more than once. Repeated construction is unnecessary and may also produce less-varied sequences when default seeding occurs close together. The verdict is based on the likely repeated execution implied by this rule; source would be needed to confirm that the generator is not strictly one-shot.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1963,
+            "output_tokens": 1234,
+            "reasoning_tokens": 1024,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 12.396
+        }
+      ],
+      "original_finding_index": 75
+    },
+    {
+      "finding_id": 18,
+      "type": "java:S2095",
+      "sourcefile": "AbstractForkedChild.java",
+      "start_line": "177",
+      "message": "Use try-with-resources or close this \"FileInputStream\" in a \"finally\" clause.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.9,
+          "developer_explanation": "The input stream is apparently created without a guaranteed close, so an exception or alternate control-flow path could leave the file descriptor open. Wrap it in try-with-resources or otherwise close it in a finally block, unless ownership is deliberately transferred and closed elsewhere.",
+          "is_true_positive": true,
+          "issue_signature": "unclosed input stream",
+          "reasoning": "The warning itself identifies a FileInputStream and states that no try-with-resources or finally-based close is present, which is the deciding evidence for a likely resource leak. An unclosed stream can exhaust file descriptors or other process resources, although the surrounding code would need to be checked to confirm that another component does not close it or that ownership is not intentionally transferred.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1990,
+            "output_tokens": 300,
+            "reasoning_tokens": 126,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.535
+        }
+      ],
+      "original_finding_index": 76
+    },
+    {
+      "finding_id": 19,
+      "type": "java:S2259",
+      "sourcefile": "NamingEntryUtil.java",
+      "start_line": "98",
+      "message": "A \"NullPointerException\" could be thrown; \"scopeName\" is nullable here.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.92,
+          "developer_explanation": "The value scopeName can be null at the reported location, and using it without a null check can cause a NullPointerException at runtime. Ensure it is validated or assigned a guaranteed non-null value before the dereference, unless the surrounding contract is corrected to guarantee non-nullness.",
+          "is_true_positive": true,
+          "issue_signature": "nullable value dereferenced without validation",
+          "reasoning": "The warning itself states that scopeName is nullable at the reported use and that this can result in a NullPointerException, which is a real correctness risk. This is therefore most likely a true positive; certainty would require checking whether an unshown invariant actually guarantees non-nullness before line 98.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1981,
+            "output_tokens": 279,
+            "reasoning_tokens": 112,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.302
+        }
+      ],
+      "original_finding_index": 84
+    },
+    {
+      "finding_id": 20,
+      "type": "java:S5164",
+      "sourcefile": "DefaultIdentityService.java",
+      "start_line": "56",
+      "message": "Use \"remove()\" instead of \"set(null)\".",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.87,
+          "developer_explanation": "The ThreadLocal value is being cleared with set(null), which leaves its ThreadLocalMap entry present rather than removing the entry. Replace this cleanup with remove() so pooled threads do not retain unnecessary ThreadLocal bookkeeping or associated state.",
+          "is_true_positive": true,
+          "issue_signature": "ThreadLocal entry not removed",
+          "reasoning": "The warning's explicit contrast between set(null) and remove() identifies a real cleanup problem: setting a ThreadLocal value to null does not expunge its per-thread map entry. This can retain stale ThreadLocal state and contribute to memory or resource retention, especially when threads are reused; confirming the exact ThreadLocal usage would establish the impact but not invalidate the general issue.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1969,
+            "output_tokens": 1046,
+            "reasoning_tokens": 871,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 10.665
+        }
+      ],
+      "original_finding_index": 99
+    },
+    {
+      "finding_id": 21,
+      "type": "java:S2259",
+      "sourcefile": "MultiAuthenticator.java",
+      "start_line": "160",
+      "message": "A \"NullPointerException\" could be thrown; \"authenticator\" is nullable here.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.9,
+          "developer_explanation": "The code uses authenticator on a path where it may still be null, so execution can fail with a NullPointerException. Ensure it is initialized or validated before use, or handle the null case explicitly.",
+          "is_true_positive": true,
+          "issue_signature": "possible null dereference",
+          "reasoning": "The warning itself states that authenticator is nullable at the flagged use and that a NullPointerException could result, which is a real correctness risk. This is a true positive unless code outside the unseen context guarantees non-nullness in a way the analyzer missed; that guarantee would need to be checked in the source.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1980,
+            "output_tokens": 235,
+            "reasoning_tokens": 82,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.025
+        }
+      ],
+      "original_finding_index": 100
+    },
+    {
+      "finding_id": 22,
+      "type": "java:S2445",
+      "sourcefile": "MultiAuthenticator.java",
+      "start_line": "372",
+      "message": "\"session\" is a method parameter, and should not be used for synchronization.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CONCURRENCY",
+          "confidence": 0.94,
+          "developer_explanation": "Using a method parameter as a monitor lets callers or other code holding the same object influence the synchronization, which can cause unexpected contention or deadlocks. Synchronize on a private, dedicated lock object instead, unless this parameter is explicitly part of a carefully documented locking protocol.",
+          "is_true_positive": true,
+          "issue_signature": "synchronization on externally accessible parameter",
+          "reasoning": "The warning itself states that a method parameter is used for synchronization, which means the lock object is externally controllable rather than private to the class. That creates a real concurrency risk because callers can synchronize on the same object or pass an object whose locking is shared unpredictably. The surrounding code could establish a deliberate locking protocol, but that cannot be verified from the warning alone.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1978,
+            "output_tokens": 478,
+            "reasoning_tokens": 298,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 5.628
+        }
+      ],
+      "original_finding_index": 101
+    },
+    {
+      "finding_id": 23,
+      "type": "java:S2142",
+      "sourcefile": "AbstractConnector.java",
+      "start_line": "706",
+      "message": "Either re-interrupt this method or rethrow the \"InterruptedException\" that can be caught here.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CONCURRENCY",
+          "confidence": 0.94,
+          "developer_explanation": "The caught interruption is apparently being swallowed, which can prevent higher-level code or thread-management logic from noticing that cancellation was requested. Either propagate the InterruptedException or restore the thread's interrupted status with Thread.currentThread().interrupt(), unless the catch block demonstrably completes the thread's interruption protocol itself.",
+          "is_true_positive": true,
+          "issue_signature": "swallowed thread interruption",
+          "reasoning": "The warning itself states that an InterruptedException can be caught without either rethrowing it or restoring the interrupted status, which is a real interruption-handling defect. Swallowing the signal can make cancellation and shutdown logic fail to observe an interruption; certainty would require checking whether the surrounding catch block intentionally and completely handles the interruption, but the warning alone most strongly indicates a true positive.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1984,
+            "output_tokens": 352,
+            "reasoning_tokens": 168,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 4.007
+        }
+      ],
+      "original_finding_index": 107
+    },
+    {
+      "finding_id": 24,
+      "type": "java:S2142",
+      "sourcefile": "LocalConnector.java",
+      "start_line": "286",
+      "message": "Either re-interrupt this method or rethrow the \"InterruptedException\" that can be caught here.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CONCURRENCY",
+          "confidence": 0.93,
+          "developer_explanation": "The caught interruption appears to be silently discarded, which can clear the thread's interrupted status and prevent higher-level code from noticing cancellation or shutdown requests. Preserve the interruption by calling Thread.currentThread().interrupt(), or propagate the InterruptedException when the method contract allows it; this assessment would be overturned only if the catch deliberately completes a documented interruption-handling boundary.",
+          "is_true_positive": true,
+          "issue_signature": "swallowed thread interruption",
+          "reasoning": "The warning itself states that an InterruptedException is caught without re-interrupting the thread or rethrowing it, which is the condition described by the rule and makes this most likely a true positive. The source would need to be checked to determine whether the catch deliberately handles interruption at a documented boundary, but absent that context swallowing the interruption is a real concurrency correctness issue.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1984,
+            "output_tokens": 394,
+            "reasoning_tokens": 200,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 4.155
+        }
+      ],
+      "original_finding_index": 114
+    },
+    {
+      "finding_id": 25,
+      "type": "java:S2142",
+      "sourcefile": "Server.java",
+      "start_line": "713",
+      "message": "Either re-interrupt this method or rethrow the \"InterruptedException\" that can be caught here.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CONCURRENCY",
+          "confidence": 0.94,
+          "developer_explanation": "The caught interruption is apparently being consumed without restoring the thread’s interrupted status or propagating the exception, which can prevent higher-level code from stopping or cancelling work correctly. Re-interrupt the thread or rethrow the exception, unless the surrounding code demonstrably handles interruption through an equivalent mechanism.",
+          "is_true_positive": true,
+          "issue_signature": "interrupted exception swallowed without restoration",
+          "reasoning": "The warning itself states that an InterruptedException is caught here without either re-interruption or rethrowing, which is the deciding fact for a likely real interruption-handling defect. Swallowing interruption can break cancellation and shutdown protocols in multithreaded code; certainty would require checking whether the method performs an equivalent interruption-aware action elsewhere.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1983,
+            "output_tokens": 325,
+            "reasoning_tokens": 149,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 4.294
+        }
+      ],
+      "original_finding_index": 119
+    },
+    {
+      "finding_id": 26,
+      "type": "java:S5164",
+      "sourcefile": "ContextHandler.java",
+      "start_line": "82",
+      "message": "Call \"remove()\" on \"CURRENT_CONTEXT\".",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "PERFORMANCE",
+          "confidence": 0.82,
+          "developer_explanation": "The context stored in CURRENT_CONTEXT should be removed when the request or operation ends, typically in a finally block. Otherwise, long-lived worker threads may retain the context and its referenced objects, causing memory retention and potentially stale context to leak between tasks.",
+          "is_true_positive": true,
+          "issue_signature": "thread-local value not removed",
+          "reasoning": "The warning itself identifies a context holder that requires an explicit remove() call, which indicates the value may remain attached to a long-lived thread after use. That is a real resource-retention risk unless the code removes it elsewhere, such as in a finally block; confirming that surrounding cleanup exists would be the one fact needed for certainty. The claimed issue is primarily a performance/resource-leak problem.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1966,
+            "output_tokens": 555,
+            "reasoning_tokens": 378,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 6.505
+        }
+      ],
+      "original_finding_index": 121
+    },
+    {
+      "finding_id": 27,
+      "type": "java:S2095",
+      "sourcefile": "ErrorHandler.java",
+      "start_line": "255",
+      "message": "Use try-with-resources or close this \"ByteBufferOutputStream\" in a \"finally\" clause.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.86,
+          "developer_explanation": "The output stream is created or acquired without a guaranteed close, so resources associated with it may remain allocated when execution leaves the relevant block, especially on exceptions. Use try-with-resources or ensure it is closed on every path; confirm the stream implementation actually owns closeable resources before suppressing the warning.",
+          "is_true_positive": true,
+          "issue_signature": "unclosed output stream resource",
+          "reasoning": "The warning itself states that a ByteBufferOutputStream is not guaranteed to be closed, which is a real resource-lifecycle defect unless its implementation has a deliberately harmless no-op close. An unclosed stream can retain buffers or other resources across exceptional and normal paths, so the claim is most likely correct; certainty would require checking the stream's implementation and surrounding control flow.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1989,
+            "output_tokens": 465,
+            "reasoning_tokens": 281,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 6.172
+        }
+      ],
+      "original_finding_index": 123
+    },
+    {
+      "finding_id": 28,
+      "type": "java:S2095",
+      "sourcefile": "ErrorHandler.java",
+      "start_line": "256",
+      "message": "Use try-with-resources or close this \"PrintWriter\" in a \"finally\" clause.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.86,
+          "developer_explanation": "A PrintWriter created or acquired by this code appears not to be closed on every execution path. Use try-with-resources or close it in a finally block, unless ownership is explicitly transferred to another component that reliably closes it.",
+          "is_true_positive": true,
+          "issue_signature": "unclosed PrintWriter resource",
+          "reasoning": "The warning itself states that a PrintWriter is left without try-with-resources or guaranteed cleanup, which is a real resource-leak condition and therefore makes this likely a true positive. An unclosed writer can retain underlying resources and, under repeated execution, contribute to resource exhaustion; certainty would require checking whether another component owns and closes it or whether it is already closed elsewhere. The issue is classified as correctness because it concerns missing resource cleanup, not merely style.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1987,
+            "output_tokens": 527,
+            "reasoning_tokens": 340,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 5.589
+        }
+      ],
+      "original_finding_index": 124
+    },
+    {
+      "finding_id": 29,
+      "type": "java:S2177",
+      "sourcefile": "StateTrackingHandler.java",
+      "start_line": "626",
+      "message": "Rename this method; there is a \"private\" method in the parent class with the same name.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.97,
+          "developer_explanation": "A private method in a superclass is not inherited or overridden, so a same-named method in the subclass is a separate method. Rename the subclass method, or otherwise clarify the relationship, to prevent readers from incorrectly assuming polymorphic behavior and to reduce maintenance risk.",
+          "is_true_positive": true,
+          "issue_signature": "same-named private methods across inheritance",
+          "reasoning": "The warning explicitly states that a method has the same name as a private method in its parent, which is a real source of confusion in an inheritance hierarchy. Because private methods cannot be overridden, the similarly named methods are unrelated despite appearing connected, making this a maintainability issue. The exact signatures and surrounding intent would be needed to assess whether a rename or refactoring is best, but the reported naming hazard itself is valid.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1977,
+            "output_tokens": 459,
+            "reasoning_tokens": 269,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 4.657
+        }
+      ],
+      "original_finding_index": 128
+    },
+    {
+      "finding_id": 30,
+      "type": "java:S2583",
+      "sourcefile": "HttpChannelState.java",
+      "start_line": "596",
+      "message": "Change this condition so that it does not always evaluate to \"false\"",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.9,
+          "developer_explanation": "The condition at the reported location is believed to be unreachable because symbolic execution finds that it always evaluates to false. Remove the dead branch or correct the preceding logic and state updates so the condition can reflect the intended runtime cases.",
+          "is_true_positive": true,
+          "issue_signature": "condition that always evaluates to false",
+          "reasoning": "The warning itself states that the condition always evaluates to false, which is a concrete correctness issue because any guarded behavior is unreachable. On the available information this is most likely a true positive, although certainty would require checking the condition and the values established on all preceding paths.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1984,
+            "output_tokens": 238,
+            "reasoning_tokens": 89,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.653
+        }
+      ],
+      "original_finding_index": 133
+    },
+    {
+      "finding_id": 31,
+      "type": "java:S2142",
+      "sourcefile": "HttpConnection.java",
+      "start_line": "1068",
+      "message": "Either re-interrupt this method or rethrow the \"InterruptedException\" that can be caught here.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CONCURRENCY",
+          "confidence": 0.9,
+          "developer_explanation": "The caught interruption is apparently being handled without restoring the thread's interrupted status or propagating the exception. Preserve the interruption by calling Thread.currentThread().interrupt(), or rethrow the exception when the surrounding API permits it.",
+          "is_true_positive": true,
+          "issue_signature": "interrupted exception swallowed without preservation",
+          "reasoning": "The warning itself states that an InterruptedException is catchable at this location and that neither re-interruption nor rethrowing is performed, which is a real interruption-handling defect. Swallowing interruption can prevent cancellation and shutdown signals from reaching higher-level code. Without source, certainty would require checking whether the catch block already preserves the status indirectly or whether a narrowly justified boundary intentionally consumes the interruption.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1986,
+            "output_tokens": 352,
+            "reasoning_tokens": 178,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 4.263
+        }
+      ],
+      "original_finding_index": 139
+    },
+    {
+      "finding_id": 32,
+      "type": "java:S2095",
+      "sourcefile": "JDBCSessionDataStore.java",
+      "start_line": "328",
+      "message": "Use try-with-resources or close this \"PreparedStatement\" in a \"finally\" clause.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.9,
+          "developer_explanation": "The PreparedStatement should be enclosed in try-with-resources or explicitly closed in a finally block. Otherwise repeated executions can retain database or driver resources and eventually exhaust available resources; ensure it is closed on every path, including exceptions.",
+          "is_true_positive": true,
+          "issue_signature": "unclosed database statement resource",
+          "reasoning": "The warning explicitly claims that a PreparedStatement is not closed, which is a real resource-management defect because statement handles can remain allocated when execution completes or fails. Without source code, the fact to verify is whether the statement is actually closed through try-with-resources, finally, or a helper on all paths; assuming the tool's claim is accurate, this is a true positive.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1989,
+            "output_tokens": 340,
+            "reasoning_tokens": 169,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 4.123
+        }
+      ],
+      "original_finding_index": 143
+    },
+    {
+      "finding_id": 33,
+      "type": "java:S2095",
+      "sourcefile": "JDBCSessionDataStore.java",
+      "start_line": "347",
+      "message": "Use try-with-resources or close this \"PreparedStatement\" in a \"finally\" clause.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.93,
+          "developer_explanation": "The PreparedStatement appears not to be closed on every execution path, which can leak JDBC resources and eventually exhaust the connection or statement pool. Use try-with-resources, or reliably close it in a finally block after all uses are complete.",
+          "is_true_positive": true,
+          "issue_signature": "unclosed JDBC statement resource",
+          "reasoning": "The warning itself states that a PreparedStatement is not closed or managed with try-with-resources, which is the deciding fact for a resource-leak verdict. Such a leak can accumulate across executions and cause resource exhaustion; certainty would require checking whether the statement is actually closed through another path not visible here.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1989,
+            "output_tokens": 334,
+            "reasoning_tokens": 176,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 4.102
+        }
+      ],
+      "original_finding_index": 144
+    },
+    {
+      "finding_id": 34,
+      "type": "java:S2095",
+      "sourcefile": "JDBCSessionDataStore.java",
+      "start_line": "370",
+      "message": "Use try-with-resources or close this \"PreparedStatement\" in a \"finally\" clause.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.91,
+          "developer_explanation": "The database statement is apparently not closed on every execution path, which can retain JDBC resources and eventually exhaust the connection or statement pool. Enclose it in try-with-resources or ensure it is closed reliably in a finally block.",
+          "is_true_positive": true,
+          "issue_signature": "unclosed JDBC resource",
+          "reasoning": "The warning explicitly identifies a PreparedStatement that lacks reliable closure and recommends try-with-resources or finally-based cleanup, which is a real resource-leak concern. Without source code, certainty would require checking whether every path already closes the statement elsewhere, but the analyzer's specific leak warning makes a true positive most likely.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1989,
+            "output_tokens": 351,
+            "reasoning_tokens": 194,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.824
+        }
+      ],
+      "original_finding_index": 145
+    },
+    {
+      "finding_id": 35,
+      "type": "java:S2095",
+      "sourcefile": "JDBCSessionDataStore.java",
+      "start_line": "394",
+      "message": "Use try-with-resources or close this \"PreparedStatement\" in a \"finally\" clause.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.94,
+          "developer_explanation": "The prepared statement created in the flagged code path is apparently not guaranteed to be closed, which can retain JDBC and database resources. Use try-with-resources or close it in a finally block so cleanup occurs on both normal and exceptional paths.",
+          "is_true_positive": true,
+          "issue_signature": "unclosed JDBC prepared statement",
+          "reasoning": "The warning itself states that a PreparedStatement lacks guaranteed cleanup and specifically recommends try-with-resources or finally-based closure, which is a real resource-management defect unless cleanup is performed elsewhere. An unclosed statement can accumulate resources and eventually impair or exhaust the database connection, so this is most appropriately classified as a correctness issue; certainty would require checking whether the statement is closed on every path in the surrounding code.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1989,
+            "output_tokens": 357,
+            "reasoning_tokens": 179,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 4.605
+        }
+      ],
+      "original_finding_index": 146
+    },
+    {
+      "finding_id": 36,
+      "type": "java:S2095",
+      "sourcefile": "JDBCSessionDataStore.java",
+      "start_line": "414",
+      "message": "Use try-with-resources or close this \"PreparedStatement\" in a \"finally\" clause.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.9,
+          "developer_explanation": "The PreparedStatement appears to lack guaranteed cleanup, which can leave database resources allocated and eventually exhaust the connection or statement pool. Close it on every path, preferably by creating it in a try-with-resources statement; verify that no enclosing cleanup already closes the same object.",
+          "is_true_positive": true,
+          "issue_signature": "unclosed PreparedStatement resource",
+          "reasoning": "The warning's direct claim that a PreparedStatement is not closed on all execution paths describes a real resource-lifecycle defect, so this is most likely a true positive. Without the source, certainty would require checking whether the statement is closed later or by an enclosing cleanup block, but the reported rule is specifically intended to identify that missing guarantee.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1989,
+            "output_tokens": 454,
+            "reasoning_tokens": 283,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 5.337
+        }
+      ],
+      "original_finding_index": 147
+    },
+    {
+      "finding_id": 37,
+      "type": "java:S2095",
+      "sourcefile": "JDBCSessionDataStore.java",
+      "start_line": "440",
+      "message": "Use try-with-resources or close this \"PreparedStatement\" in a \"finally\" clause.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.86,
+          "developer_explanation": "The PreparedStatement is apparently acquired without being reliably closed, which can leak JDBC and database resources and eventually exhaust available resources. Enclose its use in try-with-resources, or close it in a finally block on every execution path; confirm first that ownership is not deliberately transferred elsewhere.",
+          "is_true_positive": true,
+          "issue_signature": "unclosed JDBC statement resource",
+          "reasoning": "The warning itself claims that a PreparedStatement is not closed on all paths, which is a real resource-management defect if that claim is accurate. Such a leak can accumulate JDBC or database resources and impair later operations, so the appropriate fix is deterministic closure; without source code, the main uncertainty is whether the statement is actually closed elsewhere or its ownership is transferred.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1989,
+            "output_tokens": 405,
+            "reasoning_tokens": 227,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 5.236
+        }
+      ],
+      "original_finding_index": 148
+    },
+    {
+      "finding_id": 38,
+      "type": "java:S2095",
+      "sourcefile": "JDBCSessionDataStore.java",
+      "start_line": "459",
+      "message": "Use try-with-resources or close this \"PreparedStatement\" in a \"finally\" clause.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.93,
+          "developer_explanation": "The prepared statement appears to be created or used without guaranteed closure. Close it with try-with-resources or ensure it is closed on every execution path, including exceptional paths, to prevent resource exhaustion.",
+          "is_true_positive": true,
+          "issue_signature": "unclosed JDBC statement resource",
+          "reasoning": "The warning itself claims that a PreparedStatement is not reliably closed, which is a real resource-management defect if the reported code owns that statement. An unclosed statement can accumulate database or driver resources and eventually impair or exhaust the connection, so this is most likely a true positive; certainty would require checking whether another surrounding construct closes it on all paths. The issue is categorized as correctness because resource leakage can cause execution failure rather than being merely inefficient.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1989,
+            "output_tokens": 354,
+            "reasoning_tokens": 176,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 4.378
+        }
+      ],
+      "original_finding_index": 149
+    },
+    {
+      "finding_id": 39,
+      "type": "java:S2095",
+      "sourcefile": "JDBCSessionDataStore.java",
+      "start_line": "475",
+      "message": "Use try-with-resources or close this \"PreparedStatement\" in a \"finally\" clause.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.9,
+          "developer_explanation": "The prepared statement appears not to be closed on every execution path, which can retain database and driver resources and eventually exhaust available resources. Close it with try-with-resources or ensure it is reliably closed in a finally block, while verifying that no surrounding code owns and closes it instead.",
+          "is_true_positive": true,
+          "issue_signature": "unclosed database statement resource",
+          "reasoning": "The warning itself claims that a PreparedStatement lacks reliable closure, which is a real resource-management defect if accurate. Such a leak can accumulate JDBC resources and cause failures or denial of service, although certainty would require checking whether surrounding code closes the statement on every path.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1989,
+            "output_tokens": 360,
+            "reasoning_tokens": 201,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 4.643
+        }
+      ],
+      "original_finding_index": 150
+    },
+    {
+      "finding_id": 40,
+      "type": "java:S2142",
+      "sourcefile": "ManagedSession.java",
+      "start_line": "564",
+      "message": "Either re-interrupt this method or rethrow the \"InterruptedException\" that can be caught here.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CONCURRENCY",
+          "confidence": 0.94,
+          "developer_explanation": "The method catches an interruption but apparently neither restores the thread's interrupted status nor propagates the exception. Re-interrupt the current thread or rethrow the exception, unless the method deliberately completes an equivalent interruption-handling contract that is not visible here.",
+          "is_true_positive": true,
+          "issue_signature": "interrupted status swallowed",
+          "reasoning": "The warning itself states that an InterruptedException is caught without re-interrupting the thread or rethrowing the exception, which is a real interruption-handling defect in the absence of an explicit equivalent policy. Swallowing interruption can prevent callers, executors, or shutdown logic from observing cancellation and can leave the thread's interrupted status cleared. Certainty would require checking whether the catch block intentionally handles interruption and performs an equivalent propagation or cancellation action elsewhere.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1984,
+            "output_tokens": 289,
+            "reasoning_tokens": 100,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 4.555
+        }
+      ],
+      "original_finding_index": 151
+    },
+    {
+      "finding_id": 41,
+      "type": "java:S2095",
+      "sourcefile": "UnixDomainServerConnector.java",
+      "start_line": "250",
+      "message": "Use try-with-resources or close this \"ServerSocketChannel\" in a \"finally\" clause.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.92,
+          "developer_explanation": "The server socket channel appears to be left open on at least one execution path. Enclose its creation and use in try-with-resources, or close it in a finally block, unless ownership is deliberately transferred and documented elsewhere.",
+          "is_true_positive": true,
+          "issue_signature": "unclosed server socket channel",
+          "reasoning": "The warning itself identifies a ServerSocketChannel that is not closed and points to the missing cleanup mechanism, which is sufficient to make this most likely a real resource-leak issue. If the channel is not intentionally handed off to another component, failing to close it can retain file descriptors and eventually prevent new connections or otherwise exhaust process resources.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1990,
+            "output_tokens": 419,
+            "reasoning_tokens": 257,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 4.213
+        }
+      ],
+      "original_finding_index": 154
+    },
+    {
+      "finding_id": 42,
+      "type": "java:S2142",
+      "sourcefile": "Blocker.java",
+      "start_line": "134",
+      "message": "Either re-interrupt this method or rethrow the \"InterruptedException\" that can be caught here.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CONCURRENCY",
+          "confidence": 0.91,
+          "developer_explanation": "An InterruptedException is being caught without preserving the thread's interrupted status or propagating the interruption. Re-interrupt the current thread or rethrow the exception, unless the method has a deliberate, documented interruption policy that fully handles cancellation.",
+          "is_true_positive": true,
+          "issue_signature": "interrupted exception swallowed",
+          "reasoning": "The warning itself states that an InterruptedException can be caught here without either re-interrupting the thread or rethrowing it, which is the deciding issue. Swallowing interruption can prevent cooperative cancellation and cause higher-level code to continue operating as though no interruption occurred. The source would need to be checked to confirm whether a complete, intentional interruption-handling policy exists, but the warning alone most strongly indicates a real issue.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1984,
+            "output_tokens": 348,
+            "reasoning_tokens": 167,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 4.153
+        }
+      ],
+      "original_finding_index": 156
+    },
+    {
+      "finding_id": 43,
+      "type": "java:S2142",
+      "sourcefile": "Blocker.java",
+      "start_line": "216",
+      "message": "Either re-interrupt this method or rethrow the \"InterruptedException\" that can be caught here.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CONCURRENCY",
+          "confidence": 0.91,
+          "developer_explanation": "The method catches an InterruptedException without apparently preserving the thread's interrupted status or propagating the exception. Restore the interrupt with Thread.currentThread().interrupt() or rethrow the exception, unless the surrounding code demonstrably handles interruption through another valid mechanism.",
+          "is_true_positive": true,
+          "issue_signature": "interrupted exception is swallowed",
+          "reasoning": "The warning itself states that an InterruptedException is caught without re-interrupting the thread or rethrowing the exception, which is the deciding fact for a true positive. Swallowing interruption can prevent cancellation and shutdown signals from reaching code that depends on the interrupt status. Certainty would require checking whether the interrupt is restored or the exception is propagated elsewhere in the catch path, but no such exception is indicated.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1984,
+            "output_tokens": 378,
+            "reasoning_tokens": 196,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 4.993
+        }
+      ],
+      "original_finding_index": 158
+    },
+    {
+      "finding_id": 44,
+      "type": "java:S2142",
+      "sourcefile": "Blocker.java",
+      "start_line": "289",
+      "message": "Either re-interrupt this method or rethrow the \"InterruptedException\" that can be caught here.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CONCURRENCY",
+          "confidence": 0.94,
+          "developer_explanation": "The caught interruption is apparently being consumed without preserving the thread's interrupted status or propagating the exception. Re-interrupt the current thread or rethrow the exception, unless the method deliberately handles interruption as part of a clearly documented termination path.",
+          "is_true_positive": true,
+          "issue_signature": "interrupted exception swallowed without restoration",
+          "reasoning": "The warning itself states that an InterruptedException can be caught without re-interrupting the method or rethrowing it, which is the problematic condition described by this rule. Consuming interruption can prevent higher-level code from observing cancellation and can leave a thread running when it should stop. The surrounding code could establish a deliberate and safe exception, but no such context is provided, so the warning is most likely valid.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1984,
+            "output_tokens": 359,
+            "reasoning_tokens": 178,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 4.458
+        }
+      ],
+      "original_finding_index": 160
+    },
+    {
+      "finding_id": 45,
+      "type": "java:S2142",
+      "sourcefile": "Blocker.java",
+      "start_line": "513",
+      "message": "Either re-interrupt this method or rethrow the \"InterruptedException\" that can be caught here.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CONCURRENCY",
+          "confidence": 0.95,
+          "developer_explanation": "The caught interruption is apparently being handled without preserving the thread's interrupted status or propagating the interruption. Re-interrupt the current thread or rethrow the exception, unless the surrounding method has a deliberate, documented policy for consuming interrupts.",
+          "is_true_positive": true,
+          "issue_signature": "interrupted exception swallowed without propagation",
+          "reasoning": "The warning explicitly identifies a caught InterruptedException that is neither rethrown nor used to restore the interrupted status, which is the condition deciding this verdict. Swallowing an interruption can prevent cancellation and cooperative thread shutdown from reaching code that depends on the thread's interrupt status. The surrounding code could theoretically have a documented reason to consume the interrupt, but that exception cannot be established from the warning alone.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1984,
+            "output_tokens": 300,
+            "reasoning_tokens": 123,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.858
+        }
+      ],
+      "original_finding_index": 163
+    },
+    {
+      "finding_id": 46,
+      "type": "java:S3551",
+      "sourcefile": "ByteArrayOutputStream2.java",
+      "start_line": "63",
+      "message": "Make this method \"synchronized\" to match the parent class implementation.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CONCURRENCY",
+          "confidence": 0.92,
+          "developer_explanation": "Java does not automatically inherit the synchronized modifier when a method is overridden, so calls to this implementation may execute without the locking provided by the parent. Mark the override synchronized, or provide an explicitly equivalent synchronization strategy; only a documented, intentional change in thread-safety guarantees would justify dismissing this warning.",
+          "is_true_positive": true,
+          "issue_signature": "unsynchronized override of synchronized method",
+          "reasoning": "The warning states that the flagged method overrides a synchronized parent implementation without being synchronized, and that mismatch can remove the parent's locking guarantee, so it is most likely a true positive. Synchronization is not inherited by overrides, allowing concurrent callers to execute the subclass implementation without the monitor used by the parent. Certainty would require checking that the method actually overrides the synchronized parent method and that the implementation does not intentionally provide an equivalent thread-safety guarantee.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1976,
+            "output_tokens": 1039,
+            "reasoning_tokens": 835,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 11.635
+        }
+      ],
+      "original_finding_index": 167
+    },
+    {
+      "finding_id": 47,
+      "type": "java:S2142",
+      "sourcefile": "ExceptionUtil.java",
+      "start_line": "520",
+      "message": "Either re-interrupt this method or rethrow the \"InterruptedException\" that can be caught here.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CONCURRENCY",
+          "confidence": 0.96,
+          "developer_explanation": "The method catches an InterruptedException without preserving the thread's interrupted status or propagating the interruption. Re-interrupt the thread or rethrow the exception, unless the surrounding code explicitly handles interruption in a way that makes swallowing it safe.",
+          "is_true_positive": true,
+          "issue_signature": "swallowed thread interruption",
+          "reasoning": "The warning itself states that an InterruptedException is caught without re-interruption or rethrowing, which is the condition that decides this verdict. Swallowing interruption can prevent cancellation and cooperative thread shutdown from reaching callers, so the issue is materially valid; the exact handling context would be needed to identify any deliberate exception to this rule.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1984,
+            "output_tokens": 250,
+            "reasoning_tokens": 88,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.302
+        }
+      ],
+      "original_finding_index": 173
+    },
+    {
+      "finding_id": 48,
+      "type": "java:S2142",
+      "sourcefile": "FutureCallback.java",
+      "start_line": "156",
+      "message": "Either re-interrupt this method or rethrow the \"InterruptedException\" that can be caught here.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CONCURRENCY",
+          "confidence": 0.94,
+          "developer_explanation": "The method catches an interruption without preserving the thread's interrupted status or propagating the interruption. Re-interrupt the thread or rethrow the exception after any necessary cleanup so callers and cancellation mechanisms can observe it.",
+          "is_true_positive": true,
+          "issue_signature": "interrupted exception swallowed without restoration",
+          "reasoning": "The warning explicitly states that an InterruptedException is caught without either re-interrupting the thread or rethrowing the exception, which is the deciding fact and represents a real interruption-handling defect. Swallowing interruption can prevent cancellation and cause higher-level code to continue as though no interruption occurred. Without source code, the only fact that could change this assessment is whether the catch block deliberately converts the interruption into an equivalent, documented control flow, but that is not indicated here.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1984,
+            "output_tokens": 286,
+            "reasoning_tokens": 98,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.805
+        }
+      ],
+      "original_finding_index": 175
+    },
+    {
+      "finding_id": 49,
+      "type": "java:S2142",
+      "sourcefile": "SharedBlockingCallback.java",
+      "start_line": "231",
+      "message": "Either re-interrupt this method or rethrow the \"InterruptedException\" that can be caught here.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CONCURRENCY",
+          "confidence": 0.94,
+          "developer_explanation": "The method catches InterruptedException without apparently preserving the thread's interrupted status or propagating the exception. Re-interrupt the current thread, typically with Thread.currentThread().interrupt(), or rethrow the exception unless the surrounding design explicitly handles interruption another valid way.",
+          "is_true_positive": true,
+          "issue_signature": "interrupted exception swallowed without restoration",
+          "reasoning": "The warning itself states that an InterruptedException can be caught without re-interruption or rethrowing, which is a real interruption-handling defect unless the code deliberately performs an equivalent form of propagation. Swallowing interruption can prevent cancellation and shutdown signals from reaching higher-level code. Without source code, the fact that the catch block may already restore the status or intentionally completes interruption handling is the main uncertainty.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1985,
+            "output_tokens": 291,
+            "reasoning_tokens": 109,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.764
+        }
+      ],
+      "original_finding_index": 179
+    },
+    {
+      "finding_id": 50,
+      "type": "java:S2095",
+      "sourcefile": "FileSystemPool.java",
+      "start_line": "118",
+      "message": "Use try-with-resources or close this \"FileSystem\" in a \"finally\" clause.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.78,
+          "developer_explanation": "A FileSystem is a closeable resource, and the reported path appears to let it escape without a guaranteed close. Ensure ownership is explicit: close it with try-with-resources when the scope ends, or arrange for the pool to close every retained FileSystem during removal and shutdown.",
+          "is_true_positive": true,
+          "issue_signature": "unclosed filesystem resource",
+          "reasoning": "The warning itself claims that a closeable FileSystem reaches this path without a guaranteed close, which is a real resource-leak condition unless another owner reliably closes it later. Because no source is available, that possible pool-level lifecycle management cannot be verified, but the warning is most likely identifying an actual missing cleanup path. An unclosed FileSystem can retain native or operating-system resources and eventually contribute to resource exhaustion.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1988,
+            "output_tokens": 700,
+            "reasoning_tokens": 512,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 8.325
+        }
+      ],
+      "original_finding_index": 182
+    },
+    {
+      "finding_id": 51,
+      "type": "java:S4973",
+      "sourcefile": "Credential.java",
+      "start_line": "107",
+      "message": "Strings and Boxed types should be compared using \"equals()\".",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.94,
+          "developer_explanation": "The comparison at the reported line is using reference identity for a String or boxed value instead of comparing its contents. Replace the identity comparison with equals(), or use a null-safe value comparison when null is possible, so equivalent values are handled consistently.",
+          "is_true_positive": true,
+          "issue_signature": "identity comparison of strings or boxed values",
+          "reasoning": "The warning itself states that a String or boxed type is being compared in a way that should use equals(), which indicates reference comparison rather than value comparison. Such comparisons can produce different results for equal values represented by distinct objects, making this a correctness issue. The exact operands and null-handling would need checking to confirm the precise fix, but the warning is most likely valid.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1970,
+            "output_tokens": 304,
+            "reasoning_tokens": 129,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.861
+        }
+      ],
+      "original_finding_index": 185
+    },
+    {
+      "finding_id": 52,
+      "type": "java:S4973",
+      "sourcefile": "SniX509ExtendedKeyManager.java",
+      "start_line": "162",
+      "message": "Strings and Boxed types should be compared using \"equals()\".",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.98,
+          "developer_explanation": "The comparison should use equals() rather than == when comparing strings or boxed values, because == tests object identity and can produce different results for distinct objects with equal contents. Replace it with an appropriate value comparison, taking possible nulls into account.",
+          "is_true_positive": true,
+          "issue_signature": "identity comparison of strings or boxed values",
+          "reasoning": "The warning itself states that a String or boxed type is being compared in a way that should use equals(), which indicates identity comparison rather than value comparison. Such a comparison can yield an incorrect result when two distinct objects contain the same value; the exact operand types and whether identity comparison was intentionally required would be the code facts to verify.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1976,
+            "output_tokens": 288,
+            "reasoning_tokens": 121,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.647
+        }
+      ],
+      "original_finding_index": 191
+    },
+    {
+      "finding_id": 53,
+      "type": "java:S2142",
+      "sourcefile": "QueuedThreadPool.java",
+      "start_line": "354",
+      "message": "Either re-interrupt this method or rethrow the \"InterruptedException\" that can be caught here.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CONCURRENCY",
+          "confidence": 0.93,
+          "developer_explanation": "The code appears to catch InterruptedException without preserving the thread's interrupted status or propagating the interruption. This can cause higher-level cancellation and shutdown logic to miss the interruption; re-interrupt the current thread or rethrow the exception unless the method deliberately completes interruption handling in another valid way.",
+          "is_true_positive": true,
+          "issue_signature": "interrupted exception swallowed without restoration",
+          "reasoning": "The warning itself states that an InterruptedException is caught without either re-interrupting the thread or rethrowing the exception, which is the deciding defect. Swallowing interruption can prevent cooperative cancellation and shutdown logic from observing the thread's interrupted status. The source would need to be checked to confirm that the interruption is not intentionally and completely handled elsewhere, but the warning alone makes a true positive most likely.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1986,
+            "output_tokens": 360,
+            "reasoning_tokens": 170,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 4.427
+        }
+      ],
+      "original_finding_index": 195
+    },
+    {
+      "finding_id": 54,
+      "type": "java:S2095",
+      "sourcefile": "ExtensionStack.java",
+      "start_line": "139",
+      "message": "Use try-with-resources or close this \"Extension\" in a \"finally\" clause.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.88,
+          "developer_explanation": "The Extension is reported as a resource that can remain open when execution leaves the relevant code, so its cleanup is not guaranteed. Enclose its use in try-with-resources or close it reliably in a finally block, unless code inspection confirms that ownership and cleanup are handled elsewhere.",
+          "is_true_positive": true,
+          "issue_signature": "unclosed resource",
+          "reasoning": "The warning explicitly claims that an Extension is acquired without guaranteed closure, which is a real resource-lifecycle defect if that claim reflects the flagged code. Leaving such a resource open can consume native or pooled resources and eventually cause failures or denial of service. Without source code, the key fact that would need verification is whether the Extension is actually opened here and whether another component reliably owns and closes it.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1986,
+            "output_tokens": 365,
+            "reasoning_tokens": 183,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 4.67
+        }
+      ],
+      "original_finding_index": 206
+    },
+    {
+      "finding_id": 55,
+      "type": "java:S1143",
+      "sourcefile": "WebSocketConnection.java",
+      "start_line": "583",
+      "message": "Remove this throw statement from this finally block.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.94,
+          "developer_explanation": "A throw in a finally block can replace an exception already being propagated, or override a pending return, which can hide the original failure and make diagnosis unreliable. Preserve the original outcome and handle cleanup failures without throwing from finally, for example by using try-with-resources or adding cleanup failures as suppressed exceptions.",
+          "is_true_positive": true,
+          "issue_signature": "exception thrown from finally block",
+          "reasoning": "The warning itself identifies a throw statement inside a finally block, a construct that can override an exception or return from the associated try or catch code. That is a real correctness and error-handling risk unless the throw is deliberately isolated and cannot mask another outcome, which cannot be established without the source. The issue is therefore most likely a true positive.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1972,
+            "output_tokens": 357,
+            "reasoning_tokens": 177,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 4.297
+        }
+      ],
+      "original_finding_index": 207
+    },
+    {
+      "finding_id": 56,
+      "type": "java:S2259",
+      "sourcefile": "XmlConfiguration.java",
+      "start_line": "2036",
+      "message": "A \"NullPointerException\" could be thrown; \"envBuilder\" is nullable here.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.93,
+          "developer_explanation": "The code dereferences envBuilder at a point where it may still be null, so execution can fail with a NullPointerException. Ensure envBuilder is initialized before this line or explicitly handle the null case before dereferencing it.",
+          "is_true_positive": true,
+          "issue_signature": "nullable reference dereferenced without a null check",
+          "reasoning": "The warning itself states that envBuilder is nullable at the dereference and that this can cause a NullPointerException, which is a real correctness defect. Without the surrounding code, the existence of an earlier guaranteed initialization or an implicit invariant cannot be independently verified, but the reported symbolic state makes a true positive the most likely verdict.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1982,
+            "output_tokens": 287,
+            "reasoning_tokens": 123,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 4.13
+        }
+      ],
+      "original_finding_index": 220
+    },
+    {
+      "finding_id": 57,
+      "type": "java:S2583",
+      "sourcefile": "XmlParser.java",
+      "start_line": "165",
+      "message": "Change this condition so that it does not always evaluate to \"true\"",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.91,
+          "developer_explanation": "The condition at the reported location is apparently guaranteed to evaluate to true, so its alternative branch is unreachable or the check does not provide the intended protection. Review the surrounding control flow and remove the redundant condition or correct the logic so both intended outcomes remain possible.",
+          "is_true_positive": true,
+          "issue_signature": "condition that always evaluates true",
+          "reasoning": "The warning itself states that the condition always evaluates to true, which is a correctness problem because the conditional logic cannot distinguish the relevant cases. This is most likely a true positive, although confirming it would require checking the condition's operands and the preceding control flow in the source.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1983,
+            "output_tokens": 256,
+            "reasoning_tokens": 100,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.303
+        }
+      ],
+      "original_finding_index": 221
+    },
+    {
+      "finding_id": 58,
+      "type": "java:S2068",
+      "sourcefile": "JDBCLoginModule.java",
+      "start_line": "55",
+      "message": "'Password' detected in this expression, review this potentially hard-coded password.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "SECURITY",
+          "confidence": 0.78,
+          "developer_explanation": "The alert can be safely dismissed if the expression merely names a password-related property, reads a credential from configuration, or uses a non-secret placeholder rather than embedding an actual password. Confirm that the flagged expression is not a literal credential before dismissing it; if it is, move the secret to a protected external secret store.",
+          "is_true_positive": false,
+          "issue_signature": "hard-coded password credential",
+          "reasoning": "The warning itself reports only that the word 'Password' appears in an expression and calls the value potentially hard-coded, rather than establishing that an actual secret literal is embedded. Without source code, the expression could be a property name, configuration lookup, or placeholder, so the claimed security weakness is not established. The fact that the file is a JDBC login module makes password handling plausible, but does not by itself prove hard-coding.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1977,
+            "output_tokens": 485,
+            "reasoning_tokens": 286,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 5.876
+        }
+      ],
+      "original_finding_index": 222
+    },
+    {
+      "finding_id": 59,
+      "type": "java:S2755",
+      "sourcefile": "XmlParser.java",
+      "start_line": "113",
+      "message": "Disable access to external entities in XML parsing.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "SECURITY",
+          "confidence": 0.92,
+          "developer_explanation": "The XML parser configuration should explicitly disable external entities and related external-resource resolution before parsing untrusted or potentially influenced XML. Otherwise, an attacker may cause the parser to read local files or access internal network resources through an external entity; configure the relevant parser features or use a hardened XML processing configuration.",
+          "is_true_positive": true,
+          "issue_signature": "XML parsing with external entities enabled",
+          "reasoning": "The warning itself claims that XML parsing permits external entity access, which is the configuration weakness that enables XML external entity attacks. That is a genuine security issue if the flagged parser is used on attacker-controlled or otherwise untrusted XML, although the missing source prevents verifying the parser type and input origin.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1972,
+            "output_tokens": 293,
+            "reasoning_tokens": 126,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.948
+        }
+      ],
+      "original_finding_index": 223
+    },
+    {
+      "finding_id": 60,
+      "type": "java:S2178",
+      "sourcefile": "RequestListeners.java",
+      "start_line": "43",
+      "message": "Correct this \"|\" to \"||\" and extract the right operand to a variable if it should always be evaluated.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.84,
+          "developer_explanation": "The boolean expression uses the eager-evaluation operator `|`, so the right-hand side runs even when the left-hand side already determines the result. Replace it with `||` unless evaluating both operands is intentional; in that exceptional case, evaluate the right-hand expression separately and combine the stored values.",
+          "is_true_positive": true,
+          "issue_signature": "non-short-circuit boolean operator",
+          "reasoning": "The warning itself identifies a boolean use of `|` where short-circuit `||` is normally expected, and says the only exception is deliberate evaluation of the right operand. Without source evidence that eager evaluation is intentional, the alert most likely describes a real correctness and readability risk because the right-hand expression may run unnecessarily or cause side effects.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1979,
+            "output_tokens": 601,
+            "reasoning_tokens": 422,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 5.986
+        }
+      ],
+      "original_finding_index": 224
+    },
+    {
+      "finding_id": 61,
+      "type": "java:S2178",
+      "sourcefile": "RequestListeners.java",
+      "start_line": "45",
+      "message": "Correct this \"|\" to \"||\" and extract the right operand to a variable if it should always be evaluated.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.72,
+          "developer_explanation": "The expression uses a non-short-circuit boolean OR, so the right-hand operand is evaluated even when the left-hand operand is already true. Use `||` when that evaluation is unnecessary, or evaluate the right-hand side separately if its side effects are intentionally required.",
+          "is_true_positive": true,
+          "issue_signature": "non-short-circuit boolean operator",
+          "reasoning": "The warning itself identifies a boolean `|` whose right operand is always evaluated, unlike `||`, and that can produce unintended side effects or exceptions. This is a true positive unless the code intentionally requires unconditional evaluation of the right operand; that intent cannot be verified without the source, so confidence is limited.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1979,
+            "output_tokens": 678,
+            "reasoning_tokens": 512,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 7.784
+        }
+      ],
+      "original_finding_index": 226
+    },
+    {
+      "finding_id": 62,
+      "type": "java:S2178",
+      "sourcefile": "RequestListeners.java",
+      "start_line": "56",
+      "message": "Correct this \"|\" to \"||\" and extract the right operand to a variable if it should always be evaluated.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.84,
+          "developer_explanation": "The expression uses non-short-circuit boolean OR, so the right-hand operand is evaluated even when the left-hand operand is already true. Replace it with `||` unless evaluating both operands is intentional; if both evaluations are required, evaluate the right side separately and document that intent.",
+          "is_true_positive": true,
+          "issue_signature": "non-short-circuit boolean OR",
+          "reasoning": "The warning itself identifies a boolean `|` where short-circuit `||` semantics may be required, and explicitly notes that unconditional evaluation should be made intentional if it is needed. Evaluating the right operand unconditionally can trigger side effects, exceptions, or unnecessary work, making this a real correctness concern in the usual case. Without source code, the fact that both operands are deliberately required would need to be checked to rule out an intentional use.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1979,
+            "output_tokens": 709,
+            "reasoning_tokens": 512,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 8.383
+        }
+      ],
+      "original_finding_index": 231
+    },
+    {
+      "finding_id": 63,
+      "type": "java:S2178",
+      "sourcefile": "RequestListeners.java",
+      "start_line": "59",
+      "message": "Correct this \"|\" to \"||\" and extract the right operand to a variable if it should always be evaluated.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.78,
+          "developer_explanation": "The boolean `|` operator always evaluates both operands, unlike `||`, so the right-hand expression may run unnecessarily or trigger side effects or an exception when the left side already determines the result. Use `||`, or evaluate the right-hand side separately first when evaluating both operands is intentional and required.",
+          "is_true_positive": true,
+          "issue_signature": "non-short-circuit boolean operator",
+          "reasoning": "The warning itself identifies a boolean `|` that forces evaluation of the right operand where short-circuit `||` is normally required, creating a potential behavioral problem. Without the source, it is impossible to verify whether evaluating both operands is intentional, but the reported pattern is most likely a genuine correctness issue unless that deliberate evaluation can be confirmed.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1979,
+            "output_tokens": 932,
+            "reasoning_tokens": 746,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 10.145
+        }
+      ],
+      "original_finding_index": 234
+    },
+    {
+      "finding_id": 64,
+      "type": "java:S3516",
+      "sourcefile": "HttpConnection.java",
+      "start_line": "345",
+      "message": "Refactor this method to not always return the same value.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.86,
+          "developer_explanation": "This method reportedly produces the same result on every execution, so its apparent decision logic is unnecessary and may mislead future maintainers. Verify the return paths and either simplify the method to express the constant behavior directly or restore the missing variability if the result was intended to depend on inputs or state.",
+          "is_true_positive": true,
+          "issue_signature": "method always returns the same value",
+          "reasoning": "The warning itself claims that every execution path returns the same value, which is a genuine maintainability problem when the method presents itself as performing meaningful logic. A constant result can hide dead conditions or missing behavior and makes the method harder to understand and safely change. Without source code, certainty would require checking all return paths and whether the constant result is an intentional API contract.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1971,
+            "output_tokens": 458,
+            "reasoning_tokens": 274,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 5.381
+        }
+      ],
+      "original_finding_index": 236
+    },
+    {
+      "finding_id": 65,
+      "type": "java:S2178",
+      "sourcefile": "ResponseListeners.java",
+      "start_line": "367",
+      "message": "Correct this \"|\" to \"||\" and extract the right operand to a variable if it should always be evaluated.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.78,
+          "developer_explanation": "The expression uses `|`, which evaluates both boolean operands, where `||` normally avoids evaluating the right operand when the left is already true. Replace it with `||` unless the right-hand operation is deliberately required every time; in that case, evaluate it separately and then combine the results.",
+          "is_true_positive": true,
+          "issue_signature": "non-short-circuit boolean disjunction",
+          "reasoning": "The warning itself identifies a non-short-circuit `|` in a boolean expression and explicitly offers the only legitimate alternative: separately evaluating the right operand when that evaluation is intentional. Without the source, it is not possible to verify whether the right operand has required side effects, but the reported pattern is most likely a real correctness issue because it can cause unnecessary evaluation or alter exception and side-effect behavior.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1979,
+            "output_tokens": 557,
+            "reasoning_tokens": 366,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 6.132
+        }
+      ],
+      "original_finding_index": 239
+    },
+    {
+      "finding_id": 66,
+      "type": "java:S2178",
+      "sourcefile": "ResponseListeners.java",
+      "start_line": "369",
+      "message": "Correct this \"|\" to \"||\" and extract the right operand to a variable if it should always be evaluated.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.86,
+          "developer_explanation": "A boolean `|` evaluates both operands, unlike `||`, so the right-hand expression can run even when the left-hand condition is already true and may cause unintended side effects or exceptions. Use `||` unless evaluating both sides is explicitly required; in that case, evaluate the right side separately so the intent is clear.",
+          "is_true_positive": true,
+          "issue_signature": "non-short-circuit boolean OR",
+          "reasoning": "The warning itself identifies `|` in a boolean context and recommends `||`, which indicates a real risk that the right operand is evaluated when it should be skipped. This can change behavior when the right operand has side effects, is expensive, or depends on a condition established by the left operand. The source would need to be checked to confirm whether eager evaluation is intentional, but absent that evidence this is most likely a true positive.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1979,
+            "output_tokens": 577,
+            "reasoning_tokens": 374,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 6.494
+        }
+      ],
+      "original_finding_index": 241
+    },
+    {
+      "finding_id": 67,
+      "type": "java:S2178",
+      "sourcefile": "ResponseListeners.java",
+      "start_line": "377",
+      "message": "Correct this \"|\" to \"||\" and extract the right operand to a variable if it should always be evaluated.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.72,
+          "developer_explanation": "The expression uses a non-short-circuit boolean OR, so its right-hand side is evaluated even when the left-hand side is already true. Replace it with || unless evaluating both operands is intentional; if it is intentional, evaluate the right-hand side separately and combine the resulting values explicitly.",
+          "is_true_positive": true,
+          "issue_signature": "non-short-circuit boolean operator",
+          "reasoning": "The warning itself identifies use of | where || is normally expected in a boolean expression, which can cause unnecessary or unintended evaluation of the right operand. Without the source, it is impossible to verify whether that evaluation is intentional, but the warning is most likely valid because the tool specifically permits intentional evaluation to be preserved by extracting the operand.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1979,
+            "output_tokens": 484,
+            "reasoning_tokens": 309,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 6.2
+        }
+      ],
+      "original_finding_index": 243
+    },
+    {
+      "finding_id": 68,
+      "type": "java:S2178",
+      "sourcefile": "ResponseListeners.java",
+      "start_line": "379",
+      "message": "Correct this \"|\" to \"||\" and extract the right operand to a variable if it should always be evaluated.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.78,
+          "developer_explanation": "The flagged expression uses a non-short-circuit boolean OR where short-circuit evaluation is likely intended. Replace `|` with `||`; if evaluating both operands is intentional, evaluate the right-hand expression separately and combine the resulting values explicitly.",
+          "is_true_positive": true,
+          "issue_signature": "non-short-circuit boolean OR",
+          "reasoning": "The warning itself identifies a boolean `|` that should likely be `||`, meaning the right operand is evaluated even when the left operand already determines the result. That can cause unintended side effects, exceptions, or unnecessary work, although the source would need to be checked to confirm that evaluating both operands is not deliberate. The suggested separate evaluation is the appropriate alternative when both evaluations are required.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1979,
+            "output_tokens": 689,
+            "reasoning_tokens": 512,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 7.336
+        }
+      ],
+      "original_finding_index": 245
+    },
+    {
+      "finding_id": 69,
+      "type": "java:S2178",
+      "sourcefile": "ResponseListeners.java",
+      "start_line": "381",
+      "message": "Correct this \"|\" to \"||\" and extract the right operand to a variable if it should always be evaluated.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.72,
+          "developer_explanation": "The expression uses the non-short-circuit boolean operator, so the right-hand side is evaluated even when the left-hand side already determines the result. Replace it with || unless evaluating both operands is intentional; if eager evaluation is required, compute the right-hand value separately to make that intent explicit.",
+          "is_true_positive": true,
+          "issue_signature": "non-short-circuit boolean operator",
+          "reasoning": "The warning itself identifies a boolean | expression where || is normally expected, making unintended evaluation of the right operand the deciding issue. Without the source, it is impossible to verify whether the right operand has required side effects, but the rule explicitly allows that exception rather than asserting it here. The most likely interpretation is therefore a real correctness and clarity issue, contingent on eager evaluation not being intentional.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1979,
+            "output_tokens": 538,
+            "reasoning_tokens": 351,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 6.304
+        }
+      ],
+      "original_finding_index": 247
+    },
+    {
+      "finding_id": 70,
+      "type": "java:S2178",
+      "sourcefile": "ResponseListeners.java",
+      "start_line": "382",
+      "message": "Correct this \"|\" to \"||\" and extract the right operand to a variable if it should always be evaluated.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.78,
+          "developer_explanation": "Using a bitwise OR for boolean conditions is less clear because it always evaluates both operands, unlike the usual short-circuit logical OR. Replace it with || unless both operands must run; in that case, evaluate the right-hand expression separately before combining the boolean values.",
+          "is_true_positive": true,
+          "issue_signature": "bitwise operator used for boolean logic",
+          "reasoning": "The warning itself identifies a boolean-style use of |, whose non-short-circuit evaluation can obscure intent and differ from the expected behavior of ||. This is a real readability and maintainability concern, although certainty would require checking whether the operands are booleans and whether evaluating the right operand unconditionally is intentional.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1979,
+            "output_tokens": 681,
+            "reasoning_tokens": 512,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 8.39
+        }
+      ],
+      "original_finding_index": 248
+    },
+    {
+      "finding_id": 71,
+      "type": "java:S3516",
+      "sourcefile": "HTTP2Session.java",
+      "start_line": "2217",
+      "message": "Refactor this method to not always return the same value.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.82,
+          "developer_explanation": "The method appears to return a constant regardless of its inputs or execution path, so callers cannot receive a result that reflects the method’s state or arguments. Refactor the control flow or return logic so the result varies when appropriate; if a constant result is intentional, document or simplify the method to make that contract explicit.",
+          "is_true_positive": true,
+          "issue_signature": "method always returns a constant value",
+          "reasoning": "The warning itself states that every path through the method returns the same value, which is the deciding fact behind this verdict. That generally indicates a defective or meaningless implementation and can cause callers to receive an incorrect result. The missing source prevents confirming whether the constant return is intentional, such as for a required override, so confidence is not absolute.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1974,
+            "output_tokens": 499,
+            "reasoning_tokens": 317,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 6.162
+        }
+      ],
+      "original_finding_index": 252
+    },
+    {
+      "finding_id": 72,
+      "type": "java:S3516",
+      "sourcefile": "HTTP2Stream.java",
+      "start_line": "746",
+      "message": "Refactor this method to not always return the same value.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.86,
+          "developer_explanation": "This method appears to return an identical value on every execution path, so its branching or input-dependent logic has no observable effect and may indicate an implementation defect. Make the return value depend on the intended conditions, or simplify the method if a constant result is genuinely intended.",
+          "is_true_positive": true,
+          "issue_signature": "method always returns the same value",
+          "reasoning": "The warning itself states that the method always returns the same value, which is the deciding indication of a likely defective or ineffective method implementation. Such a method cannot provide the varying result its signature or surrounding control flow may imply, although certainty would require checking all return paths and whether a constant result is intentional.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1972,
+            "output_tokens": 410,
+            "reasoning_tokens": 245,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 5.088
+        }
+      ],
+      "original_finding_index": 253
+    },
+    {
+      "finding_id": 73,
+      "type": "java:S3516",
+      "sourcefile": "HTTP3Session.java",
+      "start_line": "516",
+      "message": "Refactor this method to not always return the same value.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.78,
+          "developer_explanation": "This method appears to provide no meaningful variation because every execution produces the same result, making its control flow misleading and harder to maintain. Simplify it to a constant or remove the unnecessary method, unless its fixed result is required by an interface or framework contract.",
+          "is_true_positive": true,
+          "issue_signature": "method always returning a constant value",
+          "reasoning": "The warning itself explicitly claims that the method always returns the same value, which is generally a real maintainability issue because the method's apparent decision logic has no effect. Without source code, the remaining uncertainty is whether the fixed result is intentional or required by an override, callback, or framework contract; that context would need to be checked before changing it.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1972,
+            "output_tokens": 505,
+            "reasoning_tokens": 331,
+            "cached_input_tokens": 0
+          },
+          "stop_reason": "stop",
+          "latency_s": 6.02
+        }
+      ],
+      "original_finding_index": 255
+    },
+    {
+      "finding_id": 74,
+      "type": "java:S1845",
+      "sourcefile": "BundleMetadata.java",
+      "start_line": "32",
+      "message": "Rename field \"bundle\" to prevent any misunderstanding/clash with field \"BUNDLE\".",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.98,
+          "developer_explanation": "The class contains two fields whose names differ only by capitalization, which can easily cause confusion when reading or modifying the code even though Java treats them as distinct identifiers. Rename one field to a clearly distinct name and update its references.",
+          "is_true_positive": true,
+          "issue_signature": "fields differing only by capitalization",
+          "reasoning": "The warning itself states that the field \"bundle\" can be misunderstood or confused with \"BUNDLE\", so it identifies a real naming and readability problem. Java permits these distinct identifiers, but their near-identical spelling makes accidental use and maintenance mistakes more likely; the source would only be needed to confirm whether one of the names has special contextual justification.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1974,
+            "output_tokens": 260,
+            "reasoning_tokens": 94,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.428
+        }
+      ],
+      "original_finding_index": 257
+    },
+    {
+      "finding_id": 75,
+      "type": "java:S1845",
+      "sourcefile": "FutureCallback.java",
+      "start_line": "29",
+      "message": "Rename field \"SUCCEEDED\" to prevent any misunderstanding/clash with method \"succeeded\".",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.88,
+          "developer_explanation": "The field name differs from the method name only by capitalization, so readers may mistake the two for the same concept even though Java treats them as distinct identifiers. Rename the field or method to make their roles clearly distinguishable, unless the surrounding API deliberately relies on this naming convention.",
+          "is_true_positive": true,
+          "issue_signature": "case-insensitive field-method name collision",
+          "reasoning": "The warning itself identifies a field and method whose names differ only by capitalization, which is a genuine readability and maintainability risk even though Java permits both declarations. Without the source, it is impossible to verify whether the overlap is an intentional, documented API convention, but the reported naming ambiguity is materially plausible and is the issue described.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1975,
+            "output_tokens": 461,
+            "reasoning_tokens": 287,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 5.877
+        }
+      ],
+      "original_finding_index": 259
+    },
+    {
+      "finding_id": 76,
+      "type": "java:S1845",
+      "sourcefile": "JavaVersion.java",
+      "start_line": "59",
+      "message": "Rename field \"version\" to prevent any misunderstanding/clash with field \"VERSION\".",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.96,
+          "developer_explanation": "The two field names differ only by capitalization, so readers can easily confuse the instance or ordinary field with the uppercase field, especially during maintenance or review. Rename one field to make their roles unambiguous, unless the distinction is an intentional and clearly documented convention.",
+          "is_true_positive": true,
+          "issue_signature": "fields differing only by capitalization",
+          "reasoning": "The warning itself identifies two fields whose names differ only by capitalization, which is the naming ambiguity the rule is intended to prevent. That is a real maintainability and readability concern, although the surrounding modifiers and documented conventions would be needed to determine whether the distinction is intentionally justified.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1973,
+            "output_tokens": 428,
+            "reasoning_tokens": 270,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 4.826
+        }
+      ],
+      "original_finding_index": 260
+    },
+    {
+      "finding_id": 77,
+      "type": "java:S1845",
+      "sourcefile": "Promise.java",
+      "start_line": "233",
+      "message": "Rename method \"noop\" to prevent any misunderstanding/clash with field \"NOOP\" defined in interface \"org.eclipse.jetty.util.thread.Invocable\".",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.87,
+          "developer_explanation": "The method name differs from an inherited interface constant only by capitalization, which can make references and intent difficult to distinguish during review or maintenance. Rename the method to a clearly distinct verb or descriptive name, unless the interface and method are deliberately required to use this convention.",
+          "is_true_positive": true,
+          "issue_signature": "method and field names differing only by case",
+          "reasoning": "The warning itself identifies a method and an interface field whose names differ only by capitalization, which is a genuine readability and maintenance concern. Java treats them as distinct identifiers, so there is no literal language-level clash, but the visual similarity can still cause misunderstanding when reading or changing the code. The surrounding declaration and whether the naming is required by an API would be needed to establish whether an exception is justified.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1986,
+            "output_tokens": 699,
+            "reasoning_tokens": 512,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 8.184
+        }
+      ],
+      "original_finding_index": 261
+    },
+    {
+      "finding_id": 78,
+      "type": "java:S1845",
+      "sourcefile": "RolloverFileOutputStream.java",
+      "start_line": "398",
+      "message": "Rename method \"rollOver\" to prevent any misunderstanding/clash with method \"rollover\".",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.97,
+          "developer_explanation": "The two method names differ only by capitalization, which is easy to overlook and can cause callers or maintainers to invoke the wrong method. Rename one method so the names are clearly distinct, or otherwise establish a naming convention that removes the ambiguity.",
+          "is_true_positive": true,
+          "issue_signature": "methods differing only by capitalization",
+          "reasoning": "The warning itself identifies two methods whose names differ only by capitalization, and that naming pattern can cause misunderstanding even though Java treats them as distinct methods. This is therefore a real readability and maintainability issue; the exact rename would depend on whether the methods have intentionally different semantics, which cannot be checked without source code.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1979,
+            "output_tokens": 283,
+            "reasoning_tokens": 121,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.572
+        }
+      ],
+      "original_finding_index": 262
+    },
+    {
+      "finding_id": 79,
+      "type": "java:S3014",
+      "sourcefile": "QueuedThreadPool.java",
+      "start_line": "162",
+      "message": "Remove this use of \"ThreadGroup\". Prefer the use of \"ThreadPoolExecutor\".",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.82,
+          "developer_explanation": "This alarm can be safely dismissed if the ThreadGroup is used only to organize or track the pool's worker threads, since ThreadPoolExecutor does not provide equivalent thread-group semantics. Replacing it would require a broader redesign and is not justified by the warning alone; otherwise, if it is being used to implement task scheduling, an executor should be considered.",
+          "is_true_positive": false,
+          "issue_signature": "obsolete thread group usage",
+          "reasoning": "The warning identifies a ThreadGroup in a class named QueuedThreadPool, but that fact alone does not establish that ThreadGroup is incorrectly being used as a thread-pool implementation. A ThreadGroup can be intentional for grouping worker threads, and ThreadPoolExecutor is not a direct substitute for that capability, so the claimed need to remove it is not established without checking its role at the flagged line.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1980,
+            "output_tokens": 1230,
+            "reasoning_tokens": 1024,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 13.232
+        }
+      ],
+      "original_finding_index": 268
+    },
+    {
+      "finding_id": 80,
+      "type": "java:S3014",
+      "sourcefile": "ScheduledExecutorScheduler.java",
+      "start_line": "83",
+      "message": "Remove this use of \"ThreadGroup\". Prefer the use of \"ThreadPoolExecutor\".",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.84,
+          "developer_explanation": "Directly using ThreadGroup is an outdated way to organize and manage threads and can make lifecycle and failure handling harder to reason about. Use an executor-based design, typically a ScheduledThreadPoolExecutor for scheduled work, unless this code specifically requires ThreadGroup APIs for compatibility.",
+          "is_true_positive": true,
+          "issue_signature": "direct ThreadGroup-based thread management",
+          "reasoning": "The warning explicitly identifies direct use of ThreadGroup and recommends executor-based thread management, which is a materially valid design concern in modern Java. ThreadGroup is not a suitable replacement for executor lifecycle, scheduling, and task management, although the exact impact depends on whether this code requires a legacy ThreadGroup API or merely uses it to organize scheduler threads.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1979,
+            "output_tokens": 506,
+            "reasoning_tokens": 332,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 6.399
+        }
+      ],
+      "original_finding_index": 272
+    },
+    {
+      "finding_id": 81,
+      "type": "java:S1845",
+      "sourcefile": "MessageInputStream.java",
+      "start_line": "51",
+      "message": "Rename field \"closed\" to prevent any misunderstanding/clash with field \"CLOSED\".",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.98,
+          "developer_explanation": "The fields use names that differ only by capitalization, making references harder to distinguish and increasing the chance of misunderstanding or accidental misuse. Rename one field so the names are clearly distinct, while preserving the intended behavior.",
+          "is_true_positive": true,
+          "issue_signature": "fields differing only by capitalization",
+          "reasoning": "The warning itself states that fields named \"closed\" and \"CLOSED\" differ only by capitalization, which is the naming collision the rule identifies as confusing. That creates a real maintainability and readability issue even if Java technically permits both names; the surrounding declarations would be needed to assess whether a more specific naming choice is appropriate.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1975,
+            "output_tokens": 288,
+            "reasoning_tokens": 130,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.929
+        }
+      ],
+      "original_finding_index": 274
+    },
+    {
+      "finding_id": 82,
+      "type": "java:S3776",
+      "sourcefile": "MutableHttpFields.java",
+      "start_line": "431",
+      "message": "Refactor this method to reduce its Cognitive Complexity from 16 to the 15 allowed.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.99,
+          "developer_explanation": "The method's cognitive complexity exceeds the configured maintainability threshold by one point, making its control flow slightly harder to understand and safely modify. Consider extracting cohesive branches or simplifying nested conditions while preserving behavior.",
+          "is_true_positive": true,
+          "issue_signature": "method exceeds cognitive complexity threshold",
+          "reasoning": "The warning itself states that the method has cognitive complexity 16 while the allowed threshold is 15, so the claimed maintainability issue is present. Without source code, the specific refactoring opportunity cannot be assessed, but the reported metric violation is sufficient to classify this as a true positive.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1978,
+            "output_tokens": 222,
+            "reasoning_tokens": 74,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.3
+        }
+      ],
+      "original_finding_index": 400
+    },
+    {
+      "finding_id": 83,
+      "type": "java:S3776",
+      "sourcefile": "HttpSenderOverHTTP3.java",
+      "start_line": "57",
+      "message": "Refactor this method to reduce its Cognitive Complexity from 39 to the 15 allowed.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.98,
+          "developer_explanation": "The method's reported cognitive complexity is substantially above the configured maintainability threshold, so its control flow is likely difficult to understand and safely modify. Decompose the method into focused helper methods and simplify nested conditionals or branching where practical.",
+          "is_true_positive": true,
+          "issue_signature": "excessive cognitive complexity",
+          "reasoning": "The warning itself reports cognitive complexity of 39 against an allowed maximum of 15, which directly establishes the maintainability issue claimed by the rule. Without source code, the exact contributors and best refactoring cannot be confirmed, but the reported metric is sufficient to regard this as a true positive.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1980,
+            "output_tokens": 244,
+            "reasoning_tokens": 88,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 2.887
+        }
+      ],
+      "original_finding_index": 485
+    },
+    {
+      "finding_id": 84,
+      "type": "java:S2696",
+      "sourcefile": "DefaultFileLocatorHelper.java",
+      "start_line": "152",
+      "message": "Make the enclosing method \"static\" or remove this set.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CONCURRENCY",
+          "confidence": 0.9,
+          "developer_explanation": "An instance method is assigning to shared static state, which makes the update accessible across all instances and can create thread-safety or lifecycle problems. Make the method static if it does not use instance state, or redesign the state update so it is instance-owned or otherwise safely synchronized.",
+          "is_true_positive": true,
+          "issue_signature": "instance method mutating static state",
+          "reasoning": "The warning itself states that a set to static state occurs inside an enclosing instance method, which is the condition the issue describes. That creates shared mutable state and can lead to unintended cross-instance behavior or races when multiple threads use the class; the missing source prevents confirming whether the field is immutable, safely synchronized, or intentionally global.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1973,
+            "output_tokens": 390,
+            "reasoning_tokens": 218,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 4.842
+        }
+      ],
+      "original_finding_index": 616
+    },
+    {
+      "finding_id": 85,
+      "type": "java:S3776",
+      "sourcefile": "HttpChannelState.java",
+      "start_line": "1338",
+      "message": "Refactor this method to reduce its Cognitive Complexity from 37 to the 15 allowed.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.98,
+          "developer_explanation": "This method has substantially more branching and control-flow complexity than the configured maintainability threshold, making it harder to understand, test, and safely modify. Break the logic into focused helper methods or simplify its decision paths while preserving behavior.",
+          "is_true_positive": true,
+          "issue_signature": "excessive method cognitive complexity",
+          "reasoning": "The warning itself reports cognitive complexity of 37 against an allowed maximum of 15, which directly establishes the maintainability issue claimed by the rule. Although the source would be needed to choose the best refactoring, the measured excess is enough to classify this as a true positive rather than an incorrect alarm.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1980,
+            "output_tokens": 240,
+            "reasoning_tokens": 82,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.003
+        }
+      ],
+      "original_finding_index": 785
+    },
+    {
+      "finding_id": 86,
+      "type": "java:S1948",
+      "sourcefile": "HttpConnection.java",
+      "start_line": "1049",
+      "message": "Make non-static \"_complete\" transient or serializable.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.84,
+          "developer_explanation": "The enclosing class is apparently serializable, while this non-static field is not known to be serializable, so serialization can fail with a NotSerializableException or produce an invalid serialized state. Make the field transient if it should not be persisted, or ensure its declared and runtime value types support serialization; verify the field declaration to confirm the tool's type inference.",
+          "is_true_positive": true,
+          "issue_signature": "non-serializable field in serializable class",
+          "reasoning": "The warning itself claims that a non-static field named \"_complete\" in a serializable context is neither transient nor serializable, which is the condition that can make object serialization fail. That is materially a real correctness issue unless the field's type is actually serializable or the enclosing class is not serialized; confirming those facts would require the source code.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1973,
+            "output_tokens": 457,
+            "reasoning_tokens": 261,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 5.52
+        }
+      ],
+      "original_finding_index": 791
+    },
+    {
+      "finding_id": 87,
+      "type": "java:S1948",
+      "sourcefile": "UnreadableSessionDataException.java",
+      "start_line": "26",
+      "message": "Make non-static \"_sessionContext\" transient or serializable.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.87,
+          "developer_explanation": "This exception is serializable through the exception hierarchy, so retaining a non-serializable session context can cause serialization to fail when the exception is transported or persisted. Make the context type serializable if it must be preserved, or mark the field transient if it is runtime-only and can be reconstructed or omitted.",
+          "is_true_positive": true,
+          "issue_signature": "non-serializable field in serializable class",
+          "reasoning": "The warning itself identifies a non-static field named _sessionContext in a serializable exception and states that the field is neither transient nor serializable, which is the condition that can make exception serialization fail. That is a real correctness issue unless the field's declared type is actually serializable or the enclosing class is not serializable; confirming those facts in the source would remove the remaining uncertainty.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1976,
+            "output_tokens": 423,
+            "reasoning_tokens": 230,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 4.66
+        }
+      ],
+      "original_finding_index": 829
+    },
+    {
+      "finding_id": 88,
+      "type": "java:S1192",
+      "sourcefile": "AsyncJSON.java",
+      "start_line": "673",
+      "message": "Define a constant instead of duplicating this literal \"invalid 'false' literal\" 3 times.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.96,
+          "developer_explanation": "The same literal appears three times, so the value is harder to update consistently and repeated text adds avoidable duplication. Define a named constant if all three occurrences represent the same concept; otherwise, the occurrences may need distinct context-specific handling.",
+          "is_true_positive": true,
+          "issue_signature": "duplicated string literals",
+          "reasoning": "The warning itself states that the identical literal \"invalid 'false' literal\" is duplicated three times, which is the maintainability issue reported by this rule. A shared constant would centralize the value and reduce inconsistent future edits, although the source would be needed to verify that all occurrences have the same semantic meaning.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1977,
+            "output_tokens": 344,
+            "reasoning_tokens": 184,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 4.18
+        }
+      ],
+      "original_finding_index": 841
+    },
+    {
+      "finding_id": 89,
+      "type": "java:S3776",
+      "sourcefile": "AsyncJSON.java",
+      "start_line": "1298",
+      "message": "Refactor this method to reduce its Cognitive Complexity from 19 to the 15 allowed.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.98,
+          "developer_explanation": "This method has higher cognitive complexity than the configured maintainability threshold, making its control flow harder to understand and safely modify. Consider extracting cohesive branches or helper methods and simplifying nested conditionals, while preserving behavior.",
+          "is_true_positive": true,
+          "issue_signature": "excessive cognitive complexity",
+          "reasoning": "The warning itself reports cognitive complexity of 19 against an allowed maximum of 15, so the stated maintainability issue is materially present. Without the source, the specific refactoring opportunities cannot be assessed, but the threshold violation is sufficient to support a true-positive verdict.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1979,
+            "output_tokens": 239,
+            "reasoning_tokens": 93,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.277
+        }
+      ],
+      "original_finding_index": 844
+    },
+    {
+      "finding_id": 90,
+      "type": "java:S3776",
+      "sourcefile": "Utf8StringBuilder.java",
+      "start_line": "351",
+      "message": "Refactor this method to reduce its Cognitive Complexity from 27 to the 15 allowed.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.98,
+          "developer_explanation": "This method has a measured cognitive complexity of 27, substantially above the configured threshold of 15, so its control flow is harder to understand and maintain. Split independent responsibilities into smaller methods and simplify nested conditionals or loops while preserving the existing behavior.",
+          "is_true_positive": true,
+          "issue_signature": "excessive method cognitive complexity",
+          "reasoning": "The warning itself states that the method's cognitive complexity is 27 against an allowed maximum of 15, which directly establishes the reported maintainability issue. Without source code, the exact refactoring opportunities and whether some complexity is justified cannot be assessed, but the metric violation is still a valid code-quality finding.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1979,
+            "output_tokens": 263,
+            "reasoning_tokens": 99,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.548
+        }
+      ],
+      "original_finding_index": 934
+    },
+    {
+      "finding_id": 91,
+      "type": "java:S1192",
+      "sourcefile": "AttributeNormalizer.java",
+      "start_line": "328",
+      "message": "Define a constant instead of duplicating this literal \"${%s}\" 3 times.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.97,
+          "developer_explanation": "The same formatting literal appears three times, so keeping it in a named constant would avoid repeated text and make future changes safer and clearer. Replace the duplicated occurrences with a shared constant, unless the occurrences intentionally represent independently configurable values.",
+          "is_true_positive": true,
+          "issue_signature": "duplicated string literal",
+          "reasoning": "The warning explicitly states that the literal \"${%s}\" is duplicated three times, which is the maintainability problem targeted by this rule. Repeating an identical format string creates unnecessary maintenance risk because a future change could update some occurrences but not others; the surrounding code would be needed to determine whether the duplication is intentionally independent, but nothing in the warning indicates that exception.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1974,
+            "output_tokens": 282,
+            "reasoning_tokens": 112,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.98
+        }
+      ],
+      "original_finding_index": 946
+    },
+    {
+      "finding_id": 92,
+      "type": "java:S115",
+      "sourcefile": "X509.java",
+      "start_line": "44",
+      "message": "Rename this constant name to match the regular expression '^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$'.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.98,
+          "developer_explanation": "The constant at the reported line does not follow the required uppercase naming convention. Rename it using uppercase letters, digits, and underscore-separated words unless there is a deliberate project-wide exception.",
+          "is_true_positive": true,
+          "issue_signature": "constant name violates naming convention",
+          "reasoning": "The warning explicitly states that a constant name fails the prescribed uppercase regular expression, which is the property deciding this verdict. That represents a real maintainability and consistency issue, although the source would be needed to verify whether the declaration is intentionally exempt from the convention.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1986,
+            "output_tokens": 251,
+            "reasoning_tokens": 112,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.199
+        }
+      ],
+      "original_finding_index": 976
+    },
+    {
+      "finding_id": 93,
+      "type": "java:S3776",
+      "sourcefile": "WebSocketCoreSession.java",
+      "start_line": "653",
+      "message": "Refactor this method to reduce its Cognitive Complexity from 20 to the 15 allowed.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.99,
+          "developer_explanation": "This method exceeds the configured cognitive-complexity threshold, so its control flow is harder to understand and safely modify than intended. Split nested or independent logic into focused helper methods and simplify branching where practical.",
+          "is_true_positive": true,
+          "issue_signature": "excessive cognitive complexity",
+          "reasoning": "The warning itself states that the method has cognitive complexity 20, exceeding the allowed threshold of 15, which directly establishes the reported maintainability issue. Without source code, the specific refactoring opportunities cannot be assessed, but the metric violation is materially present based on the report.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1979,
+            "output_tokens": 220,
+            "reasoning_tokens": 73,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.077
+        }
+      ],
+      "original_finding_index": 1004
+    },
+    {
+      "finding_id": 94,
+      "type": "java:S1186",
+      "sourcefile": "XmlConfiguration.java",
+      "start_line": "425",
+      "message": "Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.82,
+          "developer_explanation": "The method has an empty body with no explanation, so its purpose is unclear and future maintainers cannot tell whether the omission is intentional or unfinished. Document the intentional no-op, implement the required behavior, or throw UnsupportedOperationException if the operation is not supported.",
+          "is_true_positive": true,
+          "issue_signature": "empty method without documented intent",
+          "reasoning": "The warning itself states that the flagged method is empty and lacks an explanatory comment, which is the maintainability problem identified by this rule. An unexplained empty method can conceal an incomplete implementation or silently ignore a required operation, so the alert is most likely valid. Certainty would require checking whether the method is an intentional no-op, such as an optional callback or hook, and whether that intent is documented elsewhere.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1978,
+            "output_tokens": 519,
+            "reasoning_tokens": 333,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 5.928
+        }
+      ],
+      "original_finding_index": 1028
+    },
+    {
+      "finding_id": 95,
+      "type": "java:S1181",
+      "sourcefile": "ByteRange.java",
+      "start_line": "155",
+      "message": "Catch Exception instead of Throwable.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.94,
+          "developer_explanation": "Catching Throwable also intercepts serious JVM errors such as OutOfMemoryError and ThreadDeath, which generally should not be handled like ordinary application exceptions. Catch Exception instead unless this code is a deliberate, carefully justified top-level recovery boundary that can safely handle every Throwable.",
+          "is_true_positive": true,
+          "issue_signature": "catching Throwable instead of Exception",
+          "reasoning": "The warning itself states that the code catches Throwable where Exception should be caught, which is the deciding fact for a likely true positive. Catching Throwable can swallow fatal JVM errors and leave the application in an unsafe or inconsistent state; the source would need to be checked to determine whether this is an intentional top-level boundary with a documented reason.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1974,
+            "output_tokens": 437,
+            "reasoning_tokens": 265,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 5.438
+        }
+      ],
+      "original_finding_index": 1299
+    },
+    {
+      "finding_id": 96,
+      "type": "java:S1181",
+      "sourcefile": "SslConnection.java",
+      "start_line": "1523",
+      "message": "Catch Exception instead of Throwable.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.96,
+          "developer_explanation": "Catching Throwable also intercepts serious JVM errors such as OutOfMemoryError and ThreadDeath, which application-level recovery usually cannot handle safely and may leave the program in an invalid state. Catch Exception for expected application failures, unless this is a deliberate top-level boundary that has a documented reason to handle all throwables.",
+          "is_true_positive": true,
+          "issue_signature": "overly broad Throwable catch",
+          "reasoning": "The warning explicitly states that the code catches Throwable instead of Exception, which is the broad error-handling pattern the rule identifies, so this is most likely a true positive. Catching Throwable can swallow serious JVM-level errors that should generally propagate; certainty would require checking whether this location is an intentional top-level crash or cleanup boundary.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1977,
+            "output_tokens": 539,
+            "reasoning_tokens": 360,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 6.298
+        }
+      ],
+      "original_finding_index": 1910
+    },
+    {
+      "finding_id": 97,
+      "type": "java:S3358",
+      "sourcefile": "Attributes.java",
+      "start_line": "673",
+      "message": "Extract this nested ternary operation into an independent statement.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.95,
+          "developer_explanation": "The expression contains a ternary operation nested inside another ternary, which makes the alternatives harder to parse and maintain. Extract the inner decision into a clearly named intermediate statement or otherwise rewrite the logic into a more readable form.",
+          "is_true_positive": true,
+          "issue_signature": "nested ternary expression",
+          "reasoning": "The warning itself states that the flagged code contains a nested ternary operation, and avoiding such nesting is a readability and maintainability concern. Without the source, it is not possible to assess whether the particular expression is unusually simple or well documented, but the reported pattern is generally confusing and the warning is most likely valid.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1967,
+            "output_tokens": 300,
+            "reasoning_tokens": 142,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.741
+        }
+      ],
+      "original_finding_index": 2631
+    },
+    {
+      "finding_id": 98,
+      "type": "java:S1168",
+      "sourcefile": "StringUtil.java",
+      "start_line": "916",
+      "message": "Return an empty array instead of null.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.91,
+          "developer_explanation": "Returning null for an empty result forces every caller to add a null check and makes the API harder to use safely. Return a correctly typed empty array instead, unless the method’s documented contract deliberately uses null to convey a distinct state.",
+          "is_true_positive": true,
+          "issue_signature": "null returned instead of empty array",
+          "reasoning": "The warning itself identifies a null array return where an empty array is expected, which is a real API robustness and maintainability issue in the absence of evidence for a deliberate null contract. An empty array avoids unnecessary null checks and potential caller errors; certainty would require checking the method’s documented contract and its callers.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1965,
+            "output_tokens": 520,
+            "reasoning_tokens": 360,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 5.843
+        }
+      ],
+      "original_finding_index": 2766
+    },
+    {
+      "finding_id": 99,
+      "type": "java:S1121",
+      "sourcefile": "MessageInputStream.java",
+      "start_line": "272",
+      "message": "Extract the assignment out of this expression.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.96,
+          "developer_explanation": "The assignment is embedded in a larger expression, which makes the code harder to read and increases the risk of overlooking or misunderstanding the side effect. Move the assignment to its own statement, then use the assigned value in the surrounding expression.",
+          "is_true_positive": true,
+          "issue_signature": "assignment embedded in expression",
+          "reasoning": "The warning itself states that an assignment occurs inside an expression and identifies extracting it as the needed improvement, which is the condition targeted by this readability rule. Without source code, the exact context cannot be checked for an intentional idiom, but the reported pattern is generally a real maintainability issue and separating the operations preserves clarity.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1971,
+            "output_tokens": 267,
+            "reasoning_tokens": 106,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.502
+        }
+      ],
+      "original_finding_index": 3085
+    },
+    {
+      "finding_id": 100,
+      "type": "java:S131",
+      "sourcefile": "ServletPathSpec.java",
+      "start_line": "440",
+      "message": "Complete cases by adding the missing enum constants or add a default case to this switch.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.84,
+          "developer_explanation": "The switch does not define behavior for every enum value and provides no fallback path, so an unhandled value can silently produce the wrong behavior, especially if the enum gains a new constant. Add the missing enum cases or provide an intentional default branch that handles unexpected values appropriately.",
+          "is_true_positive": true,
+          "issue_signature": "incomplete enum switch handling",
+          "reasoning": "The warning itself states that enum constants are missing from the switch and that no default case exists, which identifies a real completeness gap. An enum value reaching the switch can therefore be left unhandled, and future enum additions can silently change behavior. Certainty would require checking whether the omitted values are deliberately meant to do nothing, but the warning's stated condition is ordinarily a correctness issue.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1976,
+            "output_tokens": 634,
+            "reasoning_tokens": 453,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 7.811
+        }
+      ],
+      "original_finding_index": 346
+    },
+    {
+      "finding_id": 101,
+      "type": "java:S2447",
+      "sourcefile": "IncludeExcludeSet.java",
+      "start_line": "215",
+      "message": "Null is returned but a \"Boolean\" is expected.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.94,
+          "developer_explanation": "Ensure the method returns a non-null Boolean value, such as true or false, on every path, or change the API to represent an intentional tri-state result explicitly. Returning null from a Boolean-returning method can cause a NullPointerException when callers auto-unbox the result.",
+          "is_true_positive": true,
+          "issue_signature": "nullable Boolean return value",
+          "reasoning": "The warning itself states that a null value is returned from a method declared to return Boolean, which is the unsafe condition the rule targets and makes this most likely a true positive. A caller that auto-unboxes the result can fail with a NullPointerException; certainty would require checking whether null is intentionally part of the method contract and whether all callers handle it safely.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1975,
+            "output_tokens": 517,
+            "reasoning_tokens": 340,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 5.912
+        }
+      ],
+      "original_finding_index": 811
+    },
+    {
+      "finding_id": 102,
+      "type": "java:S2157",
+      "sourcefile": "LazyList.java",
+      "start_line": "57",
+      "message": "Add a \"clone()\" method to this class.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.84,
+          "developer_explanation": "If this class implements Cloneable but does not provide an accessible clone() implementation, callers cannot reliably use the cloning capability that the type advertises. Add an appropriate clone() override, typically delegating to super.clone() and handling any required copying, or remove Cloneable if cloning is not part of the API.",
+          "is_true_positive": true,
+          "issue_signature": "missing clone method in cloneable class",
+          "reasoning": "The warning itself states that this class is expected to provide clone(), which is materially correct when a class implements Cloneable without exposing a suitable override. In that situation, inheriting Object.clone() only provides protected behavior and does not fulfill a usable cloning API; certainty would require checking the class declaration and inherited methods, which are unavailable here.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1970,
+            "output_tokens": 694,
+            "reasoning_tokens": 512,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 7.839
+        }
+      ],
+      "original_finding_index": 817
+    },
+    {
+      "finding_id": 103,
+      "type": "java:S1452",
+      "sourcefile": "PathCollators.java",
+      "start_line": "54",
+      "message": "Remove usage of generic wildcard type.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.84,
+          "developer_explanation": "A generic wildcard type is being exposed at the flagged location, which can make the API harder for callers to understand and use safely. Replace it with a concrete type or an appropriately named type parameter where possible; this should only be reconsidered if the wildcard is required by the surrounding API design.",
+          "is_true_positive": true,
+          "issue_signature": "wildcarded generic API type",
+          "reasoning": "The warning explicitly reports generic wildcard usage at the flagged location, which is the maintainability concern described by this rule, so it is most likely a true positive. The source would need to be checked to confirm that the wildcard is in the rule's targeted API position and is not required for a deliberate variance boundary, but no such justification is provided.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1966,
+            "output_tokens": 659,
+            "reasoning_tokens": 479,
+            "cached_input_tokens": 0
+          },
+          "stop_reason": "stop",
+          "latency_s": 6.946
+        }
+      ],
+      "original_finding_index": 875
+    },
+    {
+      "finding_id": 104,
+      "type": "java:S5843",
+      "sourcefile": "AuthenticationProtocolHandler.java",
+      "start_line": "44",
+      "message": "Simplify this regular expression to reduce its complexity from 35 to the 20 allowed.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.97,
+          "developer_explanation": "The regular expression is substantially more complex than the configured maintainability threshold, making it harder to understand, review, and safely modify. Simplify or split the expression into clearer components while preserving its matching behavior; the exact refactoring requires reviewing the pattern.",
+          "is_true_positive": true,
+          "issue_signature": "overly complex regular expression",
+          "reasoning": "The warning itself reports that this regular expression has complexity 35, exceeding the allowed threshold of 20, which directly supports a maintainability issue. A complex pattern is harder to verify and change safely, so the alert is most likely valid even though the specific simplification can only be assessed by inspecting the expression. The category is maintainability because the warning concerns readability and changeability rather than an asserted runtime defect or security weakness.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1976,
+            "output_tokens": 294,
+            "reasoning_tokens": 107,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.733
+        }
+      ],
+      "original_finding_index": 1003
+    },
+    {
+      "finding_id": 105,
+      "type": "java:S1871",
+      "sourcefile": "HttpDateTime.java",
+      "start_line": "178",
+      "message": "This branch's code block is the same as the block for the branch on line 174.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.94,
+          "developer_explanation": "Two conditional branches reportedly contain identical code, which makes the decision structure harder to understand and maintain and may conceal an omitted branch-specific action. Consolidate the equivalent branches or simplify the conditions, unless the duplication is deliberately required and documented.",
+          "is_true_positive": true,
+          "issue_signature": "duplicated conditional branch code",
+          "reasoning": "The warning explicitly states that the code block for one branch is identical to the block for another, which is the duplicated-branch condition the rule describes. That is a real maintainability issue because redundant branches can obscure intent and cause future edits to diverge accidentally. Without the source, the remaining fact to verify is whether the branches are intentionally equivalent and whether simplifying them would preserve the intended condition structure.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1979,
+            "output_tokens": 326,
+            "reasoning_tokens": 149,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 4.076
+        }
+      ],
+      "original_finding_index": 1247
+    },
+    {
+      "finding_id": 106,
+      "type": "java:S1700",
+      "sourcefile": "MultiPartByteRanges.java",
+      "start_line": "261",
+      "message": "Rename field \"parser\"",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.84,
+          "developer_explanation": "The field name likely matches or closely conflicts with the name of its enclosing class, which can make references ambiguous and reduce readability. Rename the field to a more descriptive name, unless inspection confirms that no such class-name collision exists.",
+          "is_true_positive": true,
+          "issue_signature": "field shares an enclosing class name",
+          "reasoning": "The warning itself identifies a field named \"parser\" as violating a naming rule, whose claim is that the field conflicts with a class name in its scope. That kind of name collision is a real maintainability issue because it can make field and type references harder to distinguish, although the exact enclosing class or conflicting type would need to be checked to confirm the match.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1966,
+            "output_tokens": 682,
+            "reasoning_tokens": 512,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 6.775
+        }
+      ],
+      "original_finding_index": 1338
+    },
+    {
+      "finding_id": 107,
+      "type": "java:S5261",
+      "sourcefile": "ServletPathSpec.java",
+      "start_line": "182",
+      "message": "Add explicit curly braces to avoid dangling else.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.96,
+          "developer_explanation": "The conditional structure should use explicit braces so that each else is visibly associated with the intended if statement. Without braces, the code is vulnerable to misinterpretation and can execute a different branch than intended if the structure is changed or reviewed incorrectly.",
+          "is_true_positive": true,
+          "issue_signature": "ambiguous dangling else control flow",
+          "reasoning": "The warning itself states that the flagged conditional has a dangling-else structure and lacks explicit braces, which is the deciding fact for a real ambiguity risk. Braces make the association between each else and its if unambiguous and reduce the chance of incorrect control flow during maintenance. The exact nesting would need to be checked to confirm the precise association, but the reported pattern is sufficient to treat this as a true positive.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1967,
+            "output_tokens": 325,
+            "reasoning_tokens": 142,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 4.348
+        }
+      ],
+      "original_finding_index": 1392
+    },
+    {
+      "finding_id": 108,
+      "type": "java:S6126",
+      "sourcefile": "PrefaceFrame.java",
+      "start_line": "33",
+      "message": "Replace this String concatenation with Text block.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.84,
+          "developer_explanation": "The string is being assembled through concatenation where a Java text block would make multiline content easier to read and maintain. Replace the literal concatenation with a text block, while checking that the resulting whitespace and line endings remain correct.",
+          "is_true_positive": true,
+          "issue_signature": "multiline string built through concatenation",
+          "reasoning": "The warning itself identifies a string concatenation that can be expressed as a Java text block, which is a readability and maintainability issue for multiline literal content. The exact source would be needed to verify that the concatenation is purely literal and that converting it will preserve whitespace, but the reported pattern is generally a valid target for this recommendation.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1968,
+            "output_tokens": 522,
+            "reasoning_tokens": 356,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 6.252
+        }
+      ],
+      "original_finding_index": 1477
+    },
+    {
+      "finding_id": 109,
+      "type": "java:S1172",
+      "sourcefile": "HeaderGenerator.java",
+      "start_line": "48",
+      "message": "Remove this unused method parameter \"capacity\".",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.93,
+          "developer_explanation": "The parameter is reportedly not read or otherwise used, so keeping it makes the method signature less clear and suggests functionality that is not present. Remove it unless the signature is required by an override, interface, callback, or framework contract; in those cases, verify that contract before dismissing the warning.",
+          "is_true_positive": true,
+          "issue_signature": "unused method parameter",
+          "reasoning": "The warning itself states that the method parameter is unused, which is a real maintainability issue when the parameter is not required by an external signature. An unused parameter adds needless API surface and can mislead readers about the method's behavior. Because no source is available, certainty depends on checking whether an interface, override, callback, or framework contract requires the parameter to remain.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1967,
+            "output_tokens": 322,
+            "reasoning_tokens": 139,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 4.15
+        }
+      ],
+      "original_finding_index": 1479
+    },
+    {
+      "finding_id": 110,
+      "type": "java:S1119",
+      "sourcefile": "WriteFlusher.java",
+      "start_line": "343",
+      "message": "Refactor the code to remove this label and the need for it.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.78,
+          "developer_explanation": "The code uses a label at the reported location, and labeled control flow can make execution harder to understand and maintain. Refactor the surrounding logic to avoid the label, for example by extracting the nested logic or using clearer control flow; the exact necessity of the label would need to be checked in the source.",
+          "is_true_positive": true,
+          "issue_signature": "unnecessary labeled control flow",
+          "reasoning": "The warning itself identifies a label and claims that it can be removed along with the need for labeled control flow, which is a maintainability concern. Without the source, it is not possible to verify whether the label is genuinely unnecessary or whether it is required to exit complex nested control flow, but the warning is most likely valid under the rule's claim.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1972,
+            "output_tokens": 401,
+            "reasoning_tokens": 218,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 5.044
+        }
+      ],
+      "original_finding_index": 1738
+    },
+    {
+      "finding_id": 111,
+      "type": "java:S127",
+      "sourcefile": "WriteThroughWriter.java",
+      "start_line": "249",
+      "message": "Refactor the code in order to not assign to this loop counter from within the loop body.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.9,
+          "developer_explanation": "The loop counter is being modified inside the loop body, which makes the iteration behavior harder to understand and safely maintain. Move the counter manipulation into the loop structure or use a clearer control flow construct, unless the assignment is essential and should be explicitly documented.",
+          "is_true_positive": true,
+          "issue_signature": "loop counter modified inside loop body",
+          "reasoning": "The warning itself states that the loop counter is assigned within the loop body, and that pattern is the issue identified by this rule. Such assignments obscure how iteration progresses and can cause future changes to skip or repeat iterations, so the warning is most likely valid. Certainty would require checking whether the assignment is an intentional and clearly justified form of loop control.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1976,
+            "output_tokens": 327,
+            "reasoning_tokens": 154,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 4.393
+        }
+      ],
+      "original_finding_index": 1743
+    },
+    {
+      "finding_id": 112,
+      "type": "java:S3011",
+      "sourcefile": "DefaultFileLocatorHelper.java",
+      "start_line": "153",
+      "message": "This accessibility update should be removed.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "SECURITY",
+          "confidence": 0.72,
+          "developer_explanation": "The code is making a reflective accessibility change that bypasses Java's normal visibility checks. Remove the accessibility override and use an accessible API or redesign the operation so it does not require bypassing access controls; the surrounding code should be checked to identify the safest replacement.",
+          "is_true_positive": true,
+          "issue_signature": "reflection used to bypass access checks",
+          "reasoning": "The warning itself states that an accessibility update is being applied, which indicates reflective code is overriding normal visibility checks. Such an override weakens encapsulation and is the security weakness targeted by this warning, although the exact legitimacy of the reflection use would require checking the flagged statement and its callers. On the available information, this is most likely a true positive.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1966,
+            "output_tokens": 510,
+            "reasoning_tokens": 337,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 6.569
+        }
+      ],
+      "original_finding_index": 1955
+    },
+    {
+      "finding_id": 113,
+      "type": "java:S5738",
+      "sourcefile": "Server.java",
+      "start_line": "904",
+      "message": "Remove this call to a deprecated class, it has been marked for removal.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.98,
+          "developer_explanation": "The code calls a deprecated class that has been marked for removal, so it depends on an API that may disappear in a future Java release. Replace it with the supported alternative, or otherwise remove the dependency before upgrading the runtime.",
+          "is_true_positive": true,
+          "issue_signature": "use of deprecated class marked for removal",
+          "reasoning": "The warning explicitly states that the call uses a deprecated class marked for removal, which is a real obsolete-API and future-compatibility issue. The surrounding code would need to be checked to identify the correct replacement and whether compatibility constraints justify retaining it, but those details do not invalidate the warning's claim.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1976,
+            "output_tokens": 269,
+            "reasoning_tokens": 109,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.833
+        }
+      ],
+      "original_finding_index": 2258
+    },
+    {
+      "finding_id": 114,
+      "type": "java:S112",
+      "sourcefile": "SessionDataMap.java",
+      "start_line": "58",
+      "message": "Replace generic exceptions with specific library exceptions or a custom exception.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.86,
+          "developer_explanation": "Using a generic exception makes it harder for callers to distinguish expected failures from unrelated defects and to handle each case appropriately. Replace it with the relevant library exception or a domain-specific custom exception, unless the flagged code is not actually declaring or throwing a generic exception.",
+          "is_true_positive": true,
+          "issue_signature": "generic exception usage",
+          "reasoning": "The warning itself identifies generic exception usage at the flagged line and requests a specific or custom replacement, which describes a real error-handling and maintainability problem. This is most likely a true positive, although certainty would require checking whether the line actually throws or declares Exception, Throwable, or another overly broad type rather than merely mentioning one.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1975,
+            "output_tokens": 423,
+            "reasoning_tokens": 256,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 5.417
+        }
+      ],
+      "original_finding_index": 2457
+    },
+    {
+      "finding_id": 115,
+      "type": "java:S3824",
+      "sourcefile": "TopologicalSort.java",
+      "start_line": "57",
+      "message": "Replace this \"Map.get()\" and condition with a call to \"Map.computeIfAbsent()\".",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.94,
+          "developer_explanation": "The code appears to manually check a map lookup and initialize or insert a value when the key is absent. Using computeIfAbsent expresses that intent directly, removes repetitive control flow, and keeps creation of the default value next to the lookup; verify that the mapping function has the same null and side-effect behavior before changing it.",
+          "is_true_positive": true,
+          "issue_signature": "manual map value initialization after lookup",
+          "reasoning": "The warning itself identifies a get-and-conditional-initialization pattern that has a direct Map.computeIfAbsent replacement, which is generally a real readability and maintainability issue. Without the source, the exact null-handling and side effects cannot be verified, but the reported pattern is most likely applicable and the suggested API is intended for this use case.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1982,
+            "output_tokens": 570,
+            "reasoning_tokens": 384,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 6.225
+        }
+      ],
+      "original_finding_index": 2693
+    },
+    {
+      "finding_id": 116,
+      "type": "java:S108",
+      "sourcefile": "TypeUtil.java",
+      "start_line": "622",
+      "message": "Remove this block of code, fill it in, or add a comment explaining why it is empty.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.88,
+          "developer_explanation": "The code contains an empty block with no stated reason, which makes it unclear whether the omission is intentional or accidental. Remove the block, implement the missing behavior, or document why the block must remain empty.",
+          "is_true_positive": true,
+          "issue_signature": "unexplained empty code block",
+          "reasoning": "The warning itself states that the code contains an empty block and provides no explanation for it, which is a real maintainability concern. Without seeing the source, it is possible the empty block is intentional, but the absence of an explanatory comment still matches the reported issue.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1975,
+            "output_tokens": 271,
+            "reasoning_tokens": 124,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.496
+        }
+      ],
+      "original_finding_index": 2703
+    },
+    {
+      "finding_id": 117,
+      "type": "java:S1144",
+      "sourcefile": "SecurityUtils.java",
+      "start_line": "233",
+      "message": "Remove this unused private \"callableToPrivilegedAction\" method.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.95,
+          "developer_explanation": "The private method is reported as unused, so it adds dead code that can confuse readers and increase maintenance burden. Remove it unless it is intentionally invoked through reflection or another indirect mechanism that the analyzer cannot detect.",
+          "is_true_positive": true,
+          "issue_signature": "unused private method",
+          "reasoning": "The warning explicitly claims that this private method has no usages, which means it is dead code if the usage analysis is accurate. Unused private code is a real maintainability issue, although certainty would require checking for reflective or otherwise indirect invocation. This is primarily a maintainability problem rather than a correctness or security issue.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1971,
+            "output_tokens": 264,
+            "reasoning_tokens": 110,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.273
+        }
+      ],
+      "original_finding_index": 2869
+    },
+    {
+      "finding_id": 118,
+      "type": "java:S6204",
+      "sourcefile": "JettyClientUpgradeRequest.java",
+      "start_line": "52",
+      "message": "Replace this usage of 'Stream.collect(Collectors.toList())' with 'Stream.toList()' and ensure that the list is unmodified.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.84,
+          "developer_explanation": "This stream pipeline uses the older collector form where Java 16 provides the more concise Stream.toList() API. Replace it only if the resulting list is not subsequently modified, because Stream.toList() returns an unmodifiable list and changing the call can alter behavior.",
+          "is_true_positive": true,
+          "issue_signature": "legacy stream collection method usage",
+          "reasoning": "The warning itself identifies a replaceable collect(Collectors.toList()) usage and explicitly limits the recommendation to cases where the resulting list remains unmodified, making the claimed modernization issue materially valid under that condition. The missing source prevents verifying whether later code mutates the list, but absent contrary evidence this is a legitimate maintainability warning rather than an incorrect pattern match.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1989,
+            "output_tokens": 686,
+            "reasoning_tokens": 512,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 7.974
+        }
+      ],
+      "original_finding_index": 3055
+    },
+    {
+      "finding_id": 119,
+      "type": "xml:S1134",
+      "sourcefile": "pom.xml",
+      "start_line": "54",
+      "message": "Take the required action to fix the issue indicated by this \"FIXME\" comment.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.87,
+          "developer_explanation": "The build descriptor contains a FIXME comment marking work that is still expected to be completed. Resolve the underlying issue and remove the comment, or remove it if the concern is no longer applicable.",
+          "is_true_positive": true,
+          "issue_signature": "unresolved FIXME comment",
+          "reasoning": "The warning itself identifies a FIXME comment and states that the action it indicates has not been completed, which is a maintainability issue. Without the file contents, it is not possible to verify whether the FIXME is still valid or merely stale, but the most likely interpretation is that an unresolved action remains.",
+          "run": 1,
+          "served_model": "gpt-5.6-luna",
+          "usage": {
+            "input_tokens": 1974,
+            "output_tokens": 286,
+            "reasoning_tokens": 139,
+            "cached_input_tokens": 1646
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.662
+        }
+      ],
+      "original_finding_index": 3102
+    }
+  ]
+}

@@ -1,0 +1,2996 @@
+{
+  "sonarqube_version": "26.8.0.126808",
+  "project_key": "java-errors-benchmark",
+  "total": 66,
+  "reported_total": 66,
+  "truncated": false,
+  "issues": [
+    {
+      "key": "d858f55b-1080-4e98-bf31-a85e233fa1e1",
+      "rule": "java:S106",
+      "severity": "MAJOR",
+      "component": "java-errors-benchmark:src/main/java/app/AgeClassifier.java",
+      "project": "java-errors-benchmark",
+      "line": 5,
+      "hash": "521610d106809088488d118a6356f036",
+      "textRange": {
+        "startLine": 5,
+        "endLine": 5,
+        "startOffset": 8,
+        "endOffset": 18
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Replace this use of System.out by a logger.",
+      "effort": "10min",
+      "debt": "10min",
+      "author": "",
+      "tags": [
+        "bad-practice",
+        "cert"
+      ],
+      "creationDate": "2026-08-09T15:42:41+0000",
+      "updateDate": "2026-08-09T15:42:41+0000",
+      "type": "CODE_SMELL",
+      "scope": "MAIN",
+      "quickFixAvailable": false,
+      "messageFormattings": [],
+      "codeVariants": [],
+      "cleanCodeAttribute": "MODULAR",
+      "cleanCodeAttributeCategory": "ADAPTABLE",
+      "impacts": [
+        {
+          "softwareQuality": "MAINTAINABILITY",
+          "severity": "MEDIUM"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "prioritizedRule": false,
+      "fromSonarQubeUpdate": false,
+      "internalTags": [],
+      "linkedTicketStatus": "NOT_LINKED"
+    },
+    {
+      "key": "62b176da-bda8-4fbe-9c00-ede4af4ffc4c",
+      "rule": "java:S106",
+      "severity": "MAJOR",
+      "component": "java-errors-benchmark:src/main/java/app/AgeClassifier.java",
+      "project": "java-errors-benchmark",
+      "line": 6,
+      "hash": "06d703c36e0dbbe091767a97c859b284",
+      "textRange": {
+        "startLine": 6,
+        "endLine": 6,
+        "startOffset": 8,
+        "endOffset": 18
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Replace this use of System.out by a logger.",
+      "effort": "10min",
+      "debt": "10min",
+      "author": "",
+      "tags": [
+        "bad-practice",
+        "cert"
+      ],
+      "creationDate": "2026-08-09T15:42:41+0000",
+      "updateDate": "2026-08-09T15:42:41+0000",
+      "type": "CODE_SMELL",
+      "scope": "MAIN",
+      "quickFixAvailable": false,
+      "messageFormattings": [],
+      "codeVariants": [],
+      "cleanCodeAttribute": "MODULAR",
+      "cleanCodeAttributeCategory": "ADAPTABLE",
+      "impacts": [
+        {
+          "softwareQuality": "MAINTAINABILITY",
+          "severity": "MEDIUM"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "prioritizedRule": false,
+      "fromSonarQubeUpdate": false,
+      "internalTags": [],
+      "linkedTicketStatus": "NOT_LINKED"
+    },
+    {
+      "key": "b9f8dbb9-5eaf-4d24-888f-023c1cbc9a19",
+      "rule": "java:S106",
+      "severity": "MAJOR",
+      "component": "java-errors-benchmark:src/main/java/app/AgeClassifier.java",
+      "project": "java-errors-benchmark",
+      "line": 7,
+      "hash": "992638c35f102277b760b8ae90642daa",
+      "textRange": {
+        "startLine": 7,
+        "endLine": 7,
+        "startOffset": 8,
+        "endOffset": 18
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Replace this use of System.out by a logger.",
+      "effort": "10min",
+      "debt": "10min",
+      "author": "",
+      "tags": [
+        "bad-practice",
+        "cert"
+      ],
+      "creationDate": "2026-08-09T15:42:41+0000",
+      "updateDate": "2026-08-09T15:42:41+0000",
+      "type": "CODE_SMELL",
+      "scope": "MAIN",
+      "quickFixAvailable": false,
+      "messageFormattings": [],
+      "codeVariants": [],
+      "cleanCodeAttribute": "MODULAR",
+      "cleanCodeAttributeCategory": "ADAPTABLE",
+      "impacts": [
+        {
+          "softwareQuality": "MAINTAINABILITY",
+          "severity": "MEDIUM"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "prioritizedRule": false,
+      "fromSonarQubeUpdate": false,
+      "internalTags": [],
+      "linkedTicketStatus": "NOT_LINKED"
+    },
+    {
+      "key": "7ff50f65-8898-47e4-ab91-88bf0a628acb",
+      "rule": "java:S106",
+      "severity": "MAJOR",
+      "component": "java-errors-benchmark:src/main/java/app/ArrayReader.java",
+      "project": "java-errors-benchmark",
+      "line": 6,
+      "hash": "1c12469f992ae4aae055f95248bf4e75",
+      "textRange": {
+        "startLine": 6,
+        "endLine": 6,
+        "startOffset": 8,
+        "endOffset": 18
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Replace this use of System.out by a logger.",
+      "effort": "10min",
+      "debt": "10min",
+      "author": "",
+      "tags": [
+        "bad-practice",
+        "cert"
+      ],
+      "creationDate": "2026-08-09T15:42:41+0000",
+      "updateDate": "2026-08-09T15:42:41+0000",
+      "type": "CODE_SMELL",
+      "scope": "MAIN",
+      "quickFixAvailable": false,
+      "messageFormattings": [],
+      "codeVariants": [],
+      "cleanCodeAttribute": "MODULAR",
+      "cleanCodeAttributeCategory": "ADAPTABLE",
+      "impacts": [
+        {
+          "softwareQuality": "MAINTAINABILITY",
+          "severity": "MEDIUM"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "prioritizedRule": false,
+      "fromSonarQubeUpdate": false,
+      "internalTags": [],
+      "linkedTicketStatus": "NOT_LINKED"
+    },
+    {
+      "key": "0c42ca9f-1338-438e-9918-2fc76f1ae5ef",
+      "rule": "java:S106",
+      "severity": "MAJOR",
+      "component": "java-errors-benchmark:src/main/java/app/AttributeStore.java",
+      "project": "java-errors-benchmark",
+      "line": 10,
+      "hash": "68c3ce511d9516af5dee8b5e35ad20ef",
+      "textRange": {
+        "startLine": 10,
+        "endLine": 10,
+        "startOffset": 8,
+        "endOffset": 18
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Replace this use of System.out by a logger.",
+      "effort": "10min",
+      "debt": "10min",
+      "author": "",
+      "tags": [
+        "bad-practice",
+        "cert"
+      ],
+      "creationDate": "2026-08-09T15:42:41+0000",
+      "updateDate": "2026-08-09T15:42:41+0000",
+      "type": "CODE_SMELL",
+      "scope": "MAIN",
+      "quickFixAvailable": false,
+      "messageFormattings": [],
+      "codeVariants": [],
+      "cleanCodeAttribute": "MODULAR",
+      "cleanCodeAttributeCategory": "ADAPTABLE",
+      "impacts": [
+        {
+          "softwareQuality": "MAINTAINABILITY",
+          "severity": "MEDIUM"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "prioritizedRule": false,
+      "fromSonarQubeUpdate": false,
+      "internalTags": [],
+      "linkedTicketStatus": "NOT_LINKED"
+    },
+    {
+      "key": "40f48cfd-bc80-4157-a93b-df849f5a8351",
+      "rule": "java:S106",
+      "severity": "MAJOR",
+      "component": "java-errors-benchmark:src/main/java/app/AttributeStore.java",
+      "project": "java-errors-benchmark",
+      "line": 11,
+      "hash": "eb5c5e202f8f5736bfee920f2bc0a77e",
+      "textRange": {
+        "startLine": 11,
+        "endLine": 11,
+        "startOffset": 8,
+        "endOffset": 18
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Replace this use of System.out by a logger.",
+      "effort": "10min",
+      "debt": "10min",
+      "author": "",
+      "tags": [
+        "bad-practice",
+        "cert"
+      ],
+      "creationDate": "2026-08-09T15:42:41+0000",
+      "updateDate": "2026-08-09T15:42:41+0000",
+      "type": "CODE_SMELL",
+      "scope": "MAIN",
+      "quickFixAvailable": false,
+      "messageFormattings": [],
+      "codeVariants": [],
+      "cleanCodeAttribute": "MODULAR",
+      "cleanCodeAttributeCategory": "ADAPTABLE",
+      "impacts": [
+        {
+          "softwareQuality": "MAINTAINABILITY",
+          "severity": "MEDIUM"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "prioritizedRule": false,
+      "fromSonarQubeUpdate": false,
+      "internalTags": [],
+      "linkedTicketStatus": "NOT_LINKED"
+    },
+    {
+      "key": "648aaf63-b7a6-4167-9e72-b157bffaabc4",
+      "rule": "java:S106",
+      "severity": "MAJOR",
+      "component": "java-errors-benchmark:src/main/java/app/AttributeStore.java",
+      "project": "java-errors-benchmark",
+      "line": 13,
+      "hash": "68c3ce511d9516af5dee8b5e35ad20ef",
+      "textRange": {
+        "startLine": 13,
+        "endLine": 13,
+        "startOffset": 8,
+        "endOffset": 18
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Replace this use of System.out by a logger.",
+      "effort": "10min",
+      "debt": "10min",
+      "author": "",
+      "tags": [
+        "bad-practice",
+        "cert"
+      ],
+      "creationDate": "2026-08-09T15:42:41+0000",
+      "updateDate": "2026-08-09T15:42:41+0000",
+      "type": "CODE_SMELL",
+      "scope": "MAIN",
+      "quickFixAvailable": false,
+      "messageFormattings": [],
+      "codeVariants": [],
+      "cleanCodeAttribute": "MODULAR",
+      "cleanCodeAttributeCategory": "ADAPTABLE",
+      "impacts": [
+        {
+          "softwareQuality": "MAINTAINABILITY",
+          "severity": "MEDIUM"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "prioritizedRule": false,
+      "fromSonarQubeUpdate": false,
+      "internalTags": [],
+      "linkedTicketStatus": "NOT_LINKED"
+    },
+    {
+      "key": "4c5c15b6-842e-462b-813c-c654982c7e4e",
+      "rule": "java:S106",
+      "severity": "MAJOR",
+      "component": "java-errors-benchmark:src/main/java/app/ClickDispatcher.java",
+      "project": "java-errors-benchmark",
+      "line": 5,
+      "hash": "d0037d00b4dd30cfa97aa95a9ba432a2",
+      "textRange": {
+        "startLine": 5,
+        "endLine": 5,
+        "startOffset": 8,
+        "endOffset": 18
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Replace this use of System.out by a logger.",
+      "effort": "10min",
+      "debt": "10min",
+      "author": "",
+      "tags": [
+        "bad-practice",
+        "cert"
+      ],
+      "creationDate": "2026-08-09T15:42:41+0000",
+      "updateDate": "2026-08-09T15:42:41+0000",
+      "type": "CODE_SMELL",
+      "scope": "MAIN",
+      "quickFixAvailable": false,
+      "messageFormattings": [],
+      "codeVariants": [],
+      "cleanCodeAttribute": "MODULAR",
+      "cleanCodeAttributeCategory": "ADAPTABLE",
+      "impacts": [
+        {
+          "softwareQuality": "MAINTAINABILITY",
+          "severity": "MEDIUM"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "prioritizedRule": false,
+      "fromSonarQubeUpdate": false,
+      "internalTags": [],
+      "linkedTicketStatus": "NOT_LINKED"
+    },
+    {
+      "key": "7e19216f-831f-4bf5-988b-dbe8a5512450",
+      "rule": "java:S106",
+      "severity": "MAJOR",
+      "component": "java-errors-benchmark:src/main/java/app/ClickDispatcher.java",
+      "project": "java-errors-benchmark",
+      "line": 12,
+      "hash": "c83ecb4937077c079dea72dda60ef18a",
+      "textRange": {
+        "startLine": 12,
+        "endLine": 12,
+        "startOffset": 8,
+        "endOffset": 18
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Replace this use of System.out by a logger.",
+      "effort": "10min",
+      "debt": "10min",
+      "author": "",
+      "tags": [
+        "bad-practice",
+        "cert"
+      ],
+      "creationDate": "2026-08-09T15:42:41+0000",
+      "updateDate": "2026-08-09T15:42:41+0000",
+      "type": "CODE_SMELL",
+      "scope": "MAIN",
+      "quickFixAvailable": false,
+      "messageFormattings": [],
+      "codeVariants": [],
+      "cleanCodeAttribute": "MODULAR",
+      "cleanCodeAttributeCategory": "ADAPTABLE",
+      "impacts": [
+        {
+          "softwareQuality": "MAINTAINABILITY",
+          "severity": "MEDIUM"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "prioritizedRule": false,
+      "fromSonarQubeUpdate": false,
+      "internalTags": [],
+      "linkedTicketStatus": "NOT_LINKED"
+    },
+    {
+      "key": "69df2c4d-02de-4c03-a709-9e491d9dab51",
+      "rule": "java:S2251",
+      "severity": "MAJOR",
+      "component": "java-errors-benchmark:src/main/java/app/CountdownPrinter.java",
+      "project": "java-errors-benchmark",
+      "line": 5,
+      "hash": "4aebbe5e59a47aac07040abad966c250",
+      "textRange": {
+        "startLine": 5,
+        "endLine": 5,
+        "startOffset": 24,
+        "endOffset": 30
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "\"i\" is incremented and will never reach \"stop condition\".",
+      "effort": "5min",
+      "debt": "5min",
+      "author": "",
+      "tags": [
+        "cert"
+      ],
+      "creationDate": "2026-08-09T15:42:41+0000",
+      "updateDate": "2026-08-09T15:42:41+0000",
+      "type": "BUG",
+      "scope": "MAIN",
+      "quickFixAvailable": false,
+      "messageFormattings": [],
+      "codeVariants": [],
+      "cleanCodeAttribute": "LOGICAL",
+      "cleanCodeAttributeCategory": "INTENTIONAL",
+      "impacts": [
+        {
+          "softwareQuality": "RELIABILITY",
+          "severity": "MEDIUM"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "prioritizedRule": false,
+      "fromSonarQubeUpdate": false,
+      "internalTags": [],
+      "linkedTicketStatus": "NOT_LINKED"
+    },
+    {
+      "key": "cc530b14-ca58-4703-8c25-2598af700304",
+      "rule": "java:S2189",
+      "severity": "BLOCKER",
+      "component": "java-errors-benchmark:src/main/java/app/CountdownPrinter.java",
+      "project": "java-errors-benchmark",
+      "line": 5,
+      "hash": "4aebbe5e59a47aac07040abad966c250",
+      "textRange": {
+        "startLine": 5,
+        "endLine": 7,
+        "startOffset": 8,
+        "endOffset": 9
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Correct this loop's end condition.",
+      "effort": "15min",
+      "debt": "15min",
+      "author": "",
+      "tags": [
+        "symbolic-execution",
+        "cert"
+      ],
+      "creationDate": "2026-08-09T15:42:41+0000",
+      "updateDate": "2026-08-09T15:42:41+0000",
+      "type": "BUG",
+      "scope": "MAIN",
+      "quickFixAvailable": false,
+      "messageFormattings": [],
+      "codeVariants": [],
+      "cleanCodeAttribute": "LOGICAL",
+      "cleanCodeAttributeCategory": "INTENTIONAL",
+      "impacts": [
+        {
+          "softwareQuality": "RELIABILITY",
+          "severity": "BLOCKER"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "prioritizedRule": false,
+      "fromSonarQubeUpdate": false,
+      "internalTags": [],
+      "linkedTicketStatus": "NOT_LINKED"
+    },
+    {
+      "key": "1f8e3085-2a34-453c-a79e-62dd8ba474fa",
+      "rule": "java:S106",
+      "severity": "MAJOR",
+      "component": "java-errors-benchmark:src/main/java/app/CountdownPrinter.java",
+      "project": "java-errors-benchmark",
+      "line": 6,
+      "hash": "b3aa6319dda6aade02bd7632f1deeb96",
+      "textRange": {
+        "startLine": 6,
+        "endLine": 6,
+        "startOffset": 12,
+        "endOffset": 22
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Replace this use of System.out by a logger.",
+      "effort": "10min",
+      "debt": "10min",
+      "author": "",
+      "tags": [
+        "bad-practice",
+        "cert"
+      ],
+      "creationDate": "2026-08-09T15:42:41+0000",
+      "updateDate": "2026-08-09T15:42:41+0000",
+      "type": "CODE_SMELL",
+      "scope": "MAIN",
+      "quickFixAvailable": false,
+      "messageFormattings": [],
+      "codeVariants": [],
+      "cleanCodeAttribute": "MODULAR",
+      "cleanCodeAttributeCategory": "ADAPTABLE",
+      "impacts": [
+        {
+          "softwareQuality": "MAINTAINABILITY",
+          "severity": "MEDIUM"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "prioritizedRule": false,
+      "fromSonarQubeUpdate": false,
+      "internalTags": [],
+      "linkedTicketStatus": "NOT_LINKED"
+    },
+    {
+      "key": "3e539e04-b54b-4300-8685-8dcbb2f67d82",
+      "rule": "java:S106",
+      "severity": "MAJOR",
+      "component": "java-errors-benchmark:src/main/java/app/DiscountCalculator.java",
+      "project": "java-errors-benchmark",
+      "line": 7,
+      "hash": "f0ad78656708e77c1c7808a421f8c2dc",
+      "textRange": {
+        "startLine": 7,
+        "endLine": 7,
+        "startOffset": 8,
+        "endOffset": 18
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Replace this use of System.out by a logger.",
+      "effort": "10min",
+      "debt": "10min",
+      "author": "",
+      "tags": [
+        "bad-practice",
+        "cert"
+      ],
+      "creationDate": "2026-08-09T15:42:41+0000",
+      "updateDate": "2026-08-09T15:42:41+0000",
+      "type": "CODE_SMELL",
+      "scope": "MAIN",
+      "quickFixAvailable": false,
+      "messageFormattings": [],
+      "codeVariants": [],
+      "cleanCodeAttribute": "MODULAR",
+      "cleanCodeAttributeCategory": "ADAPTABLE",
+      "impacts": [
+        {
+          "softwareQuality": "MAINTAINABILITY",
+          "severity": "MEDIUM"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "prioritizedRule": false,
+      "fromSonarQubeUpdate": false,
+      "internalTags": [],
+      "linkedTicketStatus": "NOT_LINKED"
+    },
+    {
+      "key": "1fa6b4e2-afb2-4d76-8758-33dd2f8a305b",
+      "rule": "java:S106",
+      "severity": "MAJOR",
+      "component": "java-errors-benchmark:src/main/java/app/GroupCatalog.java",
+      "project": "java-errors-benchmark",
+      "line": 15,
+      "hash": "9ddc3340caa679aa2d68b2e41469fb7b",
+      "textRange": {
+        "startLine": 15,
+        "endLine": 15,
+        "startOffset": 8,
+        "endOffset": 18
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Replace this use of System.out by a logger.",
+      "effort": "10min",
+      "debt": "10min",
+      "author": "",
+      "tags": [
+        "bad-practice",
+        "cert"
+      ],
+      "creationDate": "2026-08-09T15:42:41+0000",
+      "updateDate": "2026-08-09T15:42:41+0000",
+      "type": "CODE_SMELL",
+      "scope": "MAIN",
+      "quickFixAvailable": false,
+      "messageFormattings": [],
+      "codeVariants": [],
+      "cleanCodeAttribute": "MODULAR",
+      "cleanCodeAttributeCategory": "ADAPTABLE",
+      "impacts": [
+        {
+          "softwareQuality": "MAINTAINABILITY",
+          "severity": "MEDIUM"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "prioritizedRule": false,
+      "fromSonarQubeUpdate": false,
+      "internalTags": [],
+      "linkedTicketStatus": "NOT_LINKED"
+    },
+    {
+      "key": "7cc1112c-d860-4af4-9886-3eed235b9a04",
+      "rule": "java:S106",
+      "severity": "MAJOR",
+      "component": "java-errors-benchmark:src/main/java/app/GroupCatalog.java",
+      "project": "java-errors-benchmark",
+      "line": 18,
+      "hash": "9ddc3340caa679aa2d68b2e41469fb7b",
+      "textRange": {
+        "startLine": 18,
+        "endLine": 18,
+        "startOffset": 8,
+        "endOffset": 18
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Replace this use of System.out by a logger.",
+      "effort": "10min",
+      "debt": "10min",
+      "author": "",
+      "tags": [
+        "bad-practice",
+        "cert"
+      ],
+      "creationDate": "2026-08-09T15:42:41+0000",
+      "updateDate": "2026-08-09T15:42:41+0000",
+      "type": "CODE_SMELL",
+      "scope": "MAIN",
+      "quickFixAvailable": false,
+      "messageFormattings": [],
+      "codeVariants": [],
+      "cleanCodeAttribute": "MODULAR",
+      "cleanCodeAttributeCategory": "ADAPTABLE",
+      "impacts": [
+        {
+          "softwareQuality": "MAINTAINABILITY",
+          "severity": "MEDIUM"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "prioritizedRule": false,
+      "fromSonarQubeUpdate": false,
+      "internalTags": [],
+      "linkedTicketStatus": "NOT_LINKED"
+    },
+    {
+      "key": "1639721a-a0cb-4a47-8598-1c496ea8d4b2",
+      "rule": "java:S106",
+      "severity": "MAJOR",
+      "component": "java-errors-benchmark:src/main/java/app/InputRouter.java",
+      "project": "java-errors-benchmark",
+      "line": 10,
+      "hash": "1c2548f054a3e2b08a988d48be7b6062",
+      "textRange": {
+        "startLine": 10,
+        "endLine": 10,
+        "startOffset": 12,
+        "endOffset": 22
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Replace this use of System.out by a logger.",
+      "effort": "10min",
+      "debt": "10min",
+      "author": "",
+      "tags": [
+        "bad-practice",
+        "cert"
+      ],
+      "creationDate": "2026-08-09T15:42:41+0000",
+      "updateDate": "2026-08-09T15:42:41+0000",
+      "type": "CODE_SMELL",
+      "scope": "MAIN",
+      "quickFixAvailable": false,
+      "messageFormattings": [],
+      "codeVariants": [],
+      "cleanCodeAttribute": "MODULAR",
+      "cleanCodeAttributeCategory": "ADAPTABLE",
+      "impacts": [
+        {
+          "softwareQuality": "MAINTAINABILITY",
+          "severity": "MEDIUM"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "prioritizedRule": false,
+      "fromSonarQubeUpdate": false,
+      "internalTags": [],
+      "linkedTicketStatus": "NOT_LINKED"
+    },
+    {
+      "key": "06275187-5541-4440-8d4d-ee7938a83744",
+      "rule": "java:S106",
+      "severity": "MAJOR",
+      "component": "java-errors-benchmark:src/main/java/app/InputRouter.java",
+      "project": "java-errors-benchmark",
+      "line": 12,
+      "hash": "509f7713669c3b06bf3647dfeff9c489",
+      "textRange": {
+        "startLine": 12,
+        "endLine": 12,
+        "startOffset": 12,
+        "endOffset": 22
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Replace this use of System.out by a logger.",
+      "effort": "10min",
+      "debt": "10min",
+      "author": "",
+      "tags": [
+        "bad-practice",
+        "cert"
+      ],
+      "creationDate": "2026-08-09T15:42:41+0000",
+      "updateDate": "2026-08-09T15:42:41+0000",
+      "type": "CODE_SMELL",
+      "scope": "MAIN",
+      "quickFixAvailable": false,
+      "messageFormattings": [],
+      "codeVariants": [],
+      "cleanCodeAttribute": "MODULAR",
+      "cleanCodeAttributeCategory": "ADAPTABLE",
+      "impacts": [
+        {
+          "softwareQuality": "MAINTAINABILITY",
+          "severity": "MEDIUM"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "prioritizedRule": false,
+      "fromSonarQubeUpdate": false,
+      "internalTags": [],
+      "linkedTicketStatus": "NOT_LINKED"
+    },
+    {
+      "key": "f0edd257-ac23-479d-99e0-d95604d46a9a",
+      "rule": "java:S6880",
+      "severity": "MAJOR",
+      "component": "java-errors-benchmark:src/main/java/app/InputRouter.java",
+      "project": "java-errors-benchmark",
+      "line": 13,
+      "hash": "96d97b3fbff9dc015c1d929b59866ee5",
+      "textRange": {
+        "startLine": 13,
+        "endLine": 13,
+        "startOffset": 10,
+        "endOffset": 12
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Replace the chain of if/else with a switch expression.",
+      "effort": "10min",
+      "debt": "10min",
+      "author": "",
+      "tags": [
+        "java21"
+      ],
+      "creationDate": "2026-08-09T15:42:41+0000",
+      "updateDate": "2026-08-09T15:42:41+0000",
+      "type": "CODE_SMELL",
+      "scope": "MAIN",
+      "quickFixAvailable": true,
+      "messageFormattings": [],
+      "codeVariants": [],
+      "cleanCodeAttribute": "CLEAR",
+      "cleanCodeAttributeCategory": "INTENTIONAL",
+      "impacts": [
+        {
+          "softwareQuality": "MAINTAINABILITY",
+          "severity": "MEDIUM"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "prioritizedRule": false,
+      "fromSonarQubeUpdate": false,
+      "internalTags": [],
+      "linkedTicketStatus": "NOT_LINKED"
+    },
+    {
+      "key": "ff986495-4d7b-4a4c-9ffe-0c2252354a8c",
+      "rule": "java:S3972",
+      "severity": "CRITICAL",
+      "component": "java-errors-benchmark:src/main/java/app/InputRouter.java",
+      "project": "java-errors-benchmark",
+      "line": 13,
+      "hash": "96d97b3fbff9dc015c1d929b59866ee5",
+      "textRange": {
+        "startLine": 13,
+        "endLine": 13,
+        "startOffset": 10,
+        "endOffset": 12
+      },
+      "flows": [
+        {
+          "locations": [
+            {
+              "component": "java-errors-benchmark:src/main/java/app/InputRouter.java",
+              "textRange": {
+                "startLine": 13,
+                "endLine": 13,
+                "startOffset": 8,
+                "endOffset": 9
+              },
+              "msgFormattings": []
+            }
+          ]
+        }
+      ],
+      "status": "OPEN",
+      "message": "Move this \"if\" to a new line or add the missing \"else\".",
+      "effort": "10min",
+      "debt": "10min",
+      "author": "",
+      "tags": [
+        "suspicious"
+      ],
+      "creationDate": "2026-08-09T15:42:41+0000",
+      "updateDate": "2026-08-09T15:42:41+0000",
+      "type": "CODE_SMELL",
+      "scope": "MAIN",
+      "quickFixAvailable": false,
+      "messageFormattings": [],
+      "codeVariants": [],
+      "cleanCodeAttribute": "FORMATTED",
+      "cleanCodeAttributeCategory": "CONSISTENT",
+      "impacts": [
+        {
+          "softwareQuality": "MAINTAINABILITY",
+          "severity": "HIGH"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "prioritizedRule": false,
+      "fromSonarQubeUpdate": false,
+      "internalTags": [],
+      "linkedTicketStatus": "NOT_LINKED"
+    },
+    {
+      "key": "84af616f-ee94-44de-9948-ee175037c30b",
+      "rule": "java:S106",
+      "severity": "MAJOR",
+      "component": "java-errors-benchmark:src/main/java/app/InputRouter.java",
+      "project": "java-errors-benchmark",
+      "line": 14,
+      "hash": "f0e82022ac95d0ea854ed7f93cdb600a",
+      "textRange": {
+        "startLine": 14,
+        "endLine": 14,
+        "startOffset": 12,
+        "endOffset": 22
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Replace this use of System.out by a logger.",
+      "effort": "10min",
+      "debt": "10min",
+      "author": "",
+      "tags": [
+        "bad-practice",
+        "cert"
+      ],
+      "creationDate": "2026-08-09T15:42:41+0000",
+      "updateDate": "2026-08-09T15:42:41+0000",
+      "type": "CODE_SMELL",
+      "scope": "MAIN",
+      "quickFixAvailable": false,
+      "messageFormattings": [],
+      "codeVariants": [],
+      "cleanCodeAttribute": "MODULAR",
+      "cleanCodeAttributeCategory": "ADAPTABLE",
+      "impacts": [
+        {
+          "softwareQuality": "MAINTAINABILITY",
+          "severity": "MEDIUM"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "prioritizedRule": false,
+      "fromSonarQubeUpdate": false,
+      "internalTags": [],
+      "linkedTicketStatus": "NOT_LINKED"
+    },
+    {
+      "key": "3defad5a-e68d-4004-9852-cc1dc026dc87",
+      "rule": "java:S106",
+      "severity": "MAJOR",
+      "component": "java-errors-benchmark:src/main/java/app/InputRouter.java",
+      "project": "java-errors-benchmark",
+      "line": 16,
+      "hash": "46c9d4a30eb4eb829bbcf0585f11ab61",
+      "textRange": {
+        "startLine": 16,
+        "endLine": 16,
+        "startOffset": 12,
+        "endOffset": 22
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Replace this use of System.out by a logger.",
+      "effort": "10min",
+      "debt": "10min",
+      "author": "",
+      "tags": [
+        "bad-practice",
+        "cert"
+      ],
+      "creationDate": "2026-08-09T15:42:41+0000",
+      "updateDate": "2026-08-09T15:42:41+0000",
+      "type": "CODE_SMELL",
+      "scope": "MAIN",
+      "quickFixAvailable": false,
+      "messageFormattings": [],
+      "codeVariants": [],
+      "cleanCodeAttribute": "MODULAR",
+      "cleanCodeAttributeCategory": "ADAPTABLE",
+      "impacts": [
+        {
+          "softwareQuality": "MAINTAINABILITY",
+          "severity": "MEDIUM"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "prioritizedRule": false,
+      "fromSonarQubeUpdate": false,
+      "internalTags": [],
+      "linkedTicketStatus": "NOT_LINKED"
+    },
+    {
+      "key": "329ce94a-1f9b-43db-936c-48e4f679a657",
+      "rule": "java:S106",
+      "severity": "MAJOR",
+      "component": "java-errors-benchmark:src/main/java/app/InputRouter.java",
+      "project": "java-errors-benchmark",
+      "line": 18,
+      "hash": "66c655dce820900d8c7d0383ed5d5b66",
+      "textRange": {
+        "startLine": 18,
+        "endLine": 18,
+        "startOffset": 12,
+        "endOffset": 22
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Replace this use of System.out by a logger.",
+      "effort": "10min",
+      "debt": "10min",
+      "author": "",
+      "tags": [
+        "bad-practice",
+        "cert"
+      ],
+      "creationDate": "2026-08-09T15:42:41+0000",
+      "updateDate": "2026-08-09T15:42:41+0000",
+      "type": "CODE_SMELL",
+      "scope": "MAIN",
+      "quickFixAvailable": false,
+      "messageFormattings": [],
+      "codeVariants": [],
+      "cleanCodeAttribute": "MODULAR",
+      "cleanCodeAttributeCategory": "ADAPTABLE",
+      "impacts": [
+        {
+          "softwareQuality": "MAINTAINABILITY",
+          "severity": "MEDIUM"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "prioritizedRule": false,
+      "fromSonarQubeUpdate": false,
+      "internalTags": [],
+      "linkedTicketStatus": "NOT_LINKED"
+    },
+    {
+      "key": "5b5328af-3b15-44a6-a15b-3a4408b41f0f",
+      "rule": "java:S106",
+      "severity": "MAJOR",
+      "component": "java-errors-benchmark:src/main/java/app/ItemAppender.java",
+      "project": "java-errors-benchmark",
+      "line": 10,
+      "hash": "a70b9d2d0f2ff2e11f4a406950989fa7",
+      "textRange": {
+        "startLine": 10,
+        "endLine": 10,
+        "startOffset": 12,
+        "endOffset": 22
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Replace this use of System.out by a logger.",
+      "effort": "10min",
+      "debt": "10min",
+      "author": "",
+      "tags": [
+        "bad-practice",
+        "cert"
+      ],
+      "creationDate": "2026-08-09T15:42:41+0000",
+      "updateDate": "2026-08-09T15:42:41+0000",
+      "type": "CODE_SMELL",
+      "scope": "MAIN",
+      "quickFixAvailable": false,
+      "messageFormattings": [],
+      "codeVariants": [],
+      "cleanCodeAttribute": "MODULAR",
+      "cleanCodeAttributeCategory": "ADAPTABLE",
+      "impacts": [
+        {
+          "softwareQuality": "MAINTAINABILITY",
+          "severity": "MEDIUM"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "prioritizedRule": false,
+      "fromSonarQubeUpdate": false,
+      "internalTags": [],
+      "linkedTicketStatus": "NOT_LINKED"
+    },
+    {
+      "key": "c1448e6d-8aef-45fd-aa33-ca690d46c598",
+      "rule": "java:S106",
+      "severity": "MAJOR",
+      "component": "java-errors-benchmark:src/main/java/app/KeyValueParser.java",
+      "project": "java-errors-benchmark",
+      "line": 6,
+      "hash": "14d9eb046e9f9defc3980e08a4cef640",
+      "textRange": {
+        "startLine": 6,
+        "endLine": 6,
+        "startOffset": 8,
+        "endOffset": 18
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Replace this use of System.out by a logger.",
+      "effort": "10min",
+      "debt": "10min",
+      "author": "",
+      "tags": [
+        "bad-practice",
+        "cert"
+      ],
+      "creationDate": "2026-08-09T15:42:41+0000",
+      "updateDate": "2026-08-09T15:42:41+0000",
+      "type": "CODE_SMELL",
+      "scope": "MAIN",
+      "quickFixAvailable": false,
+      "messageFormattings": [],
+      "codeVariants": [],
+      "cleanCodeAttribute": "MODULAR",
+      "cleanCodeAttributeCategory": "ADAPTABLE",
+      "impacts": [
+        {
+          "softwareQuality": "MAINTAINABILITY",
+          "severity": "MEDIUM"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "prioritizedRule": false,
+      "fromSonarQubeUpdate": false,
+      "internalTags": [],
+      "linkedTicketStatus": "NOT_LINKED"
+    },
+    {
+      "key": "ea4950dd-f0d0-473a-b84f-7640fb542129",
+      "rule": "java:S127",
+      "severity": "MAJOR",
+      "component": "java-errors-benchmark:src/main/java/app/MatrixNormalizer.java",
+      "project": "java-errors-benchmark",
+      "line": 21,
+      "hash": "421dbe04b48f817eaa995eff5ce40964",
+      "textRange": {
+        "startLine": 21,
+        "endLine": 21,
+        "startOffset": 41,
+        "endOffset": 42
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Refactor the code in order to not assign to this loop counter from within the loop body.",
+      "effort": "10min",
+      "debt": "10min",
+      "author": "",
+      "tags": [
+        "pitfall"
+      ],
+      "creationDate": "2026-08-09T15:42:41+0000",
+      "updateDate": "2026-08-09T15:42:41+0000",
+      "type": "CODE_SMELL",
+      "scope": "MAIN",
+      "quickFixAvailable": false,
+      "messageFormattings": [],
+      "codeVariants": [],
+      "cleanCodeAttribute": "CLEAR",
+      "cleanCodeAttributeCategory": "INTENTIONAL",
+      "impacts": [
+        {
+          "softwareQuality": "MAINTAINABILITY",
+          "severity": "MEDIUM"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "prioritizedRule": false,
+      "fromSonarQubeUpdate": false,
+      "internalTags": [],
+      "linkedTicketStatus": "NOT_LINKED"
+    },
+    {
+      "key": "de54c45f-7bd0-4d22-8e75-9cbe8e6fd088",
+      "rule": "java:S106",
+      "severity": "MAJOR",
+      "component": "java-errors-benchmark:src/main/java/app/MatrixNormalizer.java",
+      "project": "java-errors-benchmark",
+      "line": 32,
+      "hash": "1c7efd44da929673bb5cb3cc4dce03f8",
+      "textRange": {
+        "startLine": 32,
+        "endLine": 32,
+        "startOffset": 16,
+        "endOffset": 26
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Replace this use of System.out by a logger.",
+      "effort": "10min",
+      "debt": "10min",
+      "author": "",
+      "tags": [
+        "bad-practice",
+        "cert"
+      ],
+      "creationDate": "2026-08-09T15:42:41+0000",
+      "updateDate": "2026-08-09T15:42:41+0000",
+      "type": "CODE_SMELL",
+      "scope": "MAIN",
+      "quickFixAvailable": false,
+      "messageFormattings": [],
+      "codeVariants": [],
+      "cleanCodeAttribute": "MODULAR",
+      "cleanCodeAttributeCategory": "ADAPTABLE",
+      "impacts": [
+        {
+          "softwareQuality": "MAINTAINABILITY",
+          "severity": "MEDIUM"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "prioritizedRule": false,
+      "fromSonarQubeUpdate": false,
+      "internalTags": [],
+      "linkedTicketStatus": "NOT_LINKED"
+    },
+    {
+      "key": "51cd3c22-5860-4759-8346-3109e4a52c07",
+      "rule": "java:S106",
+      "severity": "MAJOR",
+      "component": "java-errors-benchmark:src/main/java/app/MatrixNormalizer.java",
+      "project": "java-errors-benchmark",
+      "line": 34,
+      "hash": "d2f808bc8664ce2ebdfc6aabe957104d",
+      "textRange": {
+        "startLine": 34,
+        "endLine": 34,
+        "startOffset": 12,
+        "endOffset": 22
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Replace this use of System.out by a logger.",
+      "effort": "10min",
+      "debt": "10min",
+      "author": "",
+      "tags": [
+        "bad-practice",
+        "cert"
+      ],
+      "creationDate": "2026-08-09T15:42:41+0000",
+      "updateDate": "2026-08-09T15:42:41+0000",
+      "type": "CODE_SMELL",
+      "scope": "MAIN",
+      "quickFixAvailable": false,
+      "messageFormattings": [],
+      "codeVariants": [],
+      "cleanCodeAttribute": "MODULAR",
+      "cleanCodeAttributeCategory": "ADAPTABLE",
+      "impacts": [
+        {
+          "softwareQuality": "MAINTAINABILITY",
+          "severity": "MEDIUM"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "prioritizedRule": false,
+      "fromSonarQubeUpdate": false,
+      "internalTags": [],
+      "linkedTicketStatus": "NOT_LINKED"
+    },
+    {
+      "key": "0e35b49e-0f74-4c4e-9d5a-55e09cb2fe46",
+      "rule": "java:S106",
+      "severity": "MAJOR",
+      "component": "java-errors-benchmark:src/main/java/app/MenuHandler.java",
+      "project": "java-errors-benchmark",
+      "line": 9,
+      "hash": "74dcc8d59f7f9b7f963b9ab2dd46e8c9",
+      "textRange": {
+        "startLine": 9,
+        "endLine": 9,
+        "startOffset": 16,
+        "endOffset": 26
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Replace this use of System.out by a logger.",
+      "effort": "10min",
+      "debt": "10min",
+      "author": "",
+      "tags": [
+        "bad-practice",
+        "cert"
+      ],
+      "creationDate": "2026-08-09T15:42:41+0000",
+      "updateDate": "2026-08-09T15:42:41+0000",
+      "type": "CODE_SMELL",
+      "scope": "MAIN",
+      "quickFixAvailable": false,
+      "messageFormattings": [],
+      "codeVariants": [],
+      "cleanCodeAttribute": "MODULAR",
+      "cleanCodeAttributeCategory": "ADAPTABLE",
+      "impacts": [
+        {
+          "softwareQuality": "MAINTAINABILITY",
+          "severity": "MEDIUM"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "prioritizedRule": false,
+      "fromSonarQubeUpdate": false,
+      "internalTags": [],
+      "linkedTicketStatus": "NOT_LINKED"
+    },
+    {
+      "key": "fc32969c-09c7-4f68-b796-e780a0d27989",
+      "rule": "java:S128",
+      "severity": "BLOCKER",
+      "component": "java-errors-benchmark:src/main/java/app/MenuHandler.java",
+      "project": "java-errors-benchmark",
+      "line": 11,
+      "hash": "36ca0408391d33accfc3d2884d3005e4",
+      "textRange": {
+        "startLine": 11,
+        "endLine": 11,
+        "startOffset": 12,
+        "endOffset": 19
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "End this switch case with an unconditional break, return or throw statement.",
+      "effort": "10min",
+      "debt": "10min",
+      "author": "",
+      "tags": [
+        "cwe",
+        "cert",
+        "suspicious"
+      ],
+      "creationDate": "2026-08-09T15:42:41+0000",
+      "updateDate": "2026-08-09T15:42:41+0000",
+      "type": "CODE_SMELL",
+      "scope": "MAIN",
+      "quickFixAvailable": false,
+      "messageFormattings": [],
+      "codeVariants": [],
+      "cleanCodeAttribute": "CLEAR",
+      "cleanCodeAttributeCategory": "INTENTIONAL",
+      "impacts": [
+        {
+          "softwareQuality": "MAINTAINABILITY",
+          "severity": "BLOCKER"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "prioritizedRule": false,
+      "fromSonarQubeUpdate": false,
+      "internalTags": [],
+      "linkedTicketStatus": "NOT_LINKED"
+    },
+    {
+      "key": "7db0a6c2-892e-4131-b74c-39c75d84c1e3",
+      "rule": "java:S106",
+      "severity": "MAJOR",
+      "component": "java-errors-benchmark:src/main/java/app/MenuHandler.java",
+      "project": "java-errors-benchmark",
+      "line": 12,
+      "hash": "78477bb25595b244c08346cf3662328e",
+      "textRange": {
+        "startLine": 12,
+        "endLine": 12,
+        "startOffset": 16,
+        "endOffset": 26
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Replace this use of System.out by a logger.",
+      "effort": "10min",
+      "debt": "10min",
+      "author": "",
+      "tags": [
+        "bad-practice",
+        "cert"
+      ],
+      "creationDate": "2026-08-09T15:42:41+0000",
+      "updateDate": "2026-08-09T15:42:41+0000",
+      "type": "CODE_SMELL",
+      "scope": "MAIN",
+      "quickFixAvailable": false,
+      "messageFormattings": [],
+      "codeVariants": [],
+      "cleanCodeAttribute": "MODULAR",
+      "cleanCodeAttributeCategory": "ADAPTABLE",
+      "impacts": [
+        {
+          "softwareQuality": "MAINTAINABILITY",
+          "severity": "MEDIUM"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "prioritizedRule": false,
+      "fromSonarQubeUpdate": false,
+      "internalTags": [],
+      "linkedTicketStatus": "NOT_LINKED"
+    },
+    {
+      "key": "65331a89-5284-4e25-b310-abd4ea8d7ef6",
+      "rule": "java:S106",
+      "severity": "MAJOR",
+      "component": "java-errors-benchmark:src/main/java/app/MenuHandler.java",
+      "project": "java-errors-benchmark",
+      "line": 14,
+      "hash": "e3a50da577d025f44cb385a62d7a0b37",
+      "textRange": {
+        "startLine": 14,
+        "endLine": 14,
+        "startOffset": 16,
+        "endOffset": 26
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Replace this use of System.out by a logger.",
+      "effort": "10min",
+      "debt": "10min",
+      "author": "",
+      "tags": [
+        "bad-practice",
+        "cert"
+      ],
+      "creationDate": "2026-08-09T15:42:41+0000",
+      "updateDate": "2026-08-09T15:42:41+0000",
+      "type": "CODE_SMELL",
+      "scope": "MAIN",
+      "quickFixAvailable": false,
+      "messageFormattings": [],
+      "codeVariants": [],
+      "cleanCodeAttribute": "MODULAR",
+      "cleanCodeAttributeCategory": "ADAPTABLE",
+      "impacts": [
+        {
+          "softwareQuality": "MAINTAINABILITY",
+          "severity": "MEDIUM"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "prioritizedRule": false,
+      "fromSonarQubeUpdate": false,
+      "internalTags": [],
+      "linkedTicketStatus": "NOT_LINKED"
+    },
+    {
+      "key": "a29ed9b3-f510-4c1a-89a9-0b09e4db0555",
+      "rule": "java:S106",
+      "severity": "MAJOR",
+      "component": "java-errors-benchmark:src/main/java/app/MessageSender.java",
+      "project": "java-errors-benchmark",
+      "line": 17,
+      "hash": "e015c9892f3ae56e1cfd3936bd7a933e",
+      "textRange": {
+        "startLine": 17,
+        "endLine": 17,
+        "startOffset": 12,
+        "endOffset": 22
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Replace this use of System.out by a logger.",
+      "effort": "10min",
+      "debt": "10min",
+      "author": "",
+      "tags": [
+        "bad-practice",
+        "cert"
+      ],
+      "creationDate": "2026-08-09T15:42:41+0000",
+      "updateDate": "2026-08-09T15:42:41+0000",
+      "type": "CODE_SMELL",
+      "scope": "MAIN",
+      "quickFixAvailable": false,
+      "messageFormattings": [],
+      "codeVariants": [],
+      "cleanCodeAttribute": "MODULAR",
+      "cleanCodeAttributeCategory": "ADAPTABLE",
+      "impacts": [
+        {
+          "softwareQuality": "MAINTAINABILITY",
+          "severity": "MEDIUM"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "prioritizedRule": false,
+      "fromSonarQubeUpdate": false,
+      "internalTags": [],
+      "linkedTicketStatus": "NOT_LINKED"
+    },
+    {
+      "key": "7c3bc331-f72e-45b3-9b09-422b2ed2f0d7",
+      "rule": "java:S106",
+      "severity": "MAJOR",
+      "component": "java-errors-benchmark:src/main/java/app/MessageSender.java",
+      "project": "java-errors-benchmark",
+      "line": 20,
+      "hash": "6c4386acb35672bee458838da702b385",
+      "textRange": {
+        "startLine": 20,
+        "endLine": 20,
+        "startOffset": 12,
+        "endOffset": 22
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Replace this use of System.out by a logger.",
+      "effort": "10min",
+      "debt": "10min",
+      "author": "",
+      "tags": [
+        "bad-practice",
+        "cert"
+      ],
+      "creationDate": "2026-08-09T15:42:41+0000",
+      "updateDate": "2026-08-09T15:42:41+0000",
+      "type": "CODE_SMELL",
+      "scope": "MAIN",
+      "quickFixAvailable": false,
+      "messageFormattings": [],
+      "codeVariants": [],
+      "cleanCodeAttribute": "MODULAR",
+      "cleanCodeAttributeCategory": "ADAPTABLE",
+      "impacts": [
+        {
+          "softwareQuality": "MAINTAINABILITY",
+          "severity": "MEDIUM"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "prioritizedRule": false,
+      "fromSonarQubeUpdate": false,
+      "internalTags": [],
+      "linkedTicketStatus": "NOT_LINKED"
+    },
+    {
+      "key": "3682a895-69c6-4e27-8954-1ee8e6d46829",
+      "rule": "java:S106",
+      "severity": "MAJOR",
+      "component": "java-errors-benchmark:src/main/java/app/MessageSender.java",
+      "project": "java-errors-benchmark",
+      "line": 23,
+      "hash": "ca68320aed806fce6807740c7fb8593e",
+      "textRange": {
+        "startLine": 23,
+        "endLine": 23,
+        "startOffset": 12,
+        "endOffset": 22
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Replace this use of System.out by a logger.",
+      "effort": "10min",
+      "debt": "10min",
+      "author": "",
+      "tags": [
+        "bad-practice",
+        "cert"
+      ],
+      "creationDate": "2026-08-09T15:42:41+0000",
+      "updateDate": "2026-08-09T15:42:41+0000",
+      "type": "CODE_SMELL",
+      "scope": "MAIN",
+      "quickFixAvailable": false,
+      "messageFormattings": [],
+      "codeVariants": [],
+      "cleanCodeAttribute": "MODULAR",
+      "cleanCodeAttributeCategory": "ADAPTABLE",
+      "impacts": [
+        {
+          "softwareQuality": "MAINTAINABILITY",
+          "severity": "MEDIUM"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "prioritizedRule": false,
+      "fromSonarQubeUpdate": false,
+      "internalTags": [],
+      "linkedTicketStatus": "NOT_LINKED"
+    },
+    {
+      "key": "bb659290-a177-4a71-96a8-4ec0963581fe",
+      "rule": "java:S106",
+      "severity": "MAJOR",
+      "component": "java-errors-benchmark:src/main/java/app/NameTagPrinter.java",
+      "project": "java-errors-benchmark",
+      "line": 8,
+      "hash": "4a9e0d5987ebdd792cddf3131ff16233",
+      "textRange": {
+        "startLine": 8,
+        "endLine": 8,
+        "startOffset": 8,
+        "endOffset": 18
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Replace this use of System.out by a logger.",
+      "effort": "10min",
+      "debt": "10min",
+      "author": "",
+      "tags": [
+        "bad-practice",
+        "cert"
+      ],
+      "creationDate": "2026-08-09T15:42:41+0000",
+      "updateDate": "2026-08-09T15:42:41+0000",
+      "type": "CODE_SMELL",
+      "scope": "MAIN",
+      "quickFixAvailable": false,
+      "messageFormattings": [],
+      "codeVariants": [],
+      "cleanCodeAttribute": "MODULAR",
+      "cleanCodeAttributeCategory": "ADAPTABLE",
+      "impacts": [
+        {
+          "softwareQuality": "MAINTAINABILITY",
+          "severity": "MEDIUM"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "prioritizedRule": false,
+      "fromSonarQubeUpdate": false,
+      "internalTags": [],
+      "linkedTicketStatus": "NOT_LINKED"
+    },
+    {
+      "key": "29e47ed3-ffd2-44bf-bd7e-ae0064d53870",
+      "rule": "java:S4973",
+      "severity": "MAJOR",
+      "component": "java-errors-benchmark:src/main/java/app/NumberComparison.java",
+      "project": "java-errors-benchmark",
+      "line": 7,
+      "hash": "1cce624159b37543d5c35a156117f7f5",
+      "textRange": {
+        "startLine": 7,
+        "endLine": 7,
+        "startOffset": 32,
+        "endOffset": 34
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Strings and Boxed types should be compared using \"equals()\".",
+      "effort": "5min",
+      "debt": "5min",
+      "author": "",
+      "tags": [
+        "cwe",
+        "cert"
+      ],
+      "creationDate": "2026-08-09T15:42:41+0000",
+      "updateDate": "2026-08-09T15:42:41+0000",
+      "type": "BUG",
+      "scope": "MAIN",
+      "quickFixAvailable": true,
+      "messageFormattings": [],
+      "codeVariants": [],
+      "cleanCodeAttribute": "LOGICAL",
+      "cleanCodeAttributeCategory": "INTENTIONAL",
+      "impacts": [
+        {
+          "softwareQuality": "RELIABILITY",
+          "severity": "MEDIUM"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "prioritizedRule": false,
+      "fromSonarQubeUpdate": false,
+      "internalTags": [],
+      "linkedTicketStatus": "NOT_LINKED"
+    },
+    {
+      "key": "35e66010-2e5b-4a4e-b187-f06c051c0b87",
+      "rule": "java:S106",
+      "severity": "MAJOR",
+      "component": "java-errors-benchmark:src/main/java/app/NumberComparison.java",
+      "project": "java-errors-benchmark",
+      "line": 7,
+      "hash": "1cce624159b37543d5c35a156117f7f5",
+      "textRange": {
+        "startLine": 7,
+        "endLine": 7,
+        "startOffset": 8,
+        "endOffset": 18
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Replace this use of System.out by a logger.",
+      "effort": "10min",
+      "debt": "10min",
+      "author": "",
+      "tags": [
+        "bad-practice",
+        "cert"
+      ],
+      "creationDate": "2026-08-09T15:42:41+0000",
+      "updateDate": "2026-08-09T15:42:41+0000",
+      "type": "CODE_SMELL",
+      "scope": "MAIN",
+      "quickFixAvailable": false,
+      "messageFormattings": [],
+      "codeVariants": [],
+      "cleanCodeAttribute": "MODULAR",
+      "cleanCodeAttributeCategory": "ADAPTABLE",
+      "impacts": [
+        {
+          "softwareQuality": "MAINTAINABILITY",
+          "severity": "MEDIUM"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "prioritizedRule": false,
+      "fromSonarQubeUpdate": false,
+      "internalTags": [],
+      "linkedTicketStatus": "NOT_LINKED"
+    },
+    {
+      "key": "4729ab3f-bdfd-448b-a9bd-35b888a43f0d",
+      "rule": "java:S106",
+      "severity": "MAJOR",
+      "component": "java-errors-benchmark:src/main/java/app/NumberReader.java",
+      "project": "java-errors-benchmark",
+      "line": 6,
+      "hash": "6666dd51128faed718684c62fa41f206",
+      "textRange": {
+        "startLine": 6,
+        "endLine": 6,
+        "startOffset": 8,
+        "endOffset": 18
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Replace this use of System.out by a logger.",
+      "effort": "10min",
+      "debt": "10min",
+      "author": "",
+      "tags": [
+        "bad-practice",
+        "cert"
+      ],
+      "creationDate": "2026-08-09T15:42:41+0000",
+      "updateDate": "2026-08-09T15:42:41+0000",
+      "type": "CODE_SMELL",
+      "scope": "MAIN",
+      "quickFixAvailable": false,
+      "messageFormattings": [],
+      "codeVariants": [],
+      "cleanCodeAttribute": "MODULAR",
+      "cleanCodeAttributeCategory": "ADAPTABLE",
+      "impacts": [
+        {
+          "softwareQuality": "MAINTAINABILITY",
+          "severity": "MEDIUM"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "prioritizedRule": false,
+      "fromSonarQubeUpdate": false,
+      "internalTags": [],
+      "linkedTicketStatus": "NOT_LINKED"
+    },
+    {
+      "key": "b43921e2-5f81-4e9e-99ea-31ef76ddcb07",
+      "rule": "java:S1905",
+      "severity": "MINOR",
+      "component": "java-errors-benchmark:src/main/java/app/NumberReader.java",
+      "project": "java-errors-benchmark",
+      "line": 6,
+      "hash": "6666dd51128faed718684c62fa41f206",
+      "textRange": {
+        "startLine": 6,
+        "endLine": 6,
+        "startOffset": 27,
+        "endOffset": 36
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Remove this unnecessary cast to \"Integer\".",
+      "effort": "5min",
+      "debt": "5min",
+      "author": "",
+      "tags": [
+        "redundant",
+        "clumsy"
+      ],
+      "creationDate": "2026-08-09T15:42:41+0000",
+      "updateDate": "2026-08-09T15:42:41+0000",
+      "type": "CODE_SMELL",
+      "scope": "MAIN",
+      "quickFixAvailable": true,
+      "messageFormattings": [],
+      "codeVariants": [],
+      "cleanCodeAttribute": "CLEAR",
+      "cleanCodeAttributeCategory": "INTENTIONAL",
+      "impacts": [
+        {
+          "softwareQuality": "MAINTAINABILITY",
+          "severity": "LOW"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "prioritizedRule": false,
+      "fromSonarQubeUpdate": false,
+      "internalTags": [],
+      "linkedTicketStatus": "NOT_LINKED"
+    },
+    {
+      "key": "71aa5db5-e237-4be2-8b47-e7924d4efe90",
+      "rule": "java:S106",
+      "severity": "MAJOR",
+      "component": "java-errors-benchmark:src/main/java/app/PairPrinter.java",
+      "project": "java-errors-benchmark",
+      "line": 15,
+      "hash": "92117233e93d27040bb3b6c69c8123bc",
+      "textRange": {
+        "startLine": 15,
+        "endLine": 15,
+        "startOffset": 12,
+        "endOffset": 22
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Replace this use of System.out by a logger.",
+      "effort": "10min",
+      "debt": "10min",
+      "author": "",
+      "tags": [
+        "bad-practice",
+        "cert"
+      ],
+      "creationDate": "2026-08-09T15:42:41+0000",
+      "updateDate": "2026-08-09T15:42:41+0000",
+      "type": "CODE_SMELL",
+      "scope": "MAIN",
+      "quickFixAvailable": false,
+      "messageFormattings": [],
+      "codeVariants": [],
+      "cleanCodeAttribute": "MODULAR",
+      "cleanCodeAttributeCategory": "ADAPTABLE",
+      "impacts": [
+        {
+          "softwareQuality": "MAINTAINABILITY",
+          "severity": "MEDIUM"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "prioritizedRule": false,
+      "fromSonarQubeUpdate": false,
+      "internalTags": [],
+      "linkedTicketStatus": "NOT_LINKED"
+    },
+    {
+      "key": "a48e910c-1b64-456c-8f95-e2aed8570a78",
+      "rule": "java:S106",
+      "severity": "MAJOR",
+      "component": "java-errors-benchmark:src/main/java/app/PersonMatcher.java",
+      "project": "java-errors-benchmark",
+      "line": 9,
+      "hash": "464bf6f13719639131b2ca9fcc4b46c8",
+      "textRange": {
+        "startLine": 9,
+        "endLine": 9,
+        "startOffset": 8,
+        "endOffset": 18
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Replace this use of System.out by a logger.",
+      "effort": "10min",
+      "debt": "10min",
+      "author": "",
+      "tags": [
+        "bad-practice",
+        "cert"
+      ],
+      "creationDate": "2026-08-09T15:42:41+0000",
+      "updateDate": "2026-08-09T15:42:41+0000",
+      "type": "CODE_SMELL",
+      "scope": "MAIN",
+      "quickFixAvailable": false,
+      "messageFormattings": [],
+      "codeVariants": [],
+      "cleanCodeAttribute": "MODULAR",
+      "cleanCodeAttributeCategory": "ADAPTABLE",
+      "impacts": [
+        {
+          "softwareQuality": "MAINTAINABILITY",
+          "severity": "MEDIUM"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "prioritizedRule": false,
+      "fromSonarQubeUpdate": false,
+      "internalTags": [],
+      "linkedTicketStatus": "NOT_LINKED"
+    },
+    {
+      "key": "6ad51480-864d-48ca-85d4-7de3f8e7e4bf",
+      "rule": "java:S106",
+      "severity": "MAJOR",
+      "component": "java-errors-benchmark:src/main/java/app/PersonMatcher.java",
+      "project": "java-errors-benchmark",
+      "line": 10,
+      "hash": "c443a2489c6bfbd3e27553bf2a9d5f75",
+      "textRange": {
+        "startLine": 10,
+        "endLine": 10,
+        "startOffset": 8,
+        "endOffset": 18
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Replace this use of System.out by a logger.",
+      "effort": "10min",
+      "debt": "10min",
+      "author": "",
+      "tags": [
+        "bad-practice",
+        "cert"
+      ],
+      "creationDate": "2026-08-09T15:42:41+0000",
+      "updateDate": "2026-08-09T15:42:41+0000",
+      "type": "CODE_SMELL",
+      "scope": "MAIN",
+      "quickFixAvailable": false,
+      "messageFormattings": [],
+      "codeVariants": [],
+      "cleanCodeAttribute": "MODULAR",
+      "cleanCodeAttributeCategory": "ADAPTABLE",
+      "impacts": [
+        {
+          "softwareQuality": "MAINTAINABILITY",
+          "severity": "MEDIUM"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "prioritizedRule": false,
+      "fromSonarQubeUpdate": false,
+      "internalTags": [],
+      "linkedTicketStatus": "NOT_LINKED"
+    },
+    {
+      "key": "a55a2b18-b3ef-48fc-a9f2-346c58854726",
+      "rule": "java:S2696",
+      "severity": "CRITICAL",
+      "component": "java-errors-benchmark:src/main/java/app/PersonProfile.java",
+      "project": "java-errors-benchmark",
+      "line": 8,
+      "hash": "424d3a91bcd379d5c9790ebc37f315cb",
+      "textRange": {
+        "startLine": 8,
+        "endLine": 8,
+        "startOffset": 8,
+        "endOffset": 12
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Make the enclosing method \"static\" or remove this set.",
+      "effort": "20min",
+      "debt": "20min",
+      "author": "",
+      "tags": [
+        "multi-threading"
+      ],
+      "creationDate": "2026-08-09T15:42:41+0000",
+      "updateDate": "2026-08-09T15:42:41+0000",
+      "type": "CODE_SMELL",
+      "scope": "MAIN",
+      "quickFixAvailable": false,
+      "messageFormattings": [],
+      "codeVariants": [],
+      "cleanCodeAttribute": "COMPLETE",
+      "cleanCodeAttributeCategory": "INTENTIONAL",
+      "impacts": [
+        {
+          "softwareQuality": "MAINTAINABILITY",
+          "severity": "HIGH"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "prioritizedRule": false,
+      "fromSonarQubeUpdate": false,
+      "internalTags": [],
+      "linkedTicketStatus": "NOT_LINKED"
+    },
+    {
+      "key": "78288a06-3e85-47d1-9cc2-bff66d64f358",
+      "rule": "java:S106",
+      "severity": "MAJOR",
+      "component": "java-errors-benchmark:src/main/java/app/PersonProfile.java",
+      "project": "java-errors-benchmark",
+      "line": 23,
+      "hash": "bd013d3622f679fdba888176c4625548",
+      "textRange": {
+        "startLine": 23,
+        "endLine": 23,
+        "startOffset": 8,
+        "endOffset": 18
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Replace this use of System.out by a logger.",
+      "effort": "10min",
+      "debt": "10min",
+      "author": "",
+      "tags": [
+        "bad-practice",
+        "cert"
+      ],
+      "creationDate": "2026-08-09T15:42:41+0000",
+      "updateDate": "2026-08-09T15:42:41+0000",
+      "type": "CODE_SMELL",
+      "scope": "MAIN",
+      "quickFixAvailable": false,
+      "messageFormattings": [],
+      "codeVariants": [],
+      "cleanCodeAttribute": "MODULAR",
+      "cleanCodeAttributeCategory": "ADAPTABLE",
+      "impacts": [
+        {
+          "softwareQuality": "MAINTAINABILITY",
+          "severity": "MEDIUM"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "prioritizedRule": false,
+      "fromSonarQubeUpdate": false,
+      "internalTags": [],
+      "linkedTicketStatus": "NOT_LINKED"
+    },
+    {
+      "key": "b1a42742-799b-4543-8019-f1f4a1fe8eed",
+      "rule": "java:S106",
+      "severity": "MAJOR",
+      "component": "java-errors-benchmark:src/main/java/app/PersonProfile.java",
+      "project": "java-errors-benchmark",
+      "line": 24,
+      "hash": "13bbf1181355cdbf4a96b072e8dc6cf6",
+      "textRange": {
+        "startLine": 24,
+        "endLine": 24,
+        "startOffset": 8,
+        "endOffset": 18
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Replace this use of System.out by a logger.",
+      "effort": "10min",
+      "debt": "10min",
+      "author": "",
+      "tags": [
+        "bad-practice",
+        "cert"
+      ],
+      "creationDate": "2026-08-09T15:42:41+0000",
+      "updateDate": "2026-08-09T15:42:41+0000",
+      "type": "CODE_SMELL",
+      "scope": "MAIN",
+      "quickFixAvailable": false,
+      "messageFormattings": [],
+      "codeVariants": [],
+      "cleanCodeAttribute": "MODULAR",
+      "cleanCodeAttributeCategory": "ADAPTABLE",
+      "impacts": [
+        {
+          "softwareQuality": "MAINTAINABILITY",
+          "severity": "MEDIUM"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "prioritizedRule": false,
+      "fromSonarQubeUpdate": false,
+      "internalTags": [],
+      "linkedTicketStatus": "NOT_LINKED"
+    },
+    {
+      "key": "2b54eba2-84df-4637-b95f-54d8d456d353",
+      "rule": "java:S106",
+      "severity": "MAJOR",
+      "component": "java-errors-benchmark:src/main/java/app/PersonRanking.java",
+      "project": "java-errors-benchmark",
+      "line": 8,
+      "hash": "e962edb31945fe77b53dd79dd1dfe17f",
+      "textRange": {
+        "startLine": 8,
+        "endLine": 8,
+        "startOffset": 8,
+        "endOffset": 18
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Replace this use of System.out by a logger.",
+      "effort": "10min",
+      "debt": "10min",
+      "author": "",
+      "tags": [
+        "bad-practice",
+        "cert"
+      ],
+      "creationDate": "2026-08-09T15:42:41+0000",
+      "updateDate": "2026-08-09T15:42:41+0000",
+      "type": "CODE_SMELL",
+      "scope": "MAIN",
+      "quickFixAvailable": false,
+      "messageFormattings": [],
+      "codeVariants": [],
+      "cleanCodeAttribute": "MODULAR",
+      "cleanCodeAttributeCategory": "ADAPTABLE",
+      "impacts": [
+        {
+          "softwareQuality": "MAINTAINABILITY",
+          "severity": "MEDIUM"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "prioritizedRule": false,
+      "fromSonarQubeUpdate": false,
+      "internalTags": [],
+      "linkedTicketStatus": "NOT_LINKED"
+    },
+    {
+      "key": "80a11375-cc7f-4f77-94f7-16f223e63059",
+      "rule": "java:S1210",
+      "severity": "MINOR",
+      "component": "java-errors-benchmark:src/main/java/app/PersonRanking.java",
+      "project": "java-errors-benchmark",
+      "line": 18,
+      "hash": "774f7e969e2354e3c984b89b541adc46",
+      "textRange": {
+        "startLine": 18,
+        "endLine": 18,
+        "startOffset": 19,
+        "endOffset": 28
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Override \"equals(Object obj)\" to comply with the contract of the \"compareTo(T o)\" method.",
+      "effort": "15min",
+      "debt": "15min",
+      "author": "",
+      "tags": [],
+      "creationDate": "2026-08-09T15:42:41+0000",
+      "updateDate": "2026-08-09T15:42:41+0000",
+      "type": "CODE_SMELL",
+      "scope": "MAIN",
+      "quickFixAvailable": false,
+      "messageFormattings": [],
+      "codeVariants": [],
+      "cleanCodeAttribute": "COMPLETE",
+      "cleanCodeAttributeCategory": "INTENTIONAL",
+      "impacts": [
+        {
+          "softwareQuality": "MAINTAINABILITY",
+          "severity": "LOW"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "prioritizedRule": false,
+      "fromSonarQubeUpdate": false,
+      "internalTags": [],
+      "linkedTicketStatus": "NOT_LINKED"
+    },
+    {
+      "key": "410cffe7-9c20-4d27-92f8-3da4db1056a5",
+      "rule": "java:S106",
+      "severity": "MAJOR",
+      "component": "java-errors-benchmark:src/main/java/app/PersonRegistry.java",
+      "project": "java-errors-benchmark",
+      "line": 8,
+      "hash": "4816dce22675daddb6b6c9b1950b9e12",
+      "textRange": {
+        "startLine": 8,
+        "endLine": 8,
+        "startOffset": 8,
+        "endOffset": 18
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Replace this use of System.out by a logger.",
+      "effort": "10min",
+      "debt": "10min",
+      "author": "",
+      "tags": [
+        "bad-practice",
+        "cert"
+      ],
+      "creationDate": "2026-08-09T15:42:41+0000",
+      "updateDate": "2026-08-09T15:42:41+0000",
+      "type": "CODE_SMELL",
+      "scope": "MAIN",
+      "quickFixAvailable": false,
+      "messageFormattings": [],
+      "codeVariants": [],
+      "cleanCodeAttribute": "MODULAR",
+      "cleanCodeAttributeCategory": "ADAPTABLE",
+      "impacts": [
+        {
+          "softwareQuality": "MAINTAINABILITY",
+          "severity": "MEDIUM"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "prioritizedRule": false,
+      "fromSonarQubeUpdate": false,
+      "internalTags": [],
+      "linkedTicketStatus": "NOT_LINKED"
+    },
+    {
+      "key": "f85aef7f-2bc7-4d7f-a6d1-62a4ce86069b",
+      "rule": "java:S1206",
+      "severity": "MINOR",
+      "component": "java-errors-benchmark:src/main/java/app/PersonRegistry.java",
+      "project": "java-errors-benchmark",
+      "line": 21,
+      "hash": "cee6f6678074fba215a39e57c8651f93",
+      "textRange": {
+        "startLine": 21,
+        "endLine": 21,
+        "startOffset": 23,
+        "endOffset": 29
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "This class overrides \"equals()\" and should therefore also override \"hashCode()\".",
+      "effort": "15min",
+      "debt": "15min",
+      "author": "",
+      "tags": [
+        "cwe",
+        "cert"
+      ],
+      "creationDate": "2026-08-09T15:42:41+0000",
+      "updateDate": "2026-08-09T15:42:41+0000",
+      "type": "BUG",
+      "scope": "MAIN",
+      "quickFixAvailable": false,
+      "messageFormattings": [],
+      "codeVariants": [],
+      "cleanCodeAttribute": "COMPLETE",
+      "cleanCodeAttributeCategory": "INTENTIONAL",
+      "impacts": [
+        {
+          "softwareQuality": "RELIABILITY",
+          "severity": "LOW"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "prioritizedRule": false,
+      "fromSonarQubeUpdate": false,
+      "internalTags": [],
+      "linkedTicketStatus": "NOT_LINKED"
+    },
+    {
+      "key": "16ef79dd-2007-4822-9f4b-1cb01f1bd6ca",
+      "rule": "java:S1764",
+      "severity": "MAJOR",
+      "component": "java-errors-benchmark:src/main/java/app/PersonRegistry.java",
+      "project": "java-errors-benchmark",
+      "line": 29,
+      "hash": "11abaaffa24fa3b898a2556a4a67e3f7",
+      "textRange": {
+        "startLine": 29,
+        "endLine": 29,
+        "startOffset": 52,
+        "endOffset": 56
+      },
+      "flows": [
+        {
+          "locations": [
+            {
+              "component": "java-errors-benchmark:src/main/java/app/PersonRegistry.java",
+              "textRange": {
+                "startLine": 29,
+                "endLine": 29,
+                "startOffset": 40,
+                "endOffset": 44
+              },
+              "msg": "Identical sub-expression.",
+              "msgFormattings": []
+            }
+          ]
+        }
+      ],
+      "status": "OPEN",
+      "message": "Correct one of the identical sub-expressions on both sides of equals.",
+      "effort": "2min",
+      "debt": "2min",
+      "author": "",
+      "tags": [
+        "cert"
+      ],
+      "creationDate": "2026-08-09T15:42:41+0000",
+      "updateDate": "2026-08-09T15:42:41+0000",
+      "type": "BUG",
+      "scope": "MAIN",
+      "quickFixAvailable": false,
+      "messageFormattings": [],
+      "codeVariants": [],
+      "cleanCodeAttribute": "LOGICAL",
+      "cleanCodeAttributeCategory": "INTENTIONAL",
+      "impacts": [
+        {
+          "softwareQuality": "RELIABILITY",
+          "severity": "MEDIUM"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "prioritizedRule": false,
+      "fromSonarQubeUpdate": false,
+      "internalTags": [],
+      "linkedTicketStatus": "NOT_LINKED"
+    },
+    {
+      "key": "3e1402ec-e6c1-46ab-93d3-b64c2cdc529f",
+      "rule": "java:S106",
+      "severity": "MAJOR",
+      "component": "java-errors-benchmark:src/main/java/app/ProfileReader.java",
+      "project": "java-errors-benchmark",
+      "line": 18,
+      "hash": "f5806d70981a5f0787959774423f6c26",
+      "textRange": {
+        "startLine": 18,
+        "endLine": 18,
+        "startOffset": 8,
+        "endOffset": 18
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Replace this use of System.out by a logger.",
+      "effort": "10min",
+      "debt": "10min",
+      "author": "",
+      "tags": [
+        "bad-practice",
+        "cert"
+      ],
+      "creationDate": "2026-08-09T15:42:41+0000",
+      "updateDate": "2026-08-09T15:42:41+0000",
+      "type": "CODE_SMELL",
+      "scope": "MAIN",
+      "quickFixAvailable": false,
+      "messageFormattings": [],
+      "codeVariants": [],
+      "cleanCodeAttribute": "MODULAR",
+      "cleanCodeAttributeCategory": "ADAPTABLE",
+      "impacts": [
+        {
+          "softwareQuality": "MAINTAINABILITY",
+          "severity": "MEDIUM"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "prioritizedRule": false,
+      "fromSonarQubeUpdate": false,
+      "internalTags": [],
+      "linkedTicketStatus": "NOT_LINKED"
+    },
+    {
+      "key": "409e1547-2ef2-490b-98ad-3f22ee08620b",
+      "rule": "java:S106",
+      "severity": "MAJOR",
+      "component": "java-errors-benchmark:src/main/java/app/RangeValidator.java",
+      "project": "java-errors-benchmark",
+      "line": 5,
+      "hash": "54b9cc68f066ff31fa5a327b038ea4fb",
+      "textRange": {
+        "startLine": 5,
+        "endLine": 5,
+        "startOffset": 8,
+        "endOffset": 18
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Replace this use of System.out by a logger.",
+      "effort": "10min",
+      "debt": "10min",
+      "author": "",
+      "tags": [
+        "bad-practice",
+        "cert"
+      ],
+      "creationDate": "2026-08-09T15:42:41+0000",
+      "updateDate": "2026-08-09T15:42:41+0000",
+      "type": "CODE_SMELL",
+      "scope": "MAIN",
+      "quickFixAvailable": false,
+      "messageFormattings": [],
+      "codeVariants": [],
+      "cleanCodeAttribute": "MODULAR",
+      "cleanCodeAttributeCategory": "ADAPTABLE",
+      "impacts": [
+        {
+          "softwareQuality": "MAINTAINABILITY",
+          "severity": "MEDIUM"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "prioritizedRule": false,
+      "fromSonarQubeUpdate": false,
+      "internalTags": [],
+      "linkedTicketStatus": "NOT_LINKED"
+    },
+    {
+      "key": "165b0df1-0cac-491d-be27-ea815b2795b9",
+      "rule": "java:S106",
+      "severity": "MAJOR",
+      "component": "java-errors-benchmark:src/main/java/app/RangeValidator.java",
+      "project": "java-errors-benchmark",
+      "line": 6,
+      "hash": "f0c9e92cb241478541beeb6e3f09bb19",
+      "textRange": {
+        "startLine": 6,
+        "endLine": 6,
+        "startOffset": 8,
+        "endOffset": 18
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Replace this use of System.out by a logger.",
+      "effort": "10min",
+      "debt": "10min",
+      "author": "",
+      "tags": [
+        "bad-practice",
+        "cert"
+      ],
+      "creationDate": "2026-08-09T15:42:41+0000",
+      "updateDate": "2026-08-09T15:42:41+0000",
+      "type": "CODE_SMELL",
+      "scope": "MAIN",
+      "quickFixAvailable": false,
+      "messageFormattings": [],
+      "codeVariants": [],
+      "cleanCodeAttribute": "MODULAR",
+      "cleanCodeAttributeCategory": "ADAPTABLE",
+      "impacts": [
+        {
+          "softwareQuality": "MAINTAINABILITY",
+          "severity": "MEDIUM"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "prioritizedRule": false,
+      "fromSonarQubeUpdate": false,
+      "internalTags": [],
+      "linkedTicketStatus": "NOT_LINKED"
+    },
+    {
+      "key": "825f8fe3-770b-4b3b-b7b0-736e4ded027d",
+      "rule": "java:S106",
+      "severity": "MAJOR",
+      "component": "java-errors-benchmark:src/main/java/app/RangeValidator.java",
+      "project": "java-errors-benchmark",
+      "line": 7,
+      "hash": "1ca9151681b3c0ee6fe585a00c69cb47",
+      "textRange": {
+        "startLine": 7,
+        "endLine": 7,
+        "startOffset": 8,
+        "endOffset": 18
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Replace this use of System.out by a logger.",
+      "effort": "10min",
+      "debt": "10min",
+      "author": "",
+      "tags": [
+        "bad-practice",
+        "cert"
+      ],
+      "creationDate": "2026-08-09T15:42:41+0000",
+      "updateDate": "2026-08-09T15:42:41+0000",
+      "type": "CODE_SMELL",
+      "scope": "MAIN",
+      "quickFixAvailable": false,
+      "messageFormattings": [],
+      "codeVariants": [],
+      "cleanCodeAttribute": "MODULAR",
+      "cleanCodeAttributeCategory": "ADAPTABLE",
+      "impacts": [
+        {
+          "softwareQuality": "MAINTAINABILITY",
+          "severity": "MEDIUM"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "prioritizedRule": false,
+      "fromSonarQubeUpdate": false,
+      "internalTags": [],
+      "linkedTicketStatus": "NOT_LINKED"
+    },
+    {
+      "key": "498a28d8-d713-47bb-9d07-dab79865e0e8",
+      "rule": "java:S106",
+      "severity": "MAJOR",
+      "component": "java-errors-benchmark:src/main/java/app/ScoreResolver.java",
+      "project": "java-errors-benchmark",
+      "line": 5,
+      "hash": "06ffc901c4acf956a08845ae7c95334e",
+      "textRange": {
+        "startLine": 5,
+        "endLine": 5,
+        "startOffset": 8,
+        "endOffset": 18
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Replace this use of System.out by a logger.",
+      "effort": "10min",
+      "debt": "10min",
+      "author": "",
+      "tags": [
+        "bad-practice",
+        "cert"
+      ],
+      "creationDate": "2026-08-09T15:42:41+0000",
+      "updateDate": "2026-08-09T15:42:41+0000",
+      "type": "CODE_SMELL",
+      "scope": "MAIN",
+      "quickFixAvailable": false,
+      "messageFormattings": [],
+      "codeVariants": [],
+      "cleanCodeAttribute": "MODULAR",
+      "cleanCodeAttributeCategory": "ADAPTABLE",
+      "impacts": [
+        {
+          "softwareQuality": "MAINTAINABILITY",
+          "severity": "MEDIUM"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "prioritizedRule": false,
+      "fromSonarQubeUpdate": false,
+      "internalTags": [],
+      "linkedTicketStatus": "NOT_LINKED"
+    },
+    {
+      "key": "7a15091b-ad50-4f4c-a1b1-e688b63c6f9f",
+      "rule": "java:S106",
+      "severity": "MAJOR",
+      "component": "java-errors-benchmark:src/main/java/app/SquareCalculator.java",
+      "project": "java-errors-benchmark",
+      "line": 8,
+      "hash": "a6a1780aaf5219906eacc6f8141251e1",
+      "textRange": {
+        "startLine": 8,
+        "endLine": 8,
+        "startOffset": 8,
+        "endOffset": 18
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Replace this use of System.out by a logger.",
+      "effort": "10min",
+      "debt": "10min",
+      "author": "",
+      "tags": [
+        "bad-practice",
+        "cert"
+      ],
+      "creationDate": "2026-08-09T15:42:41+0000",
+      "updateDate": "2026-08-09T15:42:41+0000",
+      "type": "CODE_SMELL",
+      "scope": "MAIN",
+      "quickFixAvailable": false,
+      "messageFormattings": [],
+      "codeVariants": [],
+      "cleanCodeAttribute": "MODULAR",
+      "cleanCodeAttributeCategory": "ADAPTABLE",
+      "impacts": [
+        {
+          "softwareQuality": "MAINTAINABILITY",
+          "severity": "MEDIUM"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "prioritizedRule": false,
+      "fromSonarQubeUpdate": false,
+      "internalTags": [],
+      "linkedTicketStatus": "NOT_LINKED"
+    },
+    {
+      "key": "1d0771e7-2149-467b-a66b-9d2ec2192548",
+      "rule": "java:S1317",
+      "severity": "MAJOR",
+      "component": "java-errors-benchmark:src/main/java/app/TextAssembler.java",
+      "project": "java-errors-benchmark",
+      "line": 5,
+      "hash": "ca83ab73c4007dde7179419eaad8ba66",
+      "textRange": {
+        "startLine": 5,
+        "endLine": 5,
+        "startOffset": 45,
+        "endOffset": 48
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Replace the constructor character parameter 'a' with string parameter \"a\".",
+      "effort": "5min",
+      "debt": "5min",
+      "author": "",
+      "tags": [
+        "pitfall"
+      ],
+      "creationDate": "2026-08-09T15:42:41+0000",
+      "updateDate": "2026-08-09T15:42:41+0000",
+      "type": "BUG",
+      "scope": "MAIN",
+      "quickFixAvailable": false,
+      "messageFormattings": [],
+      "codeVariants": [],
+      "cleanCodeAttribute": "CLEAR",
+      "cleanCodeAttributeCategory": "INTENTIONAL",
+      "impacts": [
+        {
+          "softwareQuality": "RELIABILITY",
+          "severity": "MEDIUM"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "prioritizedRule": false,
+      "fromSonarQubeUpdate": false,
+      "internalTags": [],
+      "linkedTicketStatus": "NOT_LINKED"
+    },
+    {
+      "key": "ad88a2fe-7da4-4439-a0f8-c8e3be6c6464",
+      "rule": "java:S106",
+      "severity": "MAJOR",
+      "component": "java-errors-benchmark:src/main/java/app/TextAssembler.java",
+      "project": "java-errors-benchmark",
+      "line": 7,
+      "hash": "5cf283d2f4ffff06b332d956ae80584e",
+      "textRange": {
+        "startLine": 7,
+        "endLine": 7,
+        "startOffset": 8,
+        "endOffset": 18
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Replace this use of System.out by a logger.",
+      "effort": "10min",
+      "debt": "10min",
+      "author": "",
+      "tags": [
+        "bad-practice",
+        "cert"
+      ],
+      "creationDate": "2026-08-09T15:42:41+0000",
+      "updateDate": "2026-08-09T15:42:41+0000",
+      "type": "CODE_SMELL",
+      "scope": "MAIN",
+      "quickFixAvailable": false,
+      "messageFormattings": [],
+      "codeVariants": [],
+      "cleanCodeAttribute": "MODULAR",
+      "cleanCodeAttributeCategory": "ADAPTABLE",
+      "impacts": [
+        {
+          "softwareQuality": "MAINTAINABILITY",
+          "severity": "MEDIUM"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "prioritizedRule": false,
+      "fromSonarQubeUpdate": false,
+      "internalTags": [],
+      "linkedTicketStatus": "NOT_LINKED"
+    },
+    {
+      "key": "e57fce49-c917-4ee8-8470-5130e1d11e88",
+      "rule": "java:S2201",
+      "severity": "MAJOR",
+      "component": "java-errors-benchmark:src/main/java/app/TextTrimmer.java",
+      "project": "java-errors-benchmark",
+      "line": 6,
+      "hash": "39a921796ba30be00c1d6535639e92a9",
+      "textRange": {
+        "startLine": 6,
+        "endLine": 6,
+        "startOffset": 10,
+        "endOffset": 19
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "The return value of \"substring\" must be used.",
+      "effort": "10min",
+      "debt": "10min",
+      "author": "",
+      "tags": [
+        "cert"
+      ],
+      "creationDate": "2026-08-09T15:42:41+0000",
+      "updateDate": "2026-08-09T15:42:41+0000",
+      "type": "BUG",
+      "scope": "MAIN",
+      "quickFixAvailable": false,
+      "messageFormattings": [],
+      "codeVariants": [],
+      "cleanCodeAttribute": "LOGICAL",
+      "cleanCodeAttributeCategory": "INTENTIONAL",
+      "impacts": [
+        {
+          "softwareQuality": "RELIABILITY",
+          "severity": "MEDIUM"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "prioritizedRule": false,
+      "fromSonarQubeUpdate": false,
+      "internalTags": [],
+      "linkedTicketStatus": "NOT_LINKED"
+    },
+    {
+      "key": "d6e1b2ad-d58e-46e3-8f47-048694822875",
+      "rule": "java:S106",
+      "severity": "MAJOR",
+      "component": "java-errors-benchmark:src/main/java/app/TextTrimmer.java",
+      "project": "java-errors-benchmark",
+      "line": 7,
+      "hash": "a70b9d2d0f2ff2e11f4a406950989fa7",
+      "textRange": {
+        "startLine": 7,
+        "endLine": 7,
+        "startOffset": 8,
+        "endOffset": 18
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Replace this use of System.out by a logger.",
+      "effort": "10min",
+      "debt": "10min",
+      "author": "",
+      "tags": [
+        "bad-practice",
+        "cert"
+      ],
+      "creationDate": "2026-08-09T15:42:41+0000",
+      "updateDate": "2026-08-09T15:42:41+0000",
+      "type": "CODE_SMELL",
+      "scope": "MAIN",
+      "quickFixAvailable": false,
+      "messageFormattings": [],
+      "codeVariants": [],
+      "cleanCodeAttribute": "MODULAR",
+      "cleanCodeAttributeCategory": "ADAPTABLE",
+      "impacts": [
+        {
+          "softwareQuality": "MAINTAINABILITY",
+          "severity": "MEDIUM"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "prioritizedRule": false,
+      "fromSonarQubeUpdate": false,
+      "internalTags": [],
+      "linkedTicketStatus": "NOT_LINKED"
+    },
+    {
+      "key": "bae60148-f59c-4536-bef5-b50334ba4661",
+      "rule": "java:S106",
+      "severity": "MAJOR",
+      "component": "java-errors-benchmark:src/main/java/app/TypeNameFormatter.java",
+      "project": "java-errors-benchmark",
+      "line": 14,
+      "hash": "7e17601212f811ebea3c4b0225e5c55a",
+      "textRange": {
+        "startLine": 14,
+        "endLine": 14,
+        "startOffset": 12,
+        "endOffset": 22
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Replace this use of System.out by a logger.",
+      "effort": "10min",
+      "debt": "10min",
+      "author": "",
+      "tags": [
+        "bad-practice",
+        "cert"
+      ],
+      "creationDate": "2026-08-09T15:42:41+0000",
+      "updateDate": "2026-08-09T15:42:41+0000",
+      "type": "CODE_SMELL",
+      "scope": "MAIN",
+      "quickFixAvailable": false,
+      "messageFormattings": [],
+      "codeVariants": [],
+      "cleanCodeAttribute": "MODULAR",
+      "cleanCodeAttributeCategory": "ADAPTABLE",
+      "impacts": [
+        {
+          "softwareQuality": "MAINTAINABILITY",
+          "severity": "MEDIUM"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "prioritizedRule": false,
+      "fromSonarQubeUpdate": false,
+      "internalTags": [],
+      "linkedTicketStatus": "NOT_LINKED"
+    },
+    {
+      "key": "72b48778-425c-4e4b-8395-f6a918e1950c",
+      "rule": "java:S3984",
+      "severity": "MAJOR",
+      "component": "java-errors-benchmark:src/main/java/app/ValueProcessor.java",
+      "project": "java-errors-benchmark",
+      "line": 11,
+      "hash": "79511db4e34f994d9b0f2fef072651e3",
+      "textRange": {
+        "startLine": 11,
+        "endLine": 11,
+        "startOffset": 12,
+        "endOffset": 61
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Throw this exception or remove this useless statement.",
+      "effort": "2min",
+      "debt": "2min",
+      "author": "",
+      "tags": [
+        "error-handling"
+      ],
+      "creationDate": "2026-08-09T15:42:41+0000",
+      "updateDate": "2026-08-09T15:42:41+0000",
+      "type": "BUG",
+      "scope": "MAIN",
+      "quickFixAvailable": true,
+      "messageFormattings": [],
+      "codeVariants": [],
+      "cleanCodeAttribute": "CLEAR",
+      "cleanCodeAttributeCategory": "INTENTIONAL",
+      "impacts": [
+        {
+          "softwareQuality": "RELIABILITY",
+          "severity": "MEDIUM"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "prioritizedRule": false,
+      "fromSonarQubeUpdate": false,
+      "internalTags": [],
+      "linkedTicketStatus": "NOT_LINKED"
+    },
+    {
+      "key": "bb82c7fa-0565-462d-8172-f0b6ba8530ba",
+      "rule": "java:S106",
+      "severity": "MAJOR",
+      "component": "java-errors-benchmark:src/main/java/app/ValueProcessor.java",
+      "project": "java-errors-benchmark",
+      "line": 13,
+      "hash": "79561dd59de5f2aa2ffda31e0a437ea4",
+      "textRange": {
+        "startLine": 13,
+        "endLine": 13,
+        "startOffset": 8,
+        "endOffset": 18
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Replace this use of System.out by a logger.",
+      "effort": "10min",
+      "debt": "10min",
+      "author": "",
+      "tags": [
+        "bad-practice",
+        "cert"
+      ],
+      "creationDate": "2026-08-09T15:42:41+0000",
+      "updateDate": "2026-08-09T15:42:41+0000",
+      "type": "CODE_SMELL",
+      "scope": "MAIN",
+      "quickFixAvailable": false,
+      "messageFormattings": [],
+      "codeVariants": [],
+      "cleanCodeAttribute": "MODULAR",
+      "cleanCodeAttributeCategory": "ADAPTABLE",
+      "impacts": [
+        {
+          "softwareQuality": "MAINTAINABILITY",
+          "severity": "MEDIUM"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "prioritizedRule": false,
+      "fromSonarQubeUpdate": false,
+      "internalTags": [],
+      "linkedTicketStatus": "NOT_LINKED"
+    },
+    {
+      "key": "795f0c27-74c9-4923-a560-71c84485c065",
+      "rule": "java:S2757",
+      "severity": "MAJOR",
+      "component": "java-errors-benchmark:src/main/java/app/ValueReporter.java",
+      "project": "java-errors-benchmark",
+      "line": 11,
+      "hash": "a064e54ee723ef51c39f0da9386e5109",
+      "textRange": {
+        "startLine": 11,
+        "endLine": 11,
+        "startOffset": 10,
+        "endOffset": 12
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Was \"+=\" meant instead?",
+      "effort": "2min",
+      "debt": "2min",
+      "author": "",
+      "tags": [],
+      "creationDate": "2026-08-09T15:42:41+0000",
+      "updateDate": "2026-08-09T15:42:41+0000",
+      "type": "BUG",
+      "scope": "MAIN",
+      "quickFixAvailable": false,
+      "messageFormattings": [],
+      "codeVariants": [],
+      "cleanCodeAttribute": "CLEAR",
+      "cleanCodeAttributeCategory": "INTENTIONAL",
+      "impacts": [
+        {
+          "softwareQuality": "RELIABILITY",
+          "severity": "MEDIUM"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "prioritizedRule": false,
+      "fromSonarQubeUpdate": false,
+      "internalTags": [],
+      "linkedTicketStatus": "NOT_LINKED"
+    },
+    {
+      "key": "f64189fe-4b4b-4175-a74b-c723646b7926",
+      "rule": "java:S106",
+      "severity": "MAJOR",
+      "component": "java-errors-benchmark:src/main/java/app/ValueReporter.java",
+      "project": "java-errors-benchmark",
+      "line": 12,
+      "hash": "f26cc93339263f6710e020ae4b007c02",
+      "textRange": {
+        "startLine": 12,
+        "endLine": 12,
+        "startOffset": 8,
+        "endOffset": 18
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Replace this use of System.out by a logger.",
+      "effort": "10min",
+      "debt": "10min",
+      "author": "",
+      "tags": [
+        "bad-practice",
+        "cert"
+      ],
+      "creationDate": "2026-08-09T15:42:41+0000",
+      "updateDate": "2026-08-09T15:42:41+0000",
+      "type": "CODE_SMELL",
+      "scope": "MAIN",
+      "quickFixAvailable": false,
+      "messageFormattings": [],
+      "codeVariants": [],
+      "cleanCodeAttribute": "MODULAR",
+      "cleanCodeAttributeCategory": "ADAPTABLE",
+      "impacts": [
+        {
+          "softwareQuality": "MAINTAINABILITY",
+          "severity": "MEDIUM"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "prioritizedRule": false,
+      "fromSonarQubeUpdate": false,
+      "internalTags": [],
+      "linkedTicketStatus": "NOT_LINKED"
+    },
+    {
+      "key": "dd53b0dc-918e-492b-bff0-71c42c60cf5f",
+      "rule": "java:S106",
+      "severity": "MAJOR",
+      "component": "java-errors-benchmark:src/main/java/app/ValueReporter.java",
+      "project": "java-errors-benchmark",
+      "line": 18,
+      "hash": "160a531a10dc1db3809b5e6976fba3c4",
+      "textRange": {
+        "startLine": 18,
+        "endLine": 18,
+        "startOffset": 8,
+        "endOffset": 18
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Replace this use of System.out by a logger.",
+      "effort": "10min",
+      "debt": "10min",
+      "author": "",
+      "tags": [
+        "bad-practice",
+        "cert"
+      ],
+      "creationDate": "2026-08-09T15:42:41+0000",
+      "updateDate": "2026-08-09T15:42:41+0000",
+      "type": "CODE_SMELL",
+      "scope": "MAIN",
+      "quickFixAvailable": false,
+      "messageFormattings": [],
+      "codeVariants": [],
+      "cleanCodeAttribute": "MODULAR",
+      "cleanCodeAttributeCategory": "ADAPTABLE",
+      "impacts": [
+        {
+          "softwareQuality": "MAINTAINABILITY",
+          "severity": "MEDIUM"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "prioritizedRule": false,
+      "fromSonarQubeUpdate": false,
+      "internalTags": [],
+      "linkedTicketStatus": "NOT_LINKED"
+    }
+  ]
+}

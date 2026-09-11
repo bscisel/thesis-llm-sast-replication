@@ -1,0 +1,1078 @@
+{
+  "model": "claude-sonnet-5",
+  "tool": "sonarqube",
+  "num_runs": 3,
+  "runs_per_invocation": 3,
+  "source_root": "java-errors-benchmark",
+  "call_parameters": {
+    "temperature": null,
+    "concurrency": 3,
+    "response_format": "json_schema",
+    "max_tokens": 8192,
+    "max_retries": 6,
+    "base_url": "https://api.anthropic.com"
+  },
+  "system_prompt_variant": "benchmark",
+  "system_prompt_sha256": "b5b634e0a9109c59",
+  "user_prompt_sha256": "233249fc03b8f699",
+  "timestamp": "2026-08-09T18:29:41.321448+00:00",
+  "updated_at": "2026-08-09T18:29:41.321448+00:00",
+  "findings": [
+    {
+      "finding_id": 0,
+      "type": "java:S2251",
+      "sourcefile": "CountdownPrinter.java",
+      "start_line": "5",
+      "message": "\"i\" is incremented and will never reach \"stop condition\".",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The loop starts at i=5 with condition i>=0 and increments i each iteration, so i only grows larger and the condition i>=0 will always remain true, causing an infinite loop that never terminates. This matches exactly what the rule warns about: the increment moves away from, not toward, the stop condition.",
+          "is_true_positive": true,
+          "confidence": 0.97,
+          "category": "CORRECTNESS",
+          "issue_signature": "loop increment moves away from termination condition",
+          "developer_explanation": "The for-loop increments i instead of decrementing it, so the condition i >= 0 is never falsified and the loop runs forever, printing increasing numbers indefinitely. Change i++ to i-- so the loop counts down to 0 and terminates as intended.",
+          "run": 1,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 679,
+            "output_tokens": 339,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 6.126
+        },
+        {
+          "reasoning": "The loop initializes i=5, increments i on each iteration, and continues while i>=0; since i only grows from 5 upward, the condition i>=0 is always true and the loop never terminates, producing an infinite loop instead of the apparent countdown intent. This matches the tool's claim exactly.",
+          "is_true_positive": true,
+          "confidence": 0.98,
+          "category": "CORRECTNESS",
+          "issue_signature": "loop counter increments away from its termination condition",
+          "developer_explanation": "This for-loop increments i but checks for i >= 0, so the condition will always be true and the loop will never stop, causing an infinite loop that just keeps printing increasing numbers. Since the class name suggests a countdown, you likely meant to decrement i (i--) instead of incrementing it.",
+          "run": 2,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 679,
+            "output_tokens": 356,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 5.791
+        },
+        {
+          "reasoning": "The loop starts at i=5 with condition i>=0 and increments i (i++), so i only grows larger and the condition i>=0 remains true forever, making the loop infinite. This is exactly the pattern the rule describes: an incrementing variable that can never satisfy a decreasing stop condition, since it should have been decremented (i--) to terminate.",
+          "is_true_positive": true,
+          "confidence": 0.97,
+          "category": "CORRECTNESS",
+          "issue_signature": "loop variable incremented instead of decremented never meets termination condition",
+          "developer_explanation": "The for loop increments i but the exit condition requires i to become negative, so the loop never terminates and will print numbers forever, eventually overflowing. You likely meant to use i-- instead of i++ to count down to zero.",
+          "run": 3,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 679,
+            "output_tokens": 260,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 4.679
+        }
+      ]
+    },
+    {
+      "finding_id": 1,
+      "type": "java:S2189",
+      "sourcefile": "CountdownPrinter.java",
+      "start_line": "5",
+      "message": "Correct this loop's end condition.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The loop initializes i=5 and increments i (i++) while the condition is i>=0, which will always be true once i is non-negative and increasing, so the loop never terminates and prints ever-increasing integers instead of counting down. This is a genuine infinite loop caused by an incorrect increment/decrement direction relative to the loop's end condition.",
+          "is_true_positive": true,
+          "confidence": 0.97,
+          "category": "CORRECTNESS",
+          "issue_signature": "infinite loop from wrong increment direction",
+          "developer_explanation": "The loop increments i instead of decrementing it, so the condition i >= 0 is never false and the loop runs forever, printing increasing numbers instead of counting down from 5 to 0. Change i++ to i-- to fix the countdown behavior.",
+          "run": 1,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 687,
+            "output_tokens": 359,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 6.002
+        },
+        {
+          "reasoning": "The loop initializes i=5, continues while i>=0, but increments i (i++) instead of decrementing it, so i only grows larger and the condition i>=0 remains true forever, producing an infinite loop rather than a countdown from 5 to 0. This is exactly the kind of malformed loop end condition the rule targets, and the code will never terminate as intended.",
+          "is_true_positive": true,
+          "confidence": 0.97,
+          "category": "CORRECTNESS",
+          "issue_signature": "infinite loop due to increment instead of decrement",
+          "developer_explanation": "The loop increments i instead of decrementing it, so the condition i >= 0 is never false and the loop runs forever instead of counting down from 5 to 0. Change i++ to i-- to fix the countdown behavior.",
+          "run": 2,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 687,
+            "output_tokens": 353,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 5.31
+        },
+        {
+          "reasoning": "The loop initializes i=5, continues while i>=0, but increments i on each iteration instead of decrementing, so i only grows larger and the condition i>=0 is always true, producing an infinite loop instead of a countdown. This is a genuine logic error inconsistent with the intended countdown behavior.",
+          "is_true_positive": true,
+          "confidence": 0.97,
+          "category": "CORRECTNESS",
+          "issue_signature": "infinite loop due to wrong loop increment direction",
+          "developer_explanation": "The loop is supposed to count down from 5 to 0, but it uses i++ instead of i--, so i keeps increasing and the condition i>=0 never becomes false. This causes an infinite loop that prints ever-increasing numbers instead of counting down. Change the increment to i-- to fix the countdown.",
+          "run": 3,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 687,
+            "output_tokens": 359,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 4.988
+        }
+      ]
+    },
+    {
+      "finding_id": 2,
+      "type": "java:S6880",
+      "sourcefile": "InputRouter.java",
+      "start_line": "13",
+      "message": "Replace the chain of if/else with a switch expression.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The method body contains a sequence of equality tests on the same variable `input` (values 1, 2, 3, 4, else); although the missing `else` before line 13 causes the code to be parsed as two separate if/else structures (which is a distinct correctness bug not addressed by this rule), the code is still fundamentally a repetitive equality-based conditional chain on a single discriminant that is naturally expressible as a switch expression, and the tool's suggestion to refactor accordingly remains valid advice for readability and maintainability. The rule is about code style/refactoring, not about the separate behavioral bug, and its claim that this if/else pattern is a candidate for a switch expression is materially correct for the shown code.",
+          "is_true_positive": true,
+          "confidence": 0.6,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "repetitive if-else chain that could be a switch expression",
+          "developer_explanation": "The series of equality checks against the same variable (input == 1, == 2, == 3, == 4, else) is exactly the kind of repetitive conditional structure that reads more clearly and is easier to maintain as a switch expression. Converting it would also make the control flow explicit and avoid subtle bugs like the missing 'else' currently splitting this into two separate if-chains. Consider rewriting the method using a switch expression on `input`.",
+          "run": 1,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 848,
+            "output_tokens": 6306,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 68.986
+        },
+        {
+          "reasoning": "Because of the missing \"else\" before \"if (input == 3)\" on line 13, the parser treats lines 13–19 as an independent if/else-if/else chain (separate from the block on lines 9–12), and that chain does test the same variable with equality comparisons across three branches, which is exactly the pattern S6880 targets as convertible to a switch expression. The tool's claim about the shape of the code at line 13 is accurate even though the surrounding code has an unrelated correctness bug (the missing else causes double execution for input 1 and 2) that this particular warning does not address.",
+          "is_true_positive": true,
+          "confidence": 0.72,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "if-else chain suitable for switch expression",
+          "developer_explanation": "The block starting at that line is a genuine if / else-if / else chain that repeatedly tests the same variable, which is exactly the kind of code Java 21 switch expressions are meant to simplify and make safer against fall-through mistakes. Converting it to a switch expression would improve readability and also incidentally expose the nearby missing 'else' bug that currently makes cases 1 and 2 run extra code.",
+          "run": 2,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 848,
+            "output_tokens": 3228,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 36.474
+        },
+        {
+          "reasoning": "The flagged line 13 sits inside an if/else-if chain testing the same variable `input` against several constant values, which is exactly the pattern S6880 targets for conversion into a switch expression; the suggestion is materially valid for readability regardless of the missing 'else' bug at that line, which is a separate correctness issue not addressed by this rule.",
+          "is_true_positive": true,
+          "confidence": 0.75,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "if/else chain that could be a switch expression",
+          "developer_explanation": "This chain of if/else-if statements testing the same variable against several literal values is a good candidate for a switch expression, which would be more concise and readable. Note separately that line 13 is missing an 'else' keyword, which breaks the intended single chain into two independent if-statements — that's a real bug worth fixing too, but it's not what this particular warning is about.",
+          "run": 3,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 848,
+            "output_tokens": 1172,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 12.612
+        }
+      ]
+    },
+    {
+      "finding_id": 3,
+      "type": "java:S3972",
+      "sourcefile": "InputRouter.java",
+      "start_line": "13",
+      "message": "Move this \"if\" to a new line or add the missing \"else\".",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "Line 13 closes the first if/else-if chain with a brace and then starts a completely independent if statement on the same line, which visually resembles an else-if but is not one. This causes unintended behavior: when input==1 or input==2, the code still falls through the second if-else chain and prints the default message in addition to the matched case. The warning accurately identifies this suspicious same-line juxtaposition of a closing brace and a new if, which is exactly the ambiguous/buggy pattern the rule targets.",
+          "is_true_positive": true,
+          "confidence": 0.9,
+          "category": "CORRECTNESS",
+          "issue_signature": "if statement mistakenly written as separate chain instead of else-if",
+          "developer_explanation": "The closing brace and the next `if` are on the same line, making it look like part of the previous else-if chain when it is actually a separate, independent if-statement. As a result, when input is 1 or 2, the code still evaluates the second if/else chain and ends up printing the default message too. Add an explicit `else` (or move the `if` to its own line) so the control flow matches what was clearly intended.",
+          "run": 1,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 852,
+            "output_tokens": 927,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 11.854
+        },
+        {
+          "reasoning": "Line 13 shows \"} if (input == 3) {\" directly after the previous if-else chain's closing brace, without an \"else\" keyword — this makes it a brand new, independent if-statement rather than part of the else-if chain, even though the formatting on one line suggests otherwise. This creates a real correctness bug: for input==2, the first branch prints \"Processing data for input 2\", then the second independent if-chain evaluates false for 3 and 4 and falls into its own else, additionally printing \"Processing default data\" — two messages printed instead of one intended branch. The rule's claim that this is suspiciously formatted and likely missing an else is materially correct here and reflects an actual logic defect, not just a style nit.",
+          "is_true_positive": true,
+          "confidence": 0.92,
+          "category": "CORRECTNESS",
+          "issue_signature": "missing else creates unintended independent if chain",
+          "developer_explanation": "The line `} if (input == 3) {` looks like it continues the previous else-if chain, but because the `else` keyword is missing, it actually starts a brand-new, independent if-statement. As a result, when input equals 2, both the \"input 1/2\" branch and the second if-chain's default branch execute, printing two messages instead of one. Add the missing `else` so this becomes a proper `else if`, or put it on its own line to make the separation explicit and avoid misleading readers.",
+          "run": 2,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 852,
+            "output_tokens": 923,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 11.585
+        },
+        {
+          "reasoning": "Line 13 shows `} if (input == 3) {` placed directly on the closing brace of the prior if-else chain without an `else`, which SonarQube's S3972 flags as suspicious formatting that usually indicates a missing else. Tracing execution confirms this is a real bug: for input==1, the first if branch runs, but because there is no else linking it, control falls through to the second independent if-else chain starting at line 13, which then evaluates to the default branch, causing both 'Processing data for input 1' and 'Processing default data' to be printed. This is exactly the kind of latent correctness bug the rule is designed to catch, not merely a stylistic nit.",
+          "is_true_positive": true,
+          "confidence": 0.92,
+          "category": "CORRECTNESS",
+          "issue_signature": "missing else causes unintended fallthrough to independent if chain",
+          "developer_explanation": "The closing brace on line 13 is immediately followed by a new `if` instead of `else if`, so the two if-else chains are actually independent statements rather than one continuous chain. As a result, when input==1 matches the first branch, execution still falls through to evaluate the second if-else chain, which ends up also printing the default message. Add the missing `else` (or move the `if` to a new line and verify the logic) to restore the intended single chain of mutually exclusive branches.",
+          "run": 3,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 852,
+            "output_tokens": 1136,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 14.005
+        }
+      ]
+    },
+    {
+      "finding_id": 4,
+      "type": "java:S127",
+      "sourcefile": "MatrixNormalizer.java",
+      "start_line": "21",
+      "message": "Refactor the code in order to not assign to this loop counter from within the loop body.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The inner for loop at line 21 uses the outer loop's counter i in its condition and increment (`i < columns; i++`) instead of j, meaning the outer loop's counter is mutated from within the loop body (the nested loop), exactly the pattern the rule warns about. This is not just a style nit — it's an actual bug: j never advances, data[i][j] always reads data[i][0], and i is advanced improperly by the inner loop, causing rows to be skipped and the normalization logic to be broken.",
+          "is_true_positive": true,
+          "confidence": 0.9,
+          "category": "CORRECTNESS",
+          "issue_signature": "loop counter mutated inside nested loop body",
+          "developer_explanation": "In the inner loop, you wrote `for (int j = 0; i < columns; i++)` — this uses and increments the outer loop's counter i instead of j, so j never changes and i gets advanced incorrectly by the inner loop. This breaks the intended row/column iteration: only column 0 of each row is ever checked, and rows are skipped unpredictably. Fix the inner loop to use j in its condition and increment (`j < columns; j++`).",
+          "run": 1,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 1036,
+            "output_tokens": 1278,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 16.239
+        },
+        {
+          "reasoning": "The outer loop's counter variable i is reassigned (via i++) inside the nested for loop's update clause at line 21, which is part of the outer loop's body — this is exactly the pattern the rule flags. In this case the modification is not just a stylistic issue but reflects an actual bug (the inner loop should use and increment j, not i), causing incorrect array indexing and likely an infinite or malfunctioning loop.",
+          "is_true_positive": true,
+          "confidence": 0.9,
+          "category": "CORRECTNESS",
+          "issue_signature": "outer loop counter mutated inside nested loop body",
+          "developer_explanation": "In the inner for loop, you wrote `i < columns; i++` instead of `j < columns; j++`. This means the inner loop never advances its own counter j and instead mutates the outer loop's counter i, breaking the intended column iteration and causing incorrect or infinite looping behavior. Fix the inner loop header to use j for both the condition and increment.",
+          "run": 2,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 1036,
+            "output_tokens": 1255,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 15.035
+        },
+        {
+          "reasoning": "The inner loop at line 21 uses `i` in both its condition and increment clause instead of `j`, meaning the outer loop's counter `i` is being incremented inside the body of the outer loop via the inner loop's own increment step. This exactly matches the pattern the rule warns about—an outer loop counter modified from within its own loop body—and here it is not stylistic but a genuine bug: it causes rows to be skipped/processed incorrectly and terminates the outer loop prematurely. The evident intent was for the inner loop to iterate over `j` and `columns`, but the actual code manipulates `i`, producing wrong results.",
+          "is_true_positive": true,
+          "confidence": 0.93,
+          "category": "CORRECTNESS",
+          "issue_signature": "nested loop mistakenly mutates outer loop counter",
+          "developer_explanation": "The inner for-loop at line 21 uses `i` instead of `j` for its condition and increment (`i < columns; i++`), so it actually changes the outer loop's counter instead of iterating over columns. This causes rows to be processed incorrectly and the outer loop to end early, so not all matrix elements get normalized. Fix the inner loop to use `j < columns; j++` as intended.",
+          "run": 3,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 1036,
+            "output_tokens": 1285,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 15.236
+        }
+      ]
+    },
+    {
+      "finding_id": 5,
+      "type": "java:S128",
+      "sourcefile": "MenuHandler.java",
+      "start_line": "11",
+      "message": "End this switch case with an unconditional break, return or throw statement.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "Case 1 (line 11) prints \"User 1\" and then falls through into the default block, printing \"Invalid option\" as well, because there is no break, return, or throw before the default label. This is exactly the fall-through pattern the rule targets, and here it produces unintended, misleading output when userChoice is 1. The fix is straightforward: add a break after the println in case 1.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "switch case missing break causes fallthrough",
+          "developer_explanation": "The case 1 branch has no break statement, so execution falls through into the default block and prints both \"User 1\" and \"Invalid option\" even though choice 1 is valid. Add a break (or return) at the end of the case 1 block to prevent this unintended fall-through.",
+          "run": 1,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 784,
+            "output_tokens": 337,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 5.731
+        },
+        {
+          "reasoning": "Case 1 at line 11 prints \"User 1\" and then falls through into the default case without a break, return, or throw, so both \"User 1\" and \"Invalid option\" would be printed for userChoice=1, which is very likely unintended given the other cases end with break. This is a genuine missing-break fall-through in the switch statement.",
+          "is_true_positive": true,
+          "confidence": 0.9,
+          "category": "CORRECTNESS",
+          "issue_signature": "missing break causes switch case fall-through",
+          "developer_explanation": "The case for value 1 does not end with a break, return, or throw, so execution falls through into the default branch and prints both messages. Since every other case uses a break, this looks like an accidental omission; add a break after the println in case 1 to prevent unintended fall-through.",
+          "run": 2,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 784,
+            "output_tokens": 316,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 5.221
+        },
+        {
+          "reasoning": "Case 1 (line 11) has no break, return, or throw at its end, so execution falls through into the default case, printing both \"User 1\" and \"Invalid option\" when userChoice is 1 — this is very likely unintended behavior. The missing break causes a real logic issue distinct from the correctly-terminated case 0.",
+          "is_true_positive": true,
+          "confidence": 0.92,
+          "category": "CORRECTNESS",
+          "issue_signature": "switch case missing break causes fallthrough",
+          "developer_explanation": "The case 1 branch prints its message but has no break statement, so control falls through into the default case and also prints \"Invalid option\", which is almost certainly not what you want. Add a break (or return/throw) at the end of the case 1 block to prevent the fallthrough.",
+          "run": 3,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 784,
+            "output_tokens": 332,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 5.224
+        }
+      ]
+    },
+    {
+      "finding_id": 6,
+      "type": "java:S4973",
+      "sourcefile": "NumberComparison.java",
+      "start_line": "7",
+      "message": "Strings and Boxed types should be compared using \"equals()\".",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The code compares two Integer objects with == instead of equals(); since 1024 falls outside the Integer cache range (-128 to 127), autoboxing creates two distinct objects and num1 == num2 evaluates to false, which likely does not match the programmer's intent of value comparison. This is exactly the reference-vs-value comparison pitfall the rule targets, and it is materially present in this code.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "boxed type compared with reference equality instead of equals",
+          "developer_explanation": "You're comparing two Integer objects using ==, which checks whether they are the same object in memory, not whether they hold the same numeric value. Since 1024 is outside the range Java caches for autoboxed Integers, num1 and num2 are different objects and this comparison will print false even though both hold 1024. Use num1.equals(num2) (or unbox with intValue()) to compare their values correctly.",
+          "run": 1,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 686,
+            "output_tokens": 423,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 5.476
+        },
+        {
+          "reasoning": "num1 and num2 are Integer objects initialized to 1024, which lies outside the Integer cache range (-128 to 127), so autoboxing will create two distinct Integer instances and num1 == num2 compares references rather than values, printing false even though the values are equal. This is exactly the kind of subtle bug the rule targets: reference comparison of boxed types instead of equals(). The fix (using .equals()) would correctly compare the numeric values.",
+          "is_true_positive": true,
+          "confidence": 0.97,
+          "category": "CORRECTNESS",
+          "issue_signature": "reference equality used for boxed numeric comparison",
+          "developer_explanation": "You are comparing two Integer objects with ==, which compares object references, not their numeric values. Since 1024 falls outside the range cached by the JVM's Integer pool, num1 and num2 will be different objects, and this print statement will output false even though both hold the value 1024. Use num1.equals(num2) instead to compare their actual values.",
+          "run": 2,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 686,
+            "output_tokens": 414,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 6.863
+        },
+        {
+          "reasoning": "The code compares two boxed Integer objects with == on line 7; since 1024 falls outside the Integer cache range (-128 to 127), autoboxing creates two distinct objects, so num1 == num2 evaluates to false even though both values are 1024, which is almost certainly not the intended behavior. This is exactly the pitfall the rule targets: reference equality is used where value equality (equals() or unboxing to int) is needed for boxed types.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "reference equality used to compare boxed numeric types",
+          "developer_explanation": "You're comparing two Integer objects with == instead of equals(). Because 1024 is outside the range Java caches for autoboxed Integers, num1 and num2 are different objects, so this comparison prints false even though both hold the value 1024. Use num1.equals(num2) or unbox to int before comparing to get correct value comparison.",
+          "run": 3,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 686,
+            "output_tokens": 510,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 6.807
+        }
+      ]
+    },
+    {
+      "finding_id": 7,
+      "type": "java:S1905",
+      "sourcefile": "NumberReader.java",
+      "start_line": "6",
+      "message": "Remove this unnecessary cast to \"Integer\".",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The cast (Integer) obj is not redundant: obj is statically typed as Object and holds a String at runtime, so casting it to Integer changes the resolved println overload and will actually throw a ClassCastException when executed. Removing the cast, as the rule suggests, would silently change behavior (calling println(Object) instead of failing) rather than being a no-op, so the claim that the cast is unnecessary is materially wrong for this code.",
+          "is_true_positive": false,
+          "confidence": 0.9,
+          "category": "CORRECTNESS",
+          "issue_signature": "cast flagged as redundant despite mismatched runtime type",
+          "developer_explanation": "The cast to Integer is not unnecessary — the object actually holds a String at runtime, so this cast will throw a ClassCastException when executed. The real problem is a type mismatch bug, not a redundant cast, so this specific warning about removing an unneeded cast can be dismissed as inaccurate for this code.",
+          "run": 1,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 667,
+            "output_tokens": 816,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 9.417
+        },
+        {
+          "reasoning": "The variable obj is declared as Object and assigned a String at runtime; casting it to Integer is not redundant — it actually changes the runtime behavior by attempting a narrowing conversion, which will throw a ClassCastException here. Since removing the cast would produce different (and non-throwing) behavior, the cast is not unnecessary in the sense S1905 targets, making the tool's claim materially incorrect for this code.",
+          "is_true_positive": false,
+          "confidence": 0.9,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "cast falsely flagged as redundant",
+          "developer_explanation": "The tool says the cast to Integer is unnecessary, but it is not: obj holds a String at runtime, so casting it to Integer will actually throw a ClassCastException, and removing the cast would change what gets printed. Because the cast changes behavior rather than being a no-op, this warning doesn't apply here — though the code has a real bug (it will crash), that's a different issue than an unnecessary cast.",
+          "run": 2,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 667,
+            "output_tokens": 1164,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 14.502
+        },
+        {
+          "reasoning": "The variable obj actually holds a String (\"10\"), so casting it to Integer is not merely redundant—it will throw a ClassCastException at runtime. Removing the cast, as the tool suggests, would change the program's behavior from throwing an exception to printing the string successfully, so this is not a cosmetically unnecessary cast but rather a cast that produces a materially different (and broken) runtime outcome. The rule's claim that the cast can be safely removed without altering behavior is therefore incorrect for this code.",
+          "is_true_positive": false,
+          "confidence": 0.9,
+          "category": "CORRECTNESS",
+          "issue_signature": "cast flagged as redundant despite changing runtime behavior",
+          "developer_explanation": "The tool suggests removing the (Integer) cast as unnecessary, but obj is actually a String, so this cast will throw a ClassCastException at runtime. Removing it would change the program from crashing to printing normally, so the cast is not redundant in this context—it exposes a real type mismatch bug that should be fixed by correcting the underlying type logic, not by simply deleting the cast.",
+          "run": 3,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 667,
+            "output_tokens": 1320,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 16.947
+        }
+      ]
+    },
+    {
+      "finding_id": 8,
+      "type": "java:S2696",
+      "sourcefile": "PersonProfile.java",
+      "start_line": "8",
+      "message": "Make the enclosing method \"static\" or remove this set.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The field `name` is declared `private static String name`, but it is assigned inside the non-static method `setName`, which makes the code look like it mutates per-instance state when in fact it mutates a single shared static field across all instances. This is exactly the bug the rule targets, and the demonstration in `main` confirms it: person1 and person2 both end up sharing the same name after each call, producing unintended aliasing between separate objects.",
+          "is_true_positive": true,
+          "confidence": 0.92,
+          "category": "CORRECTNESS",
+          "issue_signature": "static field mutated through instance method",
+          "developer_explanation": "The `name` field is static but is written from the instance method `setName`, so all `PersonProfile` objects actually share one underlying value instead of having independent names. In the `main` method this causes `person1` and `person2` to report the same name after both are set — likely not what was intended. Either make `name` an instance field (drop `static`) if each person should have their own name, or make the method static if the shared value is really intentional.",
+          "run": 1,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 865,
+            "output_tokens": 730,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 9.994
+        },
+        {
+          "reasoning": "The field `name` is declared static while `setName` is a non-static instance method that mutates it, so instance methods share state unexpectedly — as demonstrated by main() where person2.setName overwrites the name for person1 too. This is exactly the pattern S2696 targets: assigning to a static field from a non-static method, which is misleading and error-prone. The code compiles and runs but produces confusing behavior inconsistent with the apparent per-instance design.",
+          "is_true_positive": true,
+          "confidence": 0.9,
+          "category": "CORRECTNESS",
+          "issue_signature": "instance method mutates static field",
+          "developer_explanation": "The `name` field is static but is being set through an instance method, so all instances of the class actually share the same value. This causes surprising behavior, as seen in your own main method where setting person2's name also changes what person1.getName() returns. Either make the field non-static (per-instance) or make the setter static to reflect that it affects shared state.",
+          "run": 2,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 865,
+            "output_tokens": 449,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 7.017
+        },
+        {
+          "reasoning": "The field `name` is declared static but assigned inside a non-static instance method, and the shown main() demonstrates the resulting bug: person1.setName and person2.setName both mutate the same static field, so both person1.getName() and person2.getName() return \"Kate\". This is exactly the anti-pattern the rule targets: an instance method appearing to set per-instance state but actually mutating shared static state, causing incorrect and confusing behavior.",
+          "is_true_positive": true,
+          "confidence": 0.92,
+          "category": "CORRECTNESS",
+          "issue_signature": "instance method mutates static field as if it were instance state",
+          "developer_explanation": "The `name` field is static but is being set from an instance method, so all instances of PersonProfile actually share the same name. As shown by main(), setting person1's name and then person2's name overwrites the same value for both objects. Either make `name` an instance field (remove `static`) if each PersonProfile should have its own name, or make setName/getName static if the shared field is intentional.",
+          "run": 3,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 865,
+            "output_tokens": 509,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 17.16
+        }
+      ]
+    },
+    {
+      "finding_id": 9,
+      "type": "java:S1210",
+      "sourcefile": "PersonRanking.java",
+      "start_line": "18",
+      "message": "Override \"equals(Object obj)\" to comply with the contract of the \"compareTo(T o)\" method.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The Person class implements Comparable<Person> and defines compareTo based on age, but does not override equals(Object), so equals falls back to reference identity while compareTo treats objects with equal age as ordered (though buggily never returning 0). This means natural ordering is inconsistent with equals as required by the Comparable contract, which is exactly what the rule flags.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "comparable implementation not consistent with equals",
+          "developer_explanation": "Your Person class implements Comparable but does not override equals(), so two Person objects with the same age are considered unequal by equals() while compareTo treats them as comparable by age. This inconsistency can cause subtle bugs when Person objects are used in sorted collections like TreeSet or TreeMap, which rely on compareTo behaving consistently with equals. Add an equals() (and hashCode()) implementation based on age to align with compareTo's ordering.",
+          "run": 1,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 858,
+            "output_tokens": 540,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 6.925
+        },
+        {
+          "reasoning": "The Person class implements Comparable<Person> and defines compareTo() but never overrides equals() (or hashCode()), which is exactly the pattern the rule targets since compareTo should ideally be consistent with equals() per the Comparable contract. The code shown confirms no equals() override exists anywhere in the file.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "comparable class missing consistent equals override",
+          "developer_explanation": "Your Person class implements Comparable and defines compareTo(), but it does not override equals(). The Comparable contract recommends that compareTo() be consistent with equals() so that sorted collections and other equality-based structures behave predictably; without an equals() override, Person relies on identity equality which can silently conflict with the ordering logic. Add an equals() (and hashCode()) implementation based on the same age field used in compareTo().",
+          "run": 2,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 858,
+            "output_tokens": 530,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 7.581
+        },
+        {
+          "reasoning": "The Person class implements Comparable<Person> and overrides compareTo, but does not override equals(Object), so it relies on Object's reference-based equals. This means compareTo can return 0 for two distinct Person objects with equal age while equals() would return false, violating the natural-ordering/equals consistency contract that collections like TreeSet and TreeMap rely on. The flagged fact (missing equals override) and its consequence (inconsistency with compareTo) are both accurate for this code.",
+          "is_true_positive": true,
+          "confidence": 0.9,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "comparable class missing consistent equals override",
+          "developer_explanation": "Your Person class implements Comparable but does not override equals(), so its natural ordering (via compareTo) can disagree with equality checks — two Person objects with the same age will compare as equal but not be equal() to each other. This breaks the contract expected by sorted collections such as TreeSet/TreeMap, which can lead to subtle bugs like duplicate elements or unexpected removals. Add an equals() (and hashCode()) implementation consistent with compareTo's logic.",
+          "run": 3,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 858,
+            "output_tokens": 596,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 6.667
+        }
+      ]
+    },
+    {
+      "finding_id": 10,
+      "type": "java:S1206",
+      "sourcefile": "PersonRegistry.java",
+      "start_line": "21",
+      "message": "This class overrides \"equals()\" and should therefore also override \"hashCode()\".",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The Person class defines equals(Object) at line 21 but does not define hashCode() anywhere in the class, violating the equals/hashCode contract that objects considered equal must produce the same hash code, which breaks correct behavior in hash-based collections like HashMap or HashSet. The warning's claim—that equals is overridden without a corresponding hashCode override—is factually accurate for this snippet.",
+          "is_true_positive": true,
+          "confidence": 0.97,
+          "category": "CORRECTNESS",
+          "issue_signature": "equals overridden without matching hashcode override",
+          "developer_explanation": "Your Person class overrides equals() but doesn't override hashCode(). This breaks the contract that equal objects must have equal hash codes, which can cause bugs if Person objects are ever used in HashSet, HashMap, or similar collections. Add a hashCode() implementation consistent with your equals() logic (based on name and age).“}```)}",
+          "run": 1,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 962,
+            "output_tokens": 431,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 5.643
+        },
+        {
+          "reasoning": "The Person class defines an equals() method (lines 21-30) but the complete 32-line file shows no hashCode() override anywhere in the class. This violates the equals/hashCode contract, which can cause the objects to behave incorrectly in hash-based collections like HashMap or HashSet.",
+          "is_true_positive": true,
+          "confidence": 0.97,
+          "category": "CORRECTNESS",
+          "issue_signature": "equals overridden without hashcode override",
+          "developer_explanation": "You've overridden equals() in this class but not hashCode(), which breaks the contract that equal objects must have equal hash codes. This will cause bugs if instances of this class are ever put into a HashMap, HashSet, or similar hash-based collection. Add a matching hashCode() implementation based on the same fields used in equals().",
+          "run": 2,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 962,
+            "output_tokens": 413,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 5.934
+        },
+        {
+          "reasoning": "The Person class overrides equals() (lines 21-30) but the file shows no overridden hashCode() method anywhere in the class, violating the equals/hashCode contract that Java collections such as HashMap and HashSet rely on. This is exactly the pattern the rule targets, and the code as shown does not contradict the claim.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "equals overridden without matching hashCode override",
+          "developer_explanation": "Your Person class overrides equals() but doesn't override hashCode(), which breaks the contract that equal objects must have equal hash codes. This can cause subtle bugs if Person instances are ever put into a HashSet, HashMap, or similar hash-based collection. Add a hashCode() implementation that's consistent with your equals() logic (based on name and age).3",
+          "run": 3,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 962,
+            "output_tokens": 428,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 6.116
+        }
+      ]
+    },
+    {
+      "finding_id": 11,
+      "type": "java:S1764",
+      "sourcefile": "PersonRegistry.java",
+      "start_line": "29",
+      "message": "Correct one of the identical sub-expressions on both sides of equals.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The code at line 29 calls name.equals(name), comparing the field to itself instead of to person.name, so the equals method never actually checks whether the two Person objects have the same name. This means two Person instances with different names but the same age would incorrectly be considered equal, a real correctness bug that the rule correctly identifies.",
+          "is_true_positive": true,
+          "confidence": 0.97,
+          "category": "CORRECTNESS",
+          "issue_signature": "comparing a field to itself instead of to the other object's field in equals",
+          "developer_explanation": "In the equals() method, name.equals(name) compares the field to itself rather than to person.name, so the name check is always true regardless of the other object's actual name. This breaks the equals contract, since two Person objects with different names but the same age will be reported as equal. Fix it by changing the comparison to name.equals(person.name).",
+          "run": 1,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 957,
+            "output_tokens": 368,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 4.543
+        },
+        {
+          "reasoning": "The expression name.equals(name) compares the field to itself instead of to person.name, so the equals method never actually checks whether the names match — it always evaluates to true regardless of the other Person's name, making the equals() implementation semantically broken.",
+          "is_true_positive": true,
+          "confidence": 0.97,
+          "category": "CORRECTNESS",
+          "issue_signature": "self-comparison in equals implementation ignoring field of compared object",
+          "developer_explanation": "In the equals method, name.equals(name) compares the field to itself rather than to person.name, so the name is never actually compared between the two objects. This means two Person instances with different names but the same age will incorrectly be considered equal. Change it to name.equals(person.name).",
+          "run": 2,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 957,
+            "output_tokens": 324,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 4.94
+        },
+        {
+          "reasoning": "The code calls name.equals(name), comparing the field to itself instead of to person.name, so the equals method never actually checks that the two Person objects have the same name and will incorrectly treat any two Persons with the same age as equal regardless of name. This is exactly the identical-subexpression pattern the rule detects and it is a genuine logic bug, not a benign or intentional pattern.",
+          "is_true_positive": true,
+          "confidence": 0.98,
+          "category": "CORRECTNESS",
+          "issue_signature": "equals method compares field to itself instead of to other object's field",
+          "developer_explanation": "In the equals method, name.equals(name) compares the field to itself rather than to person.name, so the name is never actually checked and two different-named people with the same age would incorrectly be considered equal. Change it to name.equals(person.name) so the comparison is meaningful.",
+          "run": 3,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 957,
+            "output_tokens": 388,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 6.8
+        }
+      ]
+    },
+    {
+      "finding_id": 12,
+      "type": "java:S1317",
+      "sourcefile": "TextAssembler.java",
+      "start_line": "5",
+      "message": "Replace the constructor character parameter 'a' with string parameter \"a\".",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The code calls new StringBuilder('a'), which resolves to the StringBuilder(int) constructor because char widens to int; this creates an empty StringBuilder with initial capacity 97, not one containing the character 'a'. Running this code prints \"bc\" instead of the likely intended \"abc\", so the warning correctly identifies a real pitfall where a char literal is silently used as a capacity argument. The suggested fix (using the string \"a\") would produce the intended behavior.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "char literal misinterpreted as int capacity in stringbuilder constructor",
+          "developer_explanation": "Passing a char literal like 'a' to `new StringBuilder('a')` does not create a builder containing \"a\" — it widens the char to its numeric value (97) and calls the int-capacity constructor, giving you an empty builder with capacity 97. If you meant to seed the builder with the text \"a\", use `new StringBuilder(\"a\")` instead.",
+          "run": 1,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 689,
+            "output_tokens": 500,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 6.017
+        },
+        {
+          "reasoning": "The code calls `new StringBuilder('a')`, which resolves to the `StringBuilder(int capacity)` constructor because the char 'a' is implicitly widened to int (97); it does not create a StringBuilder containing the character 'a'. This is exactly the pitfall the rule targets: the output of the program will be \"bc\", not \"abc\", which is almost certainly not the intended behavior.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "char literal misinterpreted as int overload in constructor",
+          "developer_explanation": "Passing a char literal like 'a' to `new StringBuilder(...)` doesn't create a builder containing \"a\" — Java implicitly converts the char to its integer value (97) and calls the capacity constructor instead. If you meant to seed the builder with the text \"a\", use `new StringBuilder(\"a\")`; as written, the output will just be \"bc\".",
+          "run": 2,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 689,
+            "output_tokens": 539,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 7.151
+        },
+        {
+          "reasoning": "The code calls new StringBuilder('a'), and since StringBuilder has no char constructor, 'a' is implicitly widened to its int value 97, invoking StringBuilder(int capacity) instead of creating a builder containing the character 'a'. This produces an empty StringBuilder with capacity 97 rather than one containing \"a\", so the output will be \"bc\" instead of the likely intended \"abc\" — a genuine correctness pitfall. The warning's suggestion to use a string literal \"a\" instead of a char literal correctly identifies and fixes this trap.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "char literal misinterpreted as int capacity in stringbuilder constructor",
+          "developer_explanation": "Passing a char literal like 'a' to `new StringBuilder('a')` does not create a builder containing the letter \"a\"; because StringBuilder has no char constructor, the char is implicitly converted to its numeric value (97) and matches the int-capacity constructor instead. This silently creates an empty StringBuilder with capacity 97, not one initialized with \"a\", producing unexpected output. Use `new StringBuilder(\"a\")` if you meant to initialize the content.",
+          "run": 3,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 689,
+            "output_tokens": 595,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 6.539
+        }
+      ]
+    },
+    {
+      "finding_id": 13,
+      "type": "java:S2201",
+      "sourcefile": "TextTrimmer.java",
+      "start_line": "6",
+      "message": "The return value of \"substring\" must be used.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The code calls s.substring(3) and discards the returned value; since String is immutable, this line has no effect on s, so the println on line 7 prints the original unmodified string \"abcdef\" instead of the intended trimmed result. This is exactly the pattern the rule targets: an immutable method's result must be used or the call is pointless and likely a bug.",
+          "is_true_positive": true,
+          "confidence": 0.97,
+          "category": "CORRECTNESS",
+          "issue_signature": "ignored return value of immutable string method call",
+          "developer_explanation": "Calling substring() does not modify the original string; it returns a new string that must be captured. Right now the result is discarded, so the trimming has no effect and the original string is printed unchanged. Fix it by assigning the result back, e.g. s = s.substring(3);",
+          "run": 1,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 673,
+            "output_tokens": 319,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 4.62
+        },
+        {
+          "reasoning": "The call s.substring(3) computes a new String but its result is never assigned or used, and since String is immutable this call has no effect on s, so the subsequent println(s) prints the original unmodified string, contrary to the evident intent of the code.",
+          "is_true_positive": true,
+          "confidence": 0.97,
+          "category": "CORRECTNESS",
+          "issue_signature": "discarded result of immutable string method call",
+          "developer_explanation": "Calling substring on a String does not modify it in place; it returns a new String that must be captured. Here the result of s.substring(3) is thrown away, so the trimming has no effect and the original string is printed. Assign the result back, e.g. s = s.substring(3);.",
+          "run": 2,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 673,
+            "output_tokens": 292,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 8.749
+        },
+        {
+          "reasoning": "The call s.substring(3) on line 6 discards its return value since String.substring does not mutate the original string but returns a new one; s is printed unchanged on line 7, confirming the substring result is never used and the code does nothing useful.",
+          "is_true_positive": true,
+          "confidence": 0.97,
+          "category": "CORRECTNESS",
+          "issue_signature": "discarded return value of immutable string method",
+          "developer_explanation": "String.substring() does not modify the original string in place; it returns a new string that must be captured. Here the result of s.substring(3) is thrown away, so the call has no effect and 's' still prints as 'abcdef'. Assign the result back, e.g. s = s.substring(3), if you intend to trim the string.",
+          "run": 3,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 673,
+            "output_tokens": 240,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 5.167
+        }
+      ]
+    },
+    {
+      "finding_id": 14,
+      "type": "java:S3984",
+      "sourcefile": "ValueProcessor.java",
+      "start_line": "11",
+      "message": "Throw this exception or remove this useless statement.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "Line 11 constructs an IllegalArgumentException object but never throws it or otherwise uses it, so the exception object is created and immediately discarded, meaning the intended error signaling never happens. The code continues to line 13 and prints 'Value is positive or 0' even when value is negative, which is clearly not the intended behavior. This is exactly the pattern the rule targets: an exception instantiated but not thrown.",
+          "is_true_positive": true,
+          "confidence": 0.97,
+          "category": "CORRECTNESS",
+          "issue_signature": "exception object instantiated but never thrown",
+          "developer_explanation": "You create an IllegalArgumentException but never throw it, so it has no effect—the code falls through and still prints the 'positive or 0' message even for negative values. Add a `throw` keyword before the exception construction so the error is actually raised.",
+          "run": 1,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 745,
+            "output_tokens": 279,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 3.544
+        },
+        {
+          "reasoning": "The exception is instantiated but never thrown, so the object is created and immediately discarded, meaning the intended error signaling never happens and execution falls through to print 'Value is positive or 0' even when value is negative. This is exactly the pattern the rule targets: a constructed exception that is not thrown or used.",
+          "is_true_positive": true,
+          "confidence": 0.97,
+          "category": "CORRECTNESS",
+          "issue_signature": "exception object created but never thrown",
+          "developer_explanation": "You create a new IllegalArgumentException but never throw it, so the error is silently swallowed and the code continues to print the 'positive or 0' message even for negative values. Add a 'throw' keyword before the exception, or remove the statement if it isn't needed.",
+          "run": 2,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 745,
+            "output_tokens": 246,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 3.626
+        },
+        {
+          "reasoning": "The code constructs an IllegalArgumentException object but never throws it or otherwise uses it, meaning the exception has no effect and execution simply continues to the print statement even when value is negative. This is exactly the pattern the rule targets: an exception instantiated but not thrown, which is a real logic bug since the intended error signaling never happens.",
+          "is_true_positive": true,
+          "confidence": 0.97,
+          "category": "CORRECTNESS",
+          "issue_signature": "exception object created but never thrown",
+          "developer_explanation": "You create a new IllegalArgumentException on line 11 but never throw it, so the exception has no effect and the code falls through to print 'Value is positive or 0' even when the value is negative. Add a throw statement (e.g., 'throw new IllegalArgumentException(...)') or remove the dead statement if it's not needed.",
+          "run": 3,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 745,
+            "output_tokens": 279,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 4.471
+        }
+      ]
+    },
+    {
+      "finding_id": 15,
+      "type": "java:S2757",
+      "sourcefile": "ValueReporter.java",
+      "start_line": "11",
+      "message": "Was \"+=\" meant instead?",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The code `x =+ 2;` parses as `x = (+2)`, which simply assigns the unary-plus of 2 (i.e., 2) to x, discarding the previous value of x, rather than adding 2 to x as `x += 2` would. This is the classic typo bug the rule targets, and it materially changes the printed result (2 instead of 3), which is exactly the confusable-operator issue the rule flags.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "misplaced operator resembling compound assignment",
+          "developer_explanation": "The line `x =+ 2;` doesn't add 2 to x — it's parsed as assigning the unary positive of 2, so x ends up as 2 regardless of its previous value. If the intent was to increment x by 2, use `x += 2;` instead.",
+          "run": 1,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 785,
+            "output_tokens": 357,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 4.559
+        },
+        {
+          "reasoning": "The flagged line `x =+ 2;` is parsed as `x = (+2)`, i.e. assigning the unary-plus of 2 (which is just 2) to x, discarding the previous value of x entirely rather than incrementing it. This is the classic '=+ ' vs '+=' typo the rule targets, and given the variable was just initialized to 1 and then printed, the intent was almost certainly to add 2 to x, making this a real logic bug.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "assignment operator typo swapping += for =+",
+          "developer_explanation": "Writing `x =+ 2;` does not add 2 to x — it is interpreted as `x = (+2)`, so x becomes 2 regardless of its previous value. If you intended to increase x by 2, use `x += 2;` instead.",
+          "run": 2,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 785,
+            "output_tokens": 413,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 4.9
+        },
+        {
+          "reasoning": "The code writes `x =+ 2;`, which Java parses as `x = (+2);`, assigning x the value 2 instead of incrementing it to 3 as `x += 2` would. This is the classic transposed-operator typo the rule is designed to catch, and nothing in the surrounding code suggests the unary-plus assignment was intentional. The result differs from what a reasonable reading of the code's intent (accumulating a sum) suggests.",
+          "is_true_positive": true,
+          "confidence": 0.9,
+          "category": "CORRECTNESS",
+          "issue_signature": "transposed compound assignment operator misread as unary plus",
+          "developer_explanation": "The line `x =+ 2;` doesn't add 2 to x; it just assigns x the value +2, overwriting the previous value of 1. If you intended to increment x, use `x += 2;` instead.”",
+          "run": 3,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 785,
+            "output_tokens": 421,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 6.238
+        }
+      ]
+    }
+  ]
+}

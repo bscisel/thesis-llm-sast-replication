@@ -1,0 +1,1012 @@
+{
+  "model": "claude-opus-5",
+  "tool": "error-prone",
+  "num_runs": 3,
+  "runs_per_invocation": 3,
+  "source_root": "java-errors-benchmark",
+  "call_parameters": {
+    "temperature": null,
+    "concurrency": 3,
+    "response_format": "json_schema",
+    "max_tokens": 8192,
+    "max_retries": 6,
+    "base_url": "https://api.anthropic.com"
+  },
+  "system_prompt_variant": "benchmark",
+  "system_prompt_sha256": "b5b634e0a9109c59",
+  "user_prompt_sha256": "3963ac13371abed5",
+  "timestamp": "2026-08-09T18:26:56.993042+00:00",
+  "updated_at": "2026-08-09T18:26:56.993042+00:00",
+  "findings": [
+    {
+      "finding_id": 0,
+      "type": "EqualsGetClass",
+      "sourcefile": "PersonMatcher.java",
+      "start_line": "28",
+      "message": "Prefer instanceof to getClass when implementing Object#equals.",
+      "tool_specific": {
+        "column": "24"
+      },
+      "runs": [
+        {
+          "reasoning": "The flagged equals method does use `getClass() != obj.getClass()` rather than an instanceof check, so the pattern the rule reports is literally present in the shown code. The nested Person class is not final and has no other constraint shown that would rule out subclasses, so the substitutability concern the rule raises (a subclass instance never being equal to a superclass instance, breaking symmetry with inherited equals implementations) is applicable here. The rule's claim is therefore materially correct for this code; the separate, unrelated inconsistency between the case-insensitive hashCode and the case-sensitive equals does not affect this verdict.",
+          "is_true_positive": true,
+          "confidence": 0.8,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "equals implementation compares runtime classes instead of using instanceof",
+          "developer_explanation": "The equality check rejects any object whose runtime class differs, which means an instance of a subclass can never be considered equal to a plain instance of this class even when all compared fields match. Using an instanceof test instead keeps equality well behaved under inheritance and is the conventional form. If you deliberately want strict class equality, make the class final so the intent is explicit.",
+          "run": 1,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 1110,
+            "output_tokens": 707,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 12.349
+        },
+        {
+          "reasoning": "The flagged equals method does compare types with `getClass() != obj.getClass()`, exactly the pattern the rule describes, so the claim is factually correct for this code. Person is a non-final nested class, so a subclass instance could never be considered equal to a Person instance, which is the substitutability concern behind the rule. The suggested rewrite to `instanceof` is a legitimate remedy; nothing in the shown code (e.g. a final modifier or a documented strict-type contract) justifies the getClass form here.",
+          "is_true_positive": true,
+          "confidence": 0.8,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "equals implementation compares types with getClass instead of instanceof",
+          "developer_explanation": "The equality check uses getClass() comparison, which means an instance of any subclass can never be equal to a plain Person even if all its fields match, breaking the substitutability expectation for equals. Using `if (!(obj instanceof Person)) return false;` is the more conventional and subclass-friendly form. (Separately, note that hashCode lowercases the name while equals compares it case-sensitively, so equal objects are fine but the two methods are not consistently defined.)",
+          "run": 2,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 1110,
+            "output_tokens": 762,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 12.561
+        },
+        {
+          "reasoning": "The flagged equals implementation does compare types with `getClass() != obj.getClass()` (line 32), which is exactly the pattern the rule describes, and the enclosing `Person` class is not final, so subclasses would be unable to be equal to a base instance and equality would break under proxying/subclassing. The tool points at line 28 (the method declaration) rather than line 32, but the pattern it describes is genuinely present in the shown code. The suggested rewrite to `instanceof` is the standard remedy and would preserve intended behaviour for the non-subclassed case shown here.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "type comparison via getClass instead of instanceof in equals",
+          "developer_explanation": "The equality check compares runtime classes exactly, so any future subclass of this class can never be considered equal to a plain instance, and equality also breaks for proxied or enhanced instances. Using `obj instanceof Person` keeps equality well-behaved with subtypes and is the conventional pattern. (Separately, note that hashCode lowercases the name while equals compares it case-sensitively, which is an inconsistency worth fixing too.)",
+          "run": 3,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 1110,
+            "output_tokens": 772,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 12.945
+        }
+      ]
+    },
+    {
+      "finding_id": 1,
+      "type": "StringBuilderInitWithChar",
+      "sourcefile": "TextAssembler.java",
+      "start_line": "5",
+      "message": "StringBuilder does not have a char constructor; this invokes the int constructor.",
+      "tool_specific": {
+        "column": "28"
+      },
+      "runs": [
+        {
+          "reasoning": "Line 5 constructs `new StringBuilder('a')`, and StringBuilder has no char constructor, so the char literal widens to int 97 and invokes the capacity constructor, producing an empty builder with capacity 97 rather than one containing \"a\". The output would be \"bc\" instead of the evidently intended \"abc\", so the warning's claim is materially correct for this code. The suggested rewrite to `new StringBuilder(\"a\")` matches the apparent intent.",
+          "is_true_positive": true,
+          "confidence": 0.97,
+          "category": "CORRECTNESS",
+          "issue_signature": "char literal passed to capacity constructor of string builder",
+          "developer_explanation": "There is no StringBuilder constructor taking a char, so 'a' is widened to the integer 97 and interpreted as an initial capacity; the builder starts out empty rather than containing \"a\". As written, the program prints \"bc\" instead of \"abc\". Pass the string \"a\" instead, or append the character after construction.",
+          "run": 1,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 747,
+            "output_tokens": 343,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 6.902
+        },
+        {
+          "reasoning": "Line 5 passes the char literal 'a' to the StringBuilder constructor; since StringBuilder has no char constructor, the char is widened to int (97) and the int capacity constructor is invoked, producing an empty buffer rather than one containing \"a\". The resulting output is \"bc\" instead of the evidently intended \"abc\". The tool's claim about the shown code is exactly correct, and the suggested rewrite to a String literal matches the apparent intent.",
+          "is_true_positive": true,
+          "confidence": 0.97,
+          "category": "CORRECTNESS",
+          "issue_signature": "char literal passed to int capacity constructor of StringBuilder",
+          "developer_explanation": "StringBuilder has no constructor that takes a char, so passing 'a' silently converts it to the int 97 and just sets the initial capacity \result will therwill therefore print \"bc\", not \"abc\". Use new StringBuilder(\"a\") (or new StringBuilder().append('a')) if you meant to seed the buffer with that character.",
+          "run": 2,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 747,
+            "output_tokens": 347,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 7.366
+        },
+        {
+          "reasoning": "Line 5 passes the char literal 'a' to the StringBuilder constructor; since StringBuilder has no char overload, the char widens to int and invokes StringBuilder(int capacity), creating an empty builder with capacity 97 rather than one containing \"a\". The subsequent append and print therefore output \"bc\" instead of the evidently intended \"abc\". The tool's claim about the shown code is exactly correct, and the suggested rewrite to \"a\" fixes it.",
+          "is_true_positive": true,
+          "confidence": 0.99,
+          "category": "CORRECTNESS",
+          "issue_signature": "char literal passed to int-capacity string builder constructor",
+          "developer_explanation": "StringBuilder has no constructor that takes a char, so passing 'a' silently widens to int and calls the capacity constructor: you get an empty builder pre-sized to 97 characters, not a builder containing \"a\". The program will print \"bc\" rather than \"abc\". Pass the string \"a\" instead.",
+          "run": 3,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 747,
+            "output_tokens": 406,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 7.669
+        }
+      ]
+    },
+    {
+      "finding_id": 2,
+      "type": "DeadException",
+      "sourcefile": "ValueProcessor.java",
+      "start_line": "11",
+      "message": "Exception created but not thrown",
+      "tool_specific": {
+        "column": "13"
+      },
+      "runs": [
+        {
+          "reasoning": "Line 11 constructs an IllegalArgumentException as a bare expression statement inside the negative-value guard and never throws or stores it, so the object is immediately discarded. The evident intent of the guard is to reject negative values, but execution falls through and prints \"Value is positive or 0\" even for value = -1, as the main method demonstrates. The tool's claim — an exception created but not thrown — is literally and materially correct here.",
+          "is_true_positive": true,
+          "confidence": 0.99,
+          "category": "CORRECTNESS",
+          "issue_signature": "exception instantiated but never thrown",
+          "developer_explanation": "The validation branch creates an IllegalArgumentException but never throws it, so the object is constructed and immediately discarded and the method continues as if the value were valid \\",
+          "run": 1,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 756,
+            "output_tokens": 439,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 21.681
+        },
+        {
+          "reasoning": "Line 11 constructs an IllegalArgumentException as an expression statement and discards it — the object is never thrown, assigned, or used. As a result the negative-value guard has no effect and execution falls through to print \"Value is positive or 0\" even for value = -1, which the main method demonstrates. The tool's claim matches the code exactly.",
+          "is_true_positive": true,
+          "confidence": 0.99,
+          "category": "CORRECTNESS",
+          "issue_signature": "exception instantiated but never thrown or used",
+          "developer_explanation": "The guard clause builds an IllegalArgumentException but never throws it, so the object is created and immediately discarded and the method continues as if the value were valid. With a negative input the code still prints \"Value is positive or 0\" instead of rejecting the argument. Add the throw keyword so the exception actually propagates.",
+          "run": 2,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 756,
+            "output_tokens": 280,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 7.916
+        },
+        {
+          "reasoning": "Line 11 constructs an IllegalArgumentException as a bare expression statement inside the negative-value guard, with no throw and no assignment, so the object is immediately discarded. The guard therefore has no effect and execution falls through to print \"Value is positive or 0\" even for value = -1, which is exactly what main does. The tool's claim — exception created but not thrown — is literally and materially true here.",
+          "is_true_positive": true,
+          "confidence": 0.99,
+          "category": "CORRECTNESS",
+          "issue_signature": "exception instantiated but never thrown",
+          "developer_explanation": "The validation branch creates an IllegalArgumentException object and then throws it away, so nothing happens when the value is negative and the method continues on to print \"Value is positive or 0\". Add the missing `throw` keyword so the invalid input actually aborts processing.",
+          "run": 3,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 756,
+            "output_tokens": 281,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 6.521
+        }
+      ]
+    },
+    {
+      "finding_id": 3,
+      "type": "NarrowingCompoundAssignment",
+      "sourcefile": "DiscountCalculator.java",
+      "start_line": "6",
+      "message": "Compound assignments from double to int hide lossy casts",
+      "tool_specific": {
+        "column": "11"
+      },
+      "runs": [
+        {
+          "reasoning": "The variable c is declared int and is compound-multiplied by the double literal 0.33, so the statement implicitly performs c = (int)(c * 0.33), silently truncating 3.3 to 3. The narrowing conversion is genuinely present and invisible at the call site, which is exactly what the rule claims. There is nothing in the shown code that makes the truncation intentional or documented, so the warning's claim is materially correct.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "compound assignment hides implicit narrowing cast from floating-point",
+          "developer_explanation": "Multiplying an int by a fractional double using the *= shorthand quietly inserts a cast back to int, so 10 becomes 3 rather than 3.3 and the fractional part is lost without any visible cast. If truncation is intended, write it explicitly as c = (int) (c * 0.33) so readers can see it; if it is not, change the variable to double or round explicitly.",
+          "run": 1,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 721,
+            "output_tokens": 606,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 18.746
+        },
+        {
+          "reasoning": "The flagged line applies `*=` with a double literal to an `int` variable, which the language silently compiles as `c = (int)(c * 0.33)`, truncating 3.3 to 3. That is exactly the hidden lossy narrowing cast the rule describes, so the claim is materially correct for this code. The truncation is invisible at the call site and any reader expecting rounding or a fractional result would be misled.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "compound assignment hiding implicit narrowing cast from floating-point",
+          "developer_explanation": "Multiplying an int by a double with `*=` silently truncates the result back to int, so `c` becomes 3 rather than 3.3 (or a rounded 3). Because the narrowing cast is implicit, nothing in the code signals that precision is being lost. Make the intent explicit \\u2014 either write `c = (int) (c * 0.33);`, use `Math.round`, or keep the value in a double/BigDecimal if fractional precision matters.",
+          "run": 2,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 721,
+            "output_tokens": 593,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 12.849
+        },
+        {
+          "reasoning": "The variable `c` is declared `int` and the compound assignment `c *= 0.33` performs an implicit narrowing conversion of the double result (3.3) back to int, so the cast is genuinely hidden by the compound operator exactly as the rule claims. This is precisely the pattern the rule targets, and the value is silently truncated from 3.3 to 3. The tool's suggested rewrite `c = (int) (c * 0.33)` is behaviour-preserving and simply makes the narrowing explicit, so the claim is materially correct for this code.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "compound assignment hides implicit narrowing conversion",
+          "developer_explanation": "Multiplying an int by a floating-point value with `*=` quietly inserts a cast back to int, so the fractional part is dropped without anything in the code showing it (10 * 0.33 = 3.3 becomes 3). Readers can easily miss that truncation is happening. If truncation is what you want, write it explicitly as `c = (int) (c * 0.33)`; if not, use a double or round deliberately.",
+          "run": 3,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 721,
+            "output_tokens": 940,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 16.532
+        }
+      ]
+    },
+    {
+      "finding_id": 4,
+      "type": "BoxedPrimitiveEquality",
+      "sourcefile": "NumberComparison.java",
+      "start_line": "7",
+      "message": "Comparison using reference equality instead of value equality. Reference equality of boxed primitive types is usually not useful, as they are value objects, and it is bug-prone, as instances are cached for some values but not others.",
+      "tool_specific": {
+        "column": "33"
+      },
+      "runs": [
+        {
+          "reasoning": "Both num1 and num2 are Integer objects autoboxed from the literal 1024, which is outside the Integer cache range (-128..127), so `num1 == num2` compares references and evaluates to false rather than comparing the values. This is precisely the bug pattern the rule describes: reference equality on boxed primitives yielding a result that depends on caching. The intent is clearly a numeric comparison, so `equals` (or unboxing to int) is required.",
+          "is_true_positive": true,
+          "confidence": 0.97,
+          "category": "CORRECTNESS",
+          "issue_signature": "reference equality comparison of boxed primitive values",
+          "developer_explanation": "Comparing two Integer objects with `==` checks whether they are the same object, not whether they hold the same number. Since 1024 is outside the small-integer cache, two separately boxed 1024 values are distinct objects and this prints false. Use `num1.equals(num2)` or compare primitive ints (e.g. `num1.intValue() == num2.intValue()`) to compare values.",
+          "run": 1,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 826,
+            "output_tokens": 342,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 8.656
+        },
+        {
+          "reasoning": "The code compares two boxed Integer variables holding the autoboxed value 1024 with ==, which is reference identity rather than numeric equality. Because the Integer cache only covers -128..127, these two boxes are distinct objects and the comparison prints false, which is almost certainly not the intent. This is exactly the bug pattern the rule describes, so the claim is materially correct.",
+          "is_true_positive": true,
+          "confidence": 0.98,
+          "category": "CORRECTNESS",
+          "issue_signature": "boxed primitive compared with reference equality instead of value equality",
+          "developer_explanation": "The two variables are Integer objects, so == compares object identity, not the numeric value. Since 1024 falls outside the small-integer cache range, each assignment creates a separate object and the comparison prints false. Use num1.equals(num2), Objects.equals(num1, num2), or compare primitive int values instead.",
+          "run": 2,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 826,
+            "output_tokens": 338,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 6.456
+        },
+        {
+          "reasoning": "Both num1 and num2 are Integer objects created by autoboxing the literal 1024, which lies outside the Integer cache range (-128..127), so `num1 == num2` compares references and evaluates to false even though the values are equal. This is the classic boxed-primitive reference-equality bug the rule describes, and the claim is materially correct for the shown code. The suggested rewrite to equals() would give the value comparison evidently intended.",
+          "is_true_positive": true,
+          "confidence": 0.97,
+          "category": "CORRECTNESS",
+          "issue_signature": "boxed primitive compared with reference equality instead of value equality",
+          "developer_explanation": "Comparing two Integer objects with == checks whether they are the same object, not whether they hold the same number. Since 1024 is outside the range of values the JVM caches, the two variables refer to distinct objects and this prints false despite both holding 1024. Use num1.equals(num2), or compare the unboxed int values, to test for equal numeric values.",
+          "run": 3,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 826,
+            "output_tokens": 331,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 7.529
+        }
+      ]
+    },
+    {
+      "finding_id": 5,
+      "type": "ReferenceEquality",
+      "sourcefile": "NumberComparison.java",
+      "start_line": "7",
+      "message": "Comparison using reference equality instead of value equality",
+      "tool_specific": {
+        "column": "33"
+      },
+      "runs": [
+        {
+          "reasoning": "Both operands are boxed `Integer` objects created by autoboxing the literal 1024, which lies outside the Integer cache range (-128..127), so `num1 == num2` compares distinct object references and evaluates to false rather than comparing the numeric values. The evident intent of printing the comparison of two equal numbers is value equality, so the reference comparison yields the wrong result. The warning's claim is exactly right for this code.",
+          "is_true_positive": true,
+          "confidence": 0.97,
+          "category": "CORRECTNESS",
+          "issue_signature": "boxed numeric objects compared with reference equality",
+          "developer_explanation": "`num1` and `num2` are `Integer` objects, not primitives, so `==` checks whether they are the same object rather than whether they hold the same number. Because 1024 is outside the range of values the JVM caches, two separate objects are created and the comparison prints false. Use `num1.equals(num2)` (or compare primitive `int` values) if you want to test numeric equality.",
+          "run": 1,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 710,
+            "output_tokens": 368,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 7.981
+        },
+        {
+          "reasoning": "Both operands are boxed Integer objects with value 1024, which is outside the Integer cache range (-128..127), so autoboxing creates two distinct objects and `==` compares references, printing false rather than the intended value comparison. The warning's claim — reference equality used where value equality is meant — is materially correct for this code. The suggested rewrite to `num1.equals(num2)` yields the intended true.",
+          "is_true_positive": true,
+          "confidence": 0.97,
+          "category": "CORRECTNESS",
+          "issue_signature": "boxed numeric wrappers compared with reference equality",
+          "developer_explanation": "The two variables are `Integer` objects, not primitives, so `==` checks whether they are the same object rather than whether they hold the same number. Because 1024 is outside the range of values the JVM caches for boxed integers, two separate objects are created and this prints `false`. Use `num1.equals(num2)`, or declare the variables as `int`, to compare the numeric values.",
+          "run": 2,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 710,
+            "output_tokens": 373,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 6.72
+        },
+        {
+          "reasoning": "Both operands are boxed Integer objects holding 1024, which is outside the Integer cache range (-128..127), so `num1 == num2` compares references and evaluates to false rather than comparing the numeric values. The evident intent is to compare the numbers, making this a genuine reference-vs-value equality defect. The tool's suggested rewrite to `num1.equals(num2)` correctly restores the intended value comparison.",
+          "is_true_positive": true,
+          "confidence": 0.97,
+          "category": "CORRECTNESS",
+          "issue_signature": "boxed number compared with reference equality instead of equals",
+          "developer_explanation": "The two variables are boxed Integer objects, and `==` compares object identity, not the numbers they hold. Because 1024 is outside the small-integer cache the JVM reuses, the two boxes are distinct objects and this prints false even though both values are 1024. Use `num1.equals(num2)` (or compare primitive `int` values) to get the intended numeric comparison.",
+          "run": 3,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 710,
+            "output_tokens": 368,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 7.094
+        }
+      ]
+    },
+    {
+      "finding_id": 6,
+      "type": "StringCaseLocaleUsage",
+      "sourcefile": "TypeNameFormatter.java",
+      "start_line": "10",
+      "message": "Specify a `Locale` when calling `String#to{Lower,Upper}Case`. (Note: there are multiple suggested fixes; the third may be most appropriate if you're dealing with ASCII Strings.)",
+      "tool_specific": {
+        "column": "49"
+      },
+      "runs": [
+        {
+          "reasoning": "The flagged line calls `types[0].toUpperCase()` with no `Locale`, so the result depends on the JVM's default locale, which is exactly the property the rule reports. This is not hypothetical for this data: the literal \"String\" contains an 'i', which uppercases to 'İ' (dotted capital I) under a Turkish default locale, producing a different string than intended. The separate indexing bug on the same line (using `0` instead of `i`) is a different defect and does not make this warning wrong.",
+          "is_true_positive": true,
+          "confidence": 0.9,
+          "category": "CORRECTNESS",
+          "issue_signature": "case conversion without an explicit locale",
+          "developer_explanation": "Calling `toUpperCase()` without a locale uses whatever default locale the JVM happens to run under, so the same input can produce different output on different machines — for example, 'i' becomes the dotted 'İ' under a Turkish locale, so \"String\" would not uppercase to \"STRING\". Pass an explicit locale, such as `toUpperCase(Locale.ROOT)`, when the conversion is meant to be locale-independent, or the user's locale when it is meant for display.",
+          "run": 1,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 963,
+            "output_tokens": 608,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 11.056
+        },
+        {
+          "reasoning": "Line 10 calls `types[0].toUpperCase()` with no Locale argument, so the conversion uses the JVM's default locale, which is exactly the pattern the rule flags. Under a Turkish-style locale, uppercasing strings such as \"String\" or \"Integer\" yields dotted capital \"\\u0130\" instead of \"I\", so the output genuinely varies with the runtime environment. The claim is materially correct for the shown code; the separate indexing bug (using `types[0]`/`typesUpper[0]` inside a loop over `i`) is a different defect and does not invalidate this warning.",
+          "is_true_positive": true,
+          "confidence": 0.9,
+          "category": "CORRECTNESS",
+          "issue_signature": "case conversion without explicit locale",
+          "developer_explanation": "The uppercase conversion here relies on the JVM's default locale, so the result changes depending on where the program runs \\u2014 for example, in a Turkish locale the letter 'i' becomes '\\u0130' rather than 'I', producing unexpected output for names like \"String\" or \"Integer\". Pass an explicit locale (typically `Locale.ROOT` for locale-independent, ASCII-style text) so the conversion is deterministic. Note also that the loop writes and reads index 0 instead of `i`, which looks unintended.",
+          "run": 2,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 963,
+            "output_tokens": 683,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 11.827
+        },
+        {
+          "reasoning": "Line 10 calls `types[0].toUpperCase()` with no `Locale`, so the result depends on the JVM's default locale; with a Turkish default locale the 'i' in \"String\" would uppercase to 'İ' rather than 'I', producing output that differs across environments. The rule's claim — that a locale is not specified on a `String#toUpperCase` call — is literally and materially true for this line. That another, more obvious bug exists nearby (indexing with 0 instead of i) does not affect this verdict.",
+          "is_true_positive": true,
+          "confidence": 0.93,
+          "category": "CORRECTNESS",
+          "issue_signature": "case conversion without an explicit locale",
+          "developer_explanation": "The uppercase conversion here uses whatever locale the JVM happens to be running under, so the same input can produce different output on different machines (for example, in a Turkish locale 'i' becomes 'İ' instead of 'I'). Pass an explicit locale — `Locale.ROOT` for locale-independent text such as identifiers or type names — so the behaviour is deterministic everywhere.",
+          "run": 3,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 963,
+            "output_tokens": 635,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 10.817
+        }
+      ]
+    },
+    {
+      "finding_id": 7,
+      "type": "EqualsHashCode",
+      "sourcefile": "PersonRegistry.java",
+      "start_line": "21",
+      "message": "Classes that override equals should also override hashCode.",
+      "tool_specific": {
+        "column": "24"
+      },
+      "runs": [
+        {
+          "reasoning": "The complete file is shown and the nested Person class overrides equals(Object) at line 21 but defines no hashCode() method, so it inherits Object's identity-based hash. That directly violates the equals/hashCode contract: two Person instances that compare equal can yield different hash codes, breaking HashMap/HashSet lookups. The tool's claim matches the code exactly.",
+          "is_true_positive": true,
+          "confidence": 0.97,
+          "category": "CORRECTNESS",
+          "issue_signature": "class overrides equals without overriding hashCode",
+          "developer_explanation": "Person defines equals() but not hashCode(), so it still uses the default identity hash. Two Person objects that your equals() considers equal will usually land in different buckets of a HashMap or HashSet, so lookups and duplicate detection will silently fail. Add a hashCode() implementation based on the same fields used in equals (name and age). Separately, note that equals compares name.equals(name), which always compares the field to itself and should probably be name.equals(person.name).",
+          "run": 1,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 969,
+            "output_tokens": 459,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 7.728
+        },
+        {
+          "reasoning": "The snippet is stated to be the complete file, and the nested Person class overrides equals(Object) at line 21 while declaring no hashCode() method anywhere in the class. This breaks the Object.equals/hashCode contract: two Person instances that compare equal will generally have different hash codes, so lookups in HashMap/HashSet and similar hash-based collections will misbehave. The tool's claim is literally and materially correct for this code.",
+          "is_true_positive": true,
+          "confidence": 0.97,
+          "category": "CORRECTNESS",
+          "issue_signature": "class overrides equals without overriding hashCode",
+          "developer_explanation": "The Person class defines equals() but inherits the default hashCode() from Object, so two Persons considered equal can still produce different hash codes. That silently breaks HashMap, HashSet, and any other hash-based collection or stream distinct() operation involving Person. Add a hashCode() implementation based on the same fields used in equals (name and age). While you are there, note that the equals comparison `name.equals(name)` compares the field to itself and should be `name.equals(person.name)`.",
+          "run": 2,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 969,
+            "output_tokens": 581,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 10.694
+        },
+        {
+          "reasoning": "The snippet is the complete file, and the nested Person class declares an @Override equals(Object) but no hashCode() method, so it inherits Object's identity-based hashCode. That directly violates the equals/hashCode contract: two Person instances that are equal can yield different hash codes, breaking HashMap/HashSet lookups. The tool's claim is factually correct for the shown code (a separate bug, name.equals(name), exists nearby but does not affect this verdict).",
+          "is_true_positive": true,
+          "confidence": 0.97,
+          "category": "CORRECTNESS",
+          "issue_signature": "equals overridden without corresponding hashCode override",
+          "developer_explanation": "The Person class defines its own equals() but does not define hashCode(), so it keeps the identity-based hash inherited from Object. Two Person objects that compare equal will then usually land in different buckets, so hash-based collections such as HashMap and HashSet will treat them as distinct and lookups will fail. Add a hashCode() implementation derived from the same fields used in equals (name and age), e.g. Objects.hash(name, age).",
+          "run": 3,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 969,
+            "output_tokens": 481,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 10.118
+        }
+      ]
+    },
+    {
+      "finding_id": 8,
+      "type": "EqualsGetClass",
+      "sourcefile": "PersonRegistry.java",
+      "start_line": "21",
+      "message": "Prefer instanceof to getClass when implementing Object#equals.",
+      "tool_specific": {
+        "column": "24"
+      },
+      "runs": [
+        {
+          "reasoning": "The flagged equals method does compare types with `getClass() != obj.getClass()` (line 25) rather than `instanceof`, exactly the pattern the rule describes, and `Person` is a non-final static nested class so subclasses can exist and would be rejected by any superclass instance comparison, breaking symmetry with proxies/subclasses. The tool's claim about the shown code is therefore materially correct, even though the suggested fix is only pointed at the method declaration line. A separate, more serious bug exists on line 29 (`name.equals(name)` instead of `name.equals(person.name)`), but that does not make this warning wrong.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "equals implementation compares runtime classes instead of using instanceof",
+          "developer_explanation": "The equality check uses `getClass() != obj.getClass()`, which means any subclass instance is never considered equal to a base instance, even when all relevant fields match; this breaks substitutability and interacts badly with proxies or generated subclasses. Since this class is not final, prefer `if (!(obj instanceof Person)) return false;` (or make the class final if class-identity comparison really is intended). While you are in this method, also note that line 29 compares `name.equals(name)` instead of `name.equals(person.name)`.",
+          "run": 1,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 997,
+            "output_tokens": 746,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 11.365
+        },
+        {
+          "reasoning": "The flagged equals implementation does use `getClass() != obj.getClass()` (line 25) rather than an instanceof check, which is exactly the pattern the rule describes, and the enclosing Person class is neither final nor equipped with any documented subclass contract, so the substitutability/proxy concerns the rule raises apply. The tool's claim about the code is therefore materially accurate; whether one prefers getClass() semantics is a design preference, but the pattern the rule reports is genuinely present here. (A separate, more serious bug exists on line 29 where `name.equals(name)` always compares the field to itself, but the presence of another defect does not make this warning false.)",
+          "is_true_positive": true,
+          "confidence": 0.75,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "equals implemented with getClass comparison instead of instanceof",
+          "developer_explanation": "The equals method rejects any object whose runtime class is not exactly Person, so subclasses, dynamic proxies, or framework-generated wrappers of Person can never be considered equal to a Person even when their state matches. Using `if (!(obj instanceof Person)) return false;` keeps the equality contract symmetric and works with subclassing. (Separately, line 29 compares `name.equals(name)` instead of `name.equals(person.name)`, which is a real logic error worth fixing at the same time.)",
+          "run": 2,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 997,
+            "output_tokens": 801,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 13.562
+        },
+        {
+          "reasoning": "The flagged equals implementation does use `getClass() != obj.getClass()` (line 25) rather than an instanceof check, so the pattern the rule reports is literally present in the shown code. Person is a non-final nested class, so subclasses are possible and the getClass comparison would make a subclass instance unequal to an otherwise-identical Person, which is the substitutability concern the rule describes. The claim is therefore materially correct for this code, independent of the separate self-comparison bug on line 29.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "equals implemented with getClass comparison instead of instanceof",
+          "developer_explanation": "The equality check compares runtime classes with getClass(), which means an instance of any subclass of Person can never be equal to a plain Person even when all fields match; this breaks substitutability and also trips up proxies and generated subclasses. Since the class is not final, using `obj instanceof Person` (and optionally making the class final if you truly want exact-type equality) is the safer form. Note also that line 29 compares `name.equals(name)` instead of `name.equals(person.name)`, so the name is effectively ignored.",
+          "run": 3,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 997,
+            "output_tokens": 783,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 12.508
+        }
+      ]
+    },
+    {
+      "finding_id": 9,
+      "type": "SelfEquals",
+      "sourcefile": "PersonRegistry.java",
+      "start_line": "29",
+      "message": "Testing an object for equality with itself will always be true.",
+      "tool_specific": {
+        "column": "52"
+      },
+      "runs": [
+        {
+          "reasoning": "Line 29 calls `name.equals(name)`, comparing the field to itself rather than to `person.name`, which always evaluates to true (or NPE if name is null). This makes equals return true for any two Person instances with equal ages regardless of name, exactly as demonstrated by the main method printing p1.equals(p2) for \"John\" vs \"Kate\". The tool's claim and its suggested fix (`name.equals(person.name)`) are both materially correct.",
+          "is_true_positive": true,
+          "confidence": 0.99,
+          "category": "CORRECTNESS",
+          "issue_signature": "object compared for equality with itself",
+          "developer_explanation": "In the equals method, the name field is compared against itself instead of against the other object's name, so the comparison is always true and two people with the same age but different names are reported as equal. Change it to compare this object's name with person.name (and consider guarding against a null name). As written, equality and any hash-based collections relying on it will behave incorrectly.",
+          "run": 1,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 980,
+            "output_tokens": 324,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 7.689
+        },
+        {
+          "reasoning": "Line 29 calls name.equals(name), comparing the field to itself, which is always true and never compares against person.name. This makes equals return true for any two Person instances with the same age regardless of name — indeed p1.equals(p2) in main would print true for \"John\" and \"Kate\". The tool's claim and suggested fix are exactly right.",
+          "is_true_positive": true,
+          "confidence": 0.99,
+          "category": "CORRECTNESS",
+          "issue_signature": "object compared for equality with itself, always true",
+          "developer_explanation": "In the equals method the name field is compared against itself (name.equals(name)), which is always true, so the name is never actually taken into account. As a result two people with the same age but different names are considered equal. Change the comparison to name.equals(person.name), and consider handling a null name (e.g. Objects.equals).",
+          "run": 2,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 980,
+            "output_tokens": 279,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 8.873
+        },
+        {
+          "reasoning": "Line 29 calls name.equals(name), comparing this object's name field with itself, which always returns true (unless name is null, in which case it throws). The clear intent is name.equals(person.name), so the equals implementation ignores the name entirely and would report p1 (\"John\", 25) equal to p2 (\"Kate\", 25). The tool's claim and suggested fix are exactly right.",
+          "is_true_positive": true,
+          "confidence": 0.99,
+          "category": "CORRECTNESS",
+          "issue_signature": "field compared for equality with itself instead of other operand",
+          "developer_explanation": "In the equals method, the name comparison is name.equals(name), which compares the field to itself and is always true, so names are never actually compared. As a result two Person objects with the same age but different names are reported as equal. Change it to name.equals(person.name) (and consider handling a null name, e.g. with Objects.equals).",
+          "run": 3,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 980,
+            "output_tokens": 302,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 6.973
+        }
+      ]
+    },
+    {
+      "finding_id": 10,
+      "type": "UnusedVariable",
+      "sourcefile": "ValueReporter.java",
+      "start_line": "10",
+      "message": "This assignment to the local variable 'x' is never read.",
+      "tool_specific": {
+        "column": "13"
+      },
+      "runs": [
+        {
+          "reasoning": "In `int x = 1; x =+ 2;`, the second statement parses as `x = +2`, an assignment of the unary-plus literal 2, so the initial value 1 is overwritten before ever being read — the tool's claim about the flagged line is factually correct. This dead store is exactly the symptom of the classic `=+` versus `+=` typo: the author evidently meant `x += 2` (result 3) but the code prints 2. The warning therefore points at a real defect, not just cosmetic dead code.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "value assigned to local variable overwritten before being read",
+          "developer_explanation": "The initial value assigned to the variable is thrown away immediately, because the next line is `x =+ 2`, which Java reads as `x = +2` (assign positive two) rather than `x += 2` (add two). As a result the code prints 2 instead of the intended 3. Change the statement to `x += 2` (or remove the redundant initialization if 2 really is the intended value).",
+          "run": 1,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 810,
+            "output_tokens": 705,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 11.991
+        },
+        {
+          "reasoning": "Line 11 reads `x =+ 2;`, which Java parses as `x = +2`, an unconditional reassignment that overwrites the value assigned on line 10 before it is ever read. Therefore the initializer `int x = 1;` really is a dead store, exactly as the tool claims, and it is symptomatic of the classic `=+` versus `+=` typo. The claim is materially correct for the shown code.",
+          "is_true_positive": true,
+          "confidence": 0.96,
+          "category": "CORRECTNESS",
+          "issue_signature": "value assigned to local variable is never read before being overwritten",
+          "developer_explanation": "The value 1 assigned to the variable is immediately discarded because the next line, `x =+ 2;`, is parsed as `x = +2` (assignment of positive two), not as `x += 2`. As a result the printed value is 2 rather than the intended 3. Fix the operator to `+=` (or remove the redundant initialization if overwriting really is intended).",
+          "run": 2,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 810,
+            "output_tokens": 616,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 10.14
+        },
+        {
+          "reasoning": "The initializer `int x = 1;` is immediately overwritten by `x =+ 2;`, which Java parses as `x = (+2)`, so the value 1 is never read before being replaced. The tool's claim that the assignment is never read is therefore literally correct for this code, and it exposes the classic `=+` versus `+=` typo: the printed result is 2 rather than the intended 3. No code outside the snippet can affect this, since `x` is a local variable whose entire lifetime is visible.",
+          "is_true_positive": true,
+          "confidence": 0.96,
+          "category": "CORRECTNESS",
+          "issue_signature": "value assigned to local variable is never read",
+          "developer_explanation": "The value assigned when the variable is declared is thrown away on the next line, because `x =+ 2` is parsed as `x = +2` (assigning positive two), not as `x += 2`. As written the method prints 2 instead of 3. Change the line to `x += 2;` if incrementing was intended.",
+          "run": 3,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 810,
+            "output_tokens": 681,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 11.974
+        }
+      ]
+    },
+    {
+      "finding_id": 11,
+      "type": "ReturnValueIgnored",
+      "sourcefile": "TextTrimmer.java",
+      "start_line": "6",
+      "message": "Return value of 'substring' must be used",
+      "tool_specific": {
+        "column": "20"
+      },
+      "runs": [
+        {
+          "reasoning": "Line 6 calls s.substring(3) as a statement and discards the result; String is immutable, so the call has no effect and s remains \"abcdef\" when printed on line 7. The evident intent is to trim the string, which fails silently. This is a textbook ignored-return-value bug, and the suggested fix (assigning back to s) matches the intent.",
+          "is_true_positive": true,
+          "confidence": 0.98,
+          "category": "CORRECTNESS",
+          "issue_signature": "ignored return value of pure string method call",
+          "developer_explanation": "Strings are immutable, so calling substring does not modify the original string \result here throws away the new string, leaving the variable unchanged, so the following print outputs the full original text. Assign the result back (s = s.substring(3);) or use the returned value directly.",
+          "run": 1,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 702,
+            "output_tokens": 265,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 5.947
+        },
+        {
+          "reasoning": "Line 6 calls s.substring(3) as a statement and discards the result; String is immutable, so the call has no effect and s remains \"abcdef\" when printed on line 7. The evident intent — trimming the first three characters — is not achieved, making this a clear ignored-return-value bug. The suggested fix (s = s.substring(3)) matches the apparent intent.",
+          "is_true_positive": true,
+          "confidence": 0.99,
+          "category": "CORRECTNESS",
+          "issue_signature": "ignored return value of pure immutable-string method call",
+          "developer_explanation": "Strings are immutable, so calling substring does not modify the variable; the result is thrown away and the printed value is still the original text. If you intended to drop the first three characters, assign the result back (s = s.substring(3)); otherwise the statement is dead code and should be removed.",
+          "run": 2,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 702,
+            "output_tokens": 278,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 7.43
+        },
+        {
+          "reasoning": "Line 6 calls s.substring(3) as a statement and discards the result; String is immutable, so the call has no effect and s remains \"abcdef\" when printed. The evident intent — trimming the first three characters — is not achieved, making this a genuine ignored-return-value bug. No surrounding code could change this since the whole file is shown.",
+          "is_true_positive": true,
+          "confidence": 0.98,
+          "category": "CORRECTNESS",
+          "issue_signature": "ignored return value of pure immutable-string method",
+          "developer_explanation": "Strings in Java are immutable, so calling substring does not modify the variable; it returns a new String that is being thrown away, leaving the original value unchanged. As written, the program prints the full original text rather than the trimmed version. Assign the result back (or to a new variable) if you intend to use the trimmed string.",
+          "run": 3,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 702,
+            "output_tokens": 282,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 7.311
+        }
+      ]
+    },
+    {
+      "finding_id": 12,
+      "type": "MissingOverride",
+      "sourcefile": "PersonRanking.java",
+      "start_line": "18",
+      "message": "compareTo implements method in Comparable; expected @Override",
+      "tool_specific": {
+        "column": "20"
+      },
+      "runs": [
+        {
+          "reasoning": "The nested class declares `implements Comparable<Person>` and its `compareTo(Person)` method implements the interface method, yet carries no `@Override` annotation. That is exactly the condition the rule describes, so the claim is materially correct for this code. The unrelated logic bug (returning -1 for equal ages) does not affect this verdict.",
+          "is_true_positive": true,
+          "confidence": 0.97,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "interface-implementing method missing @Override annotation",
+          "developer_explanation": "The `compareTo(Person)` method implements the method declared by `Comparable`, but it is not marked with `@Override`. Adding the annotation documents the intent and lets the compiler catch it if the signature ever drifts (for example, if someone changes the parameter type and it silently stops implementing the interface). Add `@Override` above the method declaration.",
+          "run": 1,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 871,
+            "output_tokens": 384,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 7.329
+        },
+        {
+          "reasoning": "The nested class declares `implements Comparable<Person>` and the flagged method `public int compareTo(Person obj)` is exactly the interface method being implemented, yet it carries no `@Override` annotation. The tool's claim is therefore literally correct for the shown code. Adding the annotation would not change behaviour but documents the intent and lets the compiler catch signature drift.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "interface method implementation missing @Override annotation",
+          "developer_explanation": "This method implements the `compareTo` method declared by the `Comparable` interface the class implements, but it isn't marked with `@Override`. Adding the annotation makes the intent explicit and lets the compiler flag it if the signature ever drifts (for example if the type parameter changes and the method silently becomes an unrelated overload). Just add `@Override` above the method declaration.",
+          "run": 2,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 871,
+            "output_tokens": 414,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 8.895
+        },
+        {
+          "reasoning": "The class declares `implements Comparable<Person>` and the flagged method `compareTo(Person)` is exactly the interface method implementation, yet it carries no `@Override` annotation. The tool's claim is therefore materially correct for the shown code. (Separately, the comparison logic never returns 0 for equal ages, but that is a different issue and does not affect this verdict.)",
+          "is_true_positive": true,
+          "confidence": 0.97,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "interface method implementation missing @Override annotation",
+          "developer_explanation": "This method implements the `compareTo` method declared by `Comparable`, but it is not marked with `@Override`. Adding the annotation documents the intent and lets the compiler catch mistakes if the signature ever drifts from the interface (for example, a wrong parameter type that would silently become an overload instead of an implementation).",
+          "run": 3,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 871,
+            "output_tokens": 301,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 11.521
+        }
+      ]
+    },
+    {
+      "finding_id": 13,
+      "type": "ModifyCollectionInEnhancedForLoop",
+      "sourcefile": "ItemAppender.java",
+      "start_line": "12",
+      "message": "Modifying a collection while iterating over it in a loop may cause a ConcurrentModificationException to be thrown or lead to undefined behavior.",
+      "tool_specific": {
+        "column": "25"
+      },
+      "runs": [
+        {
+          "reasoning": "The code adds an element to `list` inside an enhanced for loop iterating over that same `list`, which is exactly the pattern the rule describes. ArrayList's iterator is fail-fast, so the structural modification will cause a ConcurrentModificationException on the next call to `next()` (here, after printing \"b\", the loop will throw when advancing). The warning's claim is materially correct for this code.",
+          "is_true_positive": true,
+          "confidence": 0.98,
+          "category": "CORRECTNESS",
+          "issue_signature": "collection structurally modified while iterating over it",
+          "developer_explanation": "Inside the for-each loop you call add() on the very list being iterated, which structurally modifies it and invalidates the iterator; ArrayList's iterator detects this and throws ConcurrentModificationException on the next iteration step. If you need to append while scanning, collect the new items in a separate list and add them after the loop, or iterate with an explicit ListIterator/index-based loop that supports modification.",
+          "run": 1,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 880,
+            "output_tokens": 331,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 9.162
+        },
+        {
+          "reasoning": "The code adds an element to `list` inside an enhanced for loop that iterates over that same `list`, which is a plain ArrayList with a fail-fast iterator. On the next call to `next()`/`hasNext()` after the structural modification, the modCount check will throw ConcurrentModificationException, so the claim is materially correct for this exact code. No guard (such as a break immediately after the add) prevents the iterator from continuing.",
+          "is_true_positive": true,
+          "confidence": 0.97,
+          "category": "CORRECTNESS",
+          "issue_signature": "collection structurally modified while iterated in enhanced for loop",
+          "developer_explanation": "You add an element to the list while an enhanced for loop is iterating over the same list; the list's iterator is fail-fast and will throw a ConcurrentModificationException on the next iteration step. Collect the items to add in a separate list and append them after the loop finishes, or iterate with an explicit ListIterator and use its add method.",
+          "run": 2,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 880,
+            "output_tokens": 358,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 8.329
+        },
+        {
+          "reasoning": "The code adds to `list` inside an enhanced for loop that is iterating over that same `list`, which is exactly the flagged pattern. ArrayList's iterator is fail-fast, so the structural modification will cause the next call to `next()`/`hasNext()`-driven `next()` to throw ConcurrentModificationException; here adding \"x\" while at element \"b\" leaves a further element, so the exception will actually be thrown at runtime. The claim is materially correct for this code.",
+          "is_true_positive": true,
+          "confidence": 0.97,
+          "category": "CORRECTNESS",
+          "issue_signature": "collection structurally modified while iterating over it",
+          "developer_explanation": "You are adding an element to the same list you are looping over with a for-each loop. ArrayList's iterator detects that change and throws a ConcurrentModificationException on the next iteration, so this loop will fail at runtime. Collect the new items in a separate list and add them after the loop finishes, or iterate with an explicit ListIterator that supports adding.",
+          "run": 3,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 880,
+            "output_tokens": 343,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 9.229
+        }
+      ]
+    },
+    {
+      "finding_id": 14,
+      "type": "FallThrough",
+      "sourcefile": "MenuHandler.java",
+      "start_line": "13",
+      "message": "Execution may fall through from the previous case; add a `// fall through` comment before this line if it was deliberate",
+      "tool_specific": {
+        "column": "13"
+      },
+      "runs": [
+        {
+          "reasoning": "Case 1 prints \"User 1\" and has no break, return, or throw, so execution falls through into the default label at line 13, which also prints \"Invalid option\". The fall-through is unlabelled by any comment, and given that case 0 does break, the inconsistency strongly suggests an unintended omission — a user choice of 1 will print both a valid and an invalid message. The tool's claim about the code is factually correct at the flagged line.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "unmarked fall-through between switch cases",
+          "developer_explanation": "The branch for choice 1 prints its message but never breaks, so control continues into the default branch and also prints \"Invalid option\". If that was not intended, add a break (or return) at the end of that branch; if it really is deliberate, add an explicit \"fall through\" comment so readers and tools know.",
+          "run": 1,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 812,
+            "output_tokens": 310,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 8.732
+        },
+        {
+          "reasoning": "Case 1 prints \"User 1\" and has no break, return, or throw, so execution falls through into the default label and also prints \"Invalid option\"; there is no `// fall through` comment. Given the pattern of the other cases (each terminated by break) and the fact that a valid choice would print an \"Invalid option\" message, this is almost certainly unintended. The tool's claim about the code is exactly correct at the flagged line.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "switch case falls through without break or comment",
+          "developer_explanation": "The branch for choice 1 prints its message but never breaks, so control continues into the default branch and \"Invalid option\" is printed as well for a perfectly valid selection. Add a `break;` after the \"User 1\" line, or, if the fall-through really is intended, mark it with an explicit `// fall through` comment so readers and tools know it is deliberate.",
+          "run": 2,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 812,
+            "output_tokens": 326,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 13.405
+        },
+        {
+          "reasoning": "Case 1 prints \"User 1\" and has no break, return, or throw, so execution falls through into the default label and also prints \"Invalid option\"; there is no `// fall through` comment. Given the other cases each end with break and the default is the \"Invalid option\" message, the fall-through is almost certainly unintended and produces two messages for input 1. The warning's factual claim about the shown code is exactly correct.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "unannotated fall-through between non-empty switch cases",
+          "developer_explanation": "The `case 1` branch prints its message but never breaks, so control continues into the `default` branch and \"Invalid option\" is printed as well for choice 1. Add a `break;` after the `System.out.println(\"User 1\");` line, or, if the fall-through really is wanted, mark it with an explicit `// fall through` comment so readers know it is deliberate.",
+          "run": 3,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 812,
+            "output_tokens": 329,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 7.529
+        }
+      ]
+    }
+  ]
+}

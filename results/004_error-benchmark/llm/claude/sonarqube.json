@@ -1,0 +1,1112 @@
+{
+  "model": "claude-opus-5",
+  "tool": "sonarqube",
+  "num_runs": 3,
+  "runs_per_invocation": 3,
+  "source_root": "java-errors-benchmark",
+  "call_parameters": {
+    "temperature": null,
+    "concurrency": 3,
+    "response_format": "json_schema",
+    "max_tokens": 8192,
+    "max_retries": 6,
+    "base_url": "https://api.anthropic.com"
+  },
+  "system_prompt_variant": "benchmark",
+  "system_prompt_sha256": "b5b634e0a9109c59",
+  "user_prompt_sha256": "233249fc03b8f699",
+  "timestamp": "2026-08-09T18:31:09.062943+00:00",
+  "updated_at": "2026-08-10T20:10:18.149721+00:00",
+  "findings": [
+    {
+      "finding_id": 0,
+      "type": "java:S2251",
+      "sourcefile": "CountdownPrinter.java",
+      "start_line": "5",
+      "message": "\"i\" is incremented and will never reach \"stop condition\".",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The loop starts at i = 5, continues while i >= 0, and increments i, so the counter moves away from the termination condition instead of toward it. The evident intent (a countdown printer that prints 5 down to 0) requires i--; as written the loop prints roughly two billion values and only exits when int overflow wraps i to a negative value. The tool's claim that the increment never brings the counter to the stop condition is materially correct for this code.",
+          "is_true_positive": true,
+          "confidence": 0.97,
+          "category": "CORRECTNESS",
+          "issue_signature": "loop counter updated away from its termination condition",
+          "developer_explanation": "The loop begins at 5 and keeps increasing i while testing i >= 0, so it never counts down; it runs until the int overflows and wraps negative, printing billions of lines first. If the goal is a countdown from 5 to 0, change the update to i-- (or reverse the condition to match the increment).",
+          "run": 1,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 679,
+            "output_tokens": 482,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 11.01
+        },
+        {
+          "reasoning": "The loop starts at i = 5, continues while i >= 0, and increments i each iteration, so the update moves the variable away from the exit condition; it only ever ends via signed integer overflow after roughly two billion iterations printing wrong values. Given the class name and initial value 5, the evident intent is a countdown using i--. The tool's claim about the flagged line is materially correct.",
+          "is_true_positive": true,
+          "confidence": 0.97,
+          "category": "CORRECTNESS",
+          "issue_signature": "loop counter updated away from its termination condition",
+          "developer_explanation": "This loop starts at 5 and keeps increasing the counter while testing that it is still non-negative, so it never counts down; it only stops after about two billion iterations when the integer wraps around to a negative value. If the goal is to print 5 down to 0, the update should be i-- instead of i++.",
+          "run": 2,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 679,
+            "output_tokens": 452,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 8.939
+        },
+        {
+          "reasoning": "The loop starts at i = 5, continues while i >= 0, and increments i, so the condition stays true until int overflow wraps i to negative — the loop runs about 2^31 iterations, printing values, rather than counting down as the class name and initial value imply. This is exactly the pattern the rule describes: the counter moves away from the stop condition. The intent was clearly a countdown, so the increment should be a decrement.",
+          "is_true_positive": true,
+          "confidence": 0.97,
+          "category": "CORRECTNESS",
+          "issue_signature": "loop counter updated away from its termination condition",
+          "developer_explanation": "The loop begins at 5 and keeps incrementing while the condition requires the value to stay non-negative, so it will not stop until the integer overflows, printing over two billion lines first. Given the countdown intent, the update should be i-- rather than i++.",
+          "run": 3,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 679,
+            "output_tokens": 287,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 7.375
+        }
+      ]
+    },
+    {
+      "finding_id": 1,
+      "type": "java:S2189",
+      "sourcefile": "CountdownPrinter.java",
+      "start_line": "5",
+      "message": "Correct this loop's end condition.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The loop starts at i = 5, continues while i >= 0, but increments i, so the condition stays true until integer overflow wraps i to Integer.MIN_VALUE after roughly two billion iterations — it is effectively an unbounded loop and clearly not the countdown the class name and initial value imply. Even under the strict reading that overflow eventually terminates it, the end condition is wrong for the intended behaviour, which is exactly what the warning claims. The decisive evidence is entirely inside the shown file, which is complete.",
+          "is_true_positive": true,
+          "confidence": 0.96,
+          "category": "CORRECTNESS",
+          "issue_signature": "loop counter moves away from its termination condition",
+          "developer_explanation": "The counter starts at 5 and the loop runs while it is non-negative, but the counter is incremented instead of decremented, so the condition never becomes false until the value overflows into the negative range after billions of iterations. In practice this prints numbers endlessly rather than counting down. Change the update to i-- (or fix the condition/bounds) so the loop terminates as intended.",
+          "run": 1,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 687,
+            "output_tokens": 515,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 8.967
+        },
+        {
+          "reasoning": "The loop starts at i=5 with condition i >= 0 but increments i, so the condition stays true until int overflow wraps to Integer.MIN_VALUE after roughly two billion iterations — the loop never terminates in any practical sense and clearly contradicts the intended countdown. The class name and the descending initial value make plain that the update should be i--. This is exactly the pattern the rule describes: an end condition that the loop body's update drives away from rather than toward.",
+          "is_true_positive": true,
+          "confidence": 0.97,
+          "category": "CORRECTNESS",
+          "issue_signature": "loop counter updated away from its termination condition",
+          "developer_explanation": "The loop begins at 5 and continues while i is non-negative, but it increases i on each pass, so the condition never becomes false until the counter overflows after about two billion printed lines. The intent is clearly a countdown, so the update should be i-- instead of i++.",
+          "run": 2,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 687,
+            "output_tokens": 514,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 9.332
+        },
+        {
+          "reasoning": "The loop initializes i to 5 and increments it while testing i >= 0, so a class named for a countdown actually counts up and only stops after roughly two billion iterations when the int overflows to a negative value. The end condition is plainly wrong for the evident intent (a countdown would use i-- or a decrementing condition), and even taken on its own terms the loop runs effectively forever from a user's perspective. The tool's instruction to correct the loop's end condition is materially correct for this code.",
+          "is_true_positive": true,
+          "confidence": 0.97,
+          "category": "CORRECTNESS",
+          "issue_signature": "loop condition never falsified by the update expression",
+          "developer_explanation": "The loop starts at 5 and increments while checking that the value is still non-negative, so it counts upward and keeps printing until the integer wraps around to a negative number after about two billion iterations. That is clearly not the intended countdown behaviour and will hang the program in practice. Change the update to decrement (i--) so the condition i >= 0 eventually becomes false.",
+          "run": 3,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 687,
+            "output_tokens": 490,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 10.935
+        }
+      ]
+    },
+    {
+      "finding_id": 2,
+      "type": "java:S6880",
+      "sourcefile": "InputRouter.java",
+      "start_line": "13",
+      "message": "Replace the chain of if/else with a switch expression.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "Lines 13\ndash19 form an if/else-if/else chain testing the same int variable against the constants 3 and 4 with a final default branch, which is exactly the shape a switch can express, so the tool's structural claim holds for the flagged construct. Converting that chain (which is where the warning points, at the second `if`) into a switch is behaviour-preserving, so the claim is materially correct. The method also contains a likely typo \\which the missing `else` at line 13 that splits one intended chain into two, but the presence of that separate, more serious defect does not make this readability claim wrong; if anything, rewriting as a switch would surface it.",
+          "is_true_positive": true,
+          "confidence": 0.72,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "if-else chain on one variable convertible to switch",
+          "developer_explanation": "The block starting at the second `if` compares the same integer against a series of constant values and ends with a catch-all branch; that is more clearly and compactly written as a switch. Rewriting it as a switch also makes it obvious that the preceding `if`/`else if` pair is a separate statement \\which the missing `else` before this `if` means inputs 1 and 2 also fall through to the default branch \\which so the conversion is worth doing and will help you spot that bug.",
+          "run": 1,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 848,
+            "output_tokens": 1444,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 24.528
+        },
+        {
+          "reasoning": "Line 13 begins a genuine if/else-if/else chain that tests the same variable `input` against the integer constants 3 and 4 with a final default branch, which is exactly the shape that maps onto a switch on `input`. The claim behind the warning \be replaced by a switch\ninstead\" is therefore materially correct for the flagged construct, and rewriting only that chain as a switch (statement, or a switch expression feeding the println argument) preserves the current behaviour. The separate, arguably more serious defect nearby \\u2014 the missing `else` before the `if` on line 13, which lets input 1 or 2 also print the default message \\u2014 does not make this warning wrong; it is simply a different issue the rule does not address.",
+          "is_true_positive": true,
+          "confidence": 0.8,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "if/else-if chain on one value convertible to switch",
+          "developer_explanation": "The branches starting at the `if (input == 3)` test compare the same variable against constant values and end with a catch-all branch, so they read more clearly as a single switch over `input` than as a chain of conditionals. Rewriting them as a switch keeps behaviour identical and makes it obvious that all branches are alternatives on one value. While you are there, note that the `if` on that line has lost its `else`, so the two chains run independently \\u2014 inputs 1 and 2 currently also print the default message.",
+          "run": 2,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 848,
+            "output_tokens": 1422,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 24.222
+        },
+        {
+          "reasoning": "The flagged line 13 begins a second, self-contained if/else-if/else chain (`if (input == 3) ... else if (input == 4) ... else ...`) that tests the same int variable against constants, which is exactly the shape that can be expressed as a switch over `input`; rewriting just that chain preserves the current behaviour, so the tool's claim is materially correct for the code it points at. Note that merging both chains (lines 9\n-19) into one switch would change behaviour, because the missing `else` at line 13 means input 1 or 2 currently also falls into the default branch of the second chain \the 13 \b1 that separate defect is the real bug here, but it does not invalidate the chain-to-switch claim. The rule reports a readability/idiom issue and the flagged construct genuinely is such a chain.",
+          "is_true_positive": true,
+          "confidence": 0.72,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "if/else chain on one variable convertible to switch",
+          "developer_explanation": "The block starting at line 13 compares the same integer against a series of constants through an if/else-if/else chain; a switch over that variable expresses the same logic more clearly and makes it obvious that all branches are alternatives. Separately, note that line 13 is written as `} if (...)` rather than `} else if (...)`, so this is a second, independent chain \b also falints the default message for inputs 1 and 2 \b1 make sure that is intended before converting, and convert each chain on its own or fix the missing `else` first.",
+          "run": 3,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 848,
+            "output_tokens": 2106,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 31.321
+        }
+      ]
+    },
+    {
+      "finding_id": 3,
+      "type": "java:S3972",
+      "sourcefile": "InputRouter.java",
+      "start_line": "13",
+      "message": "Move this \"if\" to a new line or add the missing \"else\".",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "Line 13 places a new `if` on the same line as the closing brace of the previous if/else chain, so it starts a second independent chain rather than continuing the first. For input 1 the method prints \"Processing data for input 1\" and then falls into the second chain's else, also printing \"Processing default data\" — clearly not the intended single-branch dispatch. The suspicious formatting is exactly the pattern the rule targets, and here it also produces wrong behaviour.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "if statement on same line as preceding closing brace, missing else",
+          "developer_explanation": "The `if (input == 3)` on line 13 sits on the same line as the closing brace of the first if/else chain, so it begins a brand-new, independent chain instead of continuing the existing one. As a result, inputs 1 and 2 print their own message and then also fall through to the second chain's default branch, printing \"Processing default data\" as well. Change it to `} else if (input == 3) {` so all cases belong to one chain (or, if two chains really are intended, put the second `if` on its own line to make that explicit).",
+          "run": 1,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 852,
+            "output_tokens": 493,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 11.576
+        },
+        {
+          "reasoning": "Line 13 places `if (input == 3)` on the same line as the closing brace of the preceding if/else-if chain, so it starts a second, independent if-chain rather than continuing the first one. As a result, calling processData(1) prints \"Processing data for input 1\" and then falls into the second chain's final else, also printing \"Processing default data\" — evidently not intended. The flagged construct is exactly the suspicious pattern the rule describes, and here it produces observably wrong output.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "if statement on same line as closing brace, missing else",
+          "developer_explanation": "The `if (input == 3)` written on the same line as the closing brace begins a brand-new if/else chain instead of continuing the previous one. Because that second chain ends with an `else`, inputs 1 and 2 print their own message and then also print \"Processing default data\". Either add the missing `else` before that `if` so it is one chain, or move it to its own line if two separate chains really are intended.",
+          "run": 2,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 852,
+            "output_tokens": 568,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 11.925
+        },
+        {
+          "reasoning": "Line 13 places a new `if (input == 3)` on the same line as the closing brace of the preceding if/else-if chain, so the two chains are independent statements rather than one chain. This means for input 1 the code prints \"Processing data for input 1\" and then falls through to the second chain's else, also printing \"Processing default data\" — as shown by main(1). The formatting strongly suggests the author intended a single chain with `else if`, so the tool's claim about the shown code is materially correct.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "new if statement placed on same line as closing brace of previous chain",
+          "developer_explanation": "The `if (input == 3)` on the same line as the previous closing brace starts a completely separate condition chain instead of continuing the existing one. As a result, calling the method with input 1 or 2 prints its own message and then also falls into the second chain's `else`, printing the default message too. Either write `} else if (input == 3) {` to make it one chain, or move the new `if` to its own line if two independent chains are truly intended.",
+          "run": 3,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 852,
+            "output_tokens": 487,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 9.499
+        }
+      ]
+    },
+    {
+      "finding_id": 4,
+      "type": "java:S127",
+      "sourcefile": "MatrixNormalizer.java",
+      "start_line": "21",
+      "message": "Refactor the code in order to not assign to this loop counter from within the loop body.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The inner loop header `for (int j = 0; i < columns; i++)` uses and increments the outer loop's counter `i` instead of `j`, so the outer counter is indeed assigned from inside the outer loop's body — exactly the pattern the rule flags. This is not a harmless idiom: the inner loop only ever touches column 0 while advancing rows, and afterwards the outer loop's own `i++` skips iterations, so most elements are never normalized. The claim behind the warning is materially correct for this code, and the flagged line is the precise place where the stray counter update occurs.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "loop counter modified from inside the loop body",
+          "developer_explanation": "The inner loop declares `j` but its condition and increment both use the outer counter `i`, so `j` stays 0 and `i` is advanced by the inner loop. As a result only the first column of each row is examined and rows are skipped entirely, leaving negative values unnormalized. Change the inner loop to `for (int j = 0; j < columns; j++)` so each loop controls its own counter.",
+          "run": 1,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 1036,
+            "output_tokens": 1046,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 16.321
+        },
+        {
+          "reasoning": "The inner statement `for (int j = 0; i < columns; i++)` updates the outer loop's counter `i` from inside the outer loop's body, exactly the pattern the rule describes, while the declared inner counter `j` is never incremented. This is not a deliberate idiom but a copy-paste defect: the inner loop should test and increment `j`, so as written the traversal skips rows/columns and can index out of bounds for non-square input (e.g. a row longer than the number of rows). The warning's factual claim about the flagged line is therefore materially correct and points to a real bug.",
+          "is_true_positive": true,
+          "confidence": 0.96,
+          "category": "CORRECTNESS",
+          "issue_signature": "outer loop counter modified inside nested loop body",
+          "developer_explanation": "The inner loop declares `j` but its condition and increment both use the outer index `i`, so `j` stays 0 and `i` is advanced by the inner loop. This makes the nested traversal visit the wrong elements and can throw an ArrayIndexOutOfBoundsException when a row is longer than the number of rows. Change the inner loop to `for (int j = 0; j < columns; j++)`.",
+          "run": 2,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 1036,
+            "output_tokens": 841,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 12.917
+        },
+        {
+          "reasoning": "The inner `for` statement at line 21 uses `i` — the outer loop's counter — in both its condition and its update, so the outer loop counter is assigned from within the outer loop's body, exactly what the rule claims. This is not just a stylistic pitfall here: with the sample data, `i` reaches 2 inside the inner loop, the outer loop then terminates after one iteration, `j` never advances, and only elements [0][0] and [1][0] are normalized. The flagged line is precisely where the offending assignment lives, and the intended code clearly meant `j < columns; j++`.",
+          "is_true_positive": true,
+          "confidence": 0.97,
+          "category": "CORRECTNESS",
+          "issue_signature": "loop counter modified inside the loop body",
+          "developer_explanation": "The inner loop is written as `for (int j = 0; i < columns; i++)` — it tests and increments the outer loop variable `i` instead of `j`. As a result `j` never changes, the outer loop's counter is corrupted, and most matrix cells are never visited (and for wider rows you could also index out of bounds). Change the inner loop to `for (int j = 0; j < columns; j++)`.",
+          "run": 3,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 1036,
+            "output_tokens": 859,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 12.762
+        }
+      ]
+    },
+    {
+      "finding_id": 5,
+      "type": "java:S128",
+      "sourcefile": "MenuHandler.java",
+      "start_line": "11",
+      "message": "End this switch case with an unconditional break, return or throw statement.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "Case 1 at line 11 prints \"User 1\" and then falls through to the default branch, which prints \"Invalid option\", with no break, return or throw terminating the case. There is no comment or other indication that the fall-through is intentional, and the resulting behaviour (a valid choice also printing \"Invalid option\") strongly suggests an omitted break. The tool's claim about the shown code is factually correct.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "switch case falls through without break, return or throw",
+          "developer_explanation": "The branch for choice 1 prints its message but has no break, so execution continues into the default branch and also prints \"Invalid option\" for a perfectly valid choice. Unless the fall-through is deliberate, add a break (or return) at the end of that case; if it is deliberate, document it with an explicit fall-through comment.\n",
+          "run": 1,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 784,
+            "output_tokens": 309,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 8.567
+        },
+        {
+          "reasoning": "Case 1 at line 11 prints \"User 1\" and then falls through into the default case, printing \"Invalid option\" as well, with no break, return, throw, or comment indicating intentional fall-through. This is exactly the pattern the rule flags, and here it produces visibly unintended output for userChoice == 1. Since the code is only 18 lines and self-contained, no external context could justify the fall-through.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "switch case falls through without break or comment",
+          "developer_explanation": "The branch for value 1 prints its message and then keeps running into the default branch, so it also prints \"Invalid option\". Unless that combined output is deliberate, add a break (or return) at the end of that branch; if it really is deliberate, add an explicit fall-through comment so readers know.",
+          "run": 2,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 784,
+            "output_tokens": 292,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 8.174
+        },
+        {
+          "reasoning": "Case 1 at line 11 prints \"User 1\" and then falls through into the default branch, which prints \"Invalid option\" — there is no break, return or throw ending that case. The fall-through is unannotated and produces two messages for choice 1, which is almost certainly unintended. The claim behind the warning is factually correct for this code.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "switch case falls through without break, return or throw",
+          "developer_explanation": "The branch for choice 1 has no break, so after printing \"User 1\" execution continues into the default branch and also prints \"Invalid option\". Unless that double output is intentional, add a break (or return) at the end of that case; if the fall-through is deliberate, add an explicit comment so readers know.",
+          "run": 3,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 784,
+            "output_tokens": 279,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 7.941
+        }
+      ]
+    },
+    {
+      "finding_id": 6,
+      "type": "java:S4973",
+      "sourcefile": "NumberComparison.java",
+      "start_line": "7",
+      "message": "Strings and Boxed types should be compared using \"equals()\".",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "Both variables are boxed Integer objects holding 1024, which is outside the Integer cache range of -128 to 127, so autoboxing creates two distinct objects and the reference comparison at line 7 yields false rather than the intended value equality. The warning's claim — that boxed types must be compared with equals() — is exactly correct here. This is the classic reference-vs-value comparison bug, and the printed result would surprise anyone expecting a numeric comparison.",
+          "is_true_positive": true,
+          "confidence": 0.97,
+          "category": "CORRECTNESS",
+          "issue_signature": "boxed numeric wrapper compared with reference equality operator",
+          "developer_explanation": "Comparing two Integer objects with == compares object references, not numeric values. Because 1024 is outside the small-integer cache, autoboxing creates two separate objects and this prints false even though the numbers are equal. Use num1.equals(num2), Objects.equals(num1, num2), or compare primitive int values instead.",
+          "run": 1,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 686,
+            "output_tokens": 366,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 7.4
+        },
+        {
+          "reasoning": "Line 7 compares two Integer objects with ==, which compares references, not values; since 1024 is outside the Integer cache range (-128..127), autoboxing creates two distinct objects and the comparison prints false rather than the intended true. This is exactly the situation the rule describes for boxed types. The fix is to use num1.equals(num2) or compare primitive int values.",
+          "is_true_positive": true,
+          "confidence": 0.98,
+          "category": "CORRECTNESS",
+          "issue_signature": "boxed numeric values compared with reference equality operator",
+          "developer_explanation": "You are comparing two Integer objects with ==, which checks whether they are the same object rather than whether they hold the same number. Because 1024 is outside the small-integer cache, autoboxing produces two separate objects and this prints false even though both hold 1024. Use num1.equals(num2), or compare the unboxed int values, to get a value comparison.",
+          "run": 2,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 686,
+            "output_tokens": 307,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 7.296
+        },
+        {
+          "reasoning": "Both variables are of the boxed type Integer holding the value 1024, which lies outside the JVM's Integer cache range of -128..127, so autoboxing creates two distinct objects and the `==` on line 7 compares references rather than values, printing false. The rule's claim — that boxed types are being compared with `==` instead of equals() — is literally and materially true here, and it changes the observed result. This is the textbook case the rule targets.",
+          "is_true_positive": true,
+          "confidence": 0.98,
+          "category": "CORRECTNESS",
+          "issue_signature": "boxed numeric values compared with reference equality operator",
+          "developer_explanation": "The two variables are Integer objects, not primitive ints, so `==` compares object identity rather than numeric value. Because 1024 is outside the small-integer cache the JVM maintains, autoboxing produces two separate objects and this prints false even though both hold 1024. Use `num1.equals(num2)`, or declare the variables as primitive `int`, to compare the actual values.",
+          "run": 3,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 686,
+            "output_tokens": 379,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 7.605
+        }
+      ]
+    },
+    {
+      "finding_id": 7,
+      "type": "java:S1905",
+      "sourcefile": "NumberReader.java",
+      "start_line": "6",
+      "message": "Remove this unnecessary cast to \"Integer\".",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The variable is declared as `Object` and is cast to `Integer`, which is a downcast, not a redundant identity cast — the expression's static type is not already `Integer`. Removing the cast would change behaviour: `System.out.println(obj)` would print \"10\" via the `Object` overload instead of throwing a ClassCastException, so the cast is semantically significant. The genuine defect here is that the object actually holds a `String`, so the cast always fails at runtime, but that is a different claim from the one the tool makes. The claim 'unnecessary cast' is materially wrong for this code.",
+          "is_true_positive": false,
+          "confidence": 0.88,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "redundant type cast that can be removed",
+          "developer_explanation": "The cast here is not redundant: the variable is declared as Object, so casting it to Integer is a real downcast with a runtime type check, and deleting it would silently change the program's behaviour rather than clean it up. This alert can be dismissed as written. Note, though, that the variable actually holds a String, so this cast will throw a ClassCastException at runtime — that is the problem worth fixing.",
+          "run": 1,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 667,
+            "output_tokens": 917,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 14.09
+        },
+        {
+          "reasoning": "The variable `obj` has static type `Object` and is cast to `Integer`, which is a downcast — not a redundant cast, since the compiler cannot treat an `Object` expression as an `Integer` without it. Removing the cast would in fact change behaviour: as written, the cast throws a ClassCastException at runtime because `obj` actually holds a `String`, whereas `System.out.println(obj)` would simply print \"10\". The rule's claim that the cast is unnecessary is therefore materially wrong for this code, even though the code does contain a genuine (different) bug — the guaranteed ClassCastException.",
+          "is_true_positive": false,
+          "confidence": 0.9,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "redundant type cast to a type already held",
+          "developer_explanation": "The cast here is not redundant: the variable is declared as `Object`, so the cast to `Integer` is a genuine downcast and dropping it would change what the program does. In fact the cast is the only thing that makes this line throw, since the object is a String, so removing it would silently change behaviour rather than clean up dead syntax. The alarm about an unnecessary cast can be dismissed; the real problem worth fixing is that casting a String reference to Integer will always fail at runtime.",
+          "run": 2,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 667,
+            "output_tokens": 1069,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 15.189
+        },
+        {
+          "reasoning": "The variable is declared as `Object` and holds a `String`, so the cast to `Integer` is a genuine narrowing (downcast) that the compiler requires for the expression to have type `Integer` \".The static type `Object` is not assignable to `Integer`, so the cast is not redundant and removing it would change the code (it would compile to `println(Object)` and actually print \"10\" instead of throwing). In fact the cast is the source of a real `ClassCastException` at runtime, which is the opposite of harmless redundancy, so the tool's claim that the cast is unnecessary is materially wrong here.",
+          "is_true_positive": false,
+          "confidence": 0.94,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "redundant type cast that can be removed",
+          "developer_explanation": "The cast here is not redundant: the variable is declared as `Object`, so a cast is required to treat it as an `Integer`, and deleting it would change what the program does. This alert can be dismissed as stated. Note separately, though, that the object actually holds a `String`, so this cast will fail at runtime with a ClassCastException \\u2014 that is worth fixing.",
+          "run": 3,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 667,
+            "output_tokens": 715,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 13.524
+        }
+      ]
+    },
+    {
+      "finding_id": 8,
+      "type": "java:S2696",
+      "sourcefile": "PersonProfile.java",
+      "start_line": "8",
+      "message": "Make the enclosing method \"static\" or remove this set.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The field `name` is declared `static` yet assigned from the instance method `setName`, so all instances share one value; the main method in the same file demonstrates the consequence, printing \"Kate\" twice. The tool's claim — that a static field is being written from a non-static method and that this is either a missing `static` on the method or an unintended shared write — is exactly what the code does. This is a real defect, not a stylistic complaint, since per-instance state is evidently intended (two objects are created and set separately).",
+          "is_true_positive": true,
+          "confidence": 0.97,
+          "category": "CORRECTNESS",
+          "issue_signature": "static field assigned from an instance method",
+          "developer_explanation": "The `name` field is declared static, so it belongs to the class rather than to each object; every call to the setter overwrites the single shared value. As the main method shows, setting the name on one object changes it for all of them, so both prints output \"Kate\". Drop the `static` modifier on the field so each instance keeps its own name (or, if a single shared value really is intended, make the accessors static and access them through the class).",
+          "run": 1,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 865,
+            "output_tokens": 564,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 10.975
+        },
+        {
+          "reasoning": "The field `name` is declared `static` yet is assigned from the instance method `setName`, so all instances share one value; the `main` method in the same file demonstrates this directly — after `person2.setName(\"Kate\")`, `person1.getName()` also returns \"Kate\". The tool's claim (an instance method mutating static state, which should either be made static or not written from an instance context) is exactly what the code does. This is a genuine shared-mutable-state defect, not a syntactic coincidence.",
+          "is_true_positive": true,
+          "confidence": 0.97,
+          "category": "CORRECTNESS",
+          "issue_signature": "instance method assigns to a static field",
+          "developer_explanation": "The `name` field is declared static, so it belongs to the class rather than to each object, but `setName` writes to it from an instance method. As a result every object shares a single name: setting the name on one profile silently overwrites it for all others, which the sample in `main` shows (both prints output \"Kate\"). Drop the `static` modifier so each profile has its own name, or, if a single shared value really is intended, make the accessors static so the sharing is explicit.",
+          "run": 2,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 865,
+            "output_tokens": 608,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 12.827
+        },
+        {
+          "reasoning": "The instance method setName writes to the static field name, which is exactly the pattern the rule flags, and the main method demonstrates the resulting bug: two distinct instances share one field, so both print \"Kate\". The field is clearly intended to be per-instance state (a profile's name), so the static modifier plus instance-level assignment produces wrong results and is also unsafe across threads. The claim is materially correct for the shown code.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "static field assigned from an instance method",
+          "developer_explanation": "The name field is declared static, so every PersonProfile object shares the same value; setting it on one instance overwrites it for all others, as the main method shows when both prints output \"Kate\". It also makes the class unsafe if several threads set names concurrently. Remove the static modifier so each object holds its own name (or, if the value really is meant to be global, make the setter static and rename it to reflect that).",
+          "run": 3,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 865,
+            "output_tokens": 330,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 9.67
+        }
+      ]
+    },
+    {
+      "finding_id": 9,
+      "type": "java:S1210",
+      "sourcefile": "PersonRanking.java",
+      "start_line": "18",
+      "message": "Override \"equals(Object obj)\" to comply with the contract of the \"compareTo(T o)\" method.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The nested Person class implements Comparable<Person> and defines compareTo, but the shown complete file contains no equals(Object) override, so it inherits Object's identity-based equals. That is exactly the condition the rule reports, and it is materially present here: two Person instances with the same age are neither equal by equals nor consistently ordered, and the main method's expectation that equal ages compare as equivalent underlines that value semantics were intended. Since the whole file is shown, no code outside the snippet could supply the missing override.",
+          "is_true_positive": true,
+          "confidence": 0.92,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "class implementing Comparable does not override equals",
+          "developer_explanation": "This class defines an ordering through compareTo but still uses the inherited identity-based equals, so two objects with the same age are ordered as if they were different yet also reported as unequal. Classes used in sorted collections such as TreeSet or TreeMap behave inconsistently when compareTo and equals disagree. Add an equals (and matching hashCode) implementation based on the same field the comparison uses, and make compareTo return 0 for equal ages.",
+          "run": 1,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 858,
+            "output_tokens": 1098,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 18.169
+        },
+        {
+          "reasoning": "The nested class Person implements Comparable<Person> and defines compareTo, but the shown complete file contains no equals(Object) override, so it inherits identity equality from Object. That makes the comparison contract inconsistent: compareTo orders by age while equals distinguishes distinct instances, and indeed the compareTo shown never returns 0 (so even x.compareTo(x) yields -1, breaking the antisymmetry requirement). The rule's factual claim — Comparable implemented without an equals override consistent with compareTo — is materially correct for this code, and the main method printing false for two equal-aged Persons illustrates the resulting surprise.",
+          "is_true_positive": true,
+          "confidence": 0.92,
+          "category": "CORRECTNESS",
+          "issue_signature": "class implementing Comparable without a consistent equals override",
+          "developer_explanation": "Person defines an ordering through compareTo but never overrides equals, so equality falls back to object identity and disagrees with the ordering. Anything relying on both (TreeSet, TreeMap, Collections.binarySearch, sorting followed by contains) will behave inconsistently; note also that the current compareTo never returns 0, so two same-age objects are never reported as equal and even comparing an object with itself returns -1. Override equals (and hashCode) to match the ordering, and return 0 when ages are equal, e.g. Integer.compare(age, obj.age).",
+          "run": 2,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 858,
+            "output_tokens": 1405,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 20.965
+        },
+        {
+          "reasoning": "The shown class Person implements Comparable<Person> and defines compareTo, but the complete file contains no equals(Object) override, so it inherits Object's identity-based equals. That is exactly the condition the rule reports, and it is materially true here: two Persons with the same age compare in a way inconsistent with equals (indeed compareTo never even returns 0, so ordering is also unstable, reinforcing the inconsistency). Since the whole file is shown, no equals definition can exist elsewhere in this class, so the claim cannot be undermined by unseen code.",
+          "is_true_positive": true,
+          "confidence": 0.92,
+          "category": "CORRECTNESS",
+          "issue_signature": "class implements compareTo without overriding equals",
+          "developer_explanation": "This class defines a natural ordering through compareTo but still uses the default identity-based equals, so two instances that the ordering treats as equivalent will not be reported as equal. Sorted collections such as TreeSet and TreeMap rely on compareTo while other collections rely on equals, which leads to objects being duplicated or silently dropped. Add an equals (and matching hashCode) implementation based on the same field(s) used for comparison, and make compareTo return 0 when those fields are equal.",
+          "run": 3,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 858,
+            "output_tokens": 1038,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 18.908
+        }
+      ]
+    },
+    {
+      "finding_id": 10,
+      "type": "java:S1206",
+      "sourcefile": "PersonRegistry.java",
+      "start_line": "21",
+      "message": "This class overrides \"equals()\" and should therefore also override \"hashCode()\".",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The complete file is shown and the nested Person class overrides equals(Object) but defines no hashCode() method, so it inherits Object's identity-based hash. This violates the equals/hashCode contract: two Person instances that compare equal can produce different hash codes, breaking HashMap/HashSet behaviour. The tool's claim is factually correct for the shown code (a separate bug, name.equals(name), also exists but does not affect this verdict).",
+          "is_true_positive": true,
+          "confidence": 0.97,
+          "category": "CORRECTNESS",
+          "issue_signature": "equals overridden without corresponding hashCode override",
+          "developer_explanation": "The Person class defines its own equals() but keeps the inherited identity-based hashCode(), so two objects that are considered equal can end up with different hash codes. Any use of Person in a HashMap, HashSet or similar hash-based collection will then behave incorrectly (duplicates, failed lookups). Add a hashCode() implementation derived from the same fields used in equals (name and age), e.g. Objects.hash(name, age).",
+          "run": 1,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 962,
+            "output_tokens": 468,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 10.496
+        },
+        {
+          "reasoning": "The nested Person class declares an @Override equals(Object) and the complete file shows no hashCode() method anywhere in that class, so the equals/hashCode contract is indeed broken. Two Person instances that compare equal would return different default identity hash codes, breaking behaviour in HashMap, HashSet and similar collections. The class body is fully visible in this 32-line file, so nothing outside the snippet could supply the missing hashCode.",
+          "is_true_positive": true,
+          "confidence": 0.97,
+          "category": "CORRECTNESS",
+          "issue_signature": "equals overridden without corresponding hashCode override",
+          "developer_explanation": "The Person class defines its own equals() but keeps the inherited identity-based hashCode(). That means two Person objects considered equal can produce different hash codes, so lookups in HashMap/HashSet and other hash-based collections will silently fail to find them. Add a hashCode() implementation derived from the same fields used in equals (name and age). Note also that the equals comparison currently reads name.equals(name), which always compares the field to itself and should be name.equals(person.name).",
+          "run": 2,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 962,
+            "output_tokens": 463,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 9.952
+        },
+        {
+          "reasoning": "The complete file is shown and the nested Person class defines equals(Object) at line 21 but contains no hashCode() method, so it inherits Object's identity-based hashCode. This breaks the equals/hashCode contract: two Person instances that compare equal would almost certainly yield different hash codes, causing incorrect behaviour in HashMap, HashSet, and similar collections. The tool's claim is factually correct for this code.",
+          "is_true_positive": true,
+          "confidence": 0.97,
+          "category": "CORRECTNESS",
+          "issue_signature": "equals overridden without corresponding hashCode override",
+          "developer_explanation": "The Person class defines its own equals() but keeps the inherited hashCode(), which is based on object identity. That means two Person objects that are considered equal can produce different hash codes, so they will behave incorrectly if ever stored in a HashSet, used as HashMap keys, or compared through collections that rely on hashing. Add a hashCode() implementation derived from the same fields used in equals (name and age), e.g. via Objects.hash(name, age). (Separately, note that the equals body compares name.equals(name) instead of name.equals(person.name).)",
+          "run": 3,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 962,
+            "output_tokens": 526,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 11.154
+        }
+      ]
+    },
+    {
+      "finding_id": 11,
+      "type": "java:S1764",
+      "sourcefile": "PersonRegistry.java",
+      "start_line": "29",
+      "message": "Correct one of the identical sub-expressions on both sides of equals.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "Line 29 contains `name.equals(name)`, comparing the field to itself, which always returns true (or throws NPE if name is null) instead of comparing `name` to `person.name`. This makes equals return true for any two Person objects with equal ages regardless of name, exactly the bug demonstrated by the main method printing p1.equals(p2) for \"John\" and \"Kate\". The tool's claim about identical sub-expressions on both sides of equals is materially correct.",
+          "is_true_positive": true,
+          "confidence": 0.99,
+          "category": "CORRECTNESS",
+          "issue_signature": "equality check comparing an expression with itself",
+          "developer_explanation": "In the equals method the name comparison is `name.equals(name)`, which compares the field to itself and is always true, so two people with different names but the same age are reported as equal. Change it to `name.equals(person.name)` (and consider `Objects.equals(name, person.name)` to be null-safe). Without this fix, equals is broken and any hash-based collection or comparison logic relying on it will misbehave.",
+          "run": 1,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 957,
+            "output_tokens": 350,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 7.475
+        },
+        {
+          "reasoning": "Line 29 calls `name.equals(name)`, comparing the instance's own `name` field with itself, which is always true (unless null). The evident intent is `name.equals(person.name)`, so the equals implementation ignores the name entirely and would report two people with different names but the same age as equal — exactly what the demo in main exercises. The identical sub-expressions on both sides of equals are literally present and produce a wrong result.",
+          "is_true_positive": true,
+          "confidence": 0.99,
+          "category": "CORRECTNESS",
+          "issue_signature": "identical operand compared with itself in equals call",
+          "developer_explanation": "In the equality check, the name field is compared to itself (`name.equals(name)`), which is trivially true and contributes nothing. As a result two Person objects with the same age but different names are treated as equal. Change it to compare against the other object's field, e.g. `name.equals(person.name)` (or `java.util.Objects.equals(name, person.name)` to be null-safe).",
+          "run": 2,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 957,
+            "output_tokens": 364,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 7.64
+        },
+        {
+          "reasoning": "Line 29 calls name.equals(name), comparing the field to itself, which is always true (and would NPE if name were null); the intended comparison is clearly name.equals(person.name). This makes the equals contract wrong: two Person objects with the same age but different names compare as equal, which the main method demonstrates (\"John\"/25 vs \"Kate\"/25 prints true). The tool's claim about identical sub-expressions on both sides of equals is materially correct here.",
+          "is_true_positive": true,
+          "confidence": 0.99,
+          "category": "CORRECTNESS",
+          "issue_signature": "object compared to itself in equals call",
+          "developer_explanation": "In the equality check, the name field is compared against itself instead of the other object's name, so the name never affects the result. Two people with the same age but different names will be reported as equal, which also breaks any collection relying on equals/hashCode. Change it to compare against the other instance's field, e.g. using Objects.equals(name, person.name).",
+          "run": 3,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 957,
+            "output_tokens": 353,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 6.524
+        }
+      ]
+    },
+    {
+      "finding_id": 12,
+      "type": "java:S1317",
+      "sourcefile": "TextAssembler.java",
+      "start_line": "5",
+      "message": "Replace the constructor character parameter 'a' with string parameter \"a\".",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The code calls `new StringBuilder('a')`, and since char widens to int, this resolves to the capacity constructor `StringBuilder(int)` with capacity 97 rather than creating a builder containing \"a\". The subsequent append and print therefore output \"bc\", not the evidently intended \"abc\". The tool's claim about the flagged line is materially correct.",
+          "is_true_positive": true,
+          "confidence": 0.97,
+          "category": "CORRECTNESS",
+          "issue_signature": "char literal passed where string argument intended, selecting numeric overload",
+          "developer_explanation": "Passing a single-quoted character to the StringBuilder constructor does not seed the builder with that character; the char is widened to an int and interpreted as an initial capacity (97 here). As a result the program prints \"bc\" instead of \"abc\". Use double quotes — `new StringBuilder(\"a\")` — to get the intended initial content.",
+          "run": 1,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 689,
+            "output_tokens": 377,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 8.217
+        },
+        {
+          "reasoning": "The code calls new StringBuilder('a'), and since StringBuilder has no char constructor the char is widened to int 97, invoking the capacity constructor rather than seeding the content with \"a\". The resulting output is \"bc\" instead of the evidently intended \"abc\", so the warning's claim is materially correct for this code. This is the classic pitfall the rule targets.",
+          "is_true_positive": true,
+          "confidence": 0.97,
+          "category": "CORRECTNESS",
+          "issue_signature": "char literal passed where string constructor argument intended",
+          "developer_explanation": "Passing a character literal to the StringBuilder constructor does not initialise the builder with that character; the char is promoted to an int and interpreted as an initial capacity (97 here). The builder therefore starts empty and printing it yields \"bc\" rather than \"abc\". Use new StringBuilder(\"a\") if you want the initial content to be that character.",
+          "run": 2,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 689,
+            "output_tokens": 383,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 7.244
+        },
+        {
+          "reasoning": "`new StringBuilder('a')` resolves to the `StringBuilder(int capacity)` overload because char widens to int, so it creates an empty builder with capacity 97 rather than one containing \"a\". The subsequent append and print therefore produce \"bc\" instead of the evidently intended \"abc\". The tool's claim that the char literal should be a string literal is materially correct for this code.",
+          "is_true_positive": true,
+          "confidence": 0.97,
+          "category": "CORRECTNESS",
+          "issue_signature": "char literal passed where int-capacity constructor overload is selected",
+          "developer_explanation": "Passing a single-quoted character to the StringBuilder constructor does not seed the builder with that character; the char is widened to an int and interpreted as the initial capacity, so you get an empty builder with capacity 97. The program will print \"bc\" instead of \"abc\". Use double quotes, `new StringBuilder(\"a\")`, to get the intended initial content.",
+          "run": 3,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 689,
+            "output_tokens": 410,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 7.416
+        }
+      ]
+    },
+    {
+      "finding_id": 13,
+      "type": "java:S2201",
+      "sourcefile": "TextTrimmer.java",
+      "start_line": "6",
+      "message": "The return value of \"substring\" must be used.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "Line 6 calls s.substring(3) as a standalone statement and discards the result; String is immutable, so the call has no effect on s and the subsequent print outputs the unchanged \"abcdef\". This is exactly the pattern the rule describes — a pure method whose return value is ignored — and the intent (trimming the text) is clearly defeated. No hidden context could change this since the whole file is shown.",
+          "is_true_positive": true,
+          "confidence": 0.99,
+          "category": "CORRECTNESS",
+          "issue_signature": "return value of pure string method ignored",
+          "developer_explanation": "Strings are immutable, so calling substring does not modify the original variable; the result is thrown away and the printed value is still the full original text. Assign the result, e.g. s = s.substring(3), or use the returned value directly where it is needed.",
+          "run": 1,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 673,
+            "output_tokens": 272,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 7.037
+        },
+        {
+          "reasoning": "Line 6 calls s.substring(3) and discards the result; String is immutable, so the call has no effect on s and the statement is a no-op. The subsequent println(s) prints the unmodified \"abcdef\", strongly suggesting the intent was s = s.substring(3). The tool's claim that the return value must be used is materially correct here.",
+          "is_true_positive": true,
+          "confidence": 0.98,
+          "category": "CORRECTNESS",
+          "issue_signature": "return value of pure method call ignored",
+          "developer_explanation": "Strings are immutable, so calling substring does not change the existing string / the result means the line does nothing at all. If you intended to drop the first three characters, assign the result back, e.g. s = s.substring(3); otherwise remove the dead statement.",
+          "run": 2,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 673,
+            "output_tokens": 261,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 6.847
+        },
+        {
+          "reasoning": "Line 6 calls s.substring(3) as a statement and discards the result; String is immutable, so the call has no effect on s and the subsequent print outputs the unchanged \"abcdef\". This is exactly the ignored-return-value pattern the rule describes, and it is clearly unintended here since the variable name and code suggest trimming was expected. No side effects exist to justify the bare call.",
+          "is_true_positive": true,
+          "confidence": 0.98,
+          "category": "CORRECTNESS",
+          "issue_signature": "return value of pure string method ignored",
+          "developer_explanation": "Calling substring on a String does not change the original string; it returns a new one. Here the returned value is thrown away, so the variable still holds \"abcdef\" when printed. Assign the result (e.g. s = s.substring(3);) or use the returned value where needed.",
+          "run": 3,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 673,
+            "output_tokens": 277,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 7.496
+        }
+      ]
+    },
+    {
+      "finding_id": 14,
+      "type": "java:S3984",
+      "sourcefile": "ValueProcessor.java",
+      "start_line": "11",
+      "message": "Throw this exception or remove this useless statement.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "Line 11 constructs an IllegalArgumentException but never throws it or assigns it anywhere, so the object is discarded immediately and the guard on negative values has no effect. Execution falls through and prints \"Value is positive or 0\" even for value = -1, which is exactly the behaviour the code evidently intends to prevent. The tool's claim that the statement is useless unless thrown is materially correct for this code.",
+          "is_true_positive": true,
+          "confidence": 0.99,
+          "category": "CORRECTNESS",
+          "issue_signature": "exception instantiated but never thrown",
+          "developer_explanation": "The negative-value check creates an IllegalArgumentException object but never throws it, so the object is immediately garbage and the check does nothing; a negative input still falls through and prints \"Value is positive or 0\". Add the throw keyword (throw new IllegalArgumentException(\"Value is negative\");) so the guard actually rejects invalid input, or delete the statement if the validation is not wanted.",
+          "run": 1,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 745,
+            "output_tokens": 356,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 6.413
+        },
+        {
+          "reasoning": "Line 11 creates an IllegalArgumentException with `new` but never throws, assigns, or otherwise uses it, so the statement has no effect and the negative-value branch silently falls through to print \"Value is positive or 0\". This is exactly the pattern the rule describes, and it is materially correct here: the exception object is discarded. The intent is clearly to throw, making this a real correctness bug, not merely dead code.",
+          "is_true_positive": true,
+          "confidence": 0.98,
+          "category": "CORRECTNESS",
+          "issue_signature": "exception instantiated but never thrown",
+          "developer_explanation": "The negative-value check builds an IllegalArgumentException but never throws it, so the object is created and immediately discarded and execution continues to print \"Value is positive or 0\" even for negative input. Add `throw` before the `new IllegalArgumentException(...)` (or remove the statement if no error should be signalled).",
+          "run": 2,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 745,
+            "output_tokens": 310,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 7.004
+        },
+        {
+          "reasoning": "Line 11 constructs an IllegalArgumentException but never throws, assigns, or otherwise uses it, so the object is created and immediately discarded. The negative-value guard therefore has no effect, and execution falls through to print \"Value is positive or 0\" even for the -1 passed in main. This is exactly the pattern the rule describes, and the claim is materially correct.",
+          "is_true_positive": true,
+          "confidence": 0.99,
+          "category": "CORRECTNESS",
+          "issue_signature": "exception instantiated but never thrown",
+          "developer_explanation": "The guard for negative values creates an IllegalArgumentException but never throws it, so nothing happens and the method continues on to print that the value is positive or zero. Add the `throw` keyword before the `new IllegalArgumentException(...)` (or remove the statement if the check is not wanted).",
+          "run": 3,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 745,
+            "output_tokens": 287,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 8.049
+        }
+      ]
+    },
+    {
+      "finding_id": 15,
+      "type": "java:S2757",
+      "sourcefile": "ValueReporter.java",
+      "start_line": "11",
+      "message": "Was \"+=\" meant instead?",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "Line 11 writes `x =+ 2;`, which parses as assignment of the unary plus expression `+2`, silently discarding the previously assigned value 1 rather than adding to it. This is exactly the confusable `=+` vs `+=` pattern the rule targets, and the surrounding code (initialize to 1, then print) strongly suggests an accumulation was intended, so the program prints 2 instead of 3. The claim behind the warning is materially correct for this code.",
+          "is_true_positive": true,
+          "confidence": 0.93,
+          "category": "CORRECTNESS",
+          "issue_signature": "assignment of unary-plus value likely meant as compound assignment",
+          "developer_explanation": "The statement `x =+ 2;` is read by the compiler as `x = (+2);` \the number 2, throwing away the earlier value of 1, so the printed result is 2 rather than the 3 you likely expect. If you intended to add 2 to the existing value, write `x += 2;`. If overwriting really is intended, write `x = 2;` so the intent is unambiguous.",
+          "run": 1,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 785,
+            "output_tokens": 440,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 9.105
+        },
+        {
+          "reasoning": "Line 11 writes `x =+ 2;`, which parses as an assignment of the unary-plus expression `+2`, silently discarding the previously assigned value 1 instead of adding to it. This is exactly the transposed-operator pattern the rule describes, and here it materially changes the result: the program prints 2 rather than the 3 that `x += 2` would produce. The unary plus is entirely redundant, which confirms the intent was compound assignment rather than a deliberate reassignment.",
+          "is_true_positive": true,
+          "confidence": 0.93,
+          "category": "CORRECTNESS",
+          "issue_signature": "assignment with transposed compound-assignment operator",
+          "developer_explanation": "The statement `x =+ 2;` is read by the compiler as `x = (+2)`, so it replaces the value of x instead of adding to it; the initial value 1 is thrown away and the program prints 2. If you intended to accumulate, write `x += 2;`. If you really meant a plain assignment, drop the misleading unary plus and write `x = 2;`.",
+          "run": 2,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 785,
+            "output_tokens": 426,
+            "cache_creation_input_tokens": 2741,
+            "cache_read_input_tokens": 0
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 10.067,
+          "retry_of_truncated": true,
+          "retry_attempts": 1,
+          "superseded": {
+            "reasoning": "Line 11 reads `x =+ 2;`, which parses as assignment of unary plus 2, overwriting x with 2 rather than adding 2 to the existing value of 1. This is exactly the classic `=+` vs `+=` transposition the rule targets, and it changes the printed result from 3 to 2. The warning's claim is materially correct for this code.",
+            "is_true_positive": true,
+            "confidence": 0.95,
+            "category": "CORRECTNESS",
+            "issue_signature": "assignment with unary plus likely meant as compound assignment",
+            "developer_explanation": "The statement `x =+ 2;` does not add 2 to x; it assigns the value +2, discarding the previous value, so the printed result is 2 instead of 3. If the intent was to accumulate, write `x += 2;`. If overwriting is really intended, write `x = 2;` so the code reads unambiguously.   operplplus operator misplplus likely meant as compound assignment.unary plus 2.unary plus operator.unary plus.unary plus operator misread as compound assignment.unary plus 2.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus operator.unary plus operator misread as compound assignment.unary plus",
+            "run": 2,
+            "served_model": "claude-opus-5",
+            "usage": {
+              "input_tokens": 785,
+              "output_tokens": 8192,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 2741
+            },
+            "stop_reason": "max_tokens",
+            "latency_s": 67.155
+          }
+        },
+        {
+          "reasoning": "Line 11 reads `x =+ 2;`, which parses as an assignment of the unary-plus expression `+2`, silently discarding the previous value 1 rather than adding to it. This is exactly the `=+` versus `+=` transposition the rule describes, and it changes the printed result from 3 to 2. The intent to accumulate is evident from the initialisation on line 10 and the method name, so the warning's claim is materially correct here.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "assignment with unary operator mistaken for compound assignment",
+          "developer_explanation": "The statement `x =+ 2;` does not add 2 to x; it assigns the value +2, throwing away the earlier value of 1, so the program prints 2 instead of 3. If accumulation was intended, write `x += 2;`. If assigning a literal 2 really was intended, write `x = 2;` so the intent is unambiguous to readers.",
+          "run": 3,
+          "served_model": "claude-opus-5",
+          "usage": {
+            "input_tokens": 785,
+            "output_tokens": 407,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 8.365
+        }
+      ]
+    }
+  ],
+  "retry_history": [
+    {
+      "at": "2026-08-10T20:10:18.149721+00:00",
+      "reason": "failed_runs",
+      "kinds": [
+        "ucięty"
+      ],
+      "attempted": 1,
+      "repaired": 1,
+      "still_missing": 0,
+      "max_attempts": 3,
+      "configuration_changed": false
+    }
+  ]
+}

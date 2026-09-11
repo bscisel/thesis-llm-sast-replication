@@ -1,0 +1,454 @@
+{
+  "dataset": "java-errors-benchmark",
+  "schema_version": 1,
+  "created_at": "2026-08-09",
+  "run": "004_error-benchmark",
+  "ground_truth_scope": "warning_level_report_snapshot",
+  "labeling_method": "manual_author_review",
+  "key_fields": [
+    "tool",
+    "sourcefile",
+    "start_line",
+    "type",
+    "column"
+  ],
+  "reports": {
+    "sonarqube": 16,
+    "error-prone": 15,
+    "spotbugs": 12
+  },
+  "total_findings": 43,
+  "labeled_findings": 43,
+  "findings": [
+    {
+      "finding_id": "error-prone:DiscountCalculator.java:6:NarrowingCompoundAssignment:11",
+      "tool": "error-prone",
+      "sourcefile": "DiscountCalculator.java",
+      "start_line": "6",
+      "type": "NarrowingCompoundAssignment",
+      "column": "11",
+      "message": "Compound assignments from double to int hide lossy casts",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "error-prone:ItemAppender.java:12:ModifyCollectionInEnhancedForLoop:25",
+      "tool": "error-prone",
+      "sourcefile": "ItemAppender.java",
+      "start_line": "12",
+      "type": "ModifyCollectionInEnhancedForLoop",
+      "column": "25",
+      "message": "Modifying a collection while iterating over it in a loop may cause a ConcurrentModificationException to be thrown or lead to undefined behavior.",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "error-prone:MenuHandler.java:13:FallThrough:13",
+      "tool": "error-prone",
+      "sourcefile": "MenuHandler.java",
+      "start_line": "13",
+      "type": "FallThrough",
+      "column": "13",
+      "message": "Execution may fall through from the previous case; add a `// fall through` comment before this line if it was deliberate",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "error-prone:NumberComparison.java:7:BoxedPrimitiveEquality:33",
+      "tool": "error-prone",
+      "sourcefile": "NumberComparison.java",
+      "start_line": "7",
+      "type": "BoxedPrimitiveEquality",
+      "column": "33",
+      "message": "Comparison using reference equality instead of value equality. Reference equality of boxed primitive types is usually not useful, as they are value objects, and it is bug-prone, as instances are cached for some values but not others.",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "error-prone:NumberComparison.java:7:ReferenceEquality:33",
+      "tool": "error-prone",
+      "sourcefile": "NumberComparison.java",
+      "start_line": "7",
+      "type": "ReferenceEquality",
+      "column": "33",
+      "message": "Comparison using reference equality instead of value equality",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "error-prone:PersonMatcher.java:28:EqualsGetClass:24",
+      "tool": "error-prone",
+      "sourcefile": "PersonMatcher.java",
+      "start_line": "28",
+      "type": "EqualsGetClass",
+      "column": "24",
+      "message": "Prefer instanceof to getClass when implementing Object#equals.",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "error-prone:PersonRanking.java:18:MissingOverride:20",
+      "tool": "error-prone",
+      "sourcefile": "PersonRanking.java",
+      "start_line": "18",
+      "type": "MissingOverride",
+      "column": "20",
+      "message": "compareTo implements method in Comparable; expected @Override",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "error-prone:PersonRegistry.java:21:EqualsGetClass:24",
+      "tool": "error-prone",
+      "sourcefile": "PersonRegistry.java",
+      "start_line": "21",
+      "type": "EqualsGetClass",
+      "column": "24",
+      "message": "Prefer instanceof to getClass when implementing Object#equals.",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "error-prone:PersonRegistry.java:21:EqualsHashCode:24",
+      "tool": "error-prone",
+      "sourcefile": "PersonRegistry.java",
+      "start_line": "21",
+      "type": "EqualsHashCode",
+      "column": "24",
+      "message": "Classes that override equals should also override hashCode.",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "error-prone:PersonRegistry.java:29:SelfEquals:52",
+      "tool": "error-prone",
+      "sourcefile": "PersonRegistry.java",
+      "start_line": "29",
+      "type": "SelfEquals",
+      "column": "52",
+      "message": "Testing an object for equality with itself will always be true.",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "error-prone:TextAssembler.java:5:StringBuilderInitWithChar:28",
+      "tool": "error-prone",
+      "sourcefile": "TextAssembler.java",
+      "start_line": "5",
+      "type": "StringBuilderInitWithChar",
+      "column": "28",
+      "message": "StringBuilder does not have a char constructor; this invokes the int constructor.",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "error-prone:TextTrimmer.java:6:ReturnValueIgnored:20",
+      "tool": "error-prone",
+      "sourcefile": "TextTrimmer.java",
+      "start_line": "6",
+      "type": "ReturnValueIgnored",
+      "column": "20",
+      "message": "Return value of 'substring' must be used",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "error-prone:TypeNameFormatter.java:10:StringCaseLocaleUsage:49",
+      "tool": "error-prone",
+      "sourcefile": "TypeNameFormatter.java",
+      "start_line": "10",
+      "type": "StringCaseLocaleUsage",
+      "column": "49",
+      "message": "Specify a `Locale` when calling `String#to{Lower,Upper}Case`. (Note: there are multiple suggested fixes; the third may be most appropriate if you're dealing with ASCII Strings.)",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "error-prone:ValueProcessor.java:11:DeadException:13",
+      "tool": "error-prone",
+      "sourcefile": "ValueProcessor.java",
+      "start_line": "11",
+      "type": "DeadException",
+      "column": "13",
+      "message": "Exception created but not thrown",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "error-prone:ValueReporter.java:10:UnusedVariable:13",
+      "tool": "error-prone",
+      "sourcefile": "ValueReporter.java",
+      "start_line": "10",
+      "type": "UnusedVariable",
+      "column": "13",
+      "message": "This assignment to the local variable 'x' is never read.",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "sonarqube:CountdownPrinter.java:5:java:S2189:",
+      "tool": "sonarqube",
+      "sourcefile": "CountdownPrinter.java",
+      "start_line": "5",
+      "type": "java:S2189",
+      "column": "",
+      "message": "Correct this loop's end condition.",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "sonarqube:CountdownPrinter.java:5:java:S2251:",
+      "tool": "sonarqube",
+      "sourcefile": "CountdownPrinter.java",
+      "start_line": "5",
+      "type": "java:S2251",
+      "column": "",
+      "message": "\"i\" is incremented and will never reach \"stop condition\".",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "sonarqube:InputRouter.java:13:java:S3972:",
+      "tool": "sonarqube",
+      "sourcefile": "InputRouter.java",
+      "start_line": "13",
+      "type": "java:S3972",
+      "column": "",
+      "message": "Move this \"if\" to a new line or add the missing \"else\".",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "sonarqube:InputRouter.java:13:java:S6880:",
+      "tool": "sonarqube",
+      "sourcefile": "InputRouter.java",
+      "start_line": "13",
+      "type": "java:S6880",
+      "column": "",
+      "message": "Replace the chain of if/else with a switch expression.",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "sonarqube:MatrixNormalizer.java:21:java:S127:",
+      "tool": "sonarqube",
+      "sourcefile": "MatrixNormalizer.java",
+      "start_line": "21",
+      "type": "java:S127",
+      "column": "",
+      "message": "Refactor the code in order to not assign to this loop counter from within the loop body.",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "sonarqube:MenuHandler.java:11:java:S128:",
+      "tool": "sonarqube",
+      "sourcefile": "MenuHandler.java",
+      "start_line": "11",
+      "type": "java:S128",
+      "column": "",
+      "message": "End this switch case with an unconditional break, return or throw statement.",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "sonarqube:NumberComparison.java:7:java:S4973:",
+      "tool": "sonarqube",
+      "sourcefile": "NumberComparison.java",
+      "start_line": "7",
+      "type": "java:S4973",
+      "column": "",
+      "message": "Strings and Boxed types should be compared using \"equals()\".",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "sonarqube:NumberReader.java:6:java:S1905:",
+      "tool": "sonarqube",
+      "sourcefile": "NumberReader.java",
+      "start_line": "6",
+      "type": "java:S1905",
+      "column": "",
+      "message": "Remove this unnecessary cast to \"Integer\".",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "sonarqube:PersonProfile.java:8:java:S2696:",
+      "tool": "sonarqube",
+      "sourcefile": "PersonProfile.java",
+      "start_line": "8",
+      "type": "java:S2696",
+      "column": "",
+      "message": "Make the enclosing method \"static\" or remove this set.",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "sonarqube:PersonRanking.java:18:java:S1210:",
+      "tool": "sonarqube",
+      "sourcefile": "PersonRanking.java",
+      "start_line": "18",
+      "type": "java:S1210",
+      "column": "",
+      "message": "Override \"equals(Object obj)\" to comply with the contract of the \"compareTo(T o)\" method.",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "sonarqube:PersonRegistry.java:21:java:S1206:",
+      "tool": "sonarqube",
+      "sourcefile": "PersonRegistry.java",
+      "start_line": "21",
+      "type": "java:S1206",
+      "column": "",
+      "message": "This class overrides \"equals()\" and should therefore also override \"hashCode()\".",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "sonarqube:PersonRegistry.java:29:java:S1764:",
+      "tool": "sonarqube",
+      "sourcefile": "PersonRegistry.java",
+      "start_line": "29",
+      "type": "java:S1764",
+      "column": "",
+      "message": "Correct one of the identical sub-expressions on both sides of equals.",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "sonarqube:TextAssembler.java:5:java:S1317:",
+      "tool": "sonarqube",
+      "sourcefile": "TextAssembler.java",
+      "start_line": "5",
+      "type": "java:S1317",
+      "column": "",
+      "message": "Replace the constructor character parameter 'a' with string parameter \"a\".",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "sonarqube:TextTrimmer.java:6:java:S2201:",
+      "tool": "sonarqube",
+      "sourcefile": "TextTrimmer.java",
+      "start_line": "6",
+      "type": "java:S2201",
+      "column": "",
+      "message": "The return value of \"substring\" must be used.",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "sonarqube:ValueProcessor.java:11:java:S3984:",
+      "tool": "sonarqube",
+      "sourcefile": "ValueProcessor.java",
+      "start_line": "11",
+      "type": "java:S3984",
+      "column": "",
+      "message": "Throw this exception or remove this useless statement.",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "sonarqube:ValueReporter.java:11:java:S2757:",
+      "tool": "sonarqube",
+      "sourcefile": "ValueReporter.java",
+      "start_line": "11",
+      "type": "java:S2757",
+      "column": "",
+      "message": "Was \"+=\" meant instead?",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "spotbugs:AgeClassifier.java:13:UC_USELESS_CONDITION:",
+      "tool": "spotbugs",
+      "sourcefile": "AgeClassifier.java",
+      "start_line": "13",
+      "type": "UC_USELESS_CONDITION",
+      "column": "",
+      "message": "Condition has no effect",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "spotbugs:ArrayReader.java:6:RANGE_ARRAY_INDEX:",
+      "tool": "spotbugs",
+      "sourcefile": "ArrayReader.java",
+      "start_line": "6",
+      "type": "RANGE_ARRAY_INDEX",
+      "column": "",
+      "message": "Array index is out of bounds",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "spotbugs:NumberComparison.java:7:RC_REF_COMPARISON:",
+      "tool": "spotbugs",
+      "sourcefile": "NumberComparison.java",
+      "start_line": "7",
+      "type": "RC_REF_COMPARISON",
+      "column": "",
+      "message": "Suspicious reference comparison",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "spotbugs:NumberReader.java:6:BC_IMPOSSIBLE_CAST:",
+      "tool": "spotbugs",
+      "sourcefile": "NumberReader.java",
+      "start_line": "6",
+      "type": "BC_IMPOSSIBLE_CAST",
+      "column": "",
+      "message": "Impossible cast",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "spotbugs:PersonProfile.java:8:ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD:",
+      "tool": "spotbugs",
+      "sourcefile": "PersonProfile.java",
+      "start_line": "8",
+      "type": "ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD",
+      "column": "",
+      "message": "Write to static field from instance method",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "spotbugs:PersonRanking.java:19:EQ_COMPARETO_USE_OBJECT_EQUALS:",
+      "tool": "spotbugs",
+      "sourcefile": "PersonRanking.java",
+      "start_line": "19",
+      "type": "EQ_COMPARETO_USE_OBJECT_EQUALS",
+      "column": "",
+      "message": "Class defines compareTo(...) and uses Object.equals()",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "spotbugs:PersonRegistry.java:22:HE_EQUALS_USE_HASHCODE:",
+      "tool": "spotbugs",
+      "sourcefile": "PersonRegistry.java",
+      "start_line": "22",
+      "type": "HE_EQUALS_USE_HASHCODE",
+      "column": "",
+      "message": "Class defines equals() and uses Object.hashCode()",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "spotbugs:PersonRegistry.java:29:SA_FIELD_SELF_COMPARISON:",
+      "tool": "spotbugs",
+      "sourcefile": "PersonRegistry.java",
+      "start_line": "29",
+      "type": "SA_FIELD_SELF_COMPARISON",
+      "column": "",
+      "message": "Self comparison of field with itself",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "spotbugs:ProfileReader.java:12:UWF_UNWRITTEN_FIELD:",
+      "tool": "spotbugs",
+      "sourcefile": "ProfileReader.java",
+      "start_line": "12",
+      "type": "UWF_UNWRITTEN_FIELD",
+      "column": "",
+      "message": "Unwritten field",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "spotbugs:RangeValidator.java:11:UC_USELESS_CONDITION:",
+      "tool": "spotbugs",
+      "sourcefile": "RangeValidator.java",
+      "start_line": "11",
+      "type": "UC_USELESS_CONDITION",
+      "column": "",
+      "message": "Condition has no effect",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "spotbugs:TextTrimmer.java:6:RV_RETURN_VALUE_IGNORED:",
+      "tool": "spotbugs",
+      "sourcefile": "TextTrimmer.java",
+      "start_line": "6",
+      "type": "RV_RETURN_VALUE_IGNORED",
+      "column": "",
+      "message": "Method ignores return value",
+      "is_true_positive": true
+    },
+    {
+      "finding_id": "spotbugs:ValueProcessor.java:11:RV_EXCEPTION_NOT_THROWN:",
+      "tool": "spotbugs",
+      "sourcefile": "ValueProcessor.java",
+      "start_line": "11",
+      "type": "RV_EXCEPTION_NOT_THROWN",
+      "column": "",
+      "message": "Exception created and dropped rather than thrown",
+      "is_true_positive": true
+    }
+  ]
+}

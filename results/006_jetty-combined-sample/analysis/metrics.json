@@ -1,0 +1,117 @@
+{
+  "run": "006_jetty-combined-sample",
+  "models": {
+    "claude": "claude-opus-5",
+    "gpt": "gpt-5.6-terra",
+    "qwen": "qwen3.5:9b",
+    "oss": "openai/gpt-oss-120b",
+    "luna": "gpt-5.6-luna",
+    "oss20": "openai/gpt-oss-20b",
+    "sonnet": "claude-sonnet-5"
+  },
+  "settings": {
+    "iterations": 10000,
+    "seed": 20260803,
+    "alpha": 0.05,
+    "resampling": "rule"
+  },
+  "findings": 360,
+  "true_positives": 144,
+  "overview": {
+    "claude-opus-5": {
+      "tp": 144,
+      "fp": 92,
+      "tn": 124,
+      "fn": 0,
+      "precision": 0.6101694915254238,
+      "recall": 1.0,
+      "f1": 0.7578947368421053,
+      "accuracy": 0.7444444444444445
+    },
+    "gpt-5.6-terra": {
+      "tp": 137,
+      "fp": 75,
+      "tn": 141,
+      "fn": 7,
+      "precision": 0.6462264150943396,
+      "recall": 0.9513888888888888,
+      "f1": 0.7696629213483146,
+      "accuracy": 0.7722222222222223
+    },
+    "qwen3.5:9b": {
+      "tp": 89,
+      "fp": 57,
+      "tn": 159,
+      "fn": 55,
+      "precision": 0.6095890410958904,
+      "recall": 0.6180555555555556,
+      "f1": 0.6137931034482759,
+      "accuracy": 0.6888888888888889
+    },
+    "openai/gpt-oss-120b": {
+      "tp": 134,
+      "fp": 84,
+      "tn": 132,
+      "fn": 10,
+      "precision": 0.6146788990825688,
+      "recall": 0.9305555555555556,
+      "f1": 0.7403314917127072,
+      "accuracy": 0.7388888888888889
+    },
+    "gpt-5.6-luna": {
+      "tp": 141,
+      "fp": 107,
+      "tn": 109,
+      "fn": 3,
+      "precision": 0.5685483870967742,
+      "recall": 0.9791666666666666,
+      "f1": 0.7193877551020408,
+      "accuracy": 0.6944444444444444
+    },
+    "openai/gpt-oss-20b": {
+      "tp": 108,
+      "fp": 53,
+      "tn": 163,
+      "fn": 36,
+      "precision": 0.6708074534161491,
+      "recall": 0.75,
+      "f1": 0.7081967213114755,
+      "accuracy": 0.7527777777777778
+    },
+    "claude-sonnet-5": {
+      "tp": 143,
+      "fp": 95,
+      "tn": 121,
+      "fn": 1,
+      "precision": 0.6008403361344538,
+      "recall": 0.9930555555555556,
+      "f1": 0.7486910994764399,
+      "accuracy": 0.7333333333333333
+    },
+    "raw_report": {
+      "tp": 144,
+      "fp": 216,
+      "tn": 0,
+      "fn": 0,
+      "precision": 0.4,
+      "recall": 1.0,
+      "f1": 0.5714285714285715,
+      "accuracy": 0.4
+    },
+    "naive_classifier": {
+      "tp": 0,
+      "fp": 0,
+      "tn": 216,
+      "fn": 144,
+      "precision": null,
+      "recall": 0.0,
+      "f1": null,
+      "accuracy": 0.6
+    }
+  },
+  "clustering": {
+    "clusters": 123,
+    "mean_size": 2.926829268292683,
+    "icc": 0.6168371596956137
+  }
+}

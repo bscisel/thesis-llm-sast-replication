@@ -1,0 +1,926 @@
+{
+  "model": "openai/gpt-oss-20b",
+  "tool": "spotbugs",
+  "num_runs": 3,
+  "runs_per_invocation": 3,
+  "source_root": "java-errors-benchmark",
+  "call_parameters": {
+    "temperature": null,
+    "concurrency": 30,
+    "response_format": "json_schema",
+    "max_tokens": 8192,
+    "max_retries": 6,
+    "base_url": "https://openrouter.ai/api/v1",
+    "provider": "deepinfra/bf16",
+    "allow_fallbacks": false,
+    "require_parameters": true,
+    "cache_control": false
+  },
+  "system_prompt_variant": "benchmark",
+  "system_prompt_sha256": "b5b634e0a9109c59",
+  "user_prompt_sha256": "14894866e018872e",
+  "timestamp": "2026-08-09T18:22:39.939763+00:00",
+  "updated_at": "2026-08-09T18:22:39.939763+00:00",
+  "findings": [
+    {
+      "finding_id": 0,
+      "type": "UC_USELESS_CONDITION",
+      "sourcefile": "AgeClassifier.java",
+      "start_line": "13",
+      "message": "Condition has no effect",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The else-if condition is evaluated only when age ≤10, making the test age >=18 always false, so that branch can never execute.",
+          "is_true_positive": true,
+          "confidence": 0.99,
+          "category": "CORRECTNESS",
+          "issue_signature": "condition always false",
+          "developer_explanation": "The current logic never returns \"Mature\" because the else-if condition is impossible to satisfy. Adjust the conditions so that \"Teenager\" covers ages 11–17 and \"Mature\" covers 18 and above, or remove the redundant else-if entirely.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2217,
+            "output_tokens": 424,
+            "reasoning_tokens": 293,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00012587
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1160,
+          "latency_s": 5.121
+        },
+        {
+          "reasoning": "The code checks \"if (age > 10)\" first. If that is false, age must be ≤10, making the subsequent \"else if (age >= 18)\" condition impossible to satisfy – it is always false.\n",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "unreachable condition",
+          "developer_explanation": "The else-if block for \"age >= 18\" will never execute because the preceding if already excludes that range. As a result, ages 18 and above are never classified as \"Mature\". Rearrange the conditions so that the 18+ check comes before the 10+ test, or combine them with appropriate else clauses.",
+          "run": 2,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2217,
+            "output_tokens": 606,
+            "reasoning_tokens": 462,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00015135
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1820,
+          "latency_s": 4.666
+        },
+        {
+          "reasoning": "The else-if condition age >= 18 can never be true because the preceding if branch only executes if age > 10, leaving age <= 10 in the else branch, making the condition always false.",
+          "is_true_positive": true,
+          "confidence": 0.99,
+          "category": "CORRECTNESS",
+          "issue_signature": "condition always false",
+          "developer_explanation": "The else-if clause will never execute because the previous condition excludes all ages 18 and above. As a result, the method never returns \"Mature\". Revise the order of conditions or adjust the comparisons so that the mature case is reachable.",
+          "run": 3,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2217,
+            "output_tokens": 508,
+            "reasoning_tokens": 362,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00013763
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1434,
+          "latency_s": 3.484
+        }
+      ]
+    },
+    {
+      "finding_id": 1,
+      "type": "RANGE_ARRAY_INDEX",
+      "sourcefile": "ArrayReader.java",
+      "start_line": "6",
+      "message": "Array index is out of bounds",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The code defines an array of length 3 and then accesses arr[3], which is outside the valid index range (0–2).",
+          "is_true_positive": true,
+          "confidence": 1.0,
+          "category": "CORRECTNESS",
+          "issue_signature": "array index out of bounds",
+          "developer_explanation": "The array contains only three elements (indexes 0, 1, and 2). Attempting to read arr[3] will throw an ArrayIndexOutOfBoundsException at runtime. Change the index to a valid value or iterate over the array safely.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2081,
+            "output_tokens": 397,
+            "reasoning_tokens": 283,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00011801
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1113,
+          "latency_s": 4.536
+        },
+        {
+          "reasoning": "The array arr has length 3, so the highest valid index is 2; the code accesses arr[3], which is outside the bounds. This will throw an ArrayIndexOutOfBoundsException at runtime.",
+          "is_true_positive": true,
+          "confidence": 1.0,
+          "category": "CORRECTNESS",
+          "issue_signature": "array index out of bounds",
+          "developer_explanation": "This line tries to read the fourth element of a three-element array, which does not exist. As a result, the program will crash with an ArrayIndexOutOfBoundsException. Change the index to 0, 1, or 2 (or adjust the array size) to fix the bug.",
+          "run": 2,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2081,
+            "output_tokens": 339,
+            "reasoning_tokens": 158,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00010989
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 624,
+          "latency_s": 3.202
+        },
+        {
+          "reasoning": "The shown array has length 3, so valid indices are 0–2. The code accesses index 3, which is out of range.",
+          "is_true_positive": true,
+          "confidence": 0.99,
+          "category": "CORRECTNESS",
+          "issue_signature": "array index out of bounds",
+          "developer_explanation": "The statement System.out.println(arr[3]) attempts to read beyond the end of the array. This will throw ArrayIndexOutOfBoundsException at runtime. Change the index to a valid value, such as 2, or remove the statement.",
+          "run": 3,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2081,
+            "output_tokens": 328,
+            "reasoning_tokens": 187,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00010835
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 746,
+          "latency_s": 3.233
+        }
+      ]
+    },
+    {
+      "finding_id": 2,
+      "type": "RC_REF_COMPARISON",
+      "sourcefile": "NumberComparison.java",
+      "start_line": "7",
+      "message": "Suspicious reference comparison",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The method compares two Integer objects using ==, which checks reference identity rather than numeric value. Since 1024 is not cached, num1 and num2 are distinct objects, so == will be false and this comparison is incorrect.",
+          "is_true_positive": true,
+          "confidence": 0.99,
+          "category": "CORRECTNESS",
+          "issue_signature": "reference comparison of Integer",
+          "developer_explanation": "You are using == to compare Integer objects, which compares their references, not their numeric values. This will always be false for 1024 because it is not cached, even though the values are equal. Use num1.equals(num2) or compare the int values with num1.intValue() == num2.intValue() instead.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2198,
+            "output_tokens": 576,
+            "reasoning_tokens": 471,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00014658
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1860,
+          "latency_s": 7.931
+        },
+        {
+          "reasoning": "The code compares two Integer objects with '==' at line 7. Because the literals 1024 are outside the Integer cache range, num1 and num2 refer to distinct objects, so the comparison yields false while the logical values are equal.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "integer reference comparison instead of equals",
+          "developer_explanation": "You are comparing Integer instances with the == operator, which only checks object identity. Since the value 1024 isn’t cached, the two objects are distinct and this test will always be false—even though the numeric values are equal. Use num1.equals(num2) (or compare the intValue()) to test value equality.",
+          "run": 2,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2198,
+            "output_tokens": 434,
+            "reasoning_tokens": 292,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.0001267
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1164,
+          "latency_s": 4.729
+        },
+        {
+          "reasoning": "The code compares two Integer objects created by autoboxing a value (1024) that is outside the integer cache, so num1 and num2 are distinct objects. Using == on these objects therefore tests reference equality, not numeric value equality, leading to a false result. This violates the intent of comparing values and is a correctness issue.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "reference equality comparison of Integer",
+          "developer_explanation": "You’re comparing two Integer objects with ==, which checks whether they refer to the same object. Because the value 1024 is outside Java’s Integer cache, each autoboxing creates a different instance, so the comparison will always be false. To compare numeric values, call num1.equals(num2) or use \"intValue()\" or \"==\" on unboxed primitives.",
+          "run": 3,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2198,
+            "output_tokens": 555,
+            "reasoning_tokens": 437,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00014364
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1730,
+          "latency_s": 5.487
+        }
+      ]
+    },
+    {
+      "finding_id": 3,
+      "type": "BC_IMPOSSIBLE_CAST",
+      "sourcefile": "NumberReader.java",
+      "start_line": "6",
+      "message": "Impossible cast",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The variable obj is assigned a String value, yet it is cast to Integer, which is incompatible and will always throw ClassCastException at runtime.",
+          "is_true_positive": true,
+          "confidence": 0.98,
+          "category": "CORRECTNESS",
+          "issue_signature": "cast from string to integer",
+          "developer_explanation": "The Object reference obj actually holds a String, so casting it to Integer will never succeed and will crash the program. Convert the string to an integer instead, e.g. Integer.parseInt((String)obj), or remove the cast entirely.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2136,
+            "output_tokens": 452,
+            "reasoning_tokens": 359,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00012736
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1420,
+          "latency_s": 4.291
+        },
+        {
+          "reasoning": "In the shown code, obj holds a String literal, yet it is cast to Integer and printed. Since no conversion occurs, the cast can never succeed and will always throw ClassCastException.",
+          "is_true_positive": true,
+          "confidence": 0.99,
+          "category": "CORRECTNESS",
+          "issue_signature": "impossible cast",
+          "developer_explanation": "The code casts anObject that actually contains a String to Integer. That cast will always fail at runtime with a ClassCastException. Remove or correct the cast; for example, print the object directly or parse the string to an integer if that is the intended value.",
+          "run": 2,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2136,
+            "output_tokens": 313,
+            "reasoning_tokens": 210,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.0001079
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 828,
+          "latency_s": 2.6
+        },
+        {
+          "reasoning": "The variable ‘obj’ is assigned a String literal, so casting it to Integer will always throw a ClassCastException at runtime.",
+          "is_true_positive": true,
+          "confidence": 0.99,
+          "category": "CORRECTNESS",
+          "issue_signature": "impossible cast",
+          "developer_explanation": "The code casts a String to Integer, which is impossible and will cause a ClassCastException when run. Replace the cast with the correct type or remove it to avoid a runtime error.",
+          "run": 3,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2136,
+            "output_tokens": 406,
+            "reasoning_tokens": 353,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00012092
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1384,
+          "latency_s": 3.12
+        }
+      ]
+    },
+    {
+      "finding_id": 4,
+      "type": "ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD",
+      "sourcefile": "PersonProfile.java",
+      "start_line": "8",
+      "message": "Write to static field from instance method",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The setName method assigns to the static field name, so when two PersonProfile objects are used, calling setName on one instance changes the value seen by both instances. This shows the code will not behave as likely intended when multiple objects exist.",
+          "is_true_positive": true,
+          "confidence": 0.99,
+          "category": "CORRECTNESS",
+          "issue_signature": "static field overwritten by instance method",
+          "developer_explanation": "Because the name field is static, it is shared by all PersonProfile instances. Setting the name on one object will overwrite the value for every other object, so the output will always be the last value set. To fix this, make name an instance field or change setName to a static method if a shared name is intended.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2241,
+            "output_tokens": 610,
+            "reasoning_tokens": 524,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00015263
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2059,
+          "latency_s": 6.789
+        },
+        {
+          "reasoning": "The code assigns to a static field from an instance method, causing all instances to share the same value; the main method shows that setting the name on two objects overwrites the same static field, leading to incorrect behavior.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "write to static field from instance method",
+          "developer_explanation": "This code uses a static variable to store a person's name, so all PersonProfile instances share the same value. When you call setName on one object, it changes the name for every other object, leading to incorrect behaviour. Change the field to non-static or keep separate state per instance.",
+          "run": 2,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2241,
+            "output_tokens": 453,
+            "reasoning_tokens": 370,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00013065
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1470,
+          "latency_s": 3.944
+        },
+        {
+          "reasoning": "The method setName writes to the static field PersonProfile.name, and the class demonstrates that multiple instances sharing this field will override each other's values, which is a correctness problem if each instance is expected to hold its own name.",
+          "is_true_positive": true,
+          "confidence": 0.9,
+          "category": "CORRECTNESS",
+          "issue_signature": "write to static field from instance method",
+          "developer_explanation": "This code changes a static field from an instance method, meaning all PersonProfile objects share the same name. As a result, setName on one instance will overwrite the name for all instances, so getName will not return the expected individual names. If you want each profile to have its own name, change the field to be instance-based (non-static).",
+          "run": 3,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2241,
+            "output_tokens": 1040,
+            "reasoning_tokens": 1048,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00021283
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 4188,
+          "latency_s": 8.844
+        }
+      ]
+    },
+    {
+      "finding_id": 5,
+      "type": "EQ_COMPARETO_USE_OBJECT_EQUALS",
+      "sourcefile": "PersonRanking.java",
+      "start_line": "19",
+      "message": "Class defines compareTo(...) and uses Object.equals()",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The Person class defines a compareTo method that returns -1 even when two instances have the same age, yet it inherits the default equals from Object, which is true only for the same instance. This means compareTo cannot return 0 when equals is true, violating the Comparable contract.",
+          "is_true_positive": true,
+          "confidence": 1.0,
+          "category": "CORRECTNESS",
+          "issue_signature": "compareto inconsistent with equals",
+          "developer_explanation": "Your Person class compares by age but never returns 0 when ages are equal, while equals only reports identity. This inconsistency can cause collections like PriorityQueue or TreeSet to behave unpredictably. Fix by returning 0 when ages match and consider overriding equals (and hashCode) to reflect the same ordering logic.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2362,
+            "output_tokens": 909,
+            "reasoning_tokens": 850,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00019812
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3373,
+          "latency_s": 9.683
+        },
+        {
+          "reasoning": "The Person class overrides compareTo but never returns 0, while inheriting Object.equals, so compareTo is inconsistent with equals. This violates the Comparable contract and can cause unpredictable behavior.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "compareto not consistent with equals",
+          "developer_explanation": "Your Person class implements Comparable but compareTo never yields 0 even for equal ages, and equals remains the default Object.equals which checks reference identity. This inconsistency can lead to broken ordering in collections and confusing results. Override equals (and hashCode) to base equality on age, and modify compareTo to return 0 when ages are equal.",
+          "run": 2,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2362,
+            "output_tokens": 645,
+            "reasoning_tokens": 566,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00016116
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2245,
+          "latency_s": 5.942
+        },
+        {
+          "reasoning": "The class implements Comparable but never overrides equals, and the compareTo method never returns 0 even when the objects have the same age, violating the contract that compareTo==0 iff equals returns true.",
+          "is_true_positive": true,
+          "confidence": 0.99,
+          "category": "CORRECTNESS",
+          "issue_signature": "compareTo inconsistent with equals",
+          "developer_explanation": "The Person class implements Comparable but relies on Object.equals, which checks only reference equality. The compareTo method also never returns 0 when two Person objects have the same age, so the ordering is not consistent with equality. This can cause unpredictable behaviour in sorted collections such as PriorityQueue or TreeSet. Either override equals (and hashCode) to match the ordering, or change compareTo to return 0 for equal ages (e.g., return Integer.compare(age, obj.age)).",
+          "run": 3,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2362,
+            "output_tokens": 621,
+            "reasoning_tokens": 514,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.0001578
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2036,
+          "latency_s": 5.298
+        }
+      ]
+    },
+    {
+      "finding_id": 6,
+      "type": "HE_EQUALS_USE_HASHCODE",
+      "sourcefile": "PersonRegistry.java",
+      "start_line": "22",
+      "message": "Class defines equals() and uses Object.hashCode()",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "This Person class overrides equals but does not provide a matching hashCode, inheriting Object.hashCode which gives identity hash codes, so equal instances could have different hash values.",
+          "is_true_positive": true,
+          "confidence": 0.9,
+          "category": "CORRECTNESS",
+          "issue_signature": "equals without hashcode",
+          "developer_explanation": "The class implements equals() but relies on Object.hashCode(), so two Person objects that compare equal will likely return different hash codes. If these objects ever go into a HashSet, HashMap, or similar hash-based collection, they may duplicate or be inaccessible. Provide a hashCode() that hashes the same fields used in equals (name and age).",
+          "run": 1,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2436,
+            "output_tokens": 733,
+            "reasoning_tokens": 716,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.0001757
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2846,
+          "latency_s": 7.67
+        },
+        {
+          "reasoning": "The Person class overrides equals but inherits Object.hashCode(), violating the equals–hashCode contract. This break can cause incorrect behavior when Person instances are used in hash-based collections.",
+          "is_true_positive": true,
+          "confidence": 0.93,
+          "category": "CORRECTNESS",
+          "issue_signature": "hashcode consistency with equals",
+          "developer_explanation": "Person defines equals but not hashCode, so equal objects may have different hashcodes, breaking the contract required by hash-based collections. To fix, override hashCode to use the same fields that determine equality (e.g., age and name) and also correct the equals implementation to compare the other object's name instead of name with itself.",
+          "run": 2,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2436,
+            "output_tokens": 1314,
+            "reasoning_tokens": 1394,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00025704
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 5547,
+          "latency_s": 12.733
+        },
+        {
+          "reasoning": "The Person class overrides equals(Object) but inherits hashCode() from Object, so equal Person instances (same name and age) will have different hashcodes, violating the contract.",
+          "is_true_positive": true,
+          "confidence": 0.97,
+          "category": "CORRECTNESS",
+          "issue_signature": "hashcode not overridden with equals defined",
+          "developer_explanation": "The equals method compares a Person’s name and age, so two Persons with the same values are considered equal. However, because hashCode() is not overridden, those equal instances will receive different hashcodes from the default Object implementation. This breaks the contract that equal objects must return the same hashcode and can cause bugs when the objects are used in hash-based collections such as HashMap or HashSet. Override hashCode() so it returns the same value for equal objects, for example by combining the hash codes of name and age.",
+          "run": 3,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2436,
+            "output_tokens": 784,
+            "reasoning_tokens": 725,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00018284
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2875,
+          "latency_s": 6.526
+        }
+      ]
+    },
+    {
+      "finding_id": 7,
+      "type": "SA_FIELD_SELF_COMPARISON",
+      "sourcefile": "PersonRegistry.java",
+      "start_line": "29",
+      "message": "Self comparison of field with itself",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The equals method returns age == person.age && name.equals(name); the call name.equals(name) compares the field with itself, so the name field of the current object is never compared with the other object's name. This means the method does not correctly test name equality and can throw a NullPointerException if name is null.",
+          "is_true_positive": true,
+          "confidence": 0.97,
+          "category": "CORRECTNESS",
+          "issue_signature": "self comparison of field with itself",
+          "developer_explanation": "In the equals method the comparison name.equals(name) is a typo; it always returns true for a non‑null name and throws if the name is null. Replace it with name.equals(person.name) so that the names of the two Person objects are actually compared. This change ensures a correct equality check and prevents potential NullPointerExceptions.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2319,
+            "output_tokens": 393,
+            "reasoning_tokens": 262,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00012459
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1027,
+          "latency_s": 5.734
+        },
+        {
+          "reasoning": "The equals method returns age == person.age && name.equals(name); the second comparison compares the field with itself, never comparing with the other object's field. This causes equality to be true whenever ages match and name is non‑null, regardless of the other object's name.",
+          "is_true_positive": true,
+          "confidence": 0.98,
+          "category": "CORRECTNESS",
+          "issue_signature": "self comparison of field with itself",
+          "developer_explanation": "The equals method incorrectly checks name against itself instead of the other object's name. As a result, two Person instances with the same age but different names will be considered equal. Update the comparison to use person.name (or Objects.equals(name, person.name)) to ensure proper equality semantics.",
+          "run": 2,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2319,
+            "output_tokens": 392,
+            "reasoning_tokens": 250,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00012445
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 986,
+          "latency_s": 6.488
+        },
+        {
+          "reasoning": "The equals method contains `name.equals(name)`, which compares the field to itself instead of to the corresponding field of the other object, causing incorrect equality logic.",
+          "is_true_positive": true,
+          "confidence": 0.99,
+          "category": "CORRECTNESS",
+          "issue_signature": "field compared with itself",
+          "developer_explanation": "The line `return age == person.age && name.equals(name);` mistakenly compares a person's name with itself. This means two Person objects with the same age but different names will be considered equal, which is incorrect. Change the comparison to `name.equals(person.name)` (and consider null safety).",
+          "run": 3,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2319,
+            "output_tokens": 475,
+            "reasoning_tokens": 382,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00013607
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1508,
+          "latency_s": 5.012
+        }
+      ]
+    },
+    {
+      "finding_id": 8,
+      "type": "UWF_UNWRITTEN_FIELD",
+      "sourcefile": "ProfileReader.java",
+      "start_line": "12",
+      "message": "Unwritten field",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The Person constructor receives a name argument but never assigns it to the private field, so name remains null. getName() simply returns that null value, which is then dereferenced in main, causing a NullPointerException at runtime.",
+          "is_true_positive": true,
+          "confidence": 0.99,
+          "category": "CORRECTNESS",
+          "issue_signature": "unwritten instance field",
+          "developer_explanation": "The Person constructor does not set the name field, so the field stays null. Calling getName() and then using its value leads to a NullPointerException. Assign the passed value to the field (e.g., this.name = name;) or remove the unused parameter if the field should remain unset.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2185,
+            "output_tokens": 546,
+            "reasoning_tokens": 431,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00014199
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1705,
+          "latency_s": 6.203
+        },
+        {
+          "reasoning": "The constructor Person(String name) does not assign the parameter to the field, leaving the field null. Calling getName() then returns null, causing a NullPointerException when length() is called.",
+          "is_true_positive": true,
+          "confidence": 0.99,
+          "category": "CORRECTNESS",
+          "issue_signature": "uninitialized instance field",
+          "developer_explanation": "The Person constructor never writes to the name field, so the field remains null. This causes a NullPointerException when getName().length() is invoked. Initialize the field by adding \"this.name = name;\" to the constructor.",
+          "run": 2,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2185,
+            "output_tokens": 299,
+            "reasoning_tokens": 182,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00010741
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 723,
+          "latency_s": 3.269
+        },
+        {
+          "reasoning": "The Person constructor receives a name parameter but never assigns it to the private field ‘name’, so the field remains null and getName() will return null, causing a NullPointerException when used.",
+          "is_true_positive": true,
+          "confidence": 0.99,
+          "category": "CORRECTNESS",
+          "issue_signature": "uninitialized field used",
+          "developer_explanation": "The Person constructor fails to store the passed name, leaving the name field null. Calling getName() therefore returns null and any subsequent use (like getName().length()) throws a NullPointerException. Assign the parameter to the field in the constructor: this.name = name;.",
+          "run": 3,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2185,
+            "output_tokens": 358,
+            "reasoning_tokens": 244,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00011567
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 970,
+          "latency_s": 4.313
+        }
+      ]
+    },
+    {
+      "finding_id": 9,
+      "type": "UC_USELESS_CONDITION",
+      "sourcefile": "RangeValidator.java",
+      "start_line": "11",
+      "message": "Condition has no effect",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The if-statement tests value < 0 && value > 255, a conjunction that can never be satisfied because a value cannot be both below 0 and above 255 at the same time. Therefore the body will never execute, making the condition useless.",
+          "is_true_positive": true,
+          "confidence": 0.9,
+          "category": "CORRECTNESS",
+          "issue_signature": "condition always false",
+          "developer_explanation": "The test `value < 0 && value > 255` can never be true, so the exception inside the block will never be thrown. This is likely a logical error (perhaps you intended an OR or a different range). Remove or correct the condition to reflect the intended range.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2199,
+            "output_tokens": 589,
+            "reasoning_tokens": 485,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00014843
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1919,
+          "latency_s": 5.875
+        },
+        {
+          "reasoning": "In the shown code, the if-condition \"value < 0 && value > 255\" is always false because a number cannot simultaneously be smaller than 0 and larger than 255. This makes the throw statement unreachable, so the method never signals an out‑of‑range value as intended.",
+          "is_true_positive": true,
+          "confidence": 0.99,
+          "category": "CORRECTNESS",
+          "issue_signature": "condition always false",
+          "developer_explanation": "The if-statement uses && where || was intended. As written, the exception will never be thrown, so validate(-1) and validate(256) incorrectly return the given values. Replace the condition with 'value < 0 || value > 255' or adjust the logic to correctly detect out‑of‑range inputs.",
+          "run": 2,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2199,
+            "output_tokens": 628,
+            "reasoning_tokens": 497,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00015389
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1956,
+          "latency_s": 6.223
+        },
+        {
+          "reasoning": "The `if` uses `&&` between `value < 0` and `value > 255`, so the condition can never be true, making the throw unreachable.",
+          "is_true_positive": true,
+          "confidence": 0.98,
+          "category": "CORRECTNESS",
+          "issue_signature": "condition is always false",
+          "developer_explanation": "The if statement can never run because a value cannot be both less than 0 and greater than 255 at the same time. As a result, values outside the intended range are accepted without exception. Replace the condition with the appropriate range check, e.g., `if (value < 0 || value > 255)` or equivalent logic.",
+          "run": 3,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2199,
+            "output_tokens": 677,
+            "reasoning_tokens": 599,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00016075
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2371,
+          "latency_s": 5.911
+        }
+      ]
+    },
+    {
+      "finding_id": 10,
+      "type": "RV_RETURN_VALUE_IGNORED",
+      "sourcefile": "TextTrimmer.java",
+      "start_line": "6",
+      "message": "Method ignores return value",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The line `s.substring(3);` calls substring and discards its return value, meaning the method's result is ignored. This behavior is almost always unintended because substring creates a new string and has no side effects, so ignoring it results in a no‑op that likely defeats the purpose of the call.",
+          "is_true_positive": true,
+          "confidence": 0.9,
+          "category": "CORRECTNESS",
+          "issue_signature": "unused substring result",
+          "developer_explanation": "The call to `s.substring(3)` generates a new string but you never use it, so the code does nothing. If your intent was to trim or extract part of the string, assign the result back to `s` or use it in a subsequent statement. If you deliberately want to ignore the result (unlikely), you can safely remove the line.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2203,
+            "output_tokens": 989,
+            "reasoning_tokens": 975,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00020455
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3878,
+          "latency_s": 11.341
+        },
+        {
+          "reasoning": "The code calls s.substring(3) but never uses its return value, making the call a no‑op. Since the program then prints the original string \"abcdef\", the ignored substring has no effect on behavior. Therefore the warning is a false positive.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "unused return value",
+          "developer_explanation": "The line s.substring(3); does not modify s because String is immutable and the method returns a new string that is never stored. This call has no effect on the program and can safely be removed.",
+          "run": 2,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2203,
+            "output_tokens": 1064,
+            "reasoning_tokens": 1064,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00021505
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 4222,
+          "latency_s": 8.596
+        },
+        {
+          "reasoning": "Line 6 calls s.substring(3) and discards its return value. The String returned is never used, so the call has no effect on program state, indicating a likely bug.",
+          "is_true_positive": true,
+          "confidence": 0.9,
+          "category": "CORRECTNESS",
+          "issue_signature": "ignored substring return value",
+          "developer_explanation": "The call to substring(3) creates a new String but the result is never stored or used, so no part of the program benefits from it. If the intent was to keep just the substring, assign the result back to a variable. Otherwise the call is unnecessary and can be removed.",
+          "run": 3,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2203,
+            "output_tokens": 657,
+            "reasoning_tokens": 603,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00015807
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2391,
+          "latency_s": 6.908
+        }
+      ]
+    },
+    {
+      "finding_id": 11,
+      "type": "RV_EXCEPTION_NOT_THROWN",
+      "sourcefile": "ValueProcessor.java",
+      "start_line": "11",
+      "message": "Exception created and dropped rather than thrown",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The flagged line creates an IllegalArgumentException object but does not throw it or assign it to a variable, so the exception is constructed and immediately discarded without affecting program flow.",
+          "is_true_positive": true,
+          "confidence": 0.99,
+          "category": "CORRECTNESS",
+          "issue_signature": "exception object created and ignored",
+          "developer_explanation": "You create an IllegalArgumentException but never throw it or store it, so the program will not actually signal the error. Most likely you intended to throw the exception to indicate that a negative value is invalid.\nFix it by replacing the line with `throw new IllegalArgumentException(\"Value is negative\");` or by removing the unused construction altogether.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2170,
+            "output_tokens": 463,
+            "reasoning_tokens": 351,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00012992
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1389,
+          "latency_s": 5.402
+        },
+        {
+          "reasoning": "The line new IllegalArgumentException(\"Value is negative\") is not preceded by a throw, so the exception object is never thrown. The method simply continues executing when value is negative, making the check ineffective.",
+          "is_true_positive": true,
+          "confidence": 0.97,
+          "category": "CORRECTNESS",
+          "issue_signature": "exception instantiated but not thrown",
+          "developer_explanation": "The code creates an IllegalArgumentException but does not throw it. As a result, negative values are silently ignored and the method continues. Likely the intent was to signal an error; the line should be changed to throw the exception, e.g. throw new IllegalArgumentException(\"Value is negative\").",
+          "run": 2,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2170,
+            "output_tokens": 729,
+            "reasoning_tokens": 689,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00016716
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2717,
+          "latency_s": 7.282
+        },
+        {
+          "reasoning": "The code constructs a new IllegalArgumentException and does not throw or store it, so negative values are silently ignored, letting the method continue as if no error occurred.",
+          "is_true_positive": true,
+          "confidence": 0.99,
+          "category": "CORRECTNESS",
+          "issue_signature": "exception created and dropped",
+          "developer_explanation": "You create an exception but never throw or use it, so a negative value will not cause an error and the method continues. Change the code to throw the exception or otherwise handle the invalid input.",
+          "run": 3,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2170,
+            "output_tokens": 668,
+            "reasoning_tokens": 676,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00015862
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2663,
+          "latency_s": 6.347
+        }
+      ]
+    }
+  ]
+}

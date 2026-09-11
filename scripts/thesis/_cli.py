@@ -1,0 +1,76 @@
+#!/usr/bin/env python3
+"""Wspólna obsługa wiersza poleceń: te same flagi w każdym skrypcie liczącym."""
+
+from __future__ import annotations
+
+import argparse
+import json
+import sys
+from pathlib import Path
+from typing import Any
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+from analysis.dataset import Dataset, load_dataset
+from analysis.resampling import DEFAULT_ITERATIONS, DEFAULT_SEED
+
+
+def parser(doc: str) -> argparse.ArgumentParser:
+    p = argparse.ArgumentParser(description=doc)
+    p.add_argument("--run-dir", default="6")
+    p.add_argument(
+        "--include-partial",
+        action="store_true",
+        help="include models without a complete set of verdicts (skipped by default, they narrow the shared sample)",
+    )
+    p.add_argument("--iterations", type=int, default=DEFAULT_ITERATIONS)
+    p.add_argument("--seed", type=int, default=DEFAULT_SEED)
+    p.add_argument(
+        "--pricing",
+        type=Path,
+        help='JSON with list prices: {"claude": {"input": 15.0, "output": 75.0}, ...} USD per 1M tokens',
+    )
+    p.add_argument("--output-dir", type=Path)
+    return p
+
+
+def dataset_from(args: argparse.Namespace) -> Dataset:
+    dataset = load_dataset(args.run_dir, include_partial=args.include_partial)
+    for model, count in (dataset.partial_models or {}).items():
+        state = "counted" if args.include_partial else "SKIPPED"
+        print(f"WARNING: {model} has {count}/{len(dataset.findings)} verdicts - {state}.")
+    return dataset
+
+
+def pricing_from(args: argparse.Namespace) -> dict[str, Any] | None:
+    if not args.pricing:
+        return None
+    with args.pricing.open(encoding="utf-8") as handle:
+        return json.load(handle)
+
+
+def output_dir(args: argparse.Namespace, dataset: Dataset) -> Path:
+    target = args.output_dir or dataset.run_dir / "analysis"
+    target.mkdir(parents=True, exist_ok=True)
+    return target
+
+
+def save(target: Path, name: str, payload: Any) -> Path:
+    path = target / name
+    with path.open("w", encoding="utf-8") as handle:
+        json.dump(payload, handle, indent=2, ensure_ascii=False)
+    print(f"Zapisano: {path}")
+    return path
+
+
+def header(dataset: Dataset, args: argparse.Namespace, scheme: str) -> dict[str, Any]:
+    return {
+        "run": dataset.run_dir.name,
+        "models": {model: dataset.display_name(model) for model in dataset.models},
+        "settings": {
+            "iterations": args.iterations,
+            "seed": args.seed,
+            "alpha": 0.05,
+            "resampling": scheme,
+        },
+    }

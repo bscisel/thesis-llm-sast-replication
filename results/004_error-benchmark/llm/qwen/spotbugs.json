@@ -1,0 +1,807 @@
+{
+  "model": "qwen3.5:9b",
+  "tool": "spotbugs",
+  "num_runs": 3,
+  "runs_per_invocation": 3,
+  "source_root": "java-errors-benchmark",
+  "call_parameters": {
+    "temperature": null,
+    "concurrency": 1,
+    "response_format": "json_schema",
+    "num_ctx": 32768,
+    "request_timeout_s": 900,
+    "base_url": "http://localhost:11434"
+  },
+  "system_prompt_variant": "benchmark",
+  "system_prompt_sha256": "b5b634e0a9109c59",
+  "user_prompt_sha256": "14894866e018872e",
+  "timestamp": "2026-08-09T19:22:40.629798+00:00",
+  "updated_at": "2026-08-10T20:14:55.598413+00:00",
+  "findings": [
+    {
+      "finding_id": 0,
+      "type": "UC_USELESS_CONDITION",
+      "sourcefile": "AgeClassifier.java",
+      "start_line": "13",
+      "message": "Condition has no effect",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The tool claims that checking `age >= 18` is useless because it knows the condition cannot be true given prior control flow; analysis of line 11-12 confirms any execution reaching this else-if block has age <= 10, making `>= 18` always false here. The warning correctly identifies an unreachable branch in a method that contains no side effects or external state modifications between checks.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "expression proven always false by preceding logic control flow narrowing",
+          "developer_explanation": "The `else if (age >= 18)` branch will never be reached or satisfied because earlier checks eliminate that possibility for all valid input values. This redundant condition adds unnecessary complexity and should be removed to simplify the code, as it does not affect program output but improves maintainability by eliminating unreachable logic.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 16597,
+            "output_tokens": 213
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 63039,
+          "latency_s": 137.79,
+          "retry_of_truncated": true,
+          "retry_attempts": 1,
+          "superseded": {
+            "run": 1,
+            "error": "parse_failed",
+            "raw": "",
+            "served_model": "qwen3.5:9b",
+            "usage": {
+              "input_tokens": 2261,
+              "output_tokens": 30507
+            },
+            "stop_reason": "length",
+            "thinking_chars": 129903,
+            "latency_s": 328.127
+          }
+        },
+        {
+          "reasoning": "The code structure shows that entering the `else if` block requires negation of the first condition (`age <= 10`), which implies age is necessarily less than 18. Therefore, a subsequent check for `age >= 18` will always be false and never affect control flow in this context; SpotBugs' claim that the condition has no effect due to known state narrowing is materially correct.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "conditional expression always false given control flow constraint",
+          "developer_explanation": "This warning points out a redundant condition that will never execute for valid integer inputs in this method due to overlapping range constraints from the previous `if` block. Removing it simplifies your logic and improves code clarity without changing behavior, but you should also review whether the classification boundaries were intended correctly.",
+          "run": 2,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 26114,
+            "output_tokens": 208
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 98282,
+          "latency_s": 250.046
+        },
+        {
+          "reasoning": "The warning points to line 13 (`else if`) claiming the condition is useless because `age < 18` at that point, but this logic contradicts the visible code flow. The earlier check on line 12 returns for all ages > 10 immediately (or before reaching later checks). However, execution only proceeds to line 13 if `!(age > 10)`, meaning `age <= 10`. Consequently, entering an `else if (age >= 18)` when the preceding condition fails guarantees that age cannot be both <= 10 AND >= 18 simultaneously. Since this branch is logically unreachable for any valid integer input given the structure where returning stops execution at line 12 or falls through to 'else', this represents a true positive regarding dead code/always-false logic.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "redundant conditional branch due to earlier return",
+          "developer_explanation": "This warning is a false positive because the code structure implies that if `age > 10`, we enter the first block and likely stop execution (assuming single returns inside blocks), or fall through. However, looking at indentation in line 12-19: If it's an 'if'... return statement without else on its own branch, then falling to line 13 requires the initial if condition `age > 10` was false. Thus we know age <= 10 there. The check `>= 18` is always False given that constraint.",
+          "run": 3,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 4221,
+            "output_tokens": 356
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 7531,
+          "latency_s": 22.847
+        }
+      ]
+    },
+    {
+      "finding_id": 1,
+      "type": "RANGE_ARRAY_INDEX",
+      "sourcefile": "ArrayReader.java",
+      "start_line": "6",
+      "message": "Array index is out of bounds",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The code initializes an integer array with three elements, which means valid indices are strictly 0 through 2.",
+          "is_true_positive": true,
+          "confidence": 1.0,
+          "category": "CORRECTNESS",
+          "issue_signature": "accessing array beyond valid indices",
+          "developer_explanation": "The code accesses an element at index 3 on an array that only has size 3 (valid indices 0-2). This will definitely crash the application with an ArrayIndexOutOfBoundsException rather than printing data. You should change the index to a value within range or check `arr.length` before accessing it.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 3603,
+            "output_tokens": 146
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 6474,
+          "latency_s": 16.295
+        },
+        {
+          "reasoning": "Line 5 initializes an integer array with size three, meaning the only valid indices are 0 through 2.",
+          "is_true_positive": true,
+          "confidence": 1.0,
+          "category": "CORRECTNESS",
+          "issue_signature": "array index out of bounds access",
+          "developer_explanation": "This application will crash at line 6 because you attempt to read the element at index 3 from an array that only has indices up to 2 (a total length of three). Fix this by ensuring your code accesses valid indices, typically checking against arr.length before accessing or using a loop condition.",
+          "run": 2,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 6546,
+            "output_tokens": 138
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 19821,
+          "latency_s": 44.243
+        },
+        {
+          "reasoning": "The array initialization restricts valid read operations to indices zero through two inclusive per line five of file header provided above snippet context shown here.",
+          "is_true_positive": true,
+          "confidence": 1.0,
+          "category": "CORRECTNESS",
+          "issue_signature": "accessing array element beyond allocated bounds length",
+          "developer_explanation": "This warning is accurate because attempting to read from index three exceeds the actual size of your data structure and will cause an immediate runtime crash when this main method executes.",
+          "run": 3,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 15094,
+            "output_tokens": 124
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 63133,
+          "latency_s": 130.76
+        }
+      ]
+    },
+    {
+      "finding_id": 2,
+      "type": "RC_REF_COMPARISON",
+      "sourcefile": "NumberComparison.java",
+      "start_line": "7",
+      "message": "Suspicious reference comparison",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The shown code initializes Integer variables from literal values larger than 127 (e.g., 1024), which exceeds Java's default small-integer caching range (-128 to +127). Consequently, each assignment allocates a distinct heap object reference where identity comparison (`==`) returns false while value equality holds.",
+          "is_true_positive": true,
+          "confidence": 1.0,
+          "category": "CORRECTNESS",
+          "issue_signature": "comparison of wrapper references instead of contents for values",
+          "developer_explanation": "For Integer wrappers outside the -128..+127 range, new heap instances are created per autoboxing site, so `==` checks object identity rather than numeric equality. Using `.equals()` or comparing primitives (e.g., unboxing) prevents logic errors when value equivalence is intended despite distinct references.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 13387,
+            "output_tokens": 192
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 50656,
+          "latency_s": 111.603
+        },
+        {
+          "reasoning": "This code uses autoboxed literals (Integer num1 = 96 and Integer num2 = 96) where both assignments use the same literal value within typical Java Integer cache ranges (-128 to +127). With standard JVM settings, these create identical cached instances rather than distinct objects with equal values, so num1 == num2 evaluates correctly as intended. The warning flags all wrapper reference comparisons using ==/!= but this specific case doesn't exhibit the problematic pattern described due to implementation-specific caching behavior on default Java configurations.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "comparison of wrapper references using equals instead of identity check",
+          "developer_explanation": "This warning is a conservative best-practice alert about comparing Integer objects with == rather than .equals(), but it doesn't apply here. With standard JVM settings, both autoboxed assignments reference the same cached object for value 96 (within default cache range -128 to +127), so your code works correctly as-is.",
+          "run": 2,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 7408,
+            "output_tokens": 247
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 27611,
+          "latency_s": 53.045
+        },
+        {
+          "reasoning": "The flagged line compares two Integer objects representing the literal value 1024 using reference equality (`==`). Since 1024 is outside Java's standard integer cache range, these instances are distinct references on a default JVM despite having equal numeric values, making this comparison produce results that differ from expected value semantics.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "comparison of object references instead of values",
+          "developer_explanation": "This code checks if two Integer variables are the same reference using `==`, which only works reliably for cached small integers (typically -128 to 127). Since these numbers exceed that cache range, they represent distinct objects in memory even though their numeric value is identical. Use `.equals()` to correctly compare the integer values regardless of how Java allocates Integer instances.",
+          "run": 3,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 8774,
+            "output_tokens": 204
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 30357,
+          "latency_s": 66.288
+        }
+      ]
+    },
+    {
+      "finding_id": 3,
+      "type": "BC_IMPOSSIBLE_CAST",
+      "sourcefile": "NumberReader.java",
+      "start_line": "6",
+      "message": "Impossible cast",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The variable obj is initialized with the String literal \"10\" on line 5 and never reassigned within this method scope, meaning it always holds a reference of type java.lang.String at runtime.",
+          "is_true_positive": true,
+          "confidence": 1.0,
+          "category": "CORRECTNESS",
+          "issue_signature": "cast fails due to incompatible instance",
+          "developer_explanation": "The program will crash immediately because it tries to cast an object reference holding a String value directly into the Integer class without converting its contents first. You should fix this by either using an integer variable or parsing the string properly with methods like parseInt() if you intended numeric conversion.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 12808,
+            "output_tokens": 156
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 49656,
+          "latency_s": 106.204
+        },
+        {
+          "reasoning": "The variable 'obj' is assigned a string literal which has runtime class java.lang.String, not an instance of the target type Integer.",
+          "is_true_positive": true,
+          "confidence": 1.0,
+          "category": "CORRECTNESS",
+          "issue_signature": "cast between unrelated object classes causes exception at runtime",
+          "developer_explanation": "This cast will crash your program because you are treating an Object holding a String as if it were an Integer instance. The variable obj is initialized with the literal '10' which is always of class java.lang.String, so casting this reference to Integer fails immediately and cannot be corrected without storing an actual integer value or parsing correctly first.",
+          "run": 2,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 7724,
+            "output_tokens": 159
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 27134,
+          "latency_s": 55.898
+        },
+        {
+          "reasoning": "The variable obj is assigned the String literal 10 which sets its runtime type as java.lang.String and never changes before this usage point.",
+          "is_true_positive": true,
+          "confidence": 1.0,
+          "category": "CORRECTNESS",
+          "issue_signature": "impossible cast between incompatible reference types",
+          "developer_explanation": "This line attempts to treat the String instance holding '10' as an Integer object which causes a definite runtime crash via ClassCastException since these are distinct classes in Java. To resolve this, you must parse the string into a numeric value using functions like Integer.parseInt or change the variable type declaration at initialization.",
+          "run": 3,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 7779,
+            "output_tokens": 145
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 26695,
+          "latency_s": 56.129
+        }
+      ]
+    },
+    {
+      "finding_id": 4,
+      "type": "ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD",
+      "sourcefile": "PersonProfile.java",
+      "start_line": "8",
+      "message": "Write to static field from instance method",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "Line 8 stores the assigned value into a static field that is shared across all instances of PersonProfile, which means multiple objects cannot maintain their own independent names without one overwriting another when two different profiles are created as in main(). This violates expected object encapsulation and produces incorrect results for multi‑instance usage.",
+          "is_true_positive": true,
+          "confidence": 1.0,
+          "category": "CORRECTNESS",
+          "issue_signature": "instance writes to static field",
+          "developer_explanation": "Your setName method changes a shared class variable instead of an instance field for each PersonProfile object. When you create multiple profiles and set their names separately the second call overwrites what was saved by the first one, giving wrong values when both objects are read later.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 8176,
+            "output_tokens": 176
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 28892,
+          "latency_s": 60.005
+        },
+        {
+          "reasoning": "The flagged line writes to a private static variable, which is intended here by two instances created in main that appear designed for distinct profiles with different names ('John'/'Kate'). Since these objects share class-level state rather than instance-specific data, they interfere incorrectly when manipulated sequentially or concurrently.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "instance method modifies shared static field",
+          "developer_explanation": "This class currently stores 'name' in a single variable for all its instances instead of creating one per object when you instantiate PersonProfile multiple times. Fix the problem by declaring 'String name;' as an instance (non-static) member and initializing it appropriately so each person can have their own distinct profile value without interference.",
+          "run": 2,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 15047,
+            "output_tokens": 183
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 59648,
+          "latency_s": 131.953
+        },
+        {
+          "reasoning": "The instance methods person1.setName() and person2.setName() are called on separate object instances but write to the same static field 'name', causing each assignment to overwrite what was previously set by other instances. This breaks object encapsulation because the code appears intended for objects to maintain independent state (each has a getName()), yet all instances share one backing storage.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "instance method modifies shared static field across object instances",
+          "developer_explanation": "Your setName() writes to a class-level variable that all PersonProfile objects share rather than each instance's own storage. When multiple calls happen in sequence, only the last value survives—both person1 and person2 end up reporting whatever was set most recently by any caller.",
+          "run": 3,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 2982,
+            "output_tokens": 191
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3655,
+          "latency_s": 9.242
+        }
+      ]
+    },
+    {
+      "finding_id": 5,
+      "type": "EQ_COMPARETO_USE_OBJECT_EQUALS",
+      "sourcefile": "PersonRanking.java",
+      "start_line": "19",
+      "message": "Class defines compareTo(...) and uses Object.equals()",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The code defines compareTo() comparing only the 'age' field while inheriting Object.equals() which checks reference identity (since equals is not overridden). This creates an inconsistency where two Person objects with identical age values will have compareTo returning 0 but equals returning false.",
+          "is_true_positive": true,
+          "confidence": 1.0,
+          "category": "CORRECTNESS",
+          "issue_signature": "compareTo zero result does not match equals method",
+          "developer_explanation": "Your code violates the standard contract between compareTo and equals: objects considered equal by comparison (same age) are not equal according to Object.equals(). This can cause incorrect behavior in collections like TreeSet, TreeMap, or PriorityQueue where these methods should be consistent. To fix this, either override both equals() and hashCode() consistently with your ordering logic, or document the inconsistency clearly as a deliberate design choice.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 2900,
+            "output_tokens": 194
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2601,
+          "latency_s": 7.15
+        },
+        {
+          "reasoning": "The Person class implements Comparable<Person> but never returns zero from compareTo() for instances with equal age while relying on inherited Object.equals() that checks reference identity only.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "compareTo inconsistent with object equals contract",
+          "developer_explanation": "Your compareTo logic never returns zero for people of the same age, yet Java collections like TreeSet expect a return value of zero to denote that two items are equivalent. If this class is added to such standard containers without overriding equals() or noting the inconsistency in documentation, distinct individuals with matching ages may be allowed as duplicates when you intended them to be treated as equal.",
+          "run": 2,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 11077,
+            "output_tokens": 167
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 41986,
+          "latency_s": 87.677
+        },
+        {
+          "reasoning": "The code implements Comparable<Person> but uses reference-based Object.equals() instead of value-based equality to match the compareTo logic defined by age, violating standard contract recommendations for consistency. SpotBugs correctly identifies this as a potential correctness issue because such inconsistencies lead to incorrect behaviors (e.g., improper element removal or deduplication) when these objects are used with standard Java collections like PriorityQueue.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "inconsistent compareTo and equals implementation",
+          "developer_explanation": "This warning is a valid issue because the class defines value-based ordering via compareTo but retains reference-based equality from Object.equals(). This mismatch can cause unpredictable failures in standard collections like PriorityQueue or TreeSet, particularly when removing elements that logically compare as equal. To fix this, you should override equals() (and hashCode()) to align with your natural ordering semantics unless explicitly documented otherwise.",
+          "run": 3,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 14509,
+            "output_tokens": 212
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 58556,
+          "latency_s": 129.85
+        }
+      ]
+    },
+    {
+      "finding_id": 6,
+      "type": "HE_EQUALS_USE_HASHCODE",
+      "sourcefile": "PersonRegistry.java",
+      "start_line": "22",
+      "message": "Class defines equals() and uses Object.hashCode()",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The class Person overrides the equals() method to define logical equality based on name and age, yet relies on Object.hashCode(), which returns a value derived from memory address rather than field values. This violates the Java contract requiring that objects considered equal by equals() must produce identical hashCodes when used in HashMaps or HashSets.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "overridden equals without overriding hashcode",
+          "developer_explanation": "If you implement a custom logic for equality in your class (like Person), you must also override hashCode() so that equal objects are treated consistently when placed into collections like HashSet or HashMap. Without this, standard library behavior will cause unexpected failures during lookups.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 10572,
+            "output_tokens": 179
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 38947,
+          "latency_s": 86.293
+        },
+        {
+          "reasoning": "The Person class overrides equals() based on state fields (age/name) while relying on Object.hashCode(), which returns identity-based hash codes that differ between instances. This violates Java's contract stating equal objects must have identical hash codes, causing silent failures and incorrect behavior when these instances are used as keys in HashMaps or elements in HashSets.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "class overrides equals without overriding hashCode violates contract",
+          "developer_explanation": "This class defines logical equality based on name and age but does not override hashCode(), which means each object instance gets a unique hash code by default. If you put two \"equal\" Person objects into the same HashMap or HashSet, they will be treated as distinct entries because their hash codes differ, leading to broken lookups or unexpected duplicates in sets. To fix this, implement a corresponding hashCode() method that combines name and age values.",
+          "run": 2,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 10101,
+            "output_tokens": 218
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 36512,
+          "latency_s": 81.942
+        },
+        {
+          "reasoning": "The `Person` class overrides `equals()` based on content semantics but inherits identity-based `hashCode()`, violating the invariant required by hash-backed collections like HashMap and HashSet which rely on logical equality to group elements consistently. This design choice breaks standard Java collection usage patterns expected for entity classes, making it a correctness issue regarding API contract compliance.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "class defines custom equality without consistent hash code",
+          "developer_explanation": "Your Person class compares name and age for equality but uses default identity-based hashing. If these instances are ever stored in a HashMap or HashSet (common practice for entities), the map will not recognize equal objects as duplicates, causing data integrity issues like unexpected entries or lookup failures.",
+          "run": 3,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 10872,
+            "output_tokens": 186
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 40242,
+          "latency_s": 90.499
+        }
+      ]
+    },
+    {
+      "finding_id": 7,
+      "type": "SA_FIELD_SELF_COMPARISON",
+      "sourcefile": "PersonRegistry.java",
+      "start_line": "29",
+      "message": "Self comparison of field with itself",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The equals method implementation uses unqualified field identifiers twice in the string check, both resolving to the current instance's name since no local variable shadows it or another object is referenced explicitly for comparison; this self-comparison violates equality semantics and makes state comparison from passed arguments incomplete.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "comparison between identical field references",
+          "developer_explanation": "This equals method implementation is incorrect because it only checks one object's state against itself and does not compare the other argument passed in for equality testing. Two objects with different names but matching ages would be considered equal, breaking Java's contract.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 18453,
+            "output_tokens": 163
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 74742,
+          "latency_s": 174.935
+        },
+        {
+          "reasoning": "The warning points at line 29 where name.equals(name) compares a field with itself rather than comparing the two objects' names (it should be this.name.equals(person.name)). This is a real correctness issue because self-comparison will always return true for non-null strings, so equals() can incorrectly report that persons are equal when they have different names.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "comparing field with itself in equals method",
+          "developer_explanation": "You accidentally wrote name.equals(name) instead of comparing the two different Person objects' names (this.name versus person.name). Since any non-null string is always equal to itself, this check will pass even when two people have different names. Fix it by comparing this.name with person.name so that equals() correctly identifies whether both persons share the same name.",
+          "run": 2,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 3239,
+            "output_tokens": 206
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 4188,
+          "latency_s": 11.72
+        },
+        {
+          "reasoning": "The flagged code at line 29 compares 'this.name' to itself ('name.equals(name)') rather than comparing it to the other object's field ('person.name'). This will always return true for non-null names, breaking Java's equals() contract which requires symmetric equality. The warning correctly identifies that this implementation produces incorrect results.",
+          "is_true_positive": true,
+          "confidence": 1.0,
+          "category": "CORRECTNESS",
+          "issue_signature": "comparing field with itself in equals method",
+          "developer_explanation": "Your Person.equals() incorrectly compares this.name to itself instead of comparing it to the other object's name (person.name). This makes equality depend only on age matching, regardless of whether names are actually equal. Fix by changing 'name.equals(name)' to 'this.name.equals(person.name)'. Both fields should be compared for proper equals implementation.",
+          "run": 3,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 2766,
+            "output_tokens": 199
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1833,
+          "latency_s": 6.383
+        }
+      ]
+    },
+    {
+      "finding_id": 8,
+      "type": "UWF_UNWRITTEN_FIELD",
+      "sourcefile": "ProfileReader.java",
+      "start_line": "12",
+      "message": "Unwritten field",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The field `name` is declared but never assigned to anywhere else (no assignment operator found), so the tool's claim that it was 'never written' in source code matches material fact; reading this unwritten value via getter leads to NPE crash when `.length()` accesses null object from constructor parameter which should have been stored. Thus warning correctly identifies logical correctness issue despite Java compiler default initialization.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "use of uninitialized field value",
+          "developer_explanation": "This field is never initialized from the constructor parameter or any other assignment statement in the code file. When you create a `Person` with `",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 22401,
+            "output_tokens": 169
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 90195,
+          "latency_s": 219.718
+        },
+        {
+          "reasoning": "The constructor body at lines 8–9 contains no assignment statement linking the parameter argument to the instance field declared on line 6, ensuring that every object created via this class path will have its field set only by default (null). This lack of initialization directly validates the tool's claim that reads return unwritten values, indicating a genuine logic error where input data provided in main() is discarded rather than stored.",
+          "is_true_positive": true,
+          "confidence": 1.0,
+          "category": "CORRECTNESS",
+          "issue_signature": "field never written in any constructor",
+          "developer_explanation": "Your Person class defines an instance field 'name' but the single-argument constructor (lines 8–9) does not assign that input parameter to this member; Java defaults unassigned fields to null. Consequently, every person object will return a name of null immediately upon construction instead of holding its given value, which causes your subsequent print statement to fail with NullPointerException when trying to access .length() on the stored String.",
+          "run": 2,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 10240,
+            "output_tokens": 228
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 37528,
+          "latency_s": 86.447
+        },
+        {
+          "reasoning": "The code declares an instance variable 'name' on line 6 but never assigns a value to it in the constructor parameter (line 8), which shadows its identifier instead of initializing it.",
+          "is_true_positive": true,
+          "confidence": 1.0,
+          "category": "CORRECTNESS",
+          "issue_signature": "field declared but never written",
+          "developer_explanation": "Your constructor accepts a 'name' parameter but does not assign it to the instance variable because they share the same identifier and assignment must be explicit (e.g. this.name = name). Without fixing this, every object created will have a null field instead of the provided argument, causing runtime exceptions when you try to use that value.",
+          "run": 3,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 13422,
+            "output_tokens": 165
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 51329,
+          "latency_s": 119.825
+        }
+      ]
+    },
+    {
+      "finding_id": 9,
+      "type": "UC_USELESS_CONDITION",
+      "sourcefile": "RangeValidator.java",
+      "start_line": "11",
+      "message": "Condition has no effect",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The code snippet contains a method accepting an arbitrary int parameter where the condition checks both (value < 0) and (value > 256), which are disjoint ranges that can never be true simultaneously for standard signed integers, making this branch logically unreachable regardless of narrowing context; thus the warning's core claim about the condition being useless is materially correct.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "condition always evaluates to false due to disjoint ranges",
+          "developer_explanation": "This validation check will never trigger because no integer value can be both less than 0 and greater than 256 at the same time. Use logical OR instead of AND if you want to reject any out-of-range values, e.g., `(value < 0 || value > 256)`.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 20379,
+            "output_tokens": 201
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 79702,
+          "latency_s": 196.637
+        },
+        {
+          "reasoning": "The condition `value < 0 && value > 256` can never be satisfied by any signed integer in Java because no valid int input can simultaneously satisfy the requirement of being negative and greater than a positive threshold (their intervals are disjoint). This makes the branch logically dead code, so SpotBugs' claim that it has 'no effect' is materially correct regardless of its text's specific mention of variable bounds which may be an internal reasoning artifact. The warning flags this logic error or redundant check as a valid issue.",
+          "is_true_positive": true,
+          "confidence": 1.0,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "compound condition always evaluates to false due to disjoint intervals on signed integers",
+          "developer_explanation": "This warning is a true positive because the validation logic you wrote will never actually throw an exception; it uses `&&` (AND) instead of `||` (OR), making the check impossible for any integer value. Since this condition always evaluates false, code in that block runs zero times on all inputs. It's likely an accidental bug where one intended to catch out-of-range values using OR logic.",
+          "run": 2,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 29616,
+            "output_tokens": 257
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 118739,
+          "latency_s": 307.016
+        },
+        {
+          "reasoning": "The condition `value < 0 && value > 255` can never be true because no single int value can satisfy both being less than zero AND greater than 255 simultaneously—these conditions are mutually exclusive, making this always-false dead code. The tool's claim about the expression is correct even if its reasoning text mentions 'value <= 255' which doesn't appear in this visible context.",
+          "is_true_positive": true,
+          "confidence": 1.0,
+          "category": "CORRECTNESS",
+          "issue_signature": "always false compound boolean condition with mutually exclusive predicates",
+          "developer_explanation": "This validation logic can never throw because no integer value is simultaneously negative and greater than 255—the two conditions contradict each other. Either remove this useless branch entirely, or fix the intended range check to use non-conflicting bounds that could actually be violated.",
+          "run": 3,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 3309,
+            "output_tokens": 203
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 4771,
+          "latency_s": 13.933
+        }
+      ]
+    },
+    {
+      "finding_id": 10,
+      "type": "RV_RETURN_VALUE_IGNORED",
+      "sourcefile": "TextTrimmer.java",
+      "start_line": "6",
+      "message": "Method ignores return value",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "SpotBugs warns that s.substring(3); ignores its return value, which is true factually for line 6. However, since String operations on immutables are designed such that they throw exceptions (rather than returning error codes) or produce disposable instances without state changes relevant to the caller's control flow in this context, ignoring the result does not cause a logic bug, data loss of critical value, or security vulnerability beyond trivial memory overhead. Thus, the specific correctness risk claimed by CWE-252 is absent here.",
+          "is_true_positive": false,
+          "confidence": 0.9,
+          "category": "CORRECTNESS",
+          "issue_signature": "unchecked return value from immutable string method",
+          "developer_explanation": "You can dismiss this warning because standard library methods like substring on Strings are immutable and always throw an exception or a valid object if successful; ignoring the result does not hide errors since it is safe to discard. Storing that temporary String would only incur unnecessary memory allocation in your main method, but failing to check its return value isn't a correctness bug for this API usage.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 7885,
+            "output_tokens": 244
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 26647,
+          "latency_s": 62.194
+        },
+        {
+          "reasoning": "The code calls s.substring(3) on line 6 and discards its result; Java String objects are immutable so ignoring the returned value has no effect on the original string's contents or program behavior.",
+          "is_true_positive": false,
+          "confidence": 0.98,
+          "category": "CORRECTNESS",
+          "issue_signature": "unchecked return value of method call",
+          "developer_explanation": "SpotBugs flags any unassigned non-void method result as a potential bug, but with Java's immutable String class this isn't an issue. Since substring() cannot change the original string and never signals errors via its return value (it throws exceptions for bad indices), omitting to use that returned object is safe here and doesn't affect correctness or security.",
+          "run": 2,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 10720,
+            "output_tokens": 176
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 40831,
+          "latency_s": 91.556
+        },
+        {
+          "reasoning": "The flagged line invokes `s.substring(3)` but discards the returned new string, relying instead on printing the original reference 's'. Since Java Strings are immutable, they never change state regardless of whether a method call is assigned or ignored. The warning claims an unchecked return value implies a correctness bug (e.g., mutation misunderstanding), which cannot occur here for String objects.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "unchecked string substring method call result",
+          "developer_explanation": "The warning is a nuisance because the rule assumes you might expect state changes from immutable objects like String. In Java's API, calling `substring()` never updates 's' in place; it returns new text that must be assigned if needed for later use. Since this code just discards the result and prints the original variable without expecting any change, there is no logic or correctness error here.",
+          "run": 3,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 9162,
+            "output_tokens": 216
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 32459,
+          "latency_s": 76.329
+        }
+      ]
+    },
+    {
+      "finding_id": 11,
+      "type": "RV_EXCEPTION_NOT_THROWN",
+      "sourcefile": "ValueProcessor.java",
+      "start_line": "11",
+      "message": "Exception created and dropped rather than thrown",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The flagged line instantiates an IllegalArgumentException inside a validation block but discards the object immediately without throwing it. Consequently invalid inputs like -1 are accepted silently because creating unchecked exception does not propagate failure upon construction unless explicitly thrown.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "exception instantiated but not thrown",
+          "developer_explanation": "Creating a new IllegalArgumentException object does not stop execution or signal error; you must use throw to fail validation here. As written negative values pass through as valid data which likely violates the business logic expecting rejection of such inputs.",
+          "run": 1,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 11452,
+            "output_tokens": 142
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 45751,
+          "latency_s": 100.189
+        },
+        {
+          "reasoning": "The code instantiates an IllegalArgumentException at line 11 inside the conditional block but does not assign its reference nor pass it to `throw` before falling through, which confirms SpotBugs' claim that an exception object is discarded rather than handled.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "exception instance created then discarded rather than thrown",
+          "developer_explanation": "You are creating an exception object when input validation fails but continuing execution without signaling the error to callers via `throw`. This hides invalid input states and could cause downstream logic to run with bad data. Add the keyword 'throw' before constructing that exception or ensure this state is explicitly handled.",
+          "run": 2,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 8796,
+            "output_tokens": 171
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 32117,
+          "latency_s": 71.198
+        },
+        {
+          "reasoning": "In ValueProcessor.process, an IllegalArgumentException instance is instantiated inside the conditional block without being assigned to any variable nor thrown before execution continues normally.",
+          "is_true_positive": true,
+          "confidence": 0.98,
+          "category": "CORRECTNESS",
+          "issue_signature": "exception created and dropped rather than thrown",
+          "developer_explanation": "This warning indicates that an exception object was constructed as a signal for failure but ignored instead of being propagated via throw or handled inside try-catch blocks. This creates a logic error where validation conditions were checked using the wrong control flow mechanism (silent drop) contrary to standard Java usage patterns.",
+          "run": 3,
+          "served_model": "qwen3.5:9b",
+          "usage": {
+            "input_tokens": 17097,
+            "output_tokens": 148
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 71548,
+          "latency_s": 161.945
+        }
+      ]
+    }
+  ],
+  "retry_history": [
+    {
+      "at": "2026-08-10T20:14:55.598413+00:00",
+      "reason": "failed_runs",
+      "kinds": [
+        "ucięty"
+      ],
+      "attempted": 1,
+      "repaired": 1,
+      "still_missing": 0,
+      "max_attempts": 3,
+      "configuration_changed": false
+    }
+  ]
+}

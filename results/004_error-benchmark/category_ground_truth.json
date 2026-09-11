@@ -1,0 +1,351 @@
+{
+  "schema_version": "1",
+  "run": "004_error-benchmark",
+  "updated_at": "2026-08-09",
+  "taxonomy": [
+    "CORRECTNESS",
+    "CONCURRENCY",
+    "SECURITY",
+    "PERFORMANCE",
+    "MAINTAINABILITY",
+    "OTHER"
+  ],
+  "keyed_by": [
+    "tool",
+    "type"
+  ],
+  "labeling_method": "manual_author_review_per_rule",
+  "total_rules": 41,
+  "labeled_rules": 41,
+  "rules": {
+    "error-prone::BoxedPrimitiveEquality": {
+      "tool": "error-prone",
+      "type": "BoxedPrimitiveEquality",
+      "count": 1,
+      "category": "CORRECTNESS",
+      "context_dependent": false,
+      "corrected_from": null
+    },
+    "error-prone::DeadException": {
+      "tool": "error-prone",
+      "type": "DeadException",
+      "count": 1,
+      "category": "CORRECTNESS",
+      "context_dependent": false,
+      "corrected_from": null
+    },
+    "error-prone::EqualsGetClass": {
+      "tool": "error-prone",
+      "type": "EqualsGetClass",
+      "count": 2,
+      "category": "CORRECTNESS",
+      "context_dependent": false,
+      "corrected_from": null
+    },
+    "error-prone::EqualsHashCode": {
+      "tool": "error-prone",
+      "type": "EqualsHashCode",
+      "count": 1,
+      "category": "CORRECTNESS",
+      "context_dependent": false,
+      "corrected_from": null
+    },
+    "error-prone::FallThrough": {
+      "tool": "error-prone",
+      "type": "FallThrough",
+      "count": 1,
+      "category": "CORRECTNESS",
+      "context_dependent": false,
+      "corrected_from": null
+    },
+    "error-prone::MissingOverride": {
+      "tool": "error-prone",
+      "type": "MissingOverride",
+      "count": 1,
+      "category": "MAINTAINABILITY",
+      "context_dependent": false,
+      "corrected_from": null
+    },
+    "error-prone::ModifyCollectionInEnhancedForLoop": {
+      "tool": "error-prone",
+      "type": "ModifyCollectionInEnhancedForLoop",
+      "count": 1,
+      "category": "CORRECTNESS",
+      "context_dependent": false,
+      "corrected_from": null
+    },
+    "error-prone::NarrowingCompoundAssignment": {
+      "tool": "error-prone",
+      "type": "NarrowingCompoundAssignment",
+      "count": 1,
+      "category": "CORRECTNESS",
+      "context_dependent": false,
+      "corrected_from": null
+    },
+    "error-prone::ReferenceEquality": {
+      "tool": "error-prone",
+      "type": "ReferenceEquality",
+      "count": 1,
+      "category": "CORRECTNESS",
+      "context_dependent": false,
+      "corrected_from": null
+    },
+    "error-prone::ReturnValueIgnored": {
+      "tool": "error-prone",
+      "type": "ReturnValueIgnored",
+      "count": 1,
+      "category": "CORRECTNESS",
+      "context_dependent": false,
+      "corrected_from": null
+    },
+    "error-prone::SelfEquals": {
+      "tool": "error-prone",
+      "type": "SelfEquals",
+      "count": 1,
+      "category": "CORRECTNESS",
+      "context_dependent": false,
+      "corrected_from": null
+    },
+    "error-prone::StringBuilderInitWithChar": {
+      "tool": "error-prone",
+      "type": "StringBuilderInitWithChar",
+      "count": 1,
+      "category": "CORRECTNESS",
+      "context_dependent": false,
+      "corrected_from": null
+    },
+    "error-prone::StringCaseLocaleUsage": {
+      "tool": "error-prone",
+      "type": "StringCaseLocaleUsage",
+      "count": 1,
+      "category": "CORRECTNESS",
+      "context_dependent": false,
+      "corrected_from": null
+    },
+    "error-prone::UnusedVariable": {
+      "tool": "error-prone",
+      "type": "UnusedVariable",
+      "count": 1,
+      "category": "MAINTAINABILITY",
+      "context_dependent": false,
+      "corrected_from": null
+    },
+    "sonarqube::java:S1206": {
+      "tool": "sonarqube",
+      "type": "java:S1206",
+      "count": 1,
+      "category": "CORRECTNESS",
+      "context_dependent": false,
+      "corrected_from": null
+    },
+    "sonarqube::java:S1210": {
+      "tool": "sonarqube",
+      "type": "java:S1210",
+      "count": 1,
+      "category": "CORRECTNESS",
+      "context_dependent": false,
+      "corrected_from": null
+    },
+    "sonarqube::java:S127": {
+      "tool": "sonarqube",
+      "type": "java:S127",
+      "count": 1,
+      "category": "CORRECTNESS",
+      "context_dependent": false,
+      "corrected_from": null
+    },
+    "sonarqube::java:S128": {
+      "tool": "sonarqube",
+      "type": "java:S128",
+      "count": 1,
+      "category": "CORRECTNESS",
+      "context_dependent": false,
+      "corrected_from": null
+    },
+    "sonarqube::java:S1317": {
+      "tool": "sonarqube",
+      "type": "java:S1317",
+      "count": 1,
+      "category": "CORRECTNESS",
+      "context_dependent": false,
+      "corrected_from": null
+    },
+    "sonarqube::java:S1764": {
+      "tool": "sonarqube",
+      "type": "java:S1764",
+      "count": 1,
+      "category": "CORRECTNESS",
+      "context_dependent": false,
+      "corrected_from": null
+    },
+    "sonarqube::java:S1905": {
+      "tool": "sonarqube",
+      "type": "java:S1905",
+      "count": 1,
+      "category": "MAINTAINABILITY",
+      "context_dependent": false,
+      "corrected_from": null
+    },
+    "sonarqube::java:S2189": {
+      "tool": "sonarqube",
+      "type": "java:S2189",
+      "count": 1,
+      "category": "CORRECTNESS",
+      "context_dependent": false,
+      "corrected_from": null
+    },
+    "sonarqube::java:S2201": {
+      "tool": "sonarqube",
+      "type": "java:S2201",
+      "count": 1,
+      "category": "CORRECTNESS",
+      "context_dependent": false,
+      "corrected_from": null
+    },
+    "sonarqube::java:S2251": {
+      "tool": "sonarqube",
+      "type": "java:S2251",
+      "count": 1,
+      "category": "CORRECTNESS",
+      "context_dependent": false,
+      "corrected_from": null
+    },
+    "sonarqube::java:S2696": {
+      "tool": "sonarqube",
+      "type": "java:S2696",
+      "count": 1,
+      "category": "CORRECTNESS",
+      "context_dependent": false,
+      "corrected_from": "CONCURRENCY"
+    },
+    "sonarqube::java:S2757": {
+      "tool": "sonarqube",
+      "type": "java:S2757",
+      "count": 1,
+      "category": "CORRECTNESS",
+      "context_dependent": false,
+      "corrected_from": null
+    },
+    "sonarqube::java:S3972": {
+      "tool": "sonarqube",
+      "type": "java:S3972",
+      "count": 1,
+      "category": "CORRECTNESS",
+      "context_dependent": false,
+      "corrected_from": null
+    },
+    "sonarqube::java:S3984": {
+      "tool": "sonarqube",
+      "type": "java:S3984",
+      "count": 1,
+      "category": "CORRECTNESS",
+      "context_dependent": false,
+      "corrected_from": null
+    },
+    "sonarqube::java:S4973": {
+      "tool": "sonarqube",
+      "type": "java:S4973",
+      "count": 1,
+      "category": "CORRECTNESS",
+      "context_dependent": false,
+      "corrected_from": null
+    },
+    "sonarqube::java:S6880": {
+      "tool": "sonarqube",
+      "type": "java:S6880",
+      "count": 1,
+      "category": "MAINTAINABILITY",
+      "context_dependent": false,
+      "corrected_from": null
+    },
+    "spotbugs::BC_IMPOSSIBLE_CAST": {
+      "tool": "spotbugs",
+      "type": "BC_IMPOSSIBLE_CAST",
+      "count": 1,
+      "category": "CORRECTNESS",
+      "context_dependent": false,
+      "corrected_from": null
+    },
+    "spotbugs::EQ_COMPARETO_USE_OBJECT_EQUALS": {
+      "tool": "spotbugs",
+      "type": "EQ_COMPARETO_USE_OBJECT_EQUALS",
+      "count": 1,
+      "category": "CORRECTNESS",
+      "context_dependent": false,
+      "corrected_from": null
+    },
+    "spotbugs::HE_EQUALS_USE_HASHCODE": {
+      "tool": "spotbugs",
+      "type": "HE_EQUALS_USE_HASHCODE",
+      "count": 1,
+      "category": "CORRECTNESS",
+      "context_dependent": false,
+      "corrected_from": null
+    },
+    "spotbugs::RANGE_ARRAY_INDEX": {
+      "tool": "spotbugs",
+      "type": "RANGE_ARRAY_INDEX",
+      "count": 1,
+      "category": "CORRECTNESS",
+      "context_dependent": false,
+      "corrected_from": null
+    },
+    "spotbugs::RC_REF_COMPARISON": {
+      "tool": "spotbugs",
+      "type": "RC_REF_COMPARISON",
+      "count": 1,
+      "category": "CORRECTNESS",
+      "context_dependent": false,
+      "corrected_from": null
+    },
+    "spotbugs::RV_EXCEPTION_NOT_THROWN": {
+      "tool": "spotbugs",
+      "type": "RV_EXCEPTION_NOT_THROWN",
+      "count": 1,
+      "category": "CORRECTNESS",
+      "context_dependent": false,
+      "corrected_from": null
+    },
+    "spotbugs::RV_RETURN_VALUE_IGNORED": {
+      "tool": "spotbugs",
+      "type": "RV_RETURN_VALUE_IGNORED",
+      "count": 1,
+      "category": "CORRECTNESS",
+      "context_dependent": false,
+      "corrected_from": null
+    },
+    "spotbugs::SA_FIELD_SELF_COMPARISON": {
+      "tool": "spotbugs",
+      "type": "SA_FIELD_SELF_COMPARISON",
+      "count": 1,
+      "category": "CORRECTNESS",
+      "context_dependent": false,
+      "corrected_from": null
+    },
+    "spotbugs::ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD": {
+      "tool": "spotbugs",
+      "type": "ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD",
+      "count": 1,
+      "category": "CORRECTNESS",
+      "context_dependent": false,
+      "corrected_from": null
+    },
+    "spotbugs::UC_USELESS_CONDITION": {
+      "tool": "spotbugs",
+      "type": "UC_USELESS_CONDITION",
+      "count": 2,
+      "category": "CORRECTNESS",
+      "context_dependent": false,
+      "corrected_from": null
+    },
+    "spotbugs::UWF_UNWRITTEN_FIELD": {
+      "tool": "spotbugs",
+      "type": "UWF_UNWRITTEN_FIELD",
+      "count": 1,
+      "category": "CORRECTNESS",
+      "context_dependent": false,
+      "corrected_from": null
+    }
+  },
+  "overrides": {}
+}

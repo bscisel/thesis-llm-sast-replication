@@ -1,0 +1,8 @@
+model;errors;unanimous;split;unanimous_share
+Claude Opus 5;92;80;12;0,870
+Claude Sonnet 5;96;83;13;0,865
+GPT-5.6 Terra;82;68;14;0,829
+GPT-5.6 Luna;110;79;31;0,718
+gpt-oss-120b;94;72;22;0,766
+gpt-oss-20b;89;55;34;0,618
+Qwen3.5 9B;112;46;66;0,411

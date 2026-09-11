@@ -1,0 +1,415 @@
+{
+  "tool": "sonarqube",
+  "version": "26.8.0.126808",
+  "total_findings": 16,
+  "filtered_out": {
+    "total": 50,
+    "reasons": {
+      "system_out_logger_rule": 50
+    }
+  },
+  "findings": [
+    {
+      "type": "java:S2251",
+      "abbrev": "S2251",
+      "sourcefile": "CountdownPrinter.java",
+      "start_line": "5",
+      "end_line": "5",
+      "classname": "CountdownPrinter",
+      "fully_qualified_classname": "app.CountdownPrinter",
+      "source_path": "src/main/java/app/CountdownPrinter.java",
+      "source_set": "main",
+      "package": "app",
+      "message": "\"i\" is incremented and will never reach \"stop condition\".",
+      "description": "\"i\" is incremented and will never reach \"stop condition\".",
+      "tool_specific": {
+        "severity": "MAJOR",
+        "issue_type": "BUG",
+        "effort": "5min",
+        "status": "OPEN",
+        "tags": [
+          "cert"
+        ],
+        "component": "java-errors-benchmark:src/main/java/app/CountdownPrinter.java",
+        "module": null
+      }
+    },
+    {
+      "type": "java:S2189",
+      "abbrev": "S2189",
+      "sourcefile": "CountdownPrinter.java",
+      "start_line": "5",
+      "end_line": "7",
+      "classname": "CountdownPrinter",
+      "fully_qualified_classname": "app.CountdownPrinter",
+      "source_path": "src/main/java/app/CountdownPrinter.java",
+      "source_set": "main",
+      "package": "app",
+      "message": "Correct this loop's end condition.",
+      "description": "Correct this loop's end condition.",
+      "tool_specific": {
+        "severity": "BLOCKER",
+        "issue_type": "BUG",
+        "effort": "15min",
+        "status": "OPEN",
+        "tags": [
+          "symbolic-execution",
+          "cert"
+        ],
+        "component": "java-errors-benchmark:src/main/java/app/CountdownPrinter.java",
+        "module": null
+      }
+    },
+    {
+      "type": "java:S6880",
+      "abbrev": "S6880",
+      "sourcefile": "InputRouter.java",
+      "start_line": "13",
+      "end_line": "13",
+      "classname": "InputRouter",
+      "fully_qualified_classname": "app.InputRouter",
+      "source_path": "src/main/java/app/InputRouter.java",
+      "source_set": "main",
+      "package": "app",
+      "message": "Replace the chain of if/else with a switch expression.",
+      "description": "Replace the chain of if/else with a switch expression.",
+      "tool_specific": {
+        "severity": "MAJOR",
+        "issue_type": "CODE_SMELL",
+        "effort": "10min",
+        "status": "OPEN",
+        "tags": [
+          "java21"
+        ],
+        "component": "java-errors-benchmark:src/main/java/app/InputRouter.java",
+        "module": null
+      }
+    },
+    {
+      "type": "java:S3972",
+      "abbrev": "S3972",
+      "sourcefile": "InputRouter.java",
+      "start_line": "13",
+      "end_line": "13",
+      "classname": "InputRouter",
+      "fully_qualified_classname": "app.InputRouter",
+      "source_path": "src/main/java/app/InputRouter.java",
+      "source_set": "main",
+      "package": "app",
+      "message": "Move this \"if\" to a new line or add the missing \"else\".",
+      "description": "Move this \"if\" to a new line or add the missing \"else\".",
+      "tool_specific": {
+        "severity": "CRITICAL",
+        "issue_type": "CODE_SMELL",
+        "effort": "10min",
+        "status": "OPEN",
+        "tags": [
+          "suspicious"
+        ],
+        "component": "java-errors-benchmark:src/main/java/app/InputRouter.java",
+        "module": null
+      }
+    },
+    {
+      "type": "java:S127",
+      "abbrev": "S127",
+      "sourcefile": "MatrixNormalizer.java",
+      "start_line": "21",
+      "end_line": "21",
+      "classname": "MatrixNormalizer",
+      "fully_qualified_classname": "app.MatrixNormalizer",
+      "source_path": "src/main/java/app/MatrixNormalizer.java",
+      "source_set": "main",
+      "package": "app",
+      "message": "Refactor the code in order to not assign to this loop counter from within the loop body.",
+      "description": "Refactor the code in order to not assign to this loop counter from within the loop body.",
+      "tool_specific": {
+        "severity": "MAJOR",
+        "issue_type": "CODE_SMELL",
+        "effort": "10min",
+        "status": "OPEN",
+        "tags": [
+          "pitfall"
+        ],
+        "component": "java-errors-benchmark:src/main/java/app/MatrixNormalizer.java",
+        "module": null
+      }
+    },
+    {
+      "type": "java:S128",
+      "abbrev": "S128",
+      "sourcefile": "MenuHandler.java",
+      "start_line": "11",
+      "end_line": "11",
+      "classname": "MenuHandler",
+      "fully_qualified_classname": "app.MenuHandler",
+      "source_path": "src/main/java/app/MenuHandler.java",
+      "source_set": "main",
+      "package": "app",
+      "message": "End this switch case with an unconditional break, return or throw statement.",
+      "description": "End this switch case with an unconditional break, return or throw statement.",
+      "tool_specific": {
+        "severity": "BLOCKER",
+        "issue_type": "CODE_SMELL",
+        "effort": "10min",
+        "status": "OPEN",
+        "tags": [
+          "cwe",
+          "cert",
+          "suspicious"
+        ],
+        "component": "java-errors-benchmark:src/main/java/app/MenuHandler.java",
+        "module": null
+      }
+    },
+    {
+      "type": "java:S4973",
+      "abbrev": "S4973",
+      "sourcefile": "NumberComparison.java",
+      "start_line": "7",
+      "end_line": "7",
+      "classname": "NumberComparison",
+      "fully_qualified_classname": "app.NumberComparison",
+      "source_path": "src/main/java/app/NumberComparison.java",
+      "source_set": "main",
+      "package": "app",
+      "message": "Strings and Boxed types should be compared using \"equals()\".",
+      "description": "Strings and Boxed types should be compared using \"equals()\".",
+      "tool_specific": {
+        "severity": "MAJOR",
+        "issue_type": "BUG",
+        "effort": "5min",
+        "status": "OPEN",
+        "tags": [
+          "cwe",
+          "cert"
+        ],
+        "component": "java-errors-benchmark:src/main/java/app/NumberComparison.java",
+        "module": null
+      }
+    },
+    {
+      "type": "java:S1905",
+      "abbrev": "S1905",
+      "sourcefile": "NumberReader.java",
+      "start_line": "6",
+      "end_line": "6",
+      "classname": "NumberReader",
+      "fully_qualified_classname": "app.NumberReader",
+      "source_path": "src/main/java/app/NumberReader.java",
+      "source_set": "main",
+      "package": "app",
+      "message": "Remove this unnecessary cast to \"Integer\".",
+      "description": "Remove this unnecessary cast to \"Integer\".",
+      "tool_specific": {
+        "severity": "MINOR",
+        "issue_type": "CODE_SMELL",
+        "effort": "5min",
+        "status": "OPEN",
+        "tags": [
+          "redundant",
+          "clumsy"
+        ],
+        "component": "java-errors-benchmark:src/main/java/app/NumberReader.java",
+        "module": null
+      }
+    },
+    {
+      "type": "java:S2696",
+      "abbrev": "S2696",
+      "sourcefile": "PersonProfile.java",
+      "start_line": "8",
+      "end_line": "8",
+      "classname": "PersonProfile",
+      "fully_qualified_classname": "app.PersonProfile",
+      "source_path": "src/main/java/app/PersonProfile.java",
+      "source_set": "main",
+      "package": "app",
+      "message": "Make the enclosing method \"static\" or remove this set.",
+      "description": "Make the enclosing method \"static\" or remove this set.",
+      "tool_specific": {
+        "severity": "CRITICAL",
+        "issue_type": "CODE_SMELL",
+        "effort": "20min",
+        "status": "OPEN",
+        "tags": [
+          "multi-threading"
+        ],
+        "component": "java-errors-benchmark:src/main/java/app/PersonProfile.java",
+        "module": null
+      }
+    },
+    {
+      "type": "java:S1210",
+      "abbrev": "S1210",
+      "sourcefile": "PersonRanking.java",
+      "start_line": "18",
+      "end_line": "18",
+      "classname": "PersonRanking",
+      "fully_qualified_classname": "app.PersonRanking",
+      "source_path": "src/main/java/app/PersonRanking.java",
+      "source_set": "main",
+      "package": "app",
+      "message": "Override \"equals(Object obj)\" to comply with the contract of the \"compareTo(T o)\" method.",
+      "description": "Override \"equals(Object obj)\" to comply with the contract of the \"compareTo(T o)\" method.",
+      "tool_specific": {
+        "severity": "MINOR",
+        "issue_type": "CODE_SMELL",
+        "effort": "15min",
+        "status": "OPEN",
+        "tags": [],
+        "component": "java-errors-benchmark:src/main/java/app/PersonRanking.java",
+        "module": null
+      }
+    },
+    {
+      "type": "java:S1206",
+      "abbrev": "S1206",
+      "sourcefile": "PersonRegistry.java",
+      "start_line": "21",
+      "end_line": "21",
+      "classname": "PersonRegistry",
+      "fully_qualified_classname": "app.PersonRegistry",
+      "source_path": "src/main/java/app/PersonRegistry.java",
+      "source_set": "main",
+      "package": "app",
+      "message": "This class overrides \"equals()\" and should therefore also override \"hashCode()\".",
+      "description": "This class overrides \"equals()\" and should therefore also override \"hashCode()\".",
+      "tool_specific": {
+        "severity": "MINOR",
+        "issue_type": "BUG",
+        "effort": "15min",
+        "status": "OPEN",
+        "tags": [
+          "cwe",
+          "cert"
+        ],
+        "component": "java-errors-benchmark:src/main/java/app/PersonRegistry.java",
+        "module": null
+      }
+    },
+    {
+      "type": "java:S1764",
+      "abbrev": "S1764",
+      "sourcefile": "PersonRegistry.java",
+      "start_line": "29",
+      "end_line": "29",
+      "classname": "PersonRegistry",
+      "fully_qualified_classname": "app.PersonRegistry",
+      "source_path": "src/main/java/app/PersonRegistry.java",
+      "source_set": "main",
+      "package": "app",
+      "message": "Correct one of the identical sub-expressions on both sides of equals.",
+      "description": "Correct one of the identical sub-expressions on both sides of equals.",
+      "tool_specific": {
+        "severity": "MAJOR",
+        "issue_type": "BUG",
+        "effort": "2min",
+        "status": "OPEN",
+        "tags": [
+          "cert"
+        ],
+        "component": "java-errors-benchmark:src/main/java/app/PersonRegistry.java",
+        "module": null
+      }
+    },
+    {
+      "type": "java:S1317",
+      "abbrev": "S1317",
+      "sourcefile": "TextAssembler.java",
+      "start_line": "5",
+      "end_line": "5",
+      "classname": "TextAssembler",
+      "fully_qualified_classname": "app.TextAssembler",
+      "source_path": "src/main/java/app/TextAssembler.java",
+      "source_set": "main",
+      "package": "app",
+      "message": "Replace the constructor character parameter 'a' with string parameter \"a\".",
+      "description": "Replace the constructor character parameter 'a' with string parameter \"a\".",
+      "tool_specific": {
+        "severity": "MAJOR",
+        "issue_type": "BUG",
+        "effort": "5min",
+        "status": "OPEN",
+        "tags": [
+          "pitfall"
+        ],
+        "component": "java-errors-benchmark:src/main/java/app/TextAssembler.java",
+        "module": null
+      }
+    },
+    {
+      "type": "java:S2201",
+      "abbrev": "S2201",
+      "sourcefile": "TextTrimmer.java",
+      "start_line": "6",
+      "end_line": "6",
+      "classname": "TextTrimmer",
+      "fully_qualified_classname": "app.TextTrimmer",
+      "source_path": "src/main/java/app/TextTrimmer.java",
+      "source_set": "main",
+      "package": "app",
+      "message": "The return value of \"substring\" must be used.",
+      "description": "The return value of \"substring\" must be used.",
+      "tool_specific": {
+        "severity": "MAJOR",
+        "issue_type": "BUG",
+        "effort": "10min",
+        "status": "OPEN",
+        "tags": [
+          "cert"
+        ],
+        "component": "java-errors-benchmark:src/main/java/app/TextTrimmer.java",
+        "module": null
+      }
+    },
+    {
+      "type": "java:S3984",
+      "abbrev": "S3984",
+      "sourcefile": "ValueProcessor.java",
+      "start_line": "11",
+      "end_line": "11",
+      "classname": "ValueProcessor",
+      "fully_qualified_classname": "app.ValueProcessor",
+      "source_path": "src/main/java/app/ValueProcessor.java",
+      "source_set": "main",
+      "package": "app",
+      "message": "Throw this exception or remove this useless statement.",
+      "description": "Throw this exception or remove this useless statement.",
+      "tool_specific": {
+        "severity": "MAJOR",
+        "issue_type": "BUG",
+        "effort": "2min",
+        "status": "OPEN",
+        "tags": [
+          "error-handling"
+        ],
+        "component": "java-errors-benchmark:src/main/java/app/ValueProcessor.java",
+        "module": null
+      }
+    },
+    {
+      "type": "java:S2757",
+      "abbrev": "S2757",
+      "sourcefile": "ValueReporter.java",
+      "start_line": "11",
+      "end_line": "11",
+      "classname": "ValueReporter",
+      "fully_qualified_classname": "app.ValueReporter",
+      "source_path": "src/main/java/app/ValueReporter.java",
+      "source_set": "main",
+      "package": "app",
+      "message": "Was \"+=\" meant instead?",
+      "description": "Was \"+=\" meant instead?",
+      "tool_specific": {
+        "severity": "MAJOR",
+        "issue_type": "BUG",
+        "effort": "2min",
+        "status": "OPEN",
+        "tags": [],
+        "component": "java-errors-benchmark:src/main/java/app/ValueReporter.java",
+        "module": null
+      }
+    }
+  ]
+}

@@ -1,0 +1,1433 @@
+{
+  "model": "claude-sonnet-5",
+  "tool": "sonarqube",
+  "num_runs": 3,
+  "runs_per_invocation": 3,
+  "source_root": "jetty.project",
+  "call_parameters": {
+    "temperature": null,
+    "concurrency": 3,
+    "response_format": "json_schema",
+    "max_tokens": 8192,
+    "max_retries": 6,
+    "base_url": "https://api.anthropic.com"
+  },
+  "system_prompt_variant": "jetty",
+  "system_prompt_sha256": "b5b634e0a9109c59",
+  "user_prompt_sha256": "233249fc03b8f699",
+  "timestamp": "2026-08-15T08:10:27.158217+00:00",
+  "updated_at": "2026-08-31T21:39:53.831069+00:00",
+  "findings": [
+    {
+      "finding_id": 0,
+      "type": "java:S131",
+      "sourcefile": "ServletPathSpec.java",
+      "start_line": "440",
+      "message": "Complete cases by adding the missing enum constants or add a default case to this switch.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The switch operates on the PathSpecGroup enum, which in this class's own sibling methods (lines 383 and 473) is switched with cases for EXACT, PREFIX_GLOB, SUFFIX_GLOB, ROOT, DEFAULT plus an explicit default, implying the enum has additional constants (e.g. MIDDLE_GLOB) not enumerated. The switch at line 440 lacks both an explicit case for that constant and any default branch, so if _group holds an unhandled value the switch silently does nothing and matched() falls through to return null without any documented rationale, unlike the other switches in the same class that explicitly cover the unmatched case. This is a real completeness gap consistent with what the rule flags.",
+          "is_true_positive": true,
+          "confidence": 0.68,
+          "category": "CORRECTNESS",
+          "issue_signature": "switch over enum missing case and default branch",
+          "developer_explanation": "This switch statement branches on the PathSpecGroup enum but doesn't cover every possible enum constant and has no default clause, unlike the similar switches elsewhere in this class that do handle the full set (or fall back to a default). If _group ever holds a value not explicitly listed here, the method will silently fall through and return null instead of handling it deliberately, which can hide bugs. Add the missing case (or a default) so the behavior for every enum value is explicit.",
+          "run": 1,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 3520,
+            "output_tokens": 1786,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 17.819
+        },
+        {
+          "reasoning": "The switch on the _group enum at line 440 lists cases EXACT, PREFIX_GLOB, SUFFIX_GLOB, ROOT and DEFAULT but has no default clause; Jetty's PathSpecGroup enum also includes MIDDLE_GLOB (used by regex-based path specs), which is not covered here. Because ServletPathSpec's own validation logic restricts spec forms to prefix, suffix, exact, root and default groups, MIDDLE_GLOB never actually reaches this instance in practice, so the missing branch causes no observed misbehavior for this class today; the fallthrough to 'return null' after the switch happens to mirror the other methods' explicit default. Nonetheless, the switch as written is structurally incomplete for the enum type and relies on an implicit invariant enforced elsewhere rather than being self-evidently safe, which is exactly the kind of fragile pattern this rule flags for maintainability and future-proofing (e.g., if the enum evolves or the class is reused). The claim that the switch lacks full enum coverage and a default is accurate for the code shown.",
+          "is_true_positive": true,
+          "confidence": 0.6,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "switch over enum missing default or full case coverage",
+          "developer_explanation": "The switch statement on the group enum enumerates several constants but doesn't include a default branch or explicitly handle every possible enum value (e.g., a middle-glob variant used elsewhere in the codebase). Right now this is safe only because upstream validation prevents that value from ever appearing here, but the switch itself doesn't document or enforce that invariant, so a future change to validation or the enum could silently produce a wrong result. Add a default case (or explicitly handle all enum constants) to make the intent clear and guard against future changes.",
+          "run": 2,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 3520,
+            "output_tokens": 3728,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 38.402
+        },
+        {
+          "reasoning": "The switch operates on the _group field of type PathSpecGroup, which in Jetty includes at least one additional case (e.g. MIDDLE_GLOB used by regex-based path specs) beyond EXACT, PREFIX_GLOB, SUFFIX_GLOB, ROOT and DEFAULT that are handled here, and unlike the two sibling switches in the same file (getPathMatch and matches) this switch has no default clause. Because control simply falls through to the trailing 'return null;' when no case matches, the immediate behavior is benign, but the switch is genuinely not exhaustive and silently omits handling for any additional enum constant, which is exactly the risk the rule flags (a code smell about incomplete or unclear switch handling rather than a broken result today). This makes the warning materially correct even though the fallback happens to be safe.",
+          "is_true_positive": true,
+          "confidence": 0.6,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "switch statement missing default or enum case coverage",
+          "developer_explanation": "This switch on the group enum doesn't explicitly cover every possible enum value and has no default branch, unlike the very similar switches elsewhere in this class that do include one. While the trailing return after the switch happens to make the current behavior safe, leaving out an explicit case or default makes the code harder to maintain and risks silent, unnoticed gaps if the enum gains new values later. Add the missing case(s) or an explicit default to make the intent clear.",
+          "run": 3,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 3520,
+            "output_tokens": 2881,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 28.53
+        }
+      ],
+      "original_finding_index": 346
+    },
+    {
+      "finding_id": 1,
+      "type": "java:S2447",
+      "sourcefile": "IncludeExcludeSet.java",
+      "start_line": "215",
+      "message": "Null is returned but a \"Boolean\" is expected.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The method's declared return type is Boolean and it explicitly returns null on line 215 to represent a third state (neither included nor excluded), as documented in the Javadoc. While this is intentional, it is exactly the pattern S2447 warns about: any caller that auto-unboxes the result (e.g., via `if (obj.isIncludedAndNotExcluded(item))` or assigning to a primitive boolean) will suffer an NPE. The rule's claim—that returning null where a Boolean is expected is a real hazard—materially applies here regardless of the documented intent, since the risk to callers is real and reachable.",
+          "is_true_positive": true,
+          "confidence": 0.65,
+          "category": "CORRECTNESS",
+          "issue_signature": "boxed boolean method returns null risking unboxing npe",
+          "developer_explanation": "This method returns null to signal a third state (neither included nor excluded), but its return type is the boxed Boolean class. Any caller that treats the result as a primitive boolean (e.g., in an if-condition or by unboxing) will get a NullPointerException. Consider using a three-value enum or clearly documenting/enforcing null-checking at every call site to avoid this pitfall.",
+          "run": 1,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 3663,
+            "output_tokens": 1615,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 17.87
+        },
+        {
+          "reasoning": "The code explicitly returns null from a method declared to return the wrapper type Boolean, and the Javadoc confirms this is intentional tri-state logic (true/false/null). While intentional, this pattern is exactly what S2447 targets: any caller that treats the return value as a primitive boolean (e.g., in an unboxing context like `if (obj.isIncludedAndNotExcluded(x))`) risks a NullPointerException. The risk is real and present in the shown code regardless of the documented intent, since nothing in the API prevents callers from misusing it.",
+          "is_true_positive": true,
+          "confidence": 0.72,
+          "category": "CORRECTNESS",
+          "issue_signature": "boxed boolean method returns null risking unboxing npe",
+          "developer_explanation": "This method returns null as a valid third state alongside Boolean.TRUE and Boolean.FALSE, but any caller who unintentionally auto-unboxes the result (for example using it directly in an if-statement) will get a NullPointerException. Even though the tri-state behavior is documented, consider using an enum or Optional<Boolean> to make the three states explicit and unboxing-safe.",
+          "run": 2,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 3663,
+            "output_tokens": 969,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 12.016
+        },
+        {
+          "reasoning": "The method's return type is java.lang.Boolean, and it explicitly returns null in the third branch, which is an intentional design choice (tri-state result) documented in the Javadoc. However, this pattern is precisely what S2447 warns about: any caller using this Boolean in a boolean context (e.g., `if (set.isIncludedAndNotExcluded(x))`) will trigger auto-unboxing and risk a NullPointerException. Since this is a public API method and callers outside this file are not shown, the null-unboxing hazard is real and reachable, making the tool's underlying claim materially correct even though it is a deliberate design.",
+          "is_true_positive": true,
+          "confidence": 0.68,
+          "category": "CORRECTNESS",
+          "issue_signature": "boxed boolean return can be null causing unboxing npe",
+          "developer_explanation": "This method returns a Boolean that can be null to represent a third state (neither included nor excluded), but any caller who uses the result directly in a boolean condition (like `if (result)`) will get a NullPointerException from auto-unboxing when null is returned. Even though this behavior is documented, it's easy for callers to forget the null case, so consider using an enum or Optional<Boolean> to make the tri-state explicit and avoid the risk of NPE.”, ",
+          "run": 3,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 3663,
+            "output_tokens": 1301,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 15.879
+        }
+      ],
+      "original_finding_index": 811
+    },
+    {
+      "finding_id": 2,
+      "type": "java:S2157",
+      "sourcefile": "LazyList.java",
+      "start_line": "57",
+      "message": "Add a \"clone()\" method to this class.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The class declares `implements Cloneable, Serializable` at line 57 but nowhere in the shown 449-line file (at least in the visible 207 lines) does it override `clone()`, which is exactly the API-design inconsistency the rule targets: implementing Cloneable without providing a working clone() implementation is misleading since Object.clone() is protected and inaccessible externally. The private no-arg constructor means the class can never actually be instantiated, so no caller could ever try to clone an instance, but the declared implements clause itself remains an inconsistent, confusing artifact of the class's public contract. The warning's claim—that the class implements Cloneable but lacks a corresponding clone() method—is factually accurate for the shown code.",
+          "is_true_positive": true,
+          "confidence": 0.75,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "class implements cloneable without overriding clone",
+          "developer_explanation": "This class declares `implements Cloneable` but never overrides the `clone()` method, so the interface is essentially decorative and misleading to anyone reading the class signature. Since Object's clone() is protected, simply implementing the marker interface without an override doesn't give callers a working clone method. Either remove `Cloneable` from the implements list if cloning isn't needed, or add a proper public `clone()` override.",
+          "run": 1,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 3513,
+            "output_tokens": 1136,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 12.03
+        },
+        {
+          "reasoning": "The class declares `implements Cloneable` but, as shown from lines 57 through 207 of a 449-line file, no clone() method is defined anywhere in the visible class body, and the tool (which analyzes the whole class) would only flag this if none exists in the remaining lines either. Declaring Cloneable without overriding clone() is a well-known anti-pattern: Object.clone() is protected, so without an override no caller outside the class hierarchy can actually invoke clone(), making the Cloneable declaration misleading and non-functional. Even though the class is a static utility with a private constructor and so is never instantiated in practice, the API surface still advertises cloning support it does not honor, which is exactly what this rule targets.",
+          "is_true_positive": true,
+          "confidence": 0.72,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "cloneable interface implemented without overriding clone method",
+          "developer_explanation": "This class implements Cloneable but never provides its own clone() method, so the interface marker is effectively non-functional — external code cannot call clone() on it because Object.clone() stays protected without an override. Either implement a proper public clone() method that respects the Cloneable contract, or remove the Cloneable declaration since it currently promises functionality the class doesn't deliver.",
+          "run": 2,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 3513,
+            "output_tokens": 2223,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 24.264
+        },
+        {
+          "reasoning": "The class declares `implements Cloneable, Serializable` but the constructor is private and no clone() override appears in the shown 207 lines; if a compliant clone() existed later in the file, the tool's AST-based rule would not have fired, so it is reasonable to trust the fact that no clone() override exists anywhere in this 449-line file. The class is a purely static utility (private constructor, no internal instantiation visible) so implementing Cloneable is likely vestigial, but the underlying factual claim of the rule — implementing Cloneable without overriding clone() — is materially correct for this class as declared.",
+          "is_true_positive": true,
+          "confidence": 0.55,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "class implements cloneable without overriding clone",
+          "developer_explanation": "This class declares that it implements Cloneable but never provides its own clone() method, which breaks the usual Java convention that a Cloneable class should override clone() (and call super.clone()). Since the class is really just a static utility with a private constructor and is never meant to be instantiated or copied, the cleanest fix is probably to drop the unused Cloneable/Serializable interfaces rather than add a clone() method, but as written the class does violate the interface contract it declares.”",
+          "run": 3,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 3513,
+            "output_tokens": 5363,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 59.978
+        }
+      ],
+      "original_finding_index": 817
+    },
+    {
+      "finding_id": 3,
+      "type": "java:S1452",
+      "sourcefile": "PathCollators.java",
+      "start_line": "54",
+      "message": "Remove usage of generic wildcard type.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The method's return type is declared as Comparator<? super Path>, a wildcard type in a return position, which is exactly the anti-pattern S1452 targets: PECS says wildcards belong in input positions, and returning a wildcard type needlessly restricts what callers can do with the returned Comparator (e.g., limits type inference and further generic composition) compared to simply returning Comparator<Path>. Looking at the fields, all of them are genuinely just Comparator<Path> implementations, so the wildcard adds no real flexibility and only obscures the API. This is a legitimate instance of the pattern the rule is designed to catch.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "generic wildcard type used in method return type",
+          "developer_explanation": "The method returns Comparator<? super Path> instead of the more precise Comparator<Path>. Using a wildcard in a return type provides no benefit here (the underlying comparators are all Comparator<Path>) and instead makes the API less useful for callers, since wildcard-typed return values are harder to use with generics. Prefer returning the concrete Comparator<Path> type.",
+          "run": 1,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 2277,
+            "output_tokens": 745,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 9.617
+        },
+        {
+          "reasoning": "The flagged method declares its return type as Comparator<? super Path>, which is a wildcard generic type used as a return type rather than as a parameter type; this is exactly the pattern S1452 targets, since wildcards in return types constrain what callers can do with the returned value (e.g., not being able to safely combine or chain comparisons without an unchecked cast) instead of exposing the more usable Comparator<Path>. All four static comparator fields and the three public accessor methods in this file use the same overly restrictive wildcard return type. This is a legitimate, if minor, API design smell as the rule describes.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "wildcard generic type used as method return type",
+          "developer_explanation": "The method's declared return type is Comparator<? super Path> instead of the simpler Comparator<Path>. Using a wildcard as a return type makes the API harder to use because callers get a type they can't easily chain or manipulate without workarounds; wildcards are meant for input parameters, not return values. Change the return type (and the underlying static fields) to Comparator<Path> for a cleaner, more usable API.",
+          "run": 2,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 2277,
+            "output_tokens": 685,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 8.968
+        },
+        {
+          "reasoning": "The method's return type is declared as Comparator<? super Path> even though all underlying comparator instances are effectively Comparator<Path> (e.g., BY_LAST_MODIFIED_ASCENDING is built via Comparator.comparing(PathCollators::getLastModifiedTime) which yields Comparator<Path>). Using a wildcard in the return type here is unnecessary and reduces usability for callers, since they cannot rely on the more specific type and lose some generic type inference benefits when the comparator is used with generic collection APIs expecting Comparator<Path>. This matches the pattern that S1452 targets: wildcards in return types should be avoided in favor of the more precise type when there's no real need for contravariance in the return position.",
+          "is_true_positive": true,
+          "confidence": 0.68,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "unnecessary wildcard in generic return type",
+          "developer_explanation": "The public methods return Comparator<? super Path>, but the actual comparator instances are all effectively Comparator<Path>. Returning a wildcard type here provides no real benefit and just makes the API harder to use, since callers lose some type inference and cannot rely on the more specific type. Consider declaring the return type as Comparator<Path> instead.",
+          "run": 3,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 2277,
+            "output_tokens": 1176,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 14.279
+        }
+      ],
+      "original_finding_index": 875
+    },
+    {
+      "finding_id": 4,
+      "type": "java:S5843",
+      "sourcefile": "AuthenticationProtocolHandler.java",
+      "start_line": "44",
+      "message": "Simplify this regular expression to reduce its complexity from 35 to the 20 allowed.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The flagged regex contains multiple top-level alternations, several optional non-capturing groups, nested character classes with many literal alternatives, and repeated quantifiers combined with named capturing groups — exactly the kind of structure that drives up SonarQube's regex complexity metric well past typical thresholds. Looking at the pattern itself, it is objectively hard to parse and reason about at a glance, matching the tool's claim of excessive complexity independent of whether the specific numeric threshold (35 vs 20) is exactly right. This is a legitimate maintainability observation about regex readability, not a false alarm about a property absent from the code.",
+          "is_true_positive": true,
+          "confidence": 0.75,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "overly complex regular expression pattern",
+          "developer_explanation": "This regular expression combines several alternations, optional groups, nested quantifiers, and multiple named capture groups into a single pattern, making it hard to read, debug, and safely modify. Consider breaking it into smaller named sub-patterns, using comments (via Pattern.COMMENTS), or splitting the matching logic into multiple simpler regexes to reduce cognitive load for future maintainers.",
+          "run": 1,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 4251,
+            "output_tokens": 781,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 9.77
+        },
+        {
+          "reasoning": "The flagged regex indeed contains multiple alternations, nested optional groups, five named capturing groups, several character classes and quantifiers combined into a single expression, which is objectively hard to read and reason about at a glance. The rule's complexity score is a heuristic proxy, but the underlying claim that this specific regex is unusually complex and would benefit from being broken down or documented is materially accurate for this code. This is a genuine maintainability concern regardless of whether the exact threshold of 20 is meaningful.",
+          "is_true_positive": true,
+          "confidence": 0.75,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "overly complex regular expression with many groups and alternations",
+          "developer_explanation": "This regular expression packs several named groups, alternations, character classes and quantifiers into one long expression, which makes it hard to read, verify, and safely modify. Consider splitting it into smaller named sub-patterns, adding comments explaining each part, or using Pattern.COMMENTS mode to improve readability.",
+          "run": 2,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 4251,
+            "output_tokens": 654,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 8.605
+        },
+        {
+          "reasoning": "The flagged regex combines multiple named capturing groups, nested non-capturing groups, alternations, quantifiers (+, *, ?), and several large character classes, which is genuinely difficult to read and reason about in a single expression. This matches the kind of structural complexity S5843 measures, and the regex here plausibly exceeds the complexity threshold given its many decision points (alternation branches, quantified character classes, optional groups). The code does function correctly (it implements RFC 7235 grammar parsing), so this is not a correctness bug but a legitimate maintainability concern about readability and future modifiability.",
+          "is_true_positive": true,
+          "confidence": 0.72,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "overly complex regular expression with many alternations and groups",
+          "developer_explanation": "This regular expression packs several named capturing groups, nested optional groups, alternations, and broad character classes into one expression, making it hard to read, debug, or safely modify. Consider breaking it into smaller named sub-patterns or adding comments/whitespace (e.g. via Pattern.COMMENTS) to clarify each alternative, without changing its matching behavior.",
+          "run": 3,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 4251,
+            "output_tokens": 772,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 9.434
+        }
+      ],
+      "original_finding_index": 1003
+    },
+    {
+      "finding_id": 5,
+      "type": "java:S1871",
+      "sourcefile": "HttpDateTime.java",
+      "start_line": "178",
+      "message": "This branch's code block is the same as the block for the branch on line 174.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The flagged branch (lines 178-180) executes exactly the same statement `year = StringUtil.toInt(token, 0);` as the branch on line 174, differing only in the guarding condition (token.length() <= 2 vs token.length() == 4). Since the body is identical, the if/else structure is redundant and could be collapsed into a single condition, which is precisely what S1871 flags. This is a legitimate maintainability smell, not a false alarm.",
+          "is_true_positive": true,
+          "confidence": 0.9,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "duplicate branch bodies in if-else with differing conditions",
+          "developer_explanation": "The if and else-if blocks both execute the identical statement `year = StringUtil.toInt(token, 0);`, only their length conditions differ. This duplication makes the code harder to read and maintain — consider merging the conditions into a single branch, e.g. `if (token.length() <= 2 || token.length() == 4)`.",
+          "run": 1,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 4726,
+            "output_tokens": 561,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 7.173
+        },
+        {
+          "reasoning": "The two branches at lines 173-176 and 177-180 both execute the identical statement `year = StringUtil.toInt(token, 0);`, differing only in the guarding condition (token.length() <= 2 vs token.length() == 4). This duplication is real: the two conditional branches could be merged into a single condition without changing behavior, which is exactly what S1871 flags. It is a legitimate maintainability observation, even though the code is functionally correct.",
+          "is_true_positive": true,
+          "confidence": 0.9,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "identical code blocks in different if branches",
+          "developer_explanation": "The if/else-if pair for handling day and year length checks both execute the exact same statement `year = StringUtil.toInt(token, 0);`. Since both branches do the same thing, they can be combined into a single condition (e.g. checking length <= 2 OR == 4) to make the intent clearer and avoid duplicated logic.",
+          "run": 2,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 4726,
+            "output_tokens": 593,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 7.308
+        },
+        {
+          "reasoning": "Comparing lines 174-176 and 178-180, both branches execute the exact same statement 'year = StringUtil.toInt(token, 0);' despite different length conditions (<=2 vs ==4), so the flagged code block is indeed identical to the other branch's block. The tool's claim that these two branches contain the same code is materially correct; the two conditions could be combined with a logical OR without changing behavior, which is exactly what S1871 flags.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "duplicate code block in separate if/else branches",
+          "developer_explanation": "The if and else-if branches both execute the identical statement 'year = StringUtil.toInt(token, 0);', just guarded by different length checks. Since the action taken is the same regardless of which condition matched, you can combine the two conditions with an OR into a single branch, which removes the duplication and makes the logic clearer without changing behavior.",
+          "run": 3,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 4726,
+            "output_tokens": 879,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 12.13
+        }
+      ],
+      "original_finding_index": 1247
+    },
+    {
+      "finding_id": 6,
+      "type": "java:S1700",
+      "sourcefile": "MultiPartByteRanges.java",
+      "start_line": "261",
+      "message": "Rename field \"parser\"",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The field is declared as `private final MultiPart.Parser parser;` inside the class `public static class Parser`, so the field name matches the enclosing class name (ignoring case), which is exactly the naming collision pattern this rule targets. This can cause confusion between the field and the class, especially given the nested type also named Parser. The claim behind the warning is accurate for this code.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "field name identical to enclosing class name",
+          "developer_explanation": "The field 'parser' has the same name (ignoring case) as its enclosing class 'Parser'. While legal in Java, this can be confusing to readers and tools, since it's easy to mistake references to the field for references to the type. Consider renaming the field to something more specific, like 'multiPartParser'.",
+          "run": 1,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 4785,
+            "output_tokens": 942,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 10.772
+        },
+        {
+          "reasoning": "The field \"parser\" is declared inside the static class \"Parser\" (line 258), so the field name matches its enclosing class name case-insensitively, which is exactly the pattern S1700 targets. This can cause confusion when reading code that references both the class and the field, especially in nested contexts. The claim behind the warning is materially correct for this snippet.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "field named same as its enclosing class",
+          "developer_explanation": "The private field `parser` is declared inside the class `Parser`, so its name is identical (aside from case) to the class that contains it. This can be confusing when reading or debugging the code, since readers must distinguish between the class `Parser` and the field `parser` by context alone. Consider renaming the field (e.g., to `multiPartParser`) to avoid the ambiguity.",
+          "run": 2,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 4785,
+            "output_tokens": 617,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 7.182
+        },
+        {
+          "reasoning": "The field is declared as `private final MultiPart.Parser parser;` inside the class `Parser` (MultiPartByteRanges.Parser), so the field name differs from the enclosing class name only by case, which is exactly the pattern S1700 targets. This kind of naming collision can genuinely confuse readers about whether 'parser' refers to the field, the type, or the enclosing class, especially since methods reference both `parser` and `Parser.this`. The claim behind the warning is accurate for this code.",
+          "is_true_positive": true,
+          "confidence": 0.7,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "field name matches enclosing class name",
+          "developer_explanation": "The field `parser` is declared inside a class also named `Parser` (differing only by letter case), which can make the code harder to read since 'parser' could be mistaken for the class itself or vice versa. Consider renaming the field to something like `partParser` or `multiPartParser` to avoid the ambiguity.",
+          "run": 3,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 4785,
+            "output_tokens": 1066,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 11.791
+        }
+      ],
+      "original_finding_index": 1338
+    },
+    {
+      "finding_id": 7,
+      "type": "java:S5261",
+      "sourcefile": "ServletPathSpec.java",
+      "start_line": "182",
+      "message": "Add explicit curly braces to avoid dangling else.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The flagged code has a nested if/else without braces: the outer 'if (base.endsWith(\"/\"))' contains an inner if/else, and then a second else clause on line 184 that binds to the outer if. While Java's dangling-else resolution makes this parse as apparently intended, the lack of braces makes the binding ambiguous to a human reader who must apply the 'closest unmatched if' rule to figure out which if each else attaches to. This is exactly the pattern the rule targets: real potential for misreading and future maintenance errors, even though the current logic is not incorrect.",
+          "is_true_positive": true,
+          "confidence": 0.82,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "nested if-else without braces creating ambiguous dangling else",
+          "developer_explanation": "The nested if/else block spanning base.endsWith(\"/\") and info.startsWith(\"/\") omits curly braces, so a reader has to mentally apply Java's dangling-else rule to figure out which if each else belongs to. Although the code currently behaves as intended, this structure is easy to misread and easy to break during future edits. Add explicit braces around each if/else branch to make the control flow unambiguous.",
+          "run": 1,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 5414,
+            "output_tokens": 1093,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 12.198
+        },
+        {
+          "reasoning": "The code at lines 179-187 nests an if/else without braces inside another if/else, so the else on line 182 binds to the inner `if (info.startsWith(\"/\"))` rather than to the outer `if (base.endsWith(\"/\"))`, which is exactly the dangling-else ambiguity the rule targets even though the current binding happens to match the intended logic. This structure is genuinely hard to read at a glance and a maintainer could misattribute the else to the wrong if, so adding braces is a legitimate readability fix. The warning correctly identifies a real dangling-else pattern in the shown code.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "nested if-else without braces causing dangling else ambiguity",
+          "developer_explanation": "The nested if/else blocks starting around this line have no curly braces, so it's not immediately obvious from the indentation alone which if each else belongs to; a reader (or future editor) could misread the control flow. Add explicit braces around the inner if/else to make the association unambiguous, even though the current logic happens to be correct.",
+          "run": 2,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 5414,
+            "output_tokens": 1359,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 14.608
+        },
+        {
+          "reasoning": "The flagged line 182 is an else clause following a nested if-else structure (outer if(base.endsWith(\"/\")) containing an inner if(info.startsWith(\"/\"))...else...) without any braces around either the outer or inner if bodies, which is exactly the dangling-else pattern the rule targets: while Java's grammar unambiguously binds the else to the inner if, a reader skimming the indentation could easily misattribute it to the outer if, especially since the outer branch is followed by an 'else if' chain a few lines later. Adding explicit braces would remove this genuine readability ambiguity without changing behavior.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "nested if-else without braces creating dangling else ambiguity",
+          "developer_explanation": "The nested if/else block that computes the relative path has no curly braces, so it's not immediately clear which if the trailing else belongs to just from reading the indentation, even though Java resolves it correctly to the inner if. Add explicit braces around each if/else branch here to remove the visual ambiguity and make the control flow unmistakable to future readers.",
+          "run": 3,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 5414,
+            "output_tokens": 1004,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 10.568
+        }
+      ],
+      "original_finding_index": 1392
+    },
+    {
+      "finding_id": 8,
+      "type": "java:S6126",
+      "sourcefile": "PrefaceFrame.java",
+      "start_line": "33",
+      "message": "Replace this String concatenation with Text block.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The flagged code is a multi-line string built via '+' concatenation of literals ending in \\r\\n, which is exactly the pattern S6126 targets. Java text blocks (available in the Java 15+ codebase given the language level implied by the tag) can represent this exact sequence by using an explicit \\r escape before each implicit newline, so a text block rewrite is genuinely possible and would eliminate the repeated '+' concatenation while preserving the required \\r\\n bytes. The claim behind the warning — that this concatenation is a candidate for a text block — is materially correct here, even if the actual improvement in readability is modest.",
+          "is_true_positive": true,
+          "confidence": 0.62,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "multi-line string built with concatenation instead of text block",
+          "developer_explanation": "This multi-line string is built using repeated '+' concatenation across several lines, which is exactly the kind of pattern Java text blocks were introduced to simplify. You can rewrite it as a text block while still preserving the required \\r\\n line endings by using explicit \\r escapes before each line break, making the code more concise and easier to read.",
+          "run": 1,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 1318,
+            "output_tokens": 1678,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 20.364
+        },
+        {
+          "reasoning": "The flagged code is indeed a multi-line String concatenation building a byte array from literal fragments, which is exactly the pattern the rule targets and Java text blocks (available since the project's use of language features suggests Java 15+) could replace it, e.g. by explicitly encoding \\r\\n escapes within the block. The suggestion is stylistic but factually accurate about the code structure present.",
+          "is_true_positive": true,
+          "confidence": 0.75,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "multi-line string concatenation replaceable by text block",
+          "developer_explanation": "This byte array is built from several string literals joined with '+', which text blocks (introduced in Java 15) can express more cleanly with a single block literal. It's a minor readability improvement, not a functional bug, though care is needed to preserve the exact CRLF sequences when rewriting.",
+          "run": 2,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 1318,
+            "output_tokens": 847,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 10.625
+        },
+        {
+          "reasoning": "The flagged code builds a byte array of HTTP/2 protocol preface bytes that must contain exact \\r\\n sequences; a naive text-block replacement (the natural rewrite this rule suggests) would normalize line terminators to \\n only, silently changing the resulting byte sequence and breaking the protocol constant. Because the straightforward rewrite that the rule implies is safe here would in fact alter the runtime behavior of this security/protocol-critical constant, the claim that this concatenation can simply be replaced by a text block is materially misleading in this specific context, even though a carefully escaped text block could preserve semantics.",
+          "is_true_positive": false,
+          "confidence": 0.68,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "string concatenation suggested for text block replacement despite line-ending sensitivity",
+          "developer_explanation": "This flags the multi-line string concatenation as a candidate for a Java text block, but the concatenated string encodes exact \\r\\n byte sequences required by the HTTP/2 preface protocol. A plain text block normalizes line endings to \\n by default, so a straightforward conversion (as the rule implies) would silently produce the wrong bytes; only a carefully escaped text block (using explicit \\r before each line break) would preserve the current behavior, making this suggestion risky to apply as-is.",
+          "run": 3,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 1318,
+            "output_tokens": 1931,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 21.97
+        }
+      ],
+      "original_finding_index": 1477
+    },
+    {
+      "finding_id": 9,
+      "type": "java:S1172",
+      "sourcefile": "HeaderGenerator.java",
+      "start_line": "48",
+      "message": "Remove this unused method parameter \"capacity\".",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The parameter \"capacity\" is declared in generate() but never referenced anywhere in the method body, which only uses frameType, length, flags, and streamId. Nothing in the shown code indicates this method overrides a superclass or interface method (no @Override, HeaderGenerator has no shown supertype for this method), so the usual S1172 exemption for overriding methods does not obviously apply here. While it is plausible that subclasses override generate() and use capacity, that cannot be verified from the shown file, and within this class the parameter is genuinely dead.",
+          "is_true_positive": true,
+          "confidence": 0.6,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "unused method parameter",
+          "developer_explanation": "The generate() method declares a \"capacity\" parameter that is never read or used anywhere in its body. If this value isn't needed by callers of this exact method, remove it to avoid confusing readers into thinking it affects behavior; if it's meant to support subclasses that override this method, document that intent or restructure the API so the unused parameter isn't carried by the base implementation.",
+          "run": 1,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 1679,
+            "output_tokens": 1785,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 20.79
+        },
+        {
+          "reasoning": "The flagged method generate() takes a parameter named 'capacity' but the method body only uses accumulator, frameType, length, flags, and streamId — 'capacity' never appears in the code. There is no @Override annotation or interface contract shown here that would require this exact signature, so nothing in the visible code explains away the unused parameter. This matches the literal claim of the rule.",
+          "is_true_positive": true,
+          "confidence": 0.75,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "unused method parameter",
+          "developer_explanation": "The 'capacity' parameter in this method is never read or used anywhere in the method body. This is dead parameter clutter that can confuse callers into thinking it affects behavior when it does not; either wire it into the logic or remove it from the signature (and update callers) if it's truly unnecessary here.",
+          "run": 2,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 1679,
+            "output_tokens": 981,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 11.856
+        },
+        {
+          "reasoning": "The parameter `capacity` is indeed not referenced in the body of this specific `generate` method, so the tool's literal claim (unused local parameter here) is textually correct. However, this is a public, non-final method on a base generator class within Jetty's HTTP/2 frame-generator hierarchy, and its signature almost certainly matches overriding `generate` methods in sibling/subclass frame generators that do use `capacity` to size buffers before delegating to this default header-writing logic; keeping the parameter here preserves a consistent overridable API contract across that family of classes. The snippet alone cannot show the overriding subclasses, but the design pattern (uniform signature for polymorphic frame generation) is the most plausible explanation, making this an intentional, justified unused parameter rather than dead code.",
+          "is_true_positive": false,
+          "confidence": 0.55,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "unused parameter kept for consistent overridable method signature",
+          "developer_explanation": "The `capacity` parameter is not used inside this particular implementation of `generate`, but this method is designed to be overridden by other frame generator subclasses that do use `capacity` to compute buffer sizes before delegating to this shared header-writing logic. Removing the parameter here would break signature consistency needed for polymorphic overriding across the generator family, so this warning can be safely disregarded in this context.",
+          "run": 3,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 1679,
+            "output_tokens": 4643,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 51.004
+        }
+      ],
+      "original_finding_index": 1479
+    },
+    {
+      "finding_id": 10,
+      "type": "java:S1119",
+      "sourcefile": "WriteFlusher.java",
+      "start_line": "343",
+      "message": "Refactor the code to remove this label and the need for it.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The label \"loop:\" is used precisely because a switch statement is nested inside the while loop, and a plain `break` inside a switch only exits the switch, not the outer loop; `break loop;` is the standard, idiomatic Java construct for escaping the outer loop from within the switch cases (FAILED and default). This is not an obscure or confusing use of labels but the conventional pattern for this exact control-flow need, and removing the label would require restructuring the loop/switch combination (e.g., via flags or extracted methods) without any clear readability benefit. The rule flags the mere presence of a label without recognizing that it serves a legitimate, standard purpose here.",
+          "is_true_positive": false,
+          "confidence": 0.72,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "labeled break used to escape nested switch inside loop",
+          "developer_explanation": "This warning flags the `loop:` label as inherently confusing and suggests removing it, but the label is used here in the standard Java idiom to break out of the enclosing while loop from within a nested switch statement, since a bare `break` inside a switch would only exit the switch. This is a well-understood and common pattern, not a confusing one, so there's no real need to refactor it away.",
+          "run": 1,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 5049,
+            "output_tokens": 1292,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 14.172
+        },
+        {
+          "reasoning": "The flagged line does contain a label 'loop:' used with 'break loop;' statements inside a switch nested in a while loop, which is exactly the pattern S1119 targets. While the label is functionally necessary to escape the while loop from within a switch's case blocks using plain break, the logic could be refactored (e.g., extracted into a private method returning the cause via return statements) to avoid the label entirely, which is the improvement the rule is nudging toward. The warning correctly identifies a real labeled statement whose necessity stems from control-flow structure that could be simplified.",
+          "is_true_positive": true,
+          "confidence": 0.65,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "labeled break used for loop control flow",
+          "developer_explanation": "The code uses a label ('loop:') combined with 'break loop;' inside a switch nested in a while loop, which the tool flags as a maintainability smell. Although the label is technically required to break out of the outer loop from inside a switch case, the same logic could likely be refactored into a small private method using return statements, removing the need for the label and making the control flow easier to follow.",
+          "run": 2,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 5049,
+            "output_tokens": 780,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 10.819
+        },
+        {
+          "reasoning": "The flagged line does introduce a genuine label ('loop:') that is used later via 'break loop;' and 'continue' interactions to escape the outer while loop from within a nested switch statement. This is exactly the kind of control-flow labeling S1119 targets, and the pattern could indeed be refactored (e.g., by extracting the loop into a private method that uses 'return' instead of a labeled break) to avoid the label, improving readability. The label is used correctly and does what it appears to do, so the tool's claim about the code structure is materially accurate, even though the label is not incorrect or buggy.",
+          "is_true_positive": true,
+          "confidence": 0.72,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "labeled break used to exit outer loop from nested switch",
+          "developer_explanation": "The method uses a named label ('loop:') together with 'break loop;' inside a switch statement to jump out of the enclosing while loop. While this works correctly, labeled breaks are uncommon in Java and can make control flow harder to follow. Consider extracting the loop body into a private method that uses 'return' to exit, which would eliminate the need for the label and make the logic easier to read.",
+          "run": 3,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 5049,
+            "output_tokens": 1020,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 11.969
+        }
+      ],
+      "original_finding_index": 1738
+    },
+    {
+      "finding_id": 11,
+      "type": "java:S127",
+      "sourcefile": "WriteThroughWriter.java",
+      "start_line": "249",
+      "message": "Refactor the code in order to not assign to this loop counter from within the loop body.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The flagged line 249 (`i--`) does assign to the for-loop counter `i` from within the loop body, exactly matching the pattern the rule targets. Although the decrement appears intentional here (to reprocess an unpaired surrogate on the next iteration), the code genuinely modifies the loop variable inside the loop, making the control flow harder to follow and reason about, which is the maintainability concern the rule describes.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "loop counter reassigned inside loop body",
+          "developer_explanation": "Inside the for loop over `i`, the code decrements `i` itself (line 249) to force reprocessing of a character on the next iteration. While this achieves the intended surrogate-handling logic, modifying the loop counter from within the body makes the loop's iteration count hard to reason about and easy to break during future edits. Consider refactoring with a separate index variable or restructuring the loop (e.g., a while loop with explicit control) so the counter itself stays untouched by the body.",
+          "run": 1,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 5389,
+            "output_tokens": 1018,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 12.062
+        },
+        {
+          "reasoning": "The for loop at line 225 uses counter variable `i`, and at line 249 inside the loop body the code executes `i--`, which is exactly the pattern this rule flags: reassigning the loop counter from within the loop body. This makes the loop's control flow harder to follow, since a reader must track that this iteration effectively repeats index `i` after the decrement, even though the manipulation appears to be intentional to reprocess a surrogate character.",
+          "is_true_positive": true,
+          "confidence": 0.9,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "loop counter reassigned inside loop body",
+          "developer_explanation": "Inside the for loop that converts characters to UTF-8, the loop counter `i` is decremented on line 249, which makes the loop's iteration logic much harder to follow since readers expect the counter to only be updated by the for-loop's own increment. Consider refactoring this surrogate-pair handling to use an explicit index variable or restructure the loop (e.g., a while loop) so the counter update is clearer and centralized.",
+          "run": 2,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 5389,
+            "output_tokens": 922,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 12.726
+        },
+        {
+          "reasoning": "The for-loop at line 225 uses `i` as its counter, and at line 249 the code executes `i--`, which is exactly the pattern the rule flags: an assignment to the loop counter from within the loop body. This makes the control flow harder to follow, since the effect of i++ (in the for-header) and i-- cancel out to effectively reprocess the same index next iteration, a nontrivial trick that a reader must reverse-engineer. The code is functionally intentional (used to re-evaluate a fallback surrogate value), but the readability/maintainability concern the rule raises is accurate for this code.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "loop counter reassigned inside loop body",
+          "developer_explanation": "Inside the for loop, the loop variable `i` is decremented at line 249, which combined with the loop's own increment effectively re-processes the same index on the next iteration. While this achieves the intended effect for surrogate handling, it obscures the loop's control flow and makes the code harder to reason about and maintain; consider restructuring (e.g., using a separate index variable or an explicit while loop) to make the intent clearer.",
+          "run": 3,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 5389,
+            "output_tokens": 866,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 10.616
+        }
+      ],
+      "original_finding_index": 1743
+    },
+    {
+      "finding_id": 12,
+      "type": "java:S3011",
+      "sourcefile": "DefaultFileLocatorHelper.java",
+      "start_line": "153",
+      "message": "This accessibility update should be removed.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The flagged line does call setAccessible(true) on a private field obtained via reflection, which is exactly the pattern S3011 targets: it forcibly bypasses Java's accessibility rules to reach an internal, non-public field of a third-party OSGi implementation class. Although the surrounding comments show this is a deliberate, documented workaround for lacking public API, the rule's underlying claim — that accessibility is being changed via reflection — is factually accurate for this code, and this practice is inherently fragile across different OSGi implementations/JVMs and can break under a SecurityManager. There is no attacker-controlled input reaching this call (the field name is hardcoded), so it is not a reachable security exploit, but it remains a legitimate code-smell concern about fragility and encapsulation-breaking reflection.",
+          "is_true_positive": true,
+          "confidence": 0.72,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "reflection used to bypass field accessibility checks",
+          "developer_explanation": "This line calls setAccessible(true) on a private field discovered via reflection, which forcibly bypasses normal Java encapsulation to read an internal field of a third-party class. While this is a known workaround for OSGi implementations that don't expose a public API for this data, such reflective accessibility overrides are inherently fragile (they can break with JVM updates, different OSGi vendors, or under a SecurityManager) and are worth flagging even when intentional, since they should be reviewed and isolated/documented carefully.",
+          "run": 1,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 6502,
+            "output_tokens": 1533,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 18.818
+        },
+        {
+          "reasoning": "The flagged line calls setAccessible(true) on a Field object obtained via reflection to access a private field named \"bundleFile\" in an OSGi implementation class (DirZipBundleEntry), exactly matching the pattern the rule targets: suppressing Java's accessibility checks to reach non-public members. This is intentional (the surrounding comments call it a 'hack' using introspection), but the rule's factual claim—that accessibility controls are being bypassed here—is accurate. The reflection here targets internal framework implementation classes rather than attacker-supplied data, so there is no realistic attacker-exploitable weakness; the concern is fragility/encapsulation-violation rather than a security vulnerability.",
+          "is_true_positive": true,
+          "confidence": 0.75,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "reflection used to bypass field access control",
+          "developer_explanation": "This code calls setAccessible(true) on a private field of a third-party (OSGi framework) class to read its value directly, bypassing normal Java encapsulation. While this is done deliberately as a workaround to reach implementation internals across different OSGi frameworks, it is fragile: it depends on private field names/layout that can change without notice and breaks encapsulation guarantees, which is what the warning is pointing out. Consider isolating this reflective access behind a clearly documented utility, or catching potential failures more defensively, since the underlying implementation classes are not part of any public contract.",
+          "run": 2,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 6502,
+            "output_tokens": 2036,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 22.378
+        },
+        {
+          "reasoning": "The flagged line calls setAccessible(true) on a Field obtained via hardcoded, non-user-controlled reflection (a fixed field name \"bundleFile\" on an internal OSGi bundleEntry class) purely to let the same package resolve internal bundle file locations across differing OSGi implementations. There is no attacker-controlled class name, field name, or external input reaching this reflective access, so there is no realistic exploitable disclosure or bypass of access control that an attacker could leverage — the accessibility change is a deliberate, scoped workaround for OSGi API limitations, not an exposed weakness. The rule's structural pattern (setAccessible call) is present, but the security consequence the rule implies (unauthorized access enabled for an attacker) is not reachable in this code.",
+          "is_true_positive": false,
+          "confidence": 0.68,
+          "category": "SECURITY",
+          "issue_signature": "reflective accessibility override flagged as security risk",
+          "developer_explanation": "This warning fires because the code calls setAccessible(true) to reach a private field via reflection. Here the field name is hardcoded and used only to bridge differences between OSGi implementations (equinox, felix, nuxeo) when resolving a bundle's install location — there is no user-supplied class or field name and no external input reaching this reflection call, so there is nothing an attacker could exploit through this accessibility change. It's safe to leave as-is given the legitimate interop need.",
+          "run": 3,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 6502,
+            "output_tokens": 1445,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 17.654
+        }
+      ],
+      "original_finding_index": 1955
+    },
+    {
+      "finding_id": 13,
+      "type": "java:S5738",
+      "sourcefile": "Server.java",
+      "start_line": "904",
+      "message": "Remove this call to a deprecated class, it has been marked for removal.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The warning is a symbol-resolution based claim: it asserts that the class org.eclipse.jetty.util.resource.FileSystemPool (referenced via FileSystemPool.INSTANCE) is annotated as deprecated and marked for removal. This is not the kind of pattern-based rule that misclassifies context; S5738 fires only when the analyzer resolves the referenced type/member declaration and finds @Deprecated(forRemoval=true). The snippet gives no evidence contradicting this, and the reference is a normal field access used exactly as the rule describes, so the claim appears materially correct for this usage.",
+          "is_true_positive": true,
+          "confidence": 0.6,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "use of class or member marked deprecated for removal",
+          "developer_explanation": "You are referencing FileSystemPool.INSTANCE, but that class has been marked as deprecated for removal in the version of the library you depend on. Continuing to use it means your code will break once the type is actually removed in a future release, so you should migrate to its replacement API now.",
+          "run": 1,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 4132,
+            "output_tokens": 1605,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 17.399
+        },
+        {
+          "reasoning": "The warning asserts that FileSystemPool is a class deprecated for removal, but the flagged line simply passes FileSystemPool.INSTANCE into a diagnostic dump call, and this is current, actively maintained Jetty 12 code — FileSystemPool is the standard resource-pool component used throughout this codebase for tracking mounted resources, not a legacy or removal-marked API. Nothing in the shown code indicates the class carries a deprecation annotation, and its integration into the core dump() diagnostics method (alongside other live components like DumpableAttributes and ClassLoaderDump) is inconsistent with it being slated for removal. Without visibility into the FileSystemPool declaration itself, the claim cannot be substantiated from context, and contextual evidence points against it being deprecated.",
+          "is_true_positive": false,
+          "confidence": 0.65,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "reference to class deprecated for removal",
+          "developer_explanation": "The tool flags FileSystemPool.INSTANCE as a call to a class that has been deprecated and marked for removal. However, FileSystemPool is a standard, actively used resource-tracking component in this version of the codebase, referenced here as part of normal diagnostic dump output alongside other live components — there is no indication it is actually deprecated. This alert can likely be safely dismissed unless the FileSystemPool class definition (not shown here) truly carries a deprecation-for-removal annotation.",
+          "run": 2,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 4132,
+            "output_tokens": 1268,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 14.769
+        },
+        {
+          "reasoning": "The decisive fact needed to judge this warning—whether FileSystemPool actually carries a @Deprecated(forRemoval=true) annotation—is not visible in this snippet, since only the usage site is shown, not the class declaration. SonarQube's S5738 rule is based on detecting genuine deprecation annotations (often via bytecode inspection) rather than heuristic pattern matching, so it is more likely than not that the flagged class is indeed marked deprecated for removal in the library version in use. Given the strong technical basis of this rule and no visible reason (in the shown code) to distrust the tool's detection, the most plausible verdict is that the warning correctly identifies a call to a class slated for removal.",
+          "is_true_positive": true,
+          "confidence": 0.55,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "use of a class annotated deprecated for removal",
+          "developer_explanation": "This code calls FileSystemPool.INSTANCE, and that class appears to be annotated in the library as deprecated and scheduled for removal in a future release. Continuing to depend on it risks a compile break once the class is actually removed, so you should check the library's release notes and migrate to the replacement API it points to.",
+          "run": 3,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 4132,
+            "output_tokens": 2074,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 21.221
+        }
+      ],
+      "original_finding_index": 2258
+    },
+    {
+      "finding_id": 14,
+      "type": "java:S112",
+      "sourcefile": "SessionDataMap.java",
+      "start_line": "58",
+      "message": "Replace generic exceptions with specific library exceptions or a custom exception.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The flagged line declares `throws Exception`, which is exactly the generic exception type the rule targets; using java.lang.Exception as the checked exception type prevents callers from catching more specific exceptions and forces catch-all handling. This is a real instance of the pattern the rule is designed to catch, not a misapplication of the rule.",
+          "is_true_positive": true,
+          "confidence": 0.75,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "method declares generic exception type",
+          "developer_explanation": "The method signature throws the generic java.lang.Exception instead of a more specific or custom exception type. This makes it harder for callers to handle failure cases precisely, since they either have to catch overly broad exceptions or catch-all. Consider defining a specific checked exception (e.g. SessionDataMapException) that better documents what can go wrong.",
+          "run": 1,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 1471,
+            "output_tokens": 469,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 5.425
+        },
+        {
+          "reasoning": "The flagged line declares `throws Exception`, which is indeed the generic java.lang.Exception type rather than a specific or custom exception class, exactly matching what S112 flags. This reduces the caller's ability to catch and handle specific error conditions and is a real, if minor, API design concern for a library interface.",
+          "is_true_positive": true,
+          "confidence": 0.75,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "method declares throws java.lang.Exception instead of specific type",
+          "developer_explanation": "This method signature declares that it throws the generic java.lang.Exception type instead of a more specific or custom exception. That makes it harder for callers to catch and handle particular failure conditions distinctly, and it obscures what can actually go wrong. Consider defining or using a more specific exception type for this API.",
+          "run": 2,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 1471,
+            "output_tokens": 522,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 6.587
+        },
+        {
+          "reasoning": "The method declares `throws Exception`, a generic exception type that forces callers to catch broad exceptions and loses information about the specific failure modes; this is exactly the pattern S112 targets. While this is a common and long-standing pattern in Jetty's API and may be intentional for API stability, the rule's claim about the code (a generic exception type is declared in a public API signature) is materially accurate. There's no indication in the snippet that a more specific exception type would be inappropriate here.",
+          "is_true_positive": true,
+          "confidence": 0.72,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "generic exception type declared in method signature",
+          "developer_explanation": "The method signature declares `throws Exception`, which is a very generic exception type. This forces callers to catch broad exceptions or propagate them further, obscuring what specific failures can actually occur and making error handling less precise. Consider declaring a more specific or custom exception type that conveys the actual failure modes of this operation.",
+          "run": 3,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 1471,
+            "output_tokens": 324,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 4.597
+        }
+      ],
+      "original_finding_index": 2457
+    },
+    {
+      "finding_id": 15,
+      "type": "java:S3824",
+      "sourcefile": "TopologicalSort.java",
+      "start_line": "57",
+      "message": "Replace this \"Map.get()\" and condition with a call to \"Map.computeIfAbsent()\".",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The code at line 57 implements the classic get-or-create idiom: get the value, check for null, and if null create and put a new HashSet. This is exactly the pattern computeIfAbsent is designed to replace, and here it can be safely rewritten as _dependencies.computeIfAbsent(dependent, k -> new HashSet<>()) without changing behavior, since there is no recursive modification of the map inside the lambda. The claim behind the warning is materially correct for this code.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "get-check-put pattern replaceable with computeIfAbsent",
+          "developer_explanation": "The get/null-check/put block used to lazily create a Set for a map key is exactly the situation computeIfAbsent was designed for, and it can be safely inlined into a single call here. Using computeIfAbsent makes the intent clearer and removes the need for temporary variable and manual null check.",
+          "run": 1,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 3838,
+            "output_tokens": 504,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 7.808
+        },
+        {
+          "reasoning": "The code at lines 57-62 exactly matches the get-check-null-then-put idiom: it fetches the set for `dependent`, and if absent, creates a new HashSet and puts it back into the same map before adding entries to it. This is precisely the pattern that Map.computeIfAbsent() is designed to replace, and doing so here is safe since the lambda would not recursively modify the same map during computation. The suggested refactor is semantically equivalent and would simplify the code.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "manual get-check-put pattern instead of computeIfAbsent",
+          "developer_explanation": "This code manually checks if a key is present in the map and inserts a new value if not, which is exactly what Map.computeIfAbsent() does in one call. Replacing the get/null-check/put sequence with computeIfAbsent would make the code more concise and less error-prone without changing its behavior.",
+          "run": 2,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 3838,
+            "output_tokens": 485,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 6.425
+        },
+        {
+          "reasoning": "The code at lines 57-62 does exactly the get-then-check-null-then-put pattern that computeIfAbsent is designed to replace: it fetches the set for a key, creates and inserts a new HashSet if absent, and this could be simplified to `_dependencies.computeIfAbsent(dependent, k -> new HashSet<>())` with identical behavior. There is no concurrency involved here (single-threaded, non-Map.compute lambda would be safe), and the rewrite would not change semantics.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "manual get-check-put pattern replaceable by computeIfAbsent",
+          "developer_explanation": "The get/null-check/put sequence for `_dependencies` in addDependency is the classic pattern that Map.computeIfAbsent exists to replace. Switching to `_dependencies.computeIfAbsent(dependent, k -> new HashSet<>())` would be shorter, clearer, and behave identically here.",
+          "run": 3,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 3838,
+            "output_tokens": 558,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 5.967
+        }
+      ],
+      "original_finding_index": 2693
+    },
+    {
+      "finding_id": 16,
+      "type": "java:S108",
+      "sourcefile": "TypeUtil.java",
+      "start_line": "622",
+      "message": "Remove this block of code, fill it in, or add a comment explaining why it is empty.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The catch block at line 622 is genuinely empty except for its closing brace, containing no statement and no comment explaining the intentional suppression; only the exception variable is named 'ignored', which the rule does not treat as an explanatory comment. This matches the rule's literal claim that a block is empty and unexplained, even though the intent (swallowing a URISyntaxException) is fairly guessable from context.",
+          "is_true_positive": true,
+          "confidence": 0.75,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "empty catch block without explanatory comment",
+          "developer_explanation": "This catch block for URISyntaxException has no body and no comment explaining why the exception is being ignored. Add a short comment (or log statement) inside the block so future readers know this is intentional rather than an oversight.",
+          "run": 1,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 5372,
+            "output_tokens": 686,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 8.809
+        },
+        {
+          "reasoning": "The catch block at line 622 is genuinely empty except for whitespace, and there is no comment inside it explaining why the URISyntaxException is deliberately swallowed. Although the parameter is named 'ignored', which hints at intent, the rule specifically flags empty blocks lacking an explanatory comment, and that condition is met here. This matches the same pattern as the neighboring getCodeSourceLocation method (line 646-648), which is also empty and uncommented, so the flagged code truly exhibits the claimed issue.",
+          "is_true_positive": true,
+          "confidence": 0.75,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "empty catch block without explanatory comment",
+          "developer_explanation": "The catch block for URISyntaxException is completely empty and has no comment explaining why the exception is intentionally ignored. While naming the parameter 'ignored' hints at intent, adding a short comment (e.g., '// treat malformed URI as absent') would make the intentional suppression explicit for future readers and avoid the impression that error handling was simply forgotten.",
+          "run": 2,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 5372,
+            "output_tokens": 814,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 9.866
+        },
+        {
+          "reasoning": "The catch block at line 622 is genuinely empty, containing no statements and no comment explaining the intentional suppression; it relies solely on the exception variable being named 'ignored' to signal intent. SonarQube's S108 rule requires either code or an explicit comment in an empty block, and neither is present here, so the claim is materially correct for this code even though the naming convention gives a hint to readers.",
+          "is_true_positive": true,
+          "confidence": 0.75,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "empty catch block without explanatory comment",
+          "developer_explanation": "The catch block here is completely empty and has no comment explaining why the exception is safe to swallow; only the parameter name 'ignored' hints at intent. Add a short comment stating why URISyntaxException can be safely ignored here, so future readers don't mistake it for a bug or missed error handling.",
+          "run": 3,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 5372,
+            "output_tokens": 715,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 8.148
+        }
+      ],
+      "original_finding_index": 2703
+    },
+    {
+      "finding_id": 17,
+      "type": "java:S1144",
+      "sourcefile": "SecurityUtils.java",
+      "start_line": "233",
+      "message": "Remove this unused private \"callableToPrivilegedAction\" method.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The flagged method is a private helper (only callable from within this same class) that converts a Callable into a PrivilegedAction, but nowhere in the shown remainder of the file (lines 83-255, which is the tail end of the class through the private constructor) is it invoked; the two related public methods (doAs/callAs) use reflection invoke rather than doPrivileged with this converted action. Since it is private, any caller must reside in this same file, and Sonar's analysis has full visibility into the class to confirm no call sites exist. While lines 1-82 are not shown, the private access modifier and the completeness of the visible logic (doPrivileged, doAs, callAs all fully shown with no reference to this helper) make it plausible that this is genuinely dead code left over from refactoring.",
+          "is_true_positive": true,
+          "confidence": 0.72,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "unused private method never invoked",
+          "developer_explanation": "The private method that converts a Callable into a PrivilegedAction doesn't appear to be called anywhere else in this class, and because it's private, it can only be used inside this file. Dead code like this adds clutter and confusion for future maintainers, so verify usage and remove it if it's truly unreferenced.",
+          "run": 1,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 2888,
+            "output_tokens": 1245,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 14.321
+        },
+        {
+          "reasoning": "The flagged method callableToPrivilegedAction is defined at line 233 but no call site appears anywhere in the shown code (lines 83-255), including in the closely related doAs, callAs, and doPrivileged methods that would be its natural callers. Since it is private, any legitimate use must occur within this same file; the missing lines 1-82 most likely contain only field declarations and a static initializer for the MethodHandle lookups, not a call to a Callable-to-PrivilegedAction converter. This pattern (an orphaned helper left over after refactoring doAs/callAs to use MethodHandles directly) is consistent with genuinely dead code, so the warning is credible.",
+          "is_true_positive": true,
+          "confidence": 0.65,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "unused private helper method",
+          "developer_explanation": "The private method that wraps a Callable into a PrivilegedAction doesn't appear to be called anywhere in the class; it looks like leftover code from an earlier implementation of doAs/callAs. Since it's private, no external code can use it, so if nothing in the file calls it, it should be removed to avoid confusing future maintainers.”",
+          "run": 2,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 2888,
+            "output_tokens": 1637,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 16.374
+        },
+        {
+          "reasoning": "The flagged method is private and static, so it can only be invoked from within this same class; nothing in the shown code (lines 83-255, which is the remainder of the file through its closing brace) calls callableToPrivilegedAction, and the related public methods doPrivileged, doAs, and callAs each implement their own action-invocation logic without delegating to it. Although lines 1-82 are not shown, SonarQube analyzes the whole file and would only flag the method as unused if no call site exists anywhere in the class; the visible evidence is consistent with this being a genuinely orphaned private helper, likely left over from an earlier refactor. Nothing in the visible code suggests a hidden call would materialize outside the shown suffix given the method's narrow, specific purpose and lack of any reference in the API-facing methods.",
+          "is_true_positive": true,
+          "confidence": 0.72,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "unused private method",
+          "developer_explanation": "The private helper method that converts a Callable into a PrivilegedAction is never called anywhere in the class - the other methods that could use it (doPrivileged, doAs, callAs) each implement their own invocation logic instead. Since it's private, it can't be used from outside this class either, so it's dead code that should be removed or, if it was meant to be used, wired into the callers that need it.",
+          "run": 3,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 2888,
+            "output_tokens": 1197,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 12.646
+        }
+      ],
+      "original_finding_index": 2869
+    },
+    {
+      "finding_id": 18,
+      "type": "java:S6204",
+      "sourcefile": "JettyClientUpgradeRequest.java",
+      "start_line": "52",
+      "message": "Replace this usage of 'Stream.collect(Collectors.toList())' with 'Stream.toList()' and ensure that the list is unmodified.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The flagged call collects a stream into a list via Collectors.toList() and immediately passes the result as an argument to setExtensions(); there is no evidence in the shown code that the list is later mutated by the caller or elsewhere in this constructor. The suggested Stream.toList() would produce an equivalent immutable list here, since the list is used only once for initialization and not retained by this class. Without seeing CoreClientUpgradeRequest.setExtensions(), the risk of mutation can't be fully excluded, but nothing in the shown code contradicts the suggestion; this is a standard, generally sound modernization.",
+          "is_true_positive": true,
+          "confidence": 0.55,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "stream collected to list instead of using stream.tolist",
+          "developer_explanation": "This stream builds a list using the older collect(Collectors.toList()) pattern; on modern Java you can use the simpler and slightly more efficient Stream.toList() instead. Just make sure the resulting list isn't modified afterward, since Stream.toList() returns an immutable list, unlike Collectors.toList().",
+          "run": 1,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 2306,
+            "output_tokens": 1116,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 13.516
+        },
+        {
+          "reasoning": "The code at line 50-52 does call .stream().map(...).collect(Collectors.toList()), which is exactly the pattern the rule targets and can be replaced by the equivalent Stream.toList() on Java 16+. The tool's caveat about ensuring the resulting list is unmodified is a legitimate warning about a semantic difference (Stream.toList() returns an immutable list) that developers must verify against how setExtensions() uses the list, but that does not make the underlying claim about the code pattern incorrect. The claim about the code pattern is materially correct here, so this is a valid code-modernization suggestion.",
+          "is_true_positive": true,
+          "confidence": 0.7,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "outdated collector pattern instead of stream.tolist",
+          "developer_explanation": "This code builds a list from a stream using collect(Collectors.toList()), which can be simplified to the more concise Stream.toList() introduced in Java 16. Before making the change, double check that nothing downstream (such as setExtensions) tries to modify the returned list afterward, since Stream.toList() produces an immutable list unlike Collectors.toList().",
+          "run": 2,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 2306,
+            "output_tokens": 1078,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 11.467
+        },
+        {
+          "reasoning": "The code builds a list via Collectors.toList() and immediately passes it to setExtensions(); nothing in the shown snippet indicates the returned list is later mutated, so replacing it with the more concise Stream.toList() (which yields an immutable list) is a safe, valid modernization for Java 16+. The warning itself flags the caveat about immutability, and since there's no evidence in this file that the list needs to be mutable afterward, the suggestion is materially correct here.",
+          "is_true_positive": true,
+          "confidence": 0.6,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "list built with collectors instead of stream.tolist",
+          "developer_explanation": "You're using Collectors.toList() to build a list from a stream and immediately passing it onward; since Java 16, Stream.toList() does the same job more concisely and efficiently. As long as the receiving method (setExtensions) doesn't need to mutate the list afterward, switching to Stream.toList() is safe and improves readability.”",
+          "run": 3,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 2306,
+            "output_tokens": 897,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 10.285
+        }
+      ],
+      "original_finding_index": 3055
+    },
+    {
+      "finding_id": 19,
+      "type": "xml:S1134",
+      "sourcefile": "pom.xml",
+      "start_line": "54",
+      "message": "Take the required action to fix the issue indicated by this \"FIXME\" comment.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The line literally contains a FIXME comment indicating a known temporary workaround that should be removed later, which is exactly what rule S1134 flags. The comment is genuine, unresolved, and marks technical debt in the build configuration, so the tool's claim is accurate for this code.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "unresolved fixme comment marking pending work",
+          "developer_explanation": "This line has a FIXME comment noting that the Servlet API dependency should be removed once jetty-core no longer needs it. Since it's still present, it signals unfinished cleanup work that should be tracked and eventually resolved so the dependency isn't left in permanently by oversight.",
+          "run": 1,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 1839,
+            "output_tokens": 342,
+            "cache_creation_input_tokens": 2741,
+            "cache_read_input_tokens": 0
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 5.425,
+          "rerun_after_context_fix": true
+        },
+        {
+          "reasoning": "The flagged line is indeed a FIXME comment indicating pending cleanup work (removing the servlet API dependency once usage is eliminated from jetty-core), which is exactly the pattern S1134 is designed to detect. The comment marks unresolved technical debt that the rule correctly identifies as needing follow-up action or tracking.",
+          "is_true_positive": true,
+          "confidence": 0.9,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "fixme comment marking unresolved technical debt",
+          "developer_explanation": "This is a real FIXME comment left in the pom.xml noting that the jetty-jakarta-servlet-api dependency should be removed once servlet API usage is fully gone from jetty-core. Since it flags genuine pending work, either resolve the dependency removal or track it in an issue tracker instead of leaving it as an inline comment indefinitely.",
+          "run": 2,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 1839,
+            "output_tokens": 420,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 5.326,
+          "rerun_after_context_fix": true
+        },
+        {
+          "reasoning": "Line 54 contains an actual FIXME comment indicating that a dependency (jetty-jakarta-servlet-api) is only temporarily needed and should be removed once Servlet API usage is gone from jetty-core. The rule's purpose is exactly to surface such markers of known, unresolved technical debt, and this comment genuinely represents that pattern. There is no indication the FIXME has already been addressed elsewhere in the shown file.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "unresolved fixme comment marking technical debt",
+          "developer_explanation": "This pom.xml still carries a FIXME comment noting that the jetty-jakarta-servlet-api dependency should be removed once Servlet API usage is gone from jetty-core. Leaving such markers unaddressed means the temporary dependency may linger longer than intended, so it's worth tracking as a follow-up task or removing once the underlying work is done.",
+          "run": 3,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 1839,
+            "output_tokens": 429,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 5.205,
+          "rerun_after_context_fix": true
+        }
+      ],
+      "original_finding_index": 3102,
+      "superseded_runs": [
+        {
+          "reasoning": "Line 54 in the shown snippet is `<organizationUrl>https://webtide.com</organizationUrl>`, plain XML content with no comment at all, let alone a FIXME comment; scanning the entire visible snippet (lines 1-204) shows no FIXME text anywhere. The warning claims a FIXME comment exists at this line that needs resolving, but the actual code does not contain any such comment, so the tool's claim is not materially correct for the shown code.",
+          "is_true_positive": false,
+          "confidence": 0.9,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "fixme comment flagged where none exists",
+          "developer_explanation": "The tool says there's a FIXME comment on this line that needs to be addressed, but the line in question is just an organizationUrl XML tag with no comment at all. This appears to be a line-number mismatch or stale analysis result, so there is nothing to fix here.",
+          "run": 1,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 4856,
+            "output_tokens": 598,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 6.867
+        },
+        {
+          "reasoning": "Line 54 in the shown snippet is `<organizationUrl>https://webtide.com</organizationUrl>`, an ordinary XML element with no comment at all, let alone a FIXME comment. The rule claims there is a FIXME comment requiring action on this line, but no such comment exists in the shown code.",
+          "is_true_positive": false,
+          "confidence": 0.9,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "fixme comment flagged on line without any comment",
+          "developer_explanation": "The tool says line 54 contains a FIXME comment that needs addressing, but that line is just a normal organizationUrl XML tag with no comment present. This appears to be a line-number mismatch or stale analysis result and can be dismissed for this location.",
+          "run": 2,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 4856,
+            "output_tokens": 469,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 6.305
+        },
+        {
+          "reasoning": "Line 54 in the shown snippet is `<organizationUrl>https://webtide.com</organizationUrl>`, an ordinary XML element with no comment text at all, let alone a FIXME comment. The warning claims a FIXME comment needs action at this location, but no such comment exists anywhere near that line in the shown code.",
+          "is_true_positive": false,
+          "confidence": 0.9,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "fixme comment flagged where none exists",
+          "developer_explanation": "The tool says there is a FIXME comment on this line that needs attention, but the actual line here is just a developer's organizationUrl element with no comment at all. This appears to be a line-mapping or detection error and there is nothing to fix at this location.",
+          "run": 3,
+          "served_model": "claude-sonnet-5",
+          "usage": {
+            "input_tokens": 4856,
+            "output_tokens": 360,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 2741
+          },
+          "stop_reason": "end_turn",
+          "latency_s": 4.476
+        }
+      ]
+    }
+  ],
+  "rerun_history": [
+    {
+      "at": "2026-08-31T21:39:53.831069+00:00",
+      "finding": "xml:S1134 pom.xml:54",
+      "finding_id": 19,
+      "reason": "wycinek zbudowany z glownego pom.xml zamiast jetty-core/pom.xml; poprawka w _resolve_java_path",
+      "repetitions": 3,
+      "source_root": "jetty.project/jetty-core",
+      "paths_relative_to_root": true,
+      "configuration_changed": true
+    }
+  ]
+}

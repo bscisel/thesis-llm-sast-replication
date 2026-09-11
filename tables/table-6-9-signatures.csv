@@ -1,0 +1,8 @@
+model;within_rule_exact;within_rule_similar;cross_tool_groups_exact;cross_tool_groups_similar
+Claude Opus 5;0,150;0,521;2;3
+Claude Sonnet 5;0,059;0,337;2;4
+GPT-5.6 Terra;0,362;0,830;3;6
+GPT-5.6 Luna;0,371;0,848;2;4
+gpt-oss-120b;0,253;0,729;4;5
+gpt-oss-20b;0,089;0,267;2;5
+Qwen3.5 9B;0,006;0,070;0;0

@@ -1,0 +1,1226 @@
+{
+  "model": "openai/gpt-oss-120b",
+  "tool": "sonarqube",
+  "num_runs": 3,
+  "runs_per_invocation": 3,
+  "source_root": "java-errors-benchmark",
+  "call_parameters": {
+    "temperature": null,
+    "concurrency": 3,
+    "response_format": "json_schema",
+    "max_tokens": 8192,
+    "max_retries": 6,
+    "base_url": "https://openrouter.ai/api/v1",
+    "provider": "deepinfra/bf16",
+    "allow_fallbacks": false,
+    "require_parameters": true,
+    "cache_control": false
+  },
+  "system_prompt_variant": "benchmark",
+  "system_prompt_sha256": "b5b634e0a9109c59",
+  "user_prompt_sha256": "233249fc03b8f699",
+  "timestamp": "2026-08-09T18:29:43.395385+00:00",
+  "updated_at": "2026-08-09T18:29:43.395385+00:00",
+  "findings": [
+    {
+      "finding_id": 0,
+      "type": "java:S2251",
+      "sourcefile": "CountdownPrinter.java",
+      "start_line": "5",
+      "message": "\"i\" is incremented and will never reach \"stop condition\".",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The for loop starts with i = 5, tests i >= 0, and increments i each iteration, so i will never become less than 0 and the loop never terminates.",
+          "is_true_positive": true,
+          "confidence": 0.99,
+          "category": "CORRECTNESS",
+          "issue_signature": "for loop with non-terminating condition",
+          "developer_explanation": "The loop condition i >= 0 will always be true because i is increased on each iteration. This creates an infinite loop that will never finish. Change the update to decrement i (i--) or adjust the condition so the loop can terminate.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2056,
+            "output_tokens": 409,
+            "reasoning_tokens": 274,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000145602
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1082,
+          "latency_s": 8.806
+        },
+        {
+          "reasoning": "The for loop starts with i = 5, tests i >= 0, and increments i each iteration, so i will never become less than 0 and the loop never terminates.",
+          "is_true_positive": true,
+          "confidence": 0.99,
+          "category": "CORRECTNESS",
+          "issue_signature": "for loop with non-terminating condition",
+          "developer_explanation": "The loop condition i >= 0 will always be true because i is increased on each iteration. This creates an infinite loop that will never finish. Change the update to decrement i (i--) or adjust the condition so the loop can terminate.",
+          "run": 2,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2056,
+            "output_tokens": 409,
+            "reasoning_tokens": 274,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000145602
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1082,
+          "latency_s": 10.171
+        },
+        {
+          "reasoning": "The for loop starts with i = 5, tests i >= 0, and increments i each iteration, so i will never become less than 0 and the loop never terminates.",
+          "is_true_positive": true,
+          "confidence": 0.99,
+          "category": "CORRECTNESS",
+          "issue_signature": "for loop with non-terminating condition",
+          "developer_explanation": "The loop condition i >= 0 will always be true because i is increased on each iteration. This creates an infinite loop that will never finish. Change the update to decrement i (i--) or adjust the condition so the loop can terminate.",
+          "run": 3,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2056,
+            "output_tokens": 409,
+            "reasoning_tokens": 274,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000145602
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1082,
+          "latency_s": 8.736
+        }
+      ]
+    },
+    {
+      "finding_id": 1,
+      "type": "java:S2189",
+      "sourcefile": "CountdownPrinter.java",
+      "start_line": "5",
+      "message": "Correct this loop's end condition.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The for loop starts with i = 5, increments i each iteration, and tests i >= 0, which remains true forever, creating an infinite loop. This matches the tool's claim that the loop's end condition is incorrect.",
+          "is_true_positive": true,
+          "confidence": 0.99,
+          "category": "CORRECTNESS",
+          "issue_signature": "infinite for loop with incorrect condition",
+          "developer_explanation": "The loop never terminates because i is increased while the condition checks for i >= 0, which is always satisfied after the start. Change the loop to decrement i (e.g., i--) or adjust the condition so the loop can finish.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2055,
+            "output_tokens": 647,
+            "reasoning_tokens": 505,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000186025
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2008,
+          "latency_s": 14.02
+        },
+        {
+          "reasoning": "The for loop starts with i = 5, increments i each iteration, and tests i >= 0, which remains true forever, creating an infinite loop. This matches the tool's claim that the loop's end condition is incorrect.",
+          "is_true_positive": true,
+          "confidence": 0.99,
+          "category": "CORRECTNESS",
+          "issue_signature": "infinite for loop with incorrect condition",
+          "developer_explanation": "The loop never terminates because i is increased while the condition checks for i >= 0, which is always satisfied after the start. Change the loop to decrement i (e.g., i--) or adjust the condition so the loop can finish.",
+          "run": 2,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2055,
+            "output_tokens": 647,
+            "reasoning_tokens": 505,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000186025
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2008,
+          "latency_s": 13.469
+        },
+        {
+          "reasoning": "The for loop starts with i = 5, increments i each iteration, and tests i >= 0, which remains true forever, creating an infinite loop. This matches the tool's claim that the loop's end condition is incorrect.",
+          "is_true_positive": true,
+          "confidence": 0.99,
+          "category": "CORRECTNESS",
+          "issue_signature": "infinite for loop with incorrect condition",
+          "developer_explanation": "The loop never terminates because i is increased while the condition checks for i >= 0, which is always satisfied after the start. Change the loop to decrement i (e.g., i--) or adjust the condition so the loop can finish.",
+          "run": 3,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2055,
+            "output_tokens": 647,
+            "reasoning_tokens": 505,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000186025
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2008,
+          "latency_s": 13.844
+        }
+      ]
+    },
+    {
+      "finding_id": 2,
+      "type": "java:S6880",
+      "sourcefile": "InputRouter.java",
+      "start_line": "13",
+      "message": "Replace the chain of if/else with a switch expression.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The code has a stray closing brace before the \"if (input == 3)\" line, breaking the conditional into two separate if statements rather than a single if/else chain, so the tool's claim that there is a replaceable chain is incorrect.",
+          "is_true_positive": false,
+          "confidence": 0.96,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "if/else chain replaceable with switch expression",
+          "developer_explanation": "The warning can be ignored because the code does not actually form a continuous if/else chain; a misplaced brace splits the logic, making the suggested switch replacement inappropriate. Fix the brace placement if the intent was a single chain, otherwise keep the current structure.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2203,
+            "output_tokens": 727,
+            "reasoning_tokens": 610,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000205101
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2425,
+          "latency_s": 19.898
+        },
+        {
+          "reasoning": "The code has a stray closing brace before the \"if (input == 3)\" line, breaking the conditional into two separate if statements rather than a single if/else chain, so the tool's claim that there is a replaceable chain is incorrect.",
+          "is_true_positive": false,
+          "confidence": 0.96,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "if/else chain replaceable with switch expression",
+          "developer_explanation": "The warning can be ignored because the code does not actually form a continuous if/else chain; a misplaced brace splits the logic, making the suggested switch replacement inappropriate. Fix the brace placement if the intent was a single chain, otherwise keep the current structure.",
+          "run": 2,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2203,
+            "output_tokens": 727,
+            "reasoning_tokens": 610,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000205101
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2425,
+          "latency_s": 15.333
+        },
+        {
+          "reasoning": "The code has a stray closing brace before the \"if (input == 3)\" line, breaking the conditional into two separate if statements rather than a single if/else chain, so the tool's claim that there is a replaceable chain is incorrect.",
+          "is_true_positive": false,
+          "confidence": 0.96,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "if/else chain replaceable with switch expression",
+          "developer_explanation": "The warning can be ignored because the code does not actually form a continuous if/else chain; a misplaced brace splits the logic, making the suggested switch replacement inappropriate. Fix the brace placement if the intent was a single chain, otherwise keep the current structure.",
+          "run": 3,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2203,
+            "output_tokens": 727,
+            "reasoning_tokens": 610,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000205101
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2425,
+          "latency_s": 15.206
+        }
+      ]
+    },
+    {
+      "finding_id": 3,
+      "type": "java:S3972",
+      "sourcefile": "InputRouter.java",
+      "start_line": "13",
+      "message": "Move this \"if\" to a new line or add the missing \"else\".",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The code closes the previous else‑if block with a brace and then starts a new independent if, so inputs that match the first conditions also fall through to the later else branch, which is likely unintended.",
+          "is_true_positive": true,
+          "confidence": 0.96,
+          "category": "CORRECTNESS",
+          "issue_signature": "missing else in if‑else chain",
+          "developer_explanation": "The second if should be part of the same conditional chain (else if) so that only one branch executes. As written, inputs that match the first conditions also reach the default case, producing wrong output. Change the \"if (input == 3)\" to \"else if (input == 3)\" (or restructure the logic) to fix the bug.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2206,
+            "output_tokens": 603,
+            "reasoning_tokens": 444,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000184132
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1762,
+          "latency_s": 13.211
+        },
+        {
+          "reasoning": "The code closes the previous else‑if block with a brace and then starts a new independent if, so inputs that match the first conditions also fall through to the later else branch, which is likely unintended.",
+          "is_true_positive": true,
+          "confidence": 0.96,
+          "category": "CORRECTNESS",
+          "issue_signature": "missing else in if‑else chain",
+          "developer_explanation": "The second if should be part of the same conditional chain (else if) so that only one branch executes. As written, inputs that match the first conditions also reach the default case, producing wrong output. Change the \"if (input == 3)\" to \"else if (input == 3)\" (or restructure the logic) to fix the bug.",
+          "run": 2,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2206,
+            "output_tokens": 603,
+            "reasoning_tokens": 444,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000184132
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1762,
+          "latency_s": 12.983
+        },
+        {
+          "reasoning": "The code closes the previous else‑if block with a brace and then starts a new independent if, so inputs that match the first conditions also fall through to the later else branch, which is likely unintended.",
+          "is_true_positive": true,
+          "confidence": 0.96,
+          "category": "CORRECTNESS",
+          "issue_signature": "missing else in if‑else chain",
+          "developer_explanation": "The second if should be part of the same conditional chain (else if) so that only one branch executes. As written, inputs that match the first conditions also reach the default case, producing wrong output. Change the \"if (input == 3)\" to \"else if (input == 3)\" (or restructure the logic) to fix the bug.",
+          "run": 3,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2206,
+            "output_tokens": 603,
+            "reasoning_tokens": 444,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000184132
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1762,
+          "latency_s": 13.839
+        }
+      ]
+    },
+    {
+      "finding_id": 4,
+      "type": "java:S127",
+      "sourcefile": "MatrixNormalizer.java",
+      "start_line": "21",
+      "message": "Refactor the code in order to not assign to this loop counter from within the loop body.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The inner for‑loop uses the outer loop variable i in its condition and increment (for (int j = 0; i < columns; i++)), so i is modified inside the inner loop body, which is exactly what the rule warns about.",
+          "is_true_positive": true,
+          "confidence": 0.99,
+          "category": "CORRECTNESS",
+          "issue_signature": "loop counter modified inside loop",
+          "developer_explanation": "The inner loop mistakenly uses the outer loop variable i instead of j, causing i to be incremented inside the inner loop and breaking the outer iteration. This can lead to skipped rows or an infinite loop. Change the inner loop to use j in its condition and increment (for (int j = 0; j < columns; j++)).",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2335,
+            "output_tokens": 385,
+            "reasoning_tokens": 225,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000151845
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 896,
+          "latency_s": 8.263
+        },
+        {
+          "reasoning": "The inner for‑loop uses the outer loop variable i in its condition and increment (for (int j = 0; i < columns; i++)), so i is modified inside the inner loop body, which is exactly what the rule warns about.",
+          "is_true_positive": true,
+          "confidence": 0.99,
+          "category": "CORRECTNESS",
+          "issue_signature": "loop counter modified inside loop",
+          "developer_explanation": "The inner loop mistakenly uses the outer loop variable i instead of j, causing i to be incremented inside the inner loop and breaking the outer iteration. This can lead to skipped rows or an infinite loop. Change the inner loop to use j in its condition and increment (for (int j = 0; j < columns; j++)).",
+          "run": 2,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2335,
+            "output_tokens": 385,
+            "reasoning_tokens": 225,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000151845
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 896,
+          "latency_s": 7.483
+        },
+        {
+          "reasoning": "The inner for‑loop uses the outer loop variable i in its condition and increment (for (int j = 0; i < columns; i++)), so i is modified inside the inner loop body, which is exactly what the rule warns about.",
+          "is_true_positive": true,
+          "confidence": 0.99,
+          "category": "CORRECTNESS",
+          "issue_signature": "loop counter modified inside loop",
+          "developer_explanation": "The inner loop mistakenly uses the outer loop variable i instead of j, causing i to be incremented inside the inner loop and breaking the outer iteration. This can lead to skipped rows or an infinite loop. Change the inner loop to use j in its condition and increment (for (int j = 0; j < columns; j++)).",
+          "run": 3,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2335,
+            "output_tokens": 385,
+            "reasoning_tokens": 225,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000151845
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 896,
+          "latency_s": 9.52
+        }
+      ]
+    },
+    {
+      "finding_id": 5,
+      "type": "java:S128",
+      "sourcefile": "MenuHandler.java",
+      "start_line": "11",
+      "message": "End this switch case with an unconditional break, return or throw statement.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The case 1 block does not end with a break, return, or throw, causing execution to fall through to the default case.",
+          "is_true_positive": true,
+          "confidence": 0.99,
+          "category": "CORRECTNESS",
+          "issue_signature": "missing break in switch case",
+          "developer_explanation": "The case for value 1 falls through to the default case, so both \"User 1\" and \"Invalid option\" are printed. This is likely unintended and can produce incorrect output. Add a break (or return/throw) after the System.out.println in case 1 to prevent fall‑through.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2134,
+            "output_tokens": 367,
+            "reasoning_tokens": 238,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000141348
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 945,
+          "latency_s": 7.058
+        },
+        {
+          "reasoning": "The case 1 block does not end with a break, return, or throw, causing execution to fall through to the default case.",
+          "is_true_positive": true,
+          "confidence": 0.99,
+          "category": "CORRECTNESS",
+          "issue_signature": "missing break in switch case",
+          "developer_explanation": "The case for value 1 falls through to the default case, so both \"User 1\" and \"Invalid option\" are printed. This is likely unintended and can produce incorrect output. Add a break (or return/throw) after the System.out.println in case 1 to prevent fall‑through.",
+          "run": 2,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2134,
+            "output_tokens": 367,
+            "reasoning_tokens": 238,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000141348
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 945,
+          "latency_s": 8.029
+        },
+        {
+          "reasoning": "The case 1 block does not end with a break, return, or throw, causing execution to fall through to the default case.",
+          "is_true_positive": true,
+          "confidence": 0.99,
+          "category": "CORRECTNESS",
+          "issue_signature": "missing break in switch case",
+          "developer_explanation": "The case for value 1 falls through to the default case, so both \"User 1\" and \"Invalid option\" are printed. This is likely unintended and can produce incorrect output. Add a break (or return/throw) after the System.out.println in case 1 to prevent fall‑through.",
+          "run": 3,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2134,
+            "output_tokens": 367,
+            "reasoning_tokens": 238,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000141348
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 945,
+          "latency_s": 7.769
+        }
+      ]
+    },
+    {
+      "finding_id": 6,
+      "type": "java:S4973",
+      "sourcefile": "NumberComparison.java",
+      "start_line": "7",
+      "message": "Strings and Boxed types should be compared using \"equals()\".",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The code uses the == operator to compare two Integer objects. This compares object identity rather than numeric value, so the comparison may give an unexpected result; using equals() is the correct way to compare boxed numbers.",
+          "is_true_positive": true,
+          "confidence": 0.99,
+          "category": "CORRECTNESS",
+          "issue_signature": "boxed type compared using ==",
+          "developer_explanation": "Using == on Integer objects checks whether they are the same instance, not whether they hold the same value, which can produce incorrect results (e.g., false for 1024). Replace the comparison with num1.equals(num2) or compare the primitive int values to ensure value equality.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2061,
+            "output_tokens": 474,
+            "reasoning_tokens": 356,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000156837
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1413,
+          "latency_s": 9.839
+        },
+        {
+          "reasoning": "The code uses the == operator to compare two Integer objects. This performs reference equality rather than value equality, so the comparison will be false even though the numeric values are the same, which is likely unintended.",
+          "is_true_positive": true,
+          "confidence": 1.0,
+          "category": "CORRECTNESS",
+          "issue_signature": "boxed type compared using ==",
+          "developer_explanation": "Using == on Integer objects checks whether they are the same object, not whether they hold the same number. For values outside the cached range (like 1024) this yields false even when the numbers match. Replace the == with num1.equals(num2) to compare the numeric values correctly.",
+          "run": 2,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2061,
+            "output_tokens": 440,
+            "reasoning_tokens": 328,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000151057
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1299,
+          "latency_s": 9.473
+        },
+        {
+          "reasoning": "The code uses the == operator to compare two Integer objects. This compares object identity rather than numeric value, so the comparison may give an unexpected result; using equals() is the correct way to compare boxed numbers.",
+          "is_true_positive": true,
+          "confidence": 0.99,
+          "category": "CORRECTNESS",
+          "issue_signature": "boxed type compared using ==",
+          "developer_explanation": "Using == on Integer objects checks whether they are the same instance, not whether they hold the same value, which can produce incorrect results (e.g., false for 1024). Replace the comparison with num1.equals(num2) or compare the primitive int values to ensure value equality.",
+          "run": 3,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2061,
+            "output_tokens": 474,
+            "reasoning_tokens": 356,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000156837
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1413,
+          "latency_s": 9.888
+        }
+      ]
+    },
+    {
+      "finding_id": 7,
+      "type": "java:S1905",
+      "sourcefile": "NumberReader.java",
+      "start_line": "6",
+      "message": "Remove this unnecessary cast to \"Integer\".",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The code casts an Object that holds a String to Integer, which will cause a ClassCastException at runtime, so the cast is not unnecessary.",
+          "is_true_positive": false,
+          "confidence": 0.99,
+          "category": "CORRECTNESS",
+          "issue_signature": "unnecessary cast to integer",
+          "developer_explanation": "The cast to Integer is incorrect because the object actually contains a String, leading to a ClassCastException when the code runs. The warning can be ignored; instead, either remove the cast and print the String or convert the String to an Integer properly.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2042,
+            "output_tokens": 364,
+            "reasoning_tokens": 268,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000137434
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1061,
+          "latency_s": 7.991
+        },
+        {
+          "reasoning": "The code casts an Object that holds a String to Integer, which will cause a ClassCastException at runtime, so the cast is not unnecessary.",
+          "is_true_positive": false,
+          "confidence": 0.99,
+          "category": "CORRECTNESS",
+          "issue_signature": "unnecessary cast to integer",
+          "developer_explanation": "The cast to Integer is incorrect because the object actually contains a String, leading to a ClassCastException when the code runs. The warning can be ignored; instead, either remove the cast and print the String or convert the String to an Integer properly.",
+          "run": 2,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2042,
+            "output_tokens": 364,
+            "reasoning_tokens": 268,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000137434
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1061,
+          "latency_s": 7.336
+        },
+        {
+          "reasoning": "The cast converts a String stored in obj to Integer, which is not redundant and will cause a ClassCastException at runtime, so the claim that the cast is unnecessary is incorrect.",
+          "is_true_positive": false,
+          "confidence": 0.99,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "unnecessary type cast",
+          "developer_explanation": "The cast is not unnecessary; obj contains a String, and casting it to Integer will throw a ClassCastException. Remove the cast and either print the object directly or convert the string to an integer properly if needed.",
+          "run": 3,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2042,
+            "output_tokens": 465,
+            "reasoning_tokens": 400,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000154604
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1581,
+          "latency_s": 9.184
+        }
+      ]
+    },
+    {
+      "finding_id": 8,
+      "type": "java:S2696",
+      "sourcefile": "PersonProfile.java",
+      "start_line": "8",
+      "message": "Make the enclosing method \"static\" or remove this set.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The method setName is an instance method that assigns to the static field name, causing shared mutable state across all PersonProfile instances. This leads to unintended behavior where different objects overwrite each other's name. Therefore the warning correctly identifies a problem.",
+          "is_true_positive": true,
+          "confidence": 0.96,
+          "category": "CORRECTNESS",
+          "issue_signature": "instance method modifies static field",
+          "developer_explanation": "setName writes to a static variable, so every PersonProfile instance shares the same name value. This is likely a bug because each profile should have its own name and can cause incorrect results, especially in concurrent use. Change the field to be non‑static (or make the method static) so each object maintains its own name.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2199,
+            "output_tokens": 717,
+            "reasoning_tokens": 658,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000203253
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2611,
+          "latency_s": 15.843
+        },
+        {
+          "reasoning": "The method setName is an instance method that assigns to the static field name, causing shared mutable state across all PersonProfile instances. This leads to unintended behavior where different objects overwrite each other's name. Therefore the warning correctly identifies a problem.",
+          "is_true_positive": true,
+          "confidence": 0.96,
+          "category": "CORRECTNESS",
+          "issue_signature": "instance method modifies static field",
+          "developer_explanation": "setName writes to a static variable, so every PersonProfile instance shares the same name value. This is likely a bug because each profile should have its own name and can cause incorrect results, especially in concurrent use. Change the field to be non‑static (or make the method static) so each object maintains its own name.",
+          "run": 2,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2199,
+            "output_tokens": 717,
+            "reasoning_tokens": 658,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000203253
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2611,
+          "latency_s": 16.549
+        },
+        {
+          "reasoning": "The method setName is an instance method that assigns to the static field name, causing shared mutable state across all PersonProfile instances. This leads to unintended behavior where different objects overwrite each other's name. Therefore the warning correctly identifies a problem.",
+          "is_true_positive": true,
+          "confidence": 0.96,
+          "category": "CORRECTNESS",
+          "issue_signature": "instance method modifies static field",
+          "developer_explanation": "setName writes to a static variable, so every PersonProfile instance shares the same name value. This is likely a bug because each profile should have its own name and can cause incorrect results, especially in concurrent use. Change the field to be non‑static (or make the method static) so each object maintains its own name.",
+          "run": 3,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2199,
+            "output_tokens": 717,
+            "reasoning_tokens": 658,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000203253
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2611,
+          "latency_s": 14.506
+        }
+      ]
+    },
+    {
+      "finding_id": 9,
+      "type": "java:S1210",
+      "sourcefile": "PersonRanking.java",
+      "start_line": "18",
+      "message": "Override \"equals(Object obj)\" to comply with the contract of the \"compareTo(T o)\" method.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The class implements Comparable but its compareTo method never returns 0, so the equals contract is not actually violated; therefore the claim that equals must be overridden to satisfy the compareTo contract is not materially correct here.",
+          "is_true_positive": false,
+          "confidence": 0.9,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "missing equals override for comparable class",
+          "developer_explanation": "The tool suggests adding an equals method, but because compareTo never returns 0, the equals contract is not broken in this code. You can safely ignore this warning, though you may still want to fix compareTo to return 0 for equal ages for correctness.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2190,
+            "output_tokens": 780,
+            "reasoning_tokens": 749,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00021363
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2989,
+          "latency_s": 15.118
+        },
+        {
+          "reasoning": "The class implements Comparable but its compareTo method never returns 0, so the equals contract is not actually violated; therefore the claim that equals must be overridden to satisfy the compareTo contract is not materially correct here.",
+          "is_true_positive": false,
+          "confidence": 0.9,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "missing equals override for comparable class",
+          "developer_explanation": "The tool suggests adding an equals method, but because compareTo never returns 0, the equals contract is not broken in this code. You can safely ignore this warning, though you may still want to fix compareTo to return 0 for equal ages for correctness.",
+          "run": 2,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2190,
+            "output_tokens": 780,
+            "reasoning_tokens": 749,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00021363
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2989,
+          "latency_s": 15.951
+        },
+        {
+          "reasoning": "The class implements Comparable but its compareTo method never returns 0, so the equals contract is not actually violated; therefore the claim that equals must be overridden to satisfy the compareTo contract is not materially correct here.",
+          "is_true_positive": false,
+          "confidence": 0.9,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "missing equals override for comparable class",
+          "developer_explanation": "The tool suggests adding an equals method, but because compareTo never returns 0, the equals contract is not broken in this code. You can safely ignore this warning, though you may still want to fix compareTo to return 0 for equal ages for correctness.",
+          "run": 3,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2190,
+            "output_tokens": 780,
+            "reasoning_tokens": 749,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00021363
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2989,
+          "latency_s": 16.941
+        }
+      ]
+    },
+    {
+      "finding_id": 10,
+      "type": "java:S1206",
+      "sourcefile": "PersonRegistry.java",
+      "start_line": "21",
+      "message": "This class overrides \"equals()\" and should therefore also override \"hashCode()\".",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The Person class overrides equals(Object) but does not provide a corresponding hashCode() implementation, violating the equals/hashCode contract.",
+          "is_true_positive": true,
+          "confidence": 0.99,
+          "category": "CORRECTNESS",
+          "issue_signature": "class overrides equals without overriding hashCode",
+          "developer_explanation": "When a class overrides equals it must also override hashCode to maintain the contract required by hash-based collections. Without a matching hashCode, instances that are equal may not behave correctly in HashMap, HashSet, etc. Add a hashCode() method that computes a hash from the same fields used in equals.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2279,
+            "output_tokens": 371,
+            "reasoning_tokens": 261,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000147393
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1033,
+          "latency_s": 7.446
+        },
+        {
+          "reasoning": "The Person class overrides the equals(Object) method but does not provide a corresponding hashCode() implementation, which violates the equals/hashCode contract in Java.",
+          "is_true_positive": true,
+          "confidence": 0.99,
+          "category": "CORRECTNESS",
+          "issue_signature": "class overrides equals without overriding hashCode",
+          "developer_explanation": "Overriding equals without also overriding hashCode breaks the contract required by hash-based collections such as HashMap or HashSet. This can lead to incorrect behavior when Person objects are used as keys or stored in sets. Add a hashCode() method that is consistent with the equals() logic.",
+          "run": 2,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2279,
+            "output_tokens": 385,
+            "reasoning_tokens": 286,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000149773
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1133,
+          "latency_s": 8.807
+        },
+        {
+          "reasoning": "The Person class overrides equals(Object) but does not provide a corresponding hashCode() implementation, violating the equals/hashCode contract.",
+          "is_true_positive": true,
+          "confidence": 0.99,
+          "category": "CORRECTNESS",
+          "issue_signature": "class overrides equals without overriding hashCode",
+          "developer_explanation": "When a class overrides equals it must also override hashCode to maintain the contract required by hash-based collections. Without a matching hashCode, instances that are equal may not behave correctly in HashMap, HashSet, etc. Add a hashCode() method that computes a hash from the same fields used in equals.",
+          "run": 3,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2279,
+            "output_tokens": 371,
+            "reasoning_tokens": 261,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000147393
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1033,
+          "latency_s": 8.474
+        }
+      ]
+    },
+    {
+      "finding_id": 11,
+      "type": "java:S1764",
+      "sourcefile": "PersonRegistry.java",
+      "start_line": "29",
+      "message": "Correct one of the identical sub-expressions on both sides of equals.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The equals method returns `age == person.age && name.equals(name)`, which compares the `name` field to itself instead of to the other object's name, making the name check always true (or NPE).",
+          "is_true_positive": true,
+          "confidence": 0.99,
+          "category": "CORRECTNESS",
+          "issue_signature": "self-comparison in equals method",
+          "developer_explanation": "The equals implementation mistakenly uses `name.equals(name)`, so two Person instances with the same age but different names will be considered equal. Replace the second operand with a comparison to the other object's name, e.g., `name.equals(person.name)` or `Objects.equals(name, person.name)`, to correctly evaluate equality.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2274,
+            "output_tokens": 420,
+            "reasoning_tokens": 288,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000155538
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1140,
+          "latency_s": 11.601
+        },
+        {
+          "reasoning": "The equals method returns `age == person.age && name.equals(name)`, which compares the `name` field to itself instead of to the other object's name, making the name check always true (or NPE).",
+          "is_true_positive": true,
+          "confidence": 0.99,
+          "category": "CORRECTNESS",
+          "issue_signature": "self-comparison in equals method",
+          "developer_explanation": "The equals implementation mistakenly uses `name.equals(name)`, so two Person instances with the same age but different names will be considered equal. Replace the second operand with a comparison to the other object's name, e.g., `name.equals(person.name)` or `Objects.equals(name, person.name)`, to correctly evaluate equality.",
+          "run": 2,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2274,
+            "output_tokens": 420,
+            "reasoning_tokens": 288,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000155538
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1140,
+          "latency_s": 9.396
+        },
+        {
+          "reasoning": "The equals method returns `age == person.age && name.equals(name)`, which compares the `name` field to itself instead of to the other object's name, making the name check always true (or NPE).",
+          "is_true_positive": true,
+          "confidence": 0.99,
+          "category": "CORRECTNESS",
+          "issue_signature": "self-comparison in equals method",
+          "developer_explanation": "The equals implementation mistakenly uses `name.equals(name)`, so two Person instances with the same age but different names will be considered equal. Replace the second operand with a comparison to the other object's name, e.g., `name.equals(person.name)` or `Objects.equals(name, person.name)`, to correctly evaluate equality.",
+          "run": 3,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2274,
+            "output_tokens": 420,
+            "reasoning_tokens": 288,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000155538
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1140,
+          "latency_s": 9.065
+        }
+      ]
+    },
+    {
+      "finding_id": 12,
+      "type": "java:S1317",
+      "sourcefile": "TextAssembler.java",
+      "start_line": "5",
+      "message": "Replace the constructor character parameter 'a' with string parameter \"a\".",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The code calls new StringBuilder('a'), which invokes the capacity constructor with the numeric value of the character rather than initializing the builder with the character 'a', leading to missing initial content.",
+          "is_true_positive": true,
+          "confidence": 0.99,
+          "category": "CORRECTNESS",
+          "issue_signature": "stringbuilder initialized with char instead of string",
+          "developer_explanation": "Using a char literal in the StringBuilder constructor sets the initial capacity to the character's numeric value, not its text. This means the builder starts empty and the intended leading 'a' is omitted. Replace the char with a string literal, e.g., new StringBuilder(\"a\"), to include the character in the output.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2055,
+            "output_tokens": 543,
+            "reasoning_tokens": 433,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000168345
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1725,
+          "latency_s": 10.478
+        },
+        {
+          "reasoning": "The code calls new StringBuilder('a'), which invokes the capacity constructor with the numeric value of the character rather than initializing the builder with the character 'a', leading to missing initial content.",
+          "is_true_positive": true,
+          "confidence": 0.99,
+          "category": "CORRECTNESS",
+          "issue_signature": "stringbuilder initialized with char instead of string",
+          "developer_explanation": "Using a char literal in the StringBuilder constructor sets the initial capacity to the character's numeric value, not its text. This means the builder starts empty and the intended leading 'a' is omitted. Replace the char with a string literal, e.g., new StringBuilder(\"a\"), to include the character in the output.",
+          "run": 2,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2055,
+            "output_tokens": 543,
+            "reasoning_tokens": 433,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000168345
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1725,
+          "latency_s": 13.7
+        },
+        {
+          "reasoning": "The code calls new StringBuilder('a'), which uses the char literal as an int capacity rather than initializing the builder with the character, so the resulting StringBuilder is empty and the intended initial \"a\" is missing.",
+          "is_true_positive": true,
+          "confidence": 0.99,
+          "category": "CORRECTNESS",
+          "issue_signature": "stringbuilder initialized with character instead of string",
+          "developer_explanation": "Using a char literal in the StringBuilder constructor sets the initial capacity, not the content, so the builder starts empty and the output lacks the \"a\". Replace the call with new StringBuilder(\"a\") or append the character after construction to include the intended text.",
+          "run": 3,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2055,
+            "output_tokens": 809,
+            "reasoning_tokens": 717,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000213565
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2860,
+          "latency_s": 17.437
+        }
+      ]
+    },
+    {
+      "finding_id": 13,
+      "type": "java:S2201",
+      "sourcefile": "TextTrimmer.java",
+      "start_line": "6",
+      "message": "The return value of \"substring\" must be used.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The code calls s.substring(3) and does not assign or use the returned string, then prints the original variable s, so the substring operation has no effect.",
+          "is_true_positive": true,
+          "confidence": 0.99,
+          "category": "CORRECTNESS",
+          "issue_signature": "unused result of substring call",
+          "developer_explanation": "Calling substring without using its return value does nothing; the program will always print the original string. Assign the result to a variable or pass it directly to println to get the trimmed text.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2055,
+            "output_tokens": 350,
+            "reasoning_tokens": 246,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000135535
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 976,
+          "latency_s": 7.602
+        },
+        {
+          "reasoning": "The code calls s.substring(3) and does not assign or use the returned string, then prints the original variable s, so the substring operation has no effect.",
+          "is_true_positive": true,
+          "confidence": 0.99,
+          "category": "CORRECTNESS",
+          "issue_signature": "unused result of substring call",
+          "developer_explanation": "Calling substring without using its return value does nothing; the program will always print the original string. Assign the result to a variable or pass it directly to println to get the trimmed text.",
+          "run": 2,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2055,
+            "output_tokens": 350,
+            "reasoning_tokens": 246,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000135535
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 976,
+          "latency_s": 7.292
+        },
+        {
+          "reasoning": "The code calls s.substring(3) and does not assign or use the returned string, then prints the original variable s, so the substring operation has no effect.",
+          "is_true_positive": true,
+          "confidence": 0.99,
+          "category": "CORRECTNESS",
+          "issue_signature": "unused result of substring call",
+          "developer_explanation": "Calling substring without using its return value does nothing; the program will always print the original string. Assign the result to a variable or pass it directly to println to get the trimmed text.",
+          "run": 3,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2055,
+            "output_tokens": 350,
+            "reasoning_tokens": 246,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000135535
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 976,
+          "latency_s": 7.868
+        }
+      ]
+    },
+    {
+      "finding_id": 14,
+      "type": "java:S3984",
+      "sourcefile": "ValueProcessor.java",
+      "start_line": "11",
+      "message": "Throw this exception or remove this useless statement.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The code creates a new IllegalArgumentException object on line 11 but never throws it, making the statement useless.",
+          "is_true_positive": true,
+          "confidence": 0.99,
+          "category": "CORRECTNESS",
+          "issue_signature": "exception object created but not thrown",
+          "developer_explanation": "The statement `new IllegalArgumentException(\"Value is negative\");` only constructs an exception and does not throw it, so the error condition is ignored. This can lead to incorrect program behavior because negative values are treated as valid. Throw the exception (e.g., `throw new IllegalArgumentException(...);`) or remove the line if the check is unnecessary.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2108,
+            "output_tokens": 383,
+            "reasoning_tokens": 276,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000143106
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1092,
+          "latency_s": 8.723
+        },
+        {
+          "reasoning": "The code creates a new IllegalArgumentException object on line 11 but never throws it, making the statement useless.",
+          "is_true_positive": true,
+          "confidence": 0.99,
+          "category": "CORRECTNESS",
+          "issue_signature": "exception object created but not thrown",
+          "developer_explanation": "The statement `new IllegalArgumentException(\"Value is negative\");` only constructs an exception and does not throw it, so the error condition is ignored. This can lead to incorrect program behavior because negative values are treated as valid. Throw the exception (e.g., `throw new IllegalArgumentException(...);`) or remove the line if the check is unnecessary.",
+          "run": 2,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2108,
+            "output_tokens": 383,
+            "reasoning_tokens": 276,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000143106
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1092,
+          "latency_s": 8.679
+        },
+        {
+          "reasoning": "The code creates a new IllegalArgumentException object on line 11 but never throws it, making the statement useless.",
+          "is_true_positive": true,
+          "confidence": 0.99,
+          "category": "CORRECTNESS",
+          "issue_signature": "exception object created but not thrown",
+          "developer_explanation": "The statement `new IllegalArgumentException(\"Value is negative\");` only constructs an exception and does not throw it, so the error condition is ignored. This can lead to incorrect program behavior because negative values are treated as valid. Throw the exception (e.g., `throw new IllegalArgumentException(...);`) or remove the line if the check is unnecessary.",
+          "run": 3,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2108,
+            "output_tokens": 383,
+            "reasoning_tokens": 276,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000143106
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1092,
+          "latency_s": 7.771
+        }
+      ]
+    },
+    {
+      "finding_id": 15,
+      "type": "java:S2757",
+      "sourcefile": "ValueReporter.java",
+      "start_line": "11",
+      "message": "Was \"+=\" meant instead?",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The code uses the operator sequence '=+' on line 11, which assigns the positive literal 2 to x instead of adding 2 to the existing value, likely a typo for the '+=' operator.",
+          "is_true_positive": true,
+          "confidence": 0.99,
+          "category": "CORRECTNESS",
+          "issue_signature": "incorrect use of =+ instead of +=",
+          "developer_explanation": "The statement `x =+ 2;` overwrites x with 2, so the previous value (1) is lost and the sum is wrong. Replace it with `x += 2;` to correctly add 2 to x, resulting in the expected value 3.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2143,
+            "output_tokens": 381,
+            "reasoning_tokens": 195,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000144061
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 767,
+          "latency_s": 7.539
+        },
+        {
+          "reasoning": "The code uses the operator sequence '=+' on line 11, which assigns the positive literal 2 to x instead of adding 2 to the existing value, likely a typo for the '+=' operator.",
+          "is_true_positive": true,
+          "confidence": 0.99,
+          "category": "CORRECTNESS",
+          "issue_signature": "incorrect use of =+ instead of +=",
+          "developer_explanation": "The statement `x =+ 2;` overwrites x with 2, so the previous value (1) is lost and the printed sum is wrong. Replace it with `x += 2;` to correctly add 2 to x, resulting in the expected sum of 3.",
+          "run": 2,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2143,
+            "output_tokens": 383,
+            "reasoning_tokens": 195,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000144401
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 767,
+          "latency_s": 8.064
+        },
+        {
+          "reasoning": "The code uses the operator sequence '=+' on line 11, which assigns the positive literal 2 to x instead of adding 2 to the existing value, likely a typo for the '+=' operator.",
+          "is_true_positive": true,
+          "confidence": 0.99,
+          "category": "CORRECTNESS",
+          "issue_signature": "incorrect use of =+ instead of +=",
+          "developer_explanation": "The statement `x =+ 2;` overwrites x with 2, so the previous value (1) is lost and the printed sum is wrong. Replace it with `x += 2;` to correctly add 2 to x, resulting in the expected sum of 3.",
+          "run": 3,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2143,
+            "output_tokens": 383,
+            "reasoning_tokens": 195,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000144401
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 767,
+          "latency_s": 7.905
+        }
+      ]
+    }
+  ]
+}

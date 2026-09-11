@@ -1,0 +1,1079 @@
+{
+  "schema_version": "1",
+  "run": "006_jetty-combined-sample",
+  "updated_at": "2026-07-31",
+  "taxonomy": [
+    "CORRECTNESS",
+    "CONCURRENCY",
+    "SECURITY",
+    "PERFORMANCE",
+    "MAINTAINABILITY",
+    "OTHER"
+  ],
+  "keyed_by": [
+    "tool",
+    "type"
+  ],
+  "labeling_method": "manual_author_review_per_rule",
+  "total_rules": 123,
+  "labeled_rules": 123,
+  "rules": {
+    "error-prone::BanJNDI": {
+      "tool": "error-prone",
+      "type": "BanJNDI",
+      "count": 3,
+      "category": "SECURITY",
+      "context_dependent": false,
+      "note": ""
+    },
+    "error-prone::FutureReturnValueIgnored": {
+      "tool": "error-prone",
+      "type": "FutureReturnValueIgnored",
+      "count": 17,
+      "category": "CORRECTNESS",
+      "context_dependent": false,
+      "note": ""
+    },
+    "error-prone::IntLongMath": {
+      "tool": "error-prone",
+      "type": "IntLongMath",
+      "count": 10,
+      "category": "CORRECTNESS",
+      "context_dependent": false,
+      "note": ""
+    },
+    "error-prone::InvalidParam": {
+      "tool": "error-prone",
+      "type": "InvalidParam",
+      "count": 1,
+      "category": "MAINTAINABILITY",
+      "context_dependent": false,
+      "note": ""
+    },
+    "error-prone::MissingCasesInEnumSwitch": {
+      "tool": "error-prone",
+      "type": "MissingCasesInEnumSwitch",
+      "count": 12,
+      "category": "CORRECTNESS",
+      "context_dependent": false,
+      "note": ""
+    },
+    "error-prone::MissingOverride": {
+      "tool": "error-prone",
+      "type": "MissingOverride",
+      "count": 8,
+      "category": "MAINTAINABILITY",
+      "context_dependent": false,
+      "note": ""
+    },
+    "error-prone::MissingSummary": {
+      "tool": "error-prone",
+      "type": "MissingSummary",
+      "count": 12,
+      "category": "MAINTAINABILITY",
+      "context_dependent": false,
+      "note": ""
+    },
+    "error-prone::OperatorPrecedence": {
+      "tool": "error-prone",
+      "type": "OperatorPrecedence",
+      "count": 10,
+      "category": "MAINTAINABILITY",
+      "context_dependent": false,
+      "note": ""
+    },
+    "error-prone::ReferenceEquality": {
+      "tool": "error-prone",
+      "type": "ReferenceEquality",
+      "count": 10,
+      "category": "CORRECTNESS",
+      "context_dependent": false,
+      "note": ""
+    },
+    "error-prone::SameNameButDifferent": {
+      "tool": "error-prone",
+      "type": "SameNameButDifferent",
+      "count": 10,
+      "category": "MAINTAINABILITY",
+      "context_dependent": false,
+      "note": ""
+    },
+    "error-prone::UnnecessaryParentheses": {
+      "tool": "error-prone",
+      "type": "UnnecessaryParentheses",
+      "count": 4,
+      "category": "MAINTAINABILITY",
+      "context_dependent": false,
+      "note": ""
+    },
+    "error-prone::UnusedVariable": {
+      "tool": "error-prone",
+      "type": "UnusedVariable",
+      "count": 3,
+      "category": "MAINTAINABILITY",
+      "context_dependent": false,
+      "note": "poprawione 26.08.2026: reguła opisuje zmienną zadeklarowaną i nieodczytaną, czyli martwy kod — tak jak URF_UNREAD_FIELD i UnusedMethod, którym nadano MAINTAINABILITY. Pierwotne CORRECTNESS było niespójne z tamtymi dwiema i nie miało zapisanego uzasadnienia; trzy wystąpienia w próbie to null nadpisany niżej, zaślepka pod TODO i nieużywany logger — żadne nie wskazuje na zgubioną wartość"
+    },
+    "sonarqube::java:S1121": {
+      "tool": "sonarqube",
+      "type": "java:S1121",
+      "count": 1,
+      "category": "MAINTAINABILITY",
+      "context_dependent": false,
+      "note": ""
+    },
+    "sonarqube::java:S1143": {
+      "tool": "sonarqube",
+      "type": "java:S1143",
+      "count": 1,
+      "category": "CORRECTNESS",
+      "context_dependent": false,
+      "note": ""
+    },
+    "sonarqube::java:S115": {
+      "tool": "sonarqube",
+      "type": "java:S115",
+      "count": 1,
+      "category": "MAINTAINABILITY",
+      "context_dependent": false,
+      "note": ""
+    },
+    "sonarqube::java:S1168": {
+      "tool": "sonarqube",
+      "type": "java:S1168",
+      "count": 1,
+      "category": "CORRECTNESS",
+      "context_dependent": false,
+      "note": ""
+    },
+    "sonarqube::java:S1181": {
+      "tool": "sonarqube",
+      "type": "java:S1181",
+      "count": 2,
+      "category": "CORRECTNESS",
+      "context_dependent": false,
+      "note": ""
+    },
+    "sonarqube::java:S1186": {
+      "tool": "sonarqube",
+      "type": "java:S1186",
+      "count": 1,
+      "category": "MAINTAINABILITY",
+      "context_dependent": false,
+      "note": "poprawione 26.08.2026: pusta metoda bez komentarza to kwestia czytelności, nie kategoria workowa OTHER; kod zachowuje się zgodnie z zamiarem"
+    },
+    "sonarqube::java:S1192": {
+      "tool": "sonarqube",
+      "type": "java:S1192",
+      "count": 2,
+      "category": "MAINTAINABILITY",
+      "context_dependent": false,
+      "note": ""
+    },
+    "sonarqube::java:S1201": {
+      "tool": "sonarqube",
+      "type": "java:S1201",
+      "count": 1,
+      "category": "CORRECTNESS",
+      "context_dependent": false,
+      "note": "kategoria CORRECTNESS, ale nie z powodu podanego w pierwszej wersji notatki: Code jest enumem, a Enum.equals(Object) jest final, wiec tozsamosc referencyjna jest tu poprawna semantyka rownosci i zadnego nadpisania nie brakuje. Powod wlasciwy: sonarqube klasyfikuje regule jako BUG o wadze MAJOR, a equals(int) tworzy pulapke przeciazenia — wywolanie equals(Integer) wybiera odziedziczone Enum.equals(Object) i zawsze zwraca false"
+    },
+    "sonarqube::java:S1845": {
+      "tool": "sonarqube",
+      "type": "java:S1845",
+      "count": 6,
+      "category": "MAINTAINABILITY",
+      "context_dependent": false,
+      "note": ""
+    },
+    "sonarqube::java:S1948": {
+      "tool": "sonarqube",
+      "type": "java:S1948",
+      "count": 2,
+      "category": "CORRECTNESS",
+      "context_dependent": false,
+      "note": ""
+    },
+    "sonarqube::java:S2068": {
+      "tool": "sonarqube",
+      "type": "java:S2068",
+      "count": 1,
+      "category": "SECURITY",
+      "context_dependent": false,
+      "note": "",
+      "corrected_from": "OTHER"
+    },
+    "sonarqube::java:S2095": {
+      "tool": "sonarqube",
+      "type": "java:S2095",
+      "count": 21,
+      "category": "CORRECTNESS",
+      "context_dependent": false,
+      "note": ""
+    },
+    "sonarqube::java:S2119": {
+      "tool": "sonarqube",
+      "type": "java:S2119",
+      "count": 1,
+      "category": "PERFORMANCE",
+      "context_dependent": false,
+      "note": ""
+    },
+    "sonarqube::java:S2142": {
+      "tool": "sonarqube",
+      "type": "java:S2142",
+      "count": 16,
+      "category": "CONCURRENCY",
+      "context_dependent": false,
+      "note": ""
+    },
+    "sonarqube::java:S2177": {
+      "tool": "sonarqube",
+      "type": "java:S2177",
+      "count": 1,
+      "category": "MAINTAINABILITY",
+      "context_dependent": false,
+      "note": ""
+    },
+    "sonarqube::java:S2178": {
+      "tool": "sonarqube",
+      "type": "java:S2178",
+      "count": 10,
+      "category": "CORRECTNESS",
+      "context_dependent": false,
+      "note": ""
+    },
+    "sonarqube::java:S2259": {
+      "tool": "sonarqube",
+      "type": "java:S2259",
+      "count": 6,
+      "category": "CORRECTNESS",
+      "context_dependent": false,
+      "note": ""
+    },
+    "sonarqube::java:S2445": {
+      "tool": "sonarqube",
+      "type": "java:S2445",
+      "count": 1,
+      "category": "CONCURRENCY",
+      "context_dependent": false,
+      "note": "",
+      "corrected_from": "OTHER"
+    },
+    "sonarqube::java:S2583": {
+      "tool": "sonarqube",
+      "type": "java:S2583",
+      "count": 3,
+      "category": "CORRECTNESS",
+      "context_dependent": false,
+      "note": ""
+    },
+    "sonarqube::java:S2696": {
+      "tool": "sonarqube",
+      "type": "java:S2696",
+      "count": 1,
+      "category": "CORRECTNESS",
+      "context_dependent": false,
+      "note": "poprawione 26.08.2026: SonarQube uzasadnia regule tym, ze zapis do pola statycznego z metody instancyjnej myli sie \"if there are multiple class instances AND/OR multiple threads\" — problem wystepuje wiec takze przy jednym watku, gdy instancji jest kilka, a warunek CONCURRENCY wymaga, by ujawnial sie WYLACZNIE przy wielu watkach"
+    },
+    "sonarqube::java:S2755": {
+      "tool": "sonarqube",
+      "type": "java:S2755",
+      "count": 1,
+      "category": "SECURITY",
+      "context_dependent": false,
+      "note": ""
+    },
+    "sonarqube::java:S3014": {
+      "tool": "sonarqube",
+      "type": "java:S3014",
+      "count": 2,
+      "category": "MAINTAINABILITY",
+      "context_dependent": false,
+      "note": "poprawione 26.08.2026: reguła zaleca zamianę przestarzałego ThreadGroup na ThreadPoolExecutor, a nie wskazuje defektu współbieżności — nie ma tu wyścigu, nieatomowości ani błędnej publikacji, więc warunek \"problem ujawnia się wyłącznie przy wielu wątkach\" nie jest spełniony"
+    },
+    "sonarqube::java:S3358": {
+      "tool": "sonarqube",
+      "type": "java:S3358",
+      "count": 1,
+      "category": "MAINTAINABILITY",
+      "context_dependent": false,
+      "note": ""
+    },
+    "sonarqube::java:S3516": {
+      "tool": "sonarqube",
+      "type": "java:S3516",
+      "count": 4,
+      "category": "MAINTAINABILITY",
+      "context_dependent": false,
+      "note": "poprawione 26.08.2026 z CORRECTNESS na MAINTAINABILITY: sonarqube klasyfikuje regule jako CODE_SMELL, a lektura HTTP2Session.onIdleTimeout to potwierdza — w kazdej galezi metoda sama zamyka sesje (halt, sendGoAway, terminate, flusher.abort) i zwraca false, zeby wywolujacy nie zamykal jej powtornie, wiec stala wartosc jest spojna z projektem. Zostaje zbedny typ zwracany, czyli uwaga o utrzymywalnosci, a nie o poprawnosci",
+      "corrected_from": "CORRECTNESS"
+    },
+    "sonarqube::java:S3551": {
+      "tool": "sonarqube",
+      "type": "java:S3551",
+      "count": 1,
+      "category": "CONCURRENCY",
+      "context_dependent": false,
+      "note": ""
+    },
+    "sonarqube::java:S3776": {
+      "tool": "sonarqube",
+      "type": "java:S3776",
+      "count": 6,
+      "category": "MAINTAINABILITY",
+      "context_dependent": false,
+      "note": ""
+    },
+    "sonarqube::java:S4973": {
+      "tool": "sonarqube",
+      "type": "java:S4973",
+      "count": 2,
+      "category": "CORRECTNESS",
+      "context_dependent": false,
+      "note": ""
+    },
+    "sonarqube::java:S5164": {
+      "tool": "sonarqube",
+      "type": "java:S5164",
+      "count": 3,
+      "category": "CORRECTNESS",
+      "context_dependent": false,
+      "note": "",
+      "corrected_from": "PERFORMANCE"
+    },
+    "sonarqube::java:S6218": {
+      "tool": "sonarqube",
+      "type": "java:S6218",
+      "count": 1,
+      "category": "CORRECTNESS",
+      "context_dependent": false,
+      "note": ""
+    },
+    "spotbugs::AT_NONATOMIC_64BIT_PRIMITIVE": {
+      "tool": "spotbugs",
+      "type": "AT_NONATOMIC_64BIT_PRIMITIVE",
+      "count": 7,
+      "category": "CONCURRENCY",
+      "context_dependent": false,
+      "note": ""
+    },
+    "spotbugs::AT_STALE_THREAD_WRITE_OF_PRIMITIVE": {
+      "tool": "spotbugs",
+      "type": "AT_STALE_THREAD_WRITE_OF_PRIMITIVE",
+      "count": 25,
+      "category": "CONCURRENCY",
+      "context_dependent": false,
+      "note": ""
+    },
+    "spotbugs::CT_CONSTRUCTOR_THROW": {
+      "tool": "spotbugs",
+      "type": "CT_CONSTRUCTOR_THROW",
+      "count": 25,
+      "category": "SECURITY",
+      "context_dependent": false,
+      "note": ""
+    },
+    "spotbugs::EI_EXPOSE_REP": {
+      "tool": "spotbugs",
+      "type": "EI_EXPOSE_REP",
+      "count": 4,
+      "category": "SECURITY",
+      "context_dependent": false,
+      "note": ""
+    },
+    "spotbugs::EI_EXPOSE_REP2": {
+      "tool": "spotbugs",
+      "type": "EI_EXPOSE_REP2",
+      "count": 6,
+      "category": "SECURITY",
+      "context_dependent": false,
+      "note": ""
+    },
+    "spotbugs::HSM_HIDING_METHOD": {
+      "tool": "spotbugs",
+      "type": "HSM_HIDING_METHOD",
+      "count": 1,
+      "category": "CORRECTNESS",
+      "context_dependent": false,
+      "note": ""
+    },
+    "spotbugs::INT_BAD_COMPARISON_WITH_NONNEGATIVE_VALUE": {
+      "tool": "spotbugs",
+      "type": "INT_BAD_COMPARISON_WITH_NONNEGATIVE_VALUE",
+      "count": 1,
+      "category": "CORRECTNESS",
+      "context_dependent": false,
+      "note": "",
+      "corrected_from": "OTHER"
+    },
+    "spotbugs::MS_MUTABLE_ARRAY": {
+      "tool": "spotbugs",
+      "type": "MS_MUTABLE_ARRAY",
+      "count": 1,
+      "category": "SECURITY",
+      "context_dependent": false,
+      "note": "",
+      "corrected_from": "OTHER"
+    },
+    "spotbugs::NM_CLASS_NAMING_CONVENTION": {
+      "tool": "spotbugs",
+      "type": "NM_CLASS_NAMING_CONVENTION",
+      "count": 1,
+      "category": "MAINTAINABILITY",
+      "context_dependent": false,
+      "note": "",
+      "corrected_from": "OTHER"
+    },
+    "spotbugs::NM_SAME_SIMPLE_NAME_AS_SUPERCLASS": {
+      "tool": "spotbugs",
+      "type": "NM_SAME_SIMPLE_NAME_AS_SUPERCLASS",
+      "count": 1,
+      "category": "MAINTAINABILITY",
+      "context_dependent": false,
+      "note": ""
+    },
+    "spotbugs::NP_NULL_ON_SOME_PATH_EXCEPTION": {
+      "tool": "spotbugs",
+      "type": "NP_NULL_ON_SOME_PATH_EXCEPTION",
+      "count": 1,
+      "category": "CORRECTNESS",
+      "context_dependent": false,
+      "note": ""
+    },
+    "spotbugs::NP_NULL_PARAM_DEREF": {
+      "tool": "spotbugs",
+      "type": "NP_NULL_PARAM_DEREF",
+      "count": 2,
+      "category": "CORRECTNESS",
+      "context_dependent": false,
+      "note": ""
+    },
+    "spotbugs::RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE": {
+      "tool": "spotbugs",
+      "type": "RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE",
+      "count": 1,
+      "category": "CORRECTNESS",
+      "context_dependent": false,
+      "note": ""
+    },
+    "spotbugs::RC_REF_COMPARISON_BAD_PRACTICE_BOOLEAN": {
+      "tool": "spotbugs",
+      "type": "RC_REF_COMPARISON_BAD_PRACTICE_BOOLEAN",
+      "count": 1,
+      "category": "CORRECTNESS",
+      "context_dependent": false,
+      "note": ""
+    },
+    "spotbugs::RV_RETURN_VALUE_OF_PUTIFABSENT_IGNORED": {
+      "tool": "spotbugs",
+      "type": "RV_RETURN_VALUE_OF_PUTIFABSENT_IGNORED",
+      "count": 2,
+      "category": "CORRECTNESS",
+      "context_dependent": false,
+      "note": ""
+    },
+    "spotbugs::SBSC_USE_STRINGBUFFER_CONCATENATION": {
+      "tool": "spotbugs",
+      "type": "SBSC_USE_STRINGBUFFER_CONCATENATION",
+      "count": 2,
+      "category": "PERFORMANCE",
+      "context_dependent": false,
+      "note": ""
+    },
+    "spotbugs::SE_BAD_FIELD": {
+      "tool": "spotbugs",
+      "type": "SE_BAD_FIELD",
+      "count": 1,
+      "category": "CORRECTNESS",
+      "context_dependent": false,
+      "note": "",
+      "corrected_from": "OTHER"
+    },
+    "spotbugs::SIC_INNER_SHOULD_BE_STATIC": {
+      "tool": "spotbugs",
+      "type": "SIC_INNER_SHOULD_BE_STATIC",
+      "count": 6,
+      "category": "PERFORMANCE",
+      "context_dependent": false,
+      "note": ""
+    },
+    "spotbugs::SQL_PREPARED_STATEMENT_GENERATED_FROM_NONCONSTANT_STRING": {
+      "tool": "spotbugs",
+      "type": "SQL_PREPARED_STATEMENT_GENERATED_FROM_NONCONSTANT_STRING",
+      "count": 3,
+      "category": "SECURITY",
+      "context_dependent": false,
+      "note": ""
+    },
+    "spotbugs::UPM_UNCALLED_PRIVATE_METHOD": {
+      "tool": "spotbugs",
+      "type": "UPM_UNCALLED_PRIVATE_METHOD",
+      "count": 3,
+      "category": "MAINTAINABILITY",
+      "context_dependent": false,
+      "note": ""
+    },
+    "spotbugs::URF_UNREAD_FIELD": {
+      "tool": "spotbugs",
+      "type": "URF_UNREAD_FIELD",
+      "count": 3,
+      "category": "MAINTAINABILITY",
+      "context_dependent": false,
+      "note": ""
+    },
+    "spotbugs::WMI_WRONG_MAP_ITERATOR": {
+      "tool": "spotbugs",
+      "type": "WMI_WRONG_MAP_ITERATOR",
+      "count": 3,
+      "category": "PERFORMANCE",
+      "context_dependent": false,
+      "note": ""
+    },
+    "error-prone::AnnotateFormatMethod": {
+      "tool": "error-prone",
+      "type": "AnnotateFormatMethod",
+      "count": 1,
+      "category": "MAINTAINABILITY",
+      "context_dependent": false,
+      "note": "",
+      "corrected_from": null
+    },
+    "error-prone::BadInstanceof": {
+      "tool": "error-prone",
+      "type": "BadInstanceof",
+      "count": 1,
+      "category": "CORRECTNESS",
+      "context_dependent": false,
+      "note": "",
+      "corrected_from": null
+    },
+    "error-prone::CatchAndPrintStackTrace": {
+      "tool": "error-prone",
+      "type": "CatchAndPrintStackTrace",
+      "count": 1,
+      "category": "MAINTAINABILITY",
+      "context_dependent": false,
+      "note": "",
+      "corrected_from": null
+    },
+    "error-prone::ClassCanBeStatic": {
+      "tool": "error-prone",
+      "type": "ClassCanBeStatic",
+      "count": 1,
+      "category": "PERFORMANCE",
+      "context_dependent": false,
+      "note": "",
+      "corrected_from": null
+    },
+    "error-prone::EmptyCatch": {
+      "tool": "error-prone",
+      "type": "EmptyCatch",
+      "count": 1,
+      "category": "CORRECTNESS",
+      "context_dependent": false,
+      "note": "",
+      "corrected_from": null
+    },
+    "error-prone::EnumOrdinal": {
+      "tool": "error-prone",
+      "type": "EnumOrdinal",
+      "count": 1,
+      "category": "MAINTAINABILITY",
+      "context_dependent": false,
+      "note": "",
+      "corrected_from": null
+    },
+    "error-prone::EqualsGetClass": {
+      "tool": "error-prone",
+      "type": "EqualsGetClass",
+      "count": 1,
+      "category": "CORRECTNESS",
+      "context_dependent": false,
+      "note": "poprawione 26.08.2026: regula dotyczy kontraktu equals i symetrii — getClass() sprawia, ze podklasa nigdy nie jest rowna klasie bazowej. Problem behawioralny, nie stylistyczny",
+      "corrected_from": null
+    },
+    "error-prone::InconsistentCapitalization": {
+      "tool": "error-prone",
+      "type": "InconsistentCapitalization",
+      "count": 1,
+      "category": "MAINTAINABILITY",
+      "context_dependent": false,
+      "note": "",
+      "corrected_from": null
+    },
+    "error-prone::InlineMeSuggester": {
+      "tool": "error-prone",
+      "type": "InlineMeSuggester",
+      "count": 1,
+      "category": "MAINTAINABILITY",
+      "context_dependent": false,
+      "note": "",
+      "corrected_from": null
+    },
+    "error-prone::JavaLangClash": {
+      "tool": "error-prone",
+      "type": "JavaLangClash",
+      "count": 1,
+      "category": "MAINTAINABILITY",
+      "context_dependent": false,
+      "note": "",
+      "corrected_from": null
+    },
+    "error-prone::JavaTimeDefaultTimeZone": {
+      "tool": "error-prone",
+      "type": "JavaTimeDefaultTimeZone",
+      "count": 1,
+      "category": "CORRECTNESS",
+      "context_dependent": false,
+      "note": "",
+      "corrected_from": null
+    },
+    "error-prone::LockNotBeforeTry": {
+      "tool": "error-prone",
+      "type": "LockNotBeforeTry",
+      "count": 1,
+      "category": "CONCURRENCY",
+      "context_dependent": false,
+      "note": "",
+      "corrected_from": null
+    },
+    "error-prone::MalformedInlineTag": {
+      "tool": "error-prone",
+      "type": "MalformedInlineTag",
+      "count": 1,
+      "category": "MAINTAINABILITY",
+      "context_dependent": false,
+      "note": "",
+      "corrected_from": null
+    },
+    "error-prone::NarrowCalculation": {
+      "tool": "error-prone",
+      "type": "NarrowCalculation",
+      "count": 1,
+      "category": "CORRECTNESS",
+      "context_dependent": false,
+      "note": "",
+      "corrected_from": null
+    },
+    "error-prone::NonCanonicalType": {
+      "tool": "error-prone",
+      "type": "NonCanonicalType",
+      "count": 1,
+      "category": "MAINTAINABILITY",
+      "context_dependent": false,
+      "note": "",
+      "corrected_from": null
+    },
+    "error-prone::OverrideThrowableToString": {
+      "tool": "error-prone",
+      "type": "OverrideThrowableToString",
+      "count": 1,
+      "category": "MAINTAINABILITY",
+      "context_dependent": false,
+      "note": "",
+      "corrected_from": null
+    },
+    "error-prone::StringSplitter": {
+      "tool": "error-prone",
+      "type": "StringSplitter",
+      "count": 1,
+      "category": "CORRECTNESS",
+      "context_dependent": false,
+      "note": "",
+      "corrected_from": null
+    },
+    "error-prone::SuperCallToObjectMethod": {
+      "tool": "error-prone",
+      "type": "SuperCallToObjectMethod",
+      "count": 1,
+      "category": "MAINTAINABILITY",
+      "context_dependent": false,
+      "note": "",
+      "corrected_from": null
+    },
+    "error-prone::UnnecessaryLambda": {
+      "tool": "error-prone",
+      "type": "UnnecessaryLambda",
+      "count": 1,
+      "category": "MAINTAINABILITY",
+      "context_dependent": false,
+      "note": "",
+      "corrected_from": null
+    },
+    "error-prone::UnusedMethod": {
+      "tool": "error-prone",
+      "type": "UnusedMethod",
+      "count": 1,
+      "category": "MAINTAINABILITY",
+      "context_dependent": false,
+      "note": "",
+      "corrected_from": null
+    },
+    "sonarqube::java:S108": {
+      "tool": "sonarqube",
+      "type": "java:S108",
+      "count": 1,
+      "category": "MAINTAINABILITY",
+      "context_dependent": false,
+      "note": "",
+      "corrected_from": null
+    },
+    "sonarqube::java:S1119": {
+      "tool": "sonarqube",
+      "type": "java:S1119",
+      "count": 1,
+      "category": "MAINTAINABILITY",
+      "context_dependent": false,
+      "note": "",
+      "corrected_from": null
+    },
+    "sonarqube::java:S112": {
+      "tool": "sonarqube",
+      "type": "java:S112",
+      "count": 1,
+      "category": "MAINTAINABILITY",
+      "context_dependent": false,
+      "note": "",
+      "corrected_from": null
+    },
+    "sonarqube::java:S1144": {
+      "tool": "sonarqube",
+      "type": "java:S1144",
+      "count": 1,
+      "category": "MAINTAINABILITY",
+      "context_dependent": false,
+      "note": "",
+      "corrected_from": null
+    },
+    "sonarqube::java:S1172": {
+      "tool": "sonarqube",
+      "type": "java:S1172",
+      "count": 1,
+      "category": "MAINTAINABILITY",
+      "context_dependent": false,
+      "note": "",
+      "corrected_from": null
+    },
+    "sonarqube::java:S127": {
+      "tool": "sonarqube",
+      "type": "java:S127",
+      "count": 1,
+      "category": "MAINTAINABILITY",
+      "context_dependent": false,
+      "note": "",
+      "corrected_from": null
+    },
+    "sonarqube::java:S131": {
+      "tool": "sonarqube",
+      "type": "java:S131",
+      "count": 1,
+      "category": "CORRECTNESS",
+      "context_dependent": false,
+      "note": "",
+      "corrected_from": null
+    },
+    "sonarqube::java:S1452": {
+      "tool": "sonarqube",
+      "type": "java:S1452",
+      "count": 1,
+      "category": "MAINTAINABILITY",
+      "context_dependent": false,
+      "note": "",
+      "corrected_from": null
+    },
+    "sonarqube::java:S1700": {
+      "tool": "sonarqube",
+      "type": "java:S1700",
+      "count": 1,
+      "category": "MAINTAINABILITY",
+      "context_dependent": false,
+      "note": "",
+      "corrected_from": null
+    },
+    "sonarqube::java:S1871": {
+      "tool": "sonarqube",
+      "type": "java:S1871",
+      "count": 1,
+      "category": "MAINTAINABILITY",
+      "context_dependent": false,
+      "note": "",
+      "corrected_from": null
+    },
+    "sonarqube::java:S2157": {
+      "tool": "sonarqube",
+      "type": "java:S2157",
+      "count": 1,
+      "category": "CORRECTNESS",
+      "context_dependent": false,
+      "note": "poprawione 26.08.2026: klasa deklaruje Cloneable bez nadpisania clone(), wiec wywolanie daje plytka kopie Object.clone() zamiast zamierzonej",
+      "corrected_from": null
+    },
+    "sonarqube::java:S2447": {
+      "tool": "sonarqube",
+      "type": "java:S2447",
+      "count": 1,
+      "category": "CORRECTNESS",
+      "context_dependent": false,
+      "note": "",
+      "corrected_from": null
+    },
+    "sonarqube::java:S3011": {
+      "tool": "sonarqube",
+      "type": "java:S3011",
+      "count": 1,
+      "category": "SECURITY",
+      "context_dependent": false,
+      "note": "",
+      "corrected_from": null
+    },
+    "sonarqube::java:S3824": {
+      "tool": "sonarqube",
+      "type": "java:S3824",
+      "count": 1,
+      "category": "MAINTAINABILITY",
+      "context_dependent": false,
+      "note": "",
+      "corrected_from": null
+    },
+    "sonarqube::java:S5261": {
+      "tool": "sonarqube",
+      "type": "java:S5261",
+      "count": 1,
+      "category": "MAINTAINABILITY",
+      "context_dependent": false,
+      "note": "",
+      "corrected_from": null
+    },
+    "sonarqube::java:S5738": {
+      "tool": "sonarqube",
+      "type": "java:S5738",
+      "count": 1,
+      "category": "MAINTAINABILITY",
+      "context_dependent": false,
+      "note": "",
+      "corrected_from": null
+    },
+    "sonarqube::java:S5843": {
+      "tool": "sonarqube",
+      "type": "java:S5843",
+      "count": 1,
+      "category": "MAINTAINABILITY",
+      "context_dependent": false,
+      "note": "",
+      "corrected_from": null
+    },
+    "sonarqube::java:S6126": {
+      "tool": "sonarqube",
+      "type": "java:S6126",
+      "count": 1,
+      "category": "MAINTAINABILITY",
+      "context_dependent": false,
+      "note": "",
+      "corrected_from": null
+    },
+    "sonarqube::java:S6204": {
+      "tool": "sonarqube",
+      "type": "java:S6204",
+      "count": 1,
+      "category": "MAINTAINABILITY",
+      "context_dependent": false,
+      "note": "",
+      "corrected_from": null
+    },
+    "sonarqube::xml:S1134": {
+      "tool": "sonarqube",
+      "type": "xml:S1134",
+      "count": 1,
+      "category": "MAINTAINABILITY",
+      "context_dependent": false,
+      "note": "",
+      "corrected_from": null
+    },
+    "spotbugs::AT_NONATOMIC_OPERATIONS_ON_SHARED_VARIABLE": {
+      "tool": "spotbugs",
+      "type": "AT_NONATOMIC_OPERATIONS_ON_SHARED_VARIABLE",
+      "count": 1,
+      "category": "CONCURRENCY",
+      "context_dependent": false,
+      "note": "",
+      "corrected_from": null
+    },
+    "spotbugs::CN_IDIOM": {
+      "tool": "spotbugs",
+      "type": "CN_IDIOM",
+      "count": 1,
+      "category": "CORRECTNESS",
+      "context_dependent": false,
+      "note": "poprawione 26.08.2026: klasa deklaruje Cloneable bez metody clone, wiec wywolanie clone() daje plytka kopie Object.clone() zamiast zamierzonej — ten sam problem co java:S2157, ktoremu nadano CORRECTNESS",
+      "corrected_from": null
+    },
+    "spotbugs::DMI_RANDOM_USED_ONLY_ONCE": {
+      "tool": "spotbugs",
+      "type": "DMI_RANDOM_USED_ONLY_ONCE",
+      "count": 1,
+      "category": "PERFORMANCE",
+      "context_dependent": false,
+      "note": "poprawione 26.08.2026: ta sama tresc co java:S2119 — tworzenie nowego Random zamiast ponownego uzycia. Oba narzedzia uzasadniaja regule kosztem tworzenia obiektu, wiec \"kod poprawny, tylko rozrzutny\"",
+      "corrected_from": null
+    },
+    "spotbugs::DM_EXIT": {
+      "tool": "spotbugs",
+      "type": "DM_EXIT",
+      "count": 1,
+      "category": "MAINTAINABILITY",
+      "context_dependent": false,
+      "note": "",
+      "corrected_from": null
+    },
+    "spotbugs::EI_EXPOSE_STATIC_REP2": {
+      "tool": "spotbugs",
+      "type": "EI_EXPOSE_STATIC_REP2",
+      "count": 1,
+      "category": "SECURITY",
+      "context_dependent": false,
+      "note": "",
+      "corrected_from": null
+    },
+    "spotbugs::EQ_CHECK_FOR_OPERAND_NOT_COMPATIBLE_WITH_THIS": {
+      "tool": "spotbugs",
+      "type": "EQ_CHECK_FOR_OPERAND_NOT_COMPATIBLE_WITH_THIS",
+      "count": 1,
+      "category": "CORRECTNESS",
+      "context_dependent": false,
+      "note": "",
+      "corrected_from": null
+    },
+    "spotbugs::ES_COMPARING_PARAMETER_STRING_WITH_EQ": {
+      "tool": "spotbugs",
+      "type": "ES_COMPARING_PARAMETER_STRING_WITH_EQ",
+      "count": 1,
+      "category": "CORRECTNESS",
+      "context_dependent": false,
+      "note": "",
+      "corrected_from": null
+    },
+    "spotbugs::IT_NO_SUCH_ELEMENT": {
+      "tool": "spotbugs",
+      "type": "IT_NO_SUCH_ELEMENT",
+      "count": 1,
+      "category": "CORRECTNESS",
+      "context_dependent": false,
+      "note": "",
+      "corrected_from": null
+    },
+    "spotbugs::MS_MUTABLE_COLLECTION_PKGPROTECT": {
+      "tool": "spotbugs",
+      "type": "MS_MUTABLE_COLLECTION_PKGPROTECT",
+      "count": 1,
+      "category": "SECURITY",
+      "context_dependent": false,
+      "note": "",
+      "corrected_from": null
+    },
+    "spotbugs::MS_PKGPROTECT": {
+      "tool": "spotbugs",
+      "type": "MS_PKGPROTECT",
+      "count": 1,
+      "category": "SECURITY",
+      "context_dependent": false,
+      "note": "",
+      "corrected_from": null
+    },
+    "spotbugs::MS_SHOULD_BE_FINAL": {
+      "tool": "spotbugs",
+      "type": "MS_SHOULD_BE_FINAL",
+      "count": 1,
+      "category": "SECURITY",
+      "context_dependent": false,
+      "note": "",
+      "corrected_from": null
+    },
+    "spotbugs::NM_CLASS_NOT_EXCEPTION": {
+      "tool": "spotbugs",
+      "type": "NM_CLASS_NOT_EXCEPTION",
+      "count": 1,
+      "category": "MAINTAINABILITY",
+      "context_dependent": false,
+      "note": "",
+      "corrected_from": null
+    },
+    "spotbugs::NM_SAME_SIMPLE_NAME_AS_INTERFACE": {
+      "tool": "spotbugs",
+      "type": "NM_SAME_SIMPLE_NAME_AS_INTERFACE",
+      "count": 1,
+      "category": "MAINTAINABILITY",
+      "context_dependent": false,
+      "note": "",
+      "corrected_from": null
+    },
+    "spotbugs::NP_BOOLEAN_RETURN_NULL": {
+      "tool": "spotbugs",
+      "type": "NP_BOOLEAN_RETURN_NULL",
+      "count": 1,
+      "category": "CORRECTNESS",
+      "context_dependent": false,
+      "note": "",
+      "corrected_from": null
+    },
+    "spotbugs::OS_OPEN_STREAM": {
+      "tool": "spotbugs",
+      "type": "OS_OPEN_STREAM",
+      "count": 1,
+      "category": "CORRECTNESS",
+      "context_dependent": false,
+      "note": "",
+      "corrected_from": null
+    },
+    "spotbugs::PERM_SUPER_NOT_CALLED_IN_GETPERMISSIONS": {
+      "tool": "spotbugs",
+      "type": "PERM_SUPER_NOT_CALLED_IN_GETPERMISSIONS",
+      "count": 1,
+      "category": "SECURITY",
+      "context_dependent": false,
+      "note": "",
+      "corrected_from": null
+    },
+    "spotbugs::RV_NEGATING_RESULT_OF_COMPARETO": {
+      "tool": "spotbugs",
+      "type": "RV_NEGATING_RESULT_OF_COMPARETO",
+      "count": 1,
+      "category": "CORRECTNESS",
+      "context_dependent": false,
+      "note": "",
+      "corrected_from": null
+    },
+    "spotbugs::SE_COMPARATOR_SHOULD_BE_SERIALIZABLE": {
+      "tool": "spotbugs",
+      "type": "SE_COMPARATOR_SHOULD_BE_SERIALIZABLE",
+      "count": 1,
+      "category": "CORRECTNESS",
+      "context_dependent": false,
+      "note": "",
+      "corrected_from": null
+    },
+    "spotbugs::UL_UNRELEASED_LOCK_EXCEPTION_PATH": {
+      "tool": "spotbugs",
+      "type": "UL_UNRELEASED_LOCK_EXCEPTION_PATH",
+      "count": 1,
+      "category": "CONCURRENCY",
+      "context_dependent": false,
+      "note": "",
+      "corrected_from": null
+    },
+    "spotbugs::VA_FORMAT_STRING_USES_NEWLINE": {
+      "tool": "spotbugs",
+      "type": "VA_FORMAT_STRING_USES_NEWLINE",
+      "count": 1,
+      "category": "MAINTAINABILITY",
+      "context_dependent": false,
+      "note": "",
+      "corrected_from": null
+    }
+  },
+  "overrides": {},
+  "merged_from": [
+    "003_jetty-stage-1",
+    "005_jetty-stage-2"
+  ]
+}

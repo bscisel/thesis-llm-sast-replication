@@ -1,0 +1,4106 @@
+{
+  "model": "openai/gpt-oss-120b",
+  "tool": "error-prone",
+  "num_runs": 1,
+  "runs_per_invocation": 1,
+  "source_root": "jetty.project",
+  "call_parameters": {
+    "temperature": null,
+    "concurrency": 10,
+    "response_format": "json_schema",
+    "max_tokens": 8192,
+    "max_retries": 6,
+    "base_url": "https://openrouter.ai/api/v1",
+    "provider": "deepinfra/bf16",
+    "allow_fallbacks": false,
+    "require_parameters": true,
+    "cache_control": false
+  },
+  "system_prompt_variant": "jetty",
+  "system_prompt_sha256": "382740d7fcf34c9c",
+  "user_prompt_sha256": "25c69bec75a90c18",
+  "timestamp": "2026-08-16T16:57:13.534223+00:00",
+  "updated_at": "2026-08-16T16:57:13.534223+00:00",
+  "findings": [
+    {
+      "finding_id": 0,
+      "type": "MissingOverride",
+      "sourcefile": "ArrayTernaryTrie.java",
+      "start_line": "448",
+      "message": "size implements method in Index; expected @Override",
+      "tool_specific": {
+        "column": "16"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that the size method implements a method from the Index interface but lacks an @Override annotation, which is exactly what the MissingOverride rule checks.",
+          "is_true_positive": true,
+          "confidence": 0.93,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "missing @Override annotation on interface method implementation",
+          "developer_explanation": "The size method overrides a method from the Index interface but does not have the @Override annotation. Adding @Override improves readability and helps catch signature mismatches during compilation. Update the method declaration to include @Override.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1934,
+            "output_tokens": 346,
+            "reasoning_tokens": 267,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000130378
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1064,
+          "latency_s": 6.245
+        }
+      ],
+      "original_finding_index": 16
+    },
+    {
+      "finding_id": 1,
+      "type": "FutureReturnValueIgnored",
+      "sourcefile": "Callback.java",
+      "start_line": "90",
+      "message": "Return value of methods returning Future must be checked. Ignoring returned Futures suppresses exceptions thrown from the code that completes the Future.",
+      "tool_specific": {
+        "column": "33"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that a method returning a Future is called and its return value is ignored, which can suppress exceptions from the asynchronous computation. Ignoring a Future can cause lost exceptions, a correctness problem, so the claim is likely valid.",
+          "is_true_positive": true,
+          "confidence": 0.73,
+          "category": "CORRECTNESS",
+          "issue_signature": "ignored future return value",
+          "developer_explanation": "You invoke a method that returns a Future but do not keep or observe the result. If the asynchronous task fails, its exception will be dropped, making error handling impossible. Store the Future and attach a callback (e.g., whenComplete) or otherwise handle its outcome.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1976,
+            "output_tokens": 535,
+            "reasoning_tokens": 465,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000164062
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1857,
+          "latency_s": 9.822
+        }
+      ],
+      "original_finding_index": 39
+    },
+    {
+      "finding_id": 2,
+      "type": "UnnecessaryParentheses",
+      "sourcefile": "BufferUtil.java",
+      "start_line": "941",
+      "message": "These grouping parentheses are unnecessary; it is unlikely the code will be misinterpreted without them",
+      "tool_specific": {
+        "column": "28"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that the grouping parentheses are unnecessary, which is a correct observation about the code's syntax.",
+          "is_true_positive": true,
+          "confidence": 0.93,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "unnecessary grouping parentheses",
+          "developer_explanation": "The parentheses around the expression do not change its meaning, so they can be removed. Eliminating them makes the code simpler and easier to read without affecting functionality.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1959,
+            "output_tokens": 353,
+            "reasoning_tokens": 297,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000132493
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1177,
+          "latency_s": 6.53
+        }
+      ],
+      "original_finding_index": 55
+    },
+    {
+      "finding_id": 3,
+      "type": "ReferenceEquality",
+      "sourcefile": "CharsetStringBuilder.java",
+      "start_line": "160",
+      "message": "Comparison using reference equality instead of value equality",
+      "tool_specific": {
+        "column": "21"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning flags a comparison that uses == on a Charset object instead of .equals, which is likely a bug because value equality is intended.",
+          "is_true_positive": true,
+          "confidence": 0.9,
+          "category": "CORRECTNESS",
+          "issue_signature": "reference equality instead of value equality",
+          "developer_explanation": "The code compares a Charset instance to StandardCharsets.UTF_8 using ==, which checks object identity rather than logical equality. This can cause the comparison to fail even when the charset represents UTF-8. Replace the == with charset.equals(StandardCharsets.UTF_8) to compare correctly.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1934,
+            "output_tokens": 521,
+            "reasoning_tokens": 455,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000160128
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1813,
+          "latency_s": 9.608
+        }
+      ],
+      "original_finding_index": 75
+    },
+    {
+      "finding_id": 4,
+      "type": "ReferenceEquality",
+      "sourcefile": "ClassMatcher.java",
+      "start_line": "845",
+      "message": "Comparison using reference equality instead of value equality",
+      "tool_specific": {
+        "column": "27"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning flags a use of == on objects, claiming it should be value equality, which is the basis for the verdict.",
+          "is_true_positive": false,
+          "confidence": 0.7,
+          "category": "CORRECTNESS",
+          "issue_signature": "reference equality comparison of objects",
+          "developer_explanation": "The tool flagged a comparison that uses == on a Boolean constant, but Boolean.FALSE is a singleton, so reference equality is safe and intentional. You can keep the existing check or replace it with Objects.equals if you prefer a more explicit style; the warning does not indicate a real bug here.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1945,
+            "output_tokens": 652,
+            "reasoning_tokens": 632,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000182805
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2517,
+          "latency_s": 11.916
+        }
+      ],
+      "original_finding_index": 88
+    },
+    {
+      "finding_id": 5,
+      "type": "MissingSummary",
+      "sourcefile": "Content.java",
+      "start_line": "598",
+      "message": "A summary fragment is required; consider using the value of the @return block as a summary fragment instead.",
+      "tool_specific": {
+        "column": "12"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that a Javadoc summary fragment is missing for a method that has an @return block, which is a documented style issue. This claim is likely correct because the tool detected the absence of a summary sentence.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "missing javadoc summary fragment",
+          "developer_explanation": "The method's Javadoc lacks a brief summary sentence before the @return tag. Add a concise first sentence, such as \"Returns the content length, if known, or -1 if the content length is unknown,\" to satisfy Javadoc conventions and improve readability.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1953,
+            "output_tokens": 430,
+            "reasoning_tokens": 321,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000145361
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1271,
+          "latency_s": 7.888
+        }
+      ],
+      "original_finding_index": 124
+    },
+    {
+      "finding_id": 6,
+      "type": "MissingSummary",
+      "sourcefile": "RetainableByteBuffer.java",
+      "start_line": "257",
+      "message": "A summary fragment is required; consider using the value of the @return block as a summary fragment instead.",
+      "tool_specific": {
+        "column": "8"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that a Javadoc summary fragment is missing, which is a documentation style issue that the tool correctly identifies.",
+          "is_true_positive": true,
+          "confidence": 0.92,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "missing javadoc summary fragment",
+          "developer_explanation": "The method's Javadoc lacks a brief summary sentence before the @return tag. Add a concise summary, such as \"Returns whether the ByteBuffer is direct,\" to improve readability and comply with Javadoc conventions.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1950,
+            "output_tokens": 394,
+            "reasoning_tokens": 316,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00013913
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1251,
+          "latency_s": 7.413
+        }
+      ],
+      "original_finding_index": 131
+    },
+    {
+      "finding_id": 7,
+      "type": "IntLongMath",
+      "sourcefile": "RetainableByteBuffer.java",
+      "start_line": "330",
+      "message": "Expression of type int may overflow before being assigned to a long",
+      "tool_specific": {
+        "column": "27"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that an int expression may overflow before being assigned to a long, which is exactly what the rule IntLongMath checks for.",
+          "is_true_positive": true,
+          "confidence": 0.73,
+          "category": "CORRECTNESS",
+          "issue_signature": "int arithmetic overflow before long conversion",
+          "developer_explanation": "The subtraction is performed using int arithmetic, so if the result exceeds the int range it will wrap before being widened to long, producing an incorrect value. Cast one operand to long (e.g., (long) capacity()) before the subtraction to ensure the operation is done in long precision.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1946,
+            "output_tokens": 664,
+            "reasoning_tokens": 662,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000184882
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2643,
+          "latency_s": 12.127
+        }
+      ],
+      "original_finding_index": 140
+    },
+    {
+      "finding_id": 8,
+      "type": "InvalidParam",
+      "sourcefile": "RetainableByteBuffer.java",
+      "start_line": "633",
+      "message": "`byte` is very close to the parameter `bytes`. Did you mean to reference the parameter?",
+      "tool_specific": {
+        "column": "18"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning claims that a local variable named `byte` is likely a mistaken reference to the parameter `bytes`, indicating a possible typo. Without seeing the code we cannot be certain, but this pattern commonly catches real bugs, so it is likely a true positive.",
+          "is_true_positive": true,
+          "confidence": 0.65,
+          "category": "CORRECTNESS",
+          "issue_signature": "incorrect variable reference due to typo",
+          "developer_explanation": "The code appears to use a variable called `byte` when it probably intended to use the `bytes` parameter, which can produce incorrect results. Verify whether `byte` should be replaced with `bytes` or rename the local variable to avoid confusion. Fix the reference or rename the variable to match the intended semantics.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1968,
+            "output_tokens": 615,
+            "reasoning_tokens": 543,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000177366
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2164,
+          "latency_s": 11.315
+        }
+      ],
+      "original_finding_index": 143
+    },
+    {
+      "finding_id": 9,
+      "type": "IntLongMath",
+      "sourcefile": "RetainableByteBuffer.java",
+      "start_line": "1011",
+      "message": "Expression of type int may overflow before being assigned to a long",
+      "tool_specific": {
+        "column": "47"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning claims that the int subtraction could overflow before being widened to long, but in this context the values are non‑negative buffer sizes so overflow cannot occur.",
+          "is_true_positive": false,
+          "confidence": 0.7,
+          "category": "CORRECTNESS",
+          "issue_signature": "int expression may overflow before long conversion",
+          "developer_explanation": "The subtraction involves buffer capacity and limit, both of which are non‑negative ints, so the result cannot exceed the int range. Therefore the reported overflow risk is a false alarm and can be safely ignored, or you may cast to long before the subtraction for clarity.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1953,
+            "output_tokens": 684,
+            "reasoning_tokens": 676,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000188541
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2699,
+          "latency_s": 12.216
+        }
+      ],
+      "original_finding_index": 148
+    },
+    {
+      "finding_id": 10,
+      "type": "MissingOverride",
+      "sourcefile": "ByteBufferOutputStream.java",
+      "start_line": "48",
+      "message": "write overrides method in OutputStream; expected @Override",
+      "tool_specific": {
+        "column": "17"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that a method named write overrides OutputStream.write but is missing the @Override annotation, which is a factual claim about the code. Since the rule checks for this exact condition, the claim is likely correct, making the warning a true positive.",
+          "is_true_positive": true,
+          "confidence": 0.92,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "missing @Override annotation on overriding method",
+          "developer_explanation": "The write method in this class overrides a method from OutputStream but does not have the @Override annotation. Adding @Override improves readability and helps catch signature mismatches at compile time. Update the method declaration to include @Override.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1944,
+            "output_tokens": 356,
+            "reasoning_tokens": 235,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000132448
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 938,
+          "latency_s": 7.837
+        }
+      ],
+      "original_finding_index": 191
+    },
+    {
+      "finding_id": 11,
+      "type": "MissingCasesInEnumSwitch",
+      "sourcefile": "ComplianceUtils.java",
+      "start_line": "173",
+      "message": "Non-exhaustive switch; either add a default or handle the remaining cases: CONNECTION, CACHE_CONTROL, DATE, and 85 others",
+      "tool_specific": {
+        "column": "13"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly states that the switch on an enum is non‑exhaustive and lacks a default case, which indicates a potential correctness problem.",
+          "is_true_positive": true,
+          "confidence": 0.88,
+          "category": "CORRECTNESS",
+          "issue_signature": "non-exhaustive enum switch",
+          "developer_explanation": "Your switch statement does not handle all possible values of the enum and does not provide a default branch. If an unhandled enum constant is passed, the code will fall through unexpectedly, possibly causing incorrect behavior. Add a default case (e.g., throw an exception) or explicitly handle the missing enum constants.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1971,
+            "output_tokens": 432,
+            "reasoning_tokens": 343,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000146367
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1360,
+          "latency_s": 9.205
+        }
+      ],
+      "original_finding_index": 211
+    },
+    {
+      "finding_id": 12,
+      "type": "MissingSummary",
+      "sourcefile": "HttpURI.java",
+      "start_line": "301",
+      "message": "A summary fragment is required; consider using the value of the @return block as a summary fragment instead.",
+      "tool_specific": {
+        "column": "8"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly states that a summary fragment is missing in the Javadoc, which the tool has detected, so the claim about missing documentation is material. This is a documentation style issue, not a code correctness problem.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "missing javadoc summary fragment",
+          "developer_explanation": "The method's Javadoc does not include a brief summary line before the @return description. Adding a concise summary improves readability and helps tools generate proper documentation. Insert a one‑sentence summary at the start of the comment, optionally reusing the @return text.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1948,
+            "output_tokens": 388,
+            "reasoning_tokens": 274,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000138036
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1092,
+          "latency_s": 7.454
+        }
+      ],
+      "original_finding_index": 240
+    },
+    {
+      "finding_id": 13,
+      "type": "MissingSummary",
+      "sourcefile": "MetaData.java",
+      "start_line": "197",
+      "message": "A summary fragment is required; consider using the value of the @return block as a summary fragment instead.",
+      "tool_specific": {
+        "column": "12"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly states that a Javadoc summary fragment is missing and suggests using the @return description as the summary, which indicates a documentation issue.",
+          "is_true_positive": true,
+          "confidence": 0.88,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "missing javadoc summary fragment",
+          "developer_explanation": "Your method's Javadoc lacks a brief summary sentence before the @return tag. Adding a concise summary improves readability and helps tools generate proper documentation. Include a one‑line description of what the method does, then keep the @return description as needed.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1941,
+            "output_tokens": 347,
+            "reasoning_tokens": 256,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000130807
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1015,
+          "latency_s": 6.49
+        }
+      ],
+      "original_finding_index": 260
+    },
+    {
+      "finding_id": 14,
+      "type": "ReferenceEquality",
+      "sourcefile": "HttpField.java",
+      "start_line": "595",
+      "message": "Comparison using reference equality instead of value equality",
+      "tool_specific": {
+        "column": "19"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning flags a comparison using == on an object, which the rule assumes should be .equals, indicating a likely logic error; such misuse typically leads to incorrect behavior unless identity comparison is intentional.",
+          "is_true_positive": true,
+          "confidence": 0.66,
+          "category": "CORRECTNESS",
+          "issue_signature": "using reference equality instead of value equality",
+          "developer_explanation": "The code is comparing two objects with ==, which checks whether they are the exact same instance rather than whether their contents are equal. This can cause the program to behave incorrectly when distinct objects that should be considered equal are treated as different. Replace the == comparison with a call to .equals to compare the values.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1929,
+            "output_tokens": 636,
+            "reasoning_tokens": 592,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000179493
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2360,
+          "latency_s": 12.082
+        }
+      ],
+      "original_finding_index": 270
+    },
+    {
+      "finding_id": 15,
+      "type": "OperatorPrecedence",
+      "sourcefile": "HttpFields.java",
+      "start_line": "681",
+      "message": "Use grouping parenthesis to make the operator precedence explicit",
+      "tool_specific": {
+        "column": "47"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning points out that the return expression mixes && and || without parentheses, so the tool correctly identifies an operator precedence situation that could be clarified. Adding explicit grouping parentheses would improve readability.",
+          "is_true_positive": true,
+          "confidence": 0.93,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "missing parentheses for operator precedence",
+          "developer_explanation": "The return statement combines && and || operators, relying on Java's precedence rules. While the code works, the intent is not obvious to readers; add parentheses to make the grouping explicit and improve readability.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1957,
+            "output_tokens": 473,
+            "reasoning_tokens": 411,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000152819
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1635,
+          "latency_s": 8.579
+        }
+      ],
+      "original_finding_index": 274
+    },
+    {
+      "finding_id": 16,
+      "type": "ReferenceEquality",
+      "sourcefile": "HttpFields.java",
+      "start_line": "1841",
+      "message": "Comparison using reference equality instead of value equality",
+      "tool_specific": {
+        "column": "36"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly states that the code compares objects with reference equality instead of value equality, which is a known bug pattern.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "CORRECTNESS",
+          "issue_signature": "using reference equality instead of value equality",
+          "developer_explanation": "The code is using == or != to compare object values, which only checks if they are the same instance. This can cause incorrect behavior when distinct objects with equal content are considered unequal. Change the comparison to use .equals() (or Objects.equals) to compare the actual values.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1931,
+            "output_tokens": 405,
+            "reasoning_tokens": 319,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000140297
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1263,
+          "latency_s": 9.721
+        }
+      ],
+      "original_finding_index": 278
+    },
+    {
+      "finding_id": 17,
+      "type": "ReferenceEquality",
+      "sourcefile": "HttpFields.java",
+      "start_line": "1930",
+      "message": "Comparison using reference equality instead of value equality",
+      "tool_specific": {
+        "column": "48"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly flags a comparison using reference equality where value equality is intended, which typically leads to incorrect behavior.",
+          "is_true_positive": true,
+          "confidence": 0.73,
+          "category": "CORRECTNESS",
+          "issue_signature": "object compared with reference equality",
+          "developer_explanation": "The code is using == or != to compare two objects (likely strings), which only checks if they are the same instance. This can cause logic errors when two distinct objects have the same content. Replace the comparison with a call to .equals (or Objects.equals) to compare the values correctly.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1931,
+            "output_tokens": 434,
+            "reasoning_tokens": 352,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000145227
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1403,
+          "latency_s": 8.002
+        }
+      ],
+      "original_finding_index": 279
+    },
+    {
+      "finding_id": 18,
+      "type": "OperatorPrecedence",
+      "sourcefile": "QuotedCSVParser.java",
+      "start_line": "246",
+      "message": "Use grouping parenthesis to make the operator precedence explicit",
+      "tool_specific": {
+        "column": "101"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning flags a mixed &&/|| expression without parentheses, which the tool suggests grouping for clarity; this is a readability concern rather than a functional bug.",
+          "is_true_positive": true,
+          "confidence": 0.92,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "logical expression lacking explicit grouping parentheses",
+          "developer_explanation": "Your condition combines && and || operators, relying on Java's precedence rules. While the code works as intended, adding parentheses makes the evaluation order clear to readers and reduces the chance of mistakes during future edits. Consider rewriting the expression with explicit grouping parentheses.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1959,
+            "output_tokens": 646,
+            "reasoning_tokens": 628,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000182303
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2494,
+          "latency_s": 11.813
+        }
+      ],
+      "original_finding_index": 285
+    },
+    {
+      "finding_id": 19,
+      "type": "ReferenceEquality",
+      "sourcefile": "HttpFieldsContainsHeaderValue.java",
+      "start_line": "58",
+      "message": "Comparison using reference equality instead of value equality",
+      "tool_specific": {
+        "column": "24"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly states that a reference equality (==) is used where value equality is intended, which is a common source of bugs.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "CORRECTNESS",
+          "issue_signature": "object comparison using reference equality",
+          "developer_explanation": "The code is comparing two objects with ==, which only checks if they are the same instance, not whether their contents are equal. This can cause logical errors, especially for strings or other value objects. Replace the == with a value‑equality check such as Objects.equals(a, b) or the appropriate equals method.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1937,
+            "output_tokens": 402,
+            "reasoning_tokens": 312,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000140009
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1234,
+          "latency_s": 7.327
+        }
+      ],
+      "original_finding_index": 301
+    },
+    {
+      "finding_id": 20,
+      "type": "MissingSummary",
+      "sourcefile": "AsyncJSON.java",
+      "start_line": "117",
+      "message": "A summary line is required on public/protected Javadocs.",
+      "tool_specific": {
+        "column": "12"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly states that a public/protected Javadoc is missing its required summary line, which is the condition the rule checks. Assuming the comment indeed lacks a summary, this is a valid maintainability issue.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "missing summary line in public javadoc",
+          "developer_explanation": "The Javadoc comment for a public or protected element does not start with a concise summary sentence. Adding a brief one‑line description improves readability and helps tools generate proper documentation. Update the comment to include a clear summary at the beginning.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1920,
+            "output_tokens": 428,
+            "reasoning_tokens": 320,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.0001438
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1271,
+          "latency_s": 9.266
+        }
+      ],
+      "original_finding_index": 310
+    },
+    {
+      "finding_id": 21,
+      "type": "MissingCasesInEnumSwitch",
+      "sourcefile": "HTTP2Session.java",
+      "start_line": "1696",
+      "message": "Non-exhaustive switch; either add a default or handle the remaining cases: DATA, PRIORITY, RST_STREAM, and 9 others",
+      "tool_specific": {
+        "column": "13"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly states that the switch on an enum does not cover several enum constants and lacks a default case, which indicates a potential missing handling of those cases. This pattern is a genuine source of incorrect behavior if those enum values can occur at runtime. Therefore the claim is likely correct.",
+          "is_true_positive": true,
+          "confidence": 0.82,
+          "category": "CORRECTNESS",
+          "issue_signature": "non-exhaustive enum switch",
+          "developer_explanation": "Your switch statement does not handle all possible enum values and has no default branch, so some cases (e.g., DATA, PRIORITY, RST_STREAM) will fall through unhandled. This can lead to unexpected behavior or runtime errors when those values appear. Add a default case or explicitly handle the missing enum constants to ensure correct handling.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1977,
+            "output_tokens": 482,
+            "reasoning_tokens": 344,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000155089
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1372,
+          "latency_s": 8.883
+        }
+      ],
+      "original_finding_index": 349
+    },
+    {
+      "finding_id": 22,
+      "type": "MissingCasesInEnumSwitch",
+      "sourcefile": "HTTP2Session.java",
+      "start_line": "1726",
+      "message": "Non-exhaustive switch; either add a default or handle the remaining cases: DATA, PRIORITY, RST_STREAM, and 9 others",
+      "tool_specific": {
+        "column": "13"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly states that the switch on an enum does not handle all enum constants and lacks a default case, which indicates a potential missing behavior. This pattern is a correctness issue because unhandled enum values can lead to unexpected runtime behavior.",
+          "is_true_positive": true,
+          "confidence": 0.92,
+          "category": "CORRECTNESS",
+          "issue_signature": "non-exhaustive enum switch",
+          "developer_explanation": "Your switch statement does not cover all possible values of the enum and has no default branch, so some cases (e.g., DATA, PRIORITY, RST_STREAM, etc.) will fall through without handling. This can cause incorrect behavior when those enum values occur. Add the missing case branches or provide a default case to handle unexpected values.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1977,
+            "output_tokens": 425,
+            "reasoning_tokens": 300,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000145399
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1194,
+          "latency_s": 8.606
+        }
+      ],
+      "original_finding_index": 350
+    },
+    {
+      "finding_id": 23,
+      "type": "MissingCasesInEnumSwitch",
+      "sourcefile": "HTTP2Session.java",
+      "start_line": "2407",
+      "message": "Non-exhaustive switch; either add a default or handle the remaining cases: NOT_CLOSED, LOCALLY_CLOSING, CLOSED",
+      "tool_specific": {
+        "column": "17"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly states that the switch on an enum is missing cases for NOT_CLOSED, LOCALLY_CLOSING, and CLOSED, indicating a non‑exhaustive switch.",
+          "is_true_positive": true,
+          "confidence": 0.88,
+          "category": "CORRECTNESS",
+          "issue_signature": "non-exhaustive enum switch",
+          "developer_explanation": "Your switch statement does not handle the enum values NOT_CLOSED, LOCALLY_CLOSING, and CLOSED. If any of these values are passed, the code will fall through without a matching case, potentially causing incorrect behavior. Add explicit case blocks for these values or provide a default case to handle unexpected enum constants.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1973,
+            "output_tokens": 418,
+            "reasoning_tokens": 311,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000144061
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1235,
+          "latency_s": 7.693
+        }
+      ],
+      "original_finding_index": 351
+    },
+    {
+      "finding_id": 24,
+      "type": "FutureReturnValueIgnored",
+      "sourcefile": "HTTP2StreamEndPoint.java",
+      "start_line": "353",
+      "message": "Return value of methods returning Future must be checked. Ignoring returned Futures suppresses exceptions thrown from the code that completes the Future.",
+      "tool_specific": {
+        "column": "37"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that a method returning a Future is called and its return value is ignored, which can suppress exceptions from the asynchronous operation.",
+          "is_true_positive": true,
+          "confidence": 0.73,
+          "category": "CORRECTNESS",
+          "issue_signature": "ignored future return value",
+          "developer_explanation": "The call to stream.reset returns a Future, but the code discards it, so any exception thrown while resetting the stream will be lost. Capture the Future or attach a callback to handle possible errors, ensuring failures are not silently ignored.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1987,
+            "output_tokens": 428,
+            "reasoning_tokens": 375,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000146279
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1487,
+          "latency_s": 8.323
+        }
+      ],
+      "original_finding_index": 360
+    },
+    {
+      "finding_id": 25,
+      "type": "MissingCasesInEnumSwitch",
+      "sourcefile": "HTTP2StreamEndPoint.java",
+      "start_line": "381",
+      "message": "Non-exhaustive switch; either add a default or handle the remaining cases: IDLE, OSHUT, FAILED",
+      "tool_specific": {
+        "column": "13"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly states that the switch on an enum is missing cases for IDLE, OSHUT, and FAILED and has no default, which indicates a potential correctness problem.",
+          "is_true_positive": true,
+          "confidence": 0.92,
+          "category": "CORRECTNESS",
+          "issue_signature": "non-exhaustive enum switch",
+          "developer_explanation": "Your switch statement does not handle all possible enum values (IDLE, OSHUT, FAILED) and lacks a default case. If any of those values are passed, the switch will fall through without executing any case, which can lead to incorrect behavior. Add explicit case blocks for the missing values or a default case to ensure all scenarios are handled.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1968,
+            "output_tokens": 496,
+            "reasoning_tokens": 394,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000157136
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1564,
+          "latency_s": 9.73
+        }
+      ],
+      "original_finding_index": 361
+    },
+    {
+      "finding_id": 26,
+      "type": "MissingCasesInEnumSwitch",
+      "sourcefile": "HTTP2StreamEndPoint.java",
+      "start_line": "407",
+      "message": "Non-exhaustive switch; either add a default or handle the remaining cases: IDLE, OSHUT, FAILED",
+      "tool_specific": {
+        "column": "13"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly states that the switch on an enum is missing cases (IDLE, OSHUT, FAILED), which indicates the tool detected a non‑exhaustive switch. This claim is likely correct because the analysis can enumerate enum constants and see they are not covered.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "CORRECTNESS",
+          "issue_signature": "non-exhaustive enum switch",
+          "developer_explanation": "Your switch statement does not handle the enum values IDLE, OSHUT, and FAILED, so execution could fall through without a defined case. This may cause incorrect behavior or missed handling of those states. Add the missing case blocks or a default clause to ensure all enum values are accounted for.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1968,
+            "output_tokens": 467,
+            "reasoning_tokens": 339,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000152206
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1351,
+          "latency_s": 8.625
+        }
+      ],
+      "original_finding_index": 362
+    },
+    {
+      "finding_id": 27,
+      "type": "FutureReturnValueIgnored",
+      "sourcefile": "SessionContainer.java",
+      "start_line": "70",
+      "message": "Return value of methods returning Future must be checked. Ignoring returned Futures suppresses exceptions thrown from the code that completes the Future.",
+      "tool_specific": {
+        "column": "29"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning flags that a method returning a Future (session.shutdown()) is called and its return value is ignored, which can suppress exceptions from the asynchronous operation. Ignoring a Future can lead to missed errors, so the claim is materially correct.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "CORRECTNESS",
+          "issue_signature": "ignored future return value",
+          "developer_explanation": "You call session.shutdown() but do not keep the Future it returns. If the shutdown fails, the exception will be lost, potentially leaving the session in an inconsistent state. Capture the Future and either wait for it or add error handling to ensure any failure is observed.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1970,
+            "output_tokens": 469,
+            "reasoning_tokens": 399,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00015262
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1590,
+          "latency_s": 9.097
+        }
+      ],
+      "original_finding_index": 364
+    },
+    {
+      "finding_id": 28,
+      "type": "OperatorPrecedence",
+      "sourcefile": "XmlParser.java",
+      "start_line": "440",
+      "message": "Use grouping parenthesis to make the operator precedence explicit",
+      "tool_specific": {
+        "column": "108"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning flags a mixed && and || expression without explicit parentheses, which the tool claims makes operator precedence implicit.",
+          "is_true_positive": true,
+          "confidence": 0.9,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "missing grouping parentheses in mixed logical expression",
+          "developer_explanation": "Your code combines && and || operators without parentheses, relying on Java's default precedence. Adding parentheses makes the evaluation order clear and improves readability. Update the expression to explicitly group the && part, e.g., path.equals(xpath) || (xpath.startsWith(path) && ...).",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1961,
+            "output_tokens": 479,
+            "reasoning_tokens": 420,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000153987
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1675,
+          "latency_s": 9.191
+        }
+      ],
+      "original_finding_index": 371
+    },
+    {
+      "finding_id": 29,
+      "type": "OperatorPrecedence",
+      "sourcefile": "Server.java",
+      "start_line": "197",
+      "message": "Use grouping parenthesis to make the operator precedence explicit",
+      "tool_specific": {
+        "column": "29"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning points out that the expression mixes && and || without explicit parentheses, which the tool flags as missing grouping for readability, and that claim is correct for the code shown.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "missing grouping parentheses in mixed logical expression",
+          "developer_explanation": "The return statement combines && and || operators, relying on default precedence which can be hard to read. Adding parentheses makes the intended evaluation order clear and improves code readability. Consider adding parentheses around each && sub‑expression as suggested.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1961,
+            "output_tokens": 680,
+            "reasoning_tokens": 671,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000188157
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2672,
+          "latency_s": 12.688
+        }
+      ],
+      "original_finding_index": 381
+    },
+    {
+      "finding_id": 30,
+      "type": "OperatorPrecedence",
+      "sourcefile": "Server.java",
+      "start_line": "197",
+      "message": "Use grouping parenthesis to make the operator precedence explicit",
+      "tool_specific": {
+        "column": "100"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning flags a missing grouping parenthesis that makes the precedence of && and || unclear, which is a readability issue. Adding parentheses does not change behavior but improves code clarity, so the claim is valid.",
+          "is_true_positive": true,
+          "confidence": 0.93,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "missing grouping parentheses for operator precedence",
+          "developer_explanation": "The expression mixes && and || without explicit parentheses, which can be confusing to readers about evaluation order. Although the code works as intended, adding parentheses makes the precedence clear and reduces the risk of future mistakes. Update the return statement to include parentheses around each logical sub‑expression.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1960,
+            "output_tokens": 563,
+            "reasoning_tokens": 517,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00016823
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2056,
+          "latency_s": 10.977
+        }
+      ],
+      "original_finding_index": 382
+    },
+    {
+      "finding_id": 31,
+      "type": "MissingSummary",
+      "sourcefile": "Handler.java",
+      "start_line": "178",
+      "message": "A summary fragment is required; consider using the value of the @return block as a summary fragment instead.",
+      "tool_specific": {
+        "column": "12"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly states that a Javadoc summary fragment is missing and suggests using the @return description as the summary, which directly indicates a documentation issue.",
+          "is_true_positive": true,
+          "confidence": 0.88,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "missing javadoc summary fragment",
+          "developer_explanation": "Your method's Javadoc lacks a brief summary sentence before the @return tag. Adding a concise summary improves readability and helps tools generate proper documentation. Include a one‑sentence description of what the method returns, possibly reusing the existing @return text.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1956,
+            "output_tokens": 334,
+            "reasoning_tokens": 234,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000129152
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 931,
+          "latency_s": 6.319
+        }
+      ],
+      "original_finding_index": 397
+    },
+    {
+      "finding_id": 32,
+      "type": "MissingCasesInEnumSwitch",
+      "sourcefile": "Response.java",
+      "start_line": "521",
+      "message": "Non-exhaustive switch; either add a default or handle the remaining cases: CONNECTION, CACHE_CONTROL, DATE, and 86 others",
+      "tool_specific": {
+        "column": "13"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly states that the switch on an enum is non‑exhaustive, listing missing enum constants and suggesting a default or additional cases, which indicates a potential correctness problem.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "CORRECTNESS",
+          "issue_signature": "non-exhaustive enum switch",
+          "developer_explanation": "Your switch statement does not handle all possible values of the enum and lacks a default branch. If a value such as CONNECTION or CACHE_CONTROL is passed, the code will fall through without executing any case, which can lead to incorrect behavior. Add a default case or handle the missing enum constants to ensure the switch is exhaustive.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1970,
+            "output_tokens": 494,
+            "reasoning_tokens": 404,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00015687
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1609,
+          "latency_s": 9.118
+        }
+      ],
+      "original_finding_index": 428
+    },
+    {
+      "finding_id": 33,
+      "type": "MissingCasesInEnumSwitch",
+      "sourcefile": "GzipDecoderSource.java",
+      "start_line": "66",
+      "message": "Non-exhaustive switch; either add a default or handle the remaining cases: ID, CM, FLG, and 12 others",
+      "tool_specific": {
+        "column": "17"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly states that the switch on an enum does not cover several enum constants and lacks a default case, which is a concrete claim about missing cases. Based on this claim, the issue is likely a real correctness problem unless the code intentionally excludes those values, which is unlikely.",
+          "is_true_positive": true,
+          "confidence": 0.78,
+          "category": "CORRECTNESS",
+          "issue_signature": "non-exhaustive enum switch missing cases",
+          "developer_explanation": "The switch statement does not handle all possible enum values and has no default branch, so some enum constants (e.g., ID, CM, FLG) will fall through without any action. This can lead to incorrect behavior at runtime. Add the missing case clauses or a default case to ensure all enum values are handled.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1973,
+            "output_tokens": 516,
+            "reasoning_tokens": 389,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000160721
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1552,
+          "latency_s": 9.516
+        }
+      ],
+      "original_finding_index": 466
+    },
+    {
+      "finding_id": 34,
+      "type": "OperatorPrecedence",
+      "sourcefile": "GzipDecoderSource.java",
+      "start_line": "156",
+      "message": "Use grouping parenthesis to make the operator precedence explicit",
+      "tool_specific": {
+        "column": "63"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning flags a lack of explicit grouping parentheses around the shift amount, which is a readability concern the tool identifies as a code‑quality issue.",
+          "is_true_positive": true,
+          "confidence": 0.92,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "missing grouping parentheses for operator precedence",
+          "developer_explanation": "The expression mixes a shift (<<) with a multiplication (8 * size) without parentheses, which can be hard to read. Adding parentheses makes it clear that the shift amount is the product of 8 and size, improving readability. Update the code to value += (long)(currByte & 0xFF) << (8 * size);",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1952,
+            "output_tokens": 767,
+            "reasoning_tokens": 715,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000202614
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2851,
+          "latency_s": 13.86
+        }
+      ],
+      "original_finding_index": 467
+    },
+    {
+      "finding_id": 35,
+      "type": "OperatorPrecedence",
+      "sourcefile": "GzipDecoderSource.java",
+      "start_line": "189",
+      "message": "Use grouping parenthesis to make the operator precedence explicit",
+      "tool_specific": {
+        "column": "63"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning flags an expression where operator precedence is implicit, which can reduce readability, so the claim about missing explicit grouping is correct.",
+          "is_true_positive": true,
+          "confidence": 0.92,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "missing grouping parentheses for operator precedence",
+          "developer_explanation": "The current expression relies on Java's precedence rules, which are correct but not obvious at a glance. Adding parentheses around the shift amount makes the calculation clearer and prevents future misreading. Update the code to include the suggested parentheses.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1952,
+            "output_tokens": 723,
+            "reasoning_tokens": 682,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000195134
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2716,
+          "latency_s": 13.235
+        }
+      ],
+      "original_finding_index": 468
+    },
+    {
+      "finding_id": 36,
+      "type": "OperatorPrecedence",
+      "sourcefile": "GzipDecoderSource.java",
+      "start_line": "238",
+      "message": "Use grouping parenthesis to make the operator precedence explicit",
+      "tool_specific": {
+        "column": "63"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning flags an expression where operator precedence may be unclear and suggests adding parentheses, which is a readability concern.",
+          "is_true_positive": true,
+          "confidence": 0.88,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "missing grouping parentheses for operator precedence",
+          "developer_explanation": "The current expression relies on Java's precedence rules, making it harder to see that the shift amount is (8 * size). Adding parentheses does not change the behavior but makes the code clearer and easier to maintain.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1952,
+            "output_tokens": 701,
+            "reasoning_tokens": 673,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000191394
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2680,
+          "latency_s": 12.124
+        }
+      ],
+      "original_finding_index": 469
+    },
+    {
+      "finding_id": 37,
+      "type": "MissingSummary",
+      "sourcefile": "SessionInactivityTimer.java",
+      "start_line": "88",
+      "message": "A summary line is required on public/protected Javadocs.",
+      "tool_specific": {
+        "column": "8"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that a public/protected Javadoc is missing its required summary line, which is a documented style rule that the tool has detected.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "missing javadoc summary line",
+          "developer_explanation": "The Javadoc comment for this public or protected element does not include a brief summary sentence. Add a concise one‑sentence description at the beginning of the comment to meet documentation standards and make the code easier to understand.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1922,
+            "output_tokens": 440,
+            "reasoning_tokens": 360,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000145914
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1424,
+          "latency_s": 8.591
+        }
+      ],
+      "original_finding_index": 489
+    },
+    {
+      "finding_id": 38,
+      "type": "UnnecessaryParentheses",
+      "sourcefile": "DatabaseAdaptor.java",
+      "start_line": "178",
+      "message": "These grouping parentheses are unnecessary; it is unlikely the code will be misinterpreted without them",
+      "tool_specific": {
+        "column": "16"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that the grouping parentheses around the expression are unnecessary, which is a correct observation about the code style.",
+          "is_true_positive": true,
+          "confidence": 0.96,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "unnecessary parentheses around expression",
+          "developer_explanation": "The extra parentheses do not change the program's behavior but make the code harder to read. Removing them simplifies the return statement and improves readability. Update the line to `return _dbName.startsWith(\"oracle\");`.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1960,
+            "output_tokens": 379,
+            "reasoning_tokens": 312,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00013695
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1238,
+          "latency_s": 6.783
+        }
+      ],
+      "original_finding_index": 509
+    },
+    {
+      "finding_id": 39,
+      "type": "BanJNDI",
+      "sourcefile": "DatabaseAdaptor.java",
+      "start_line": "277",
+      "message": "Using JNDI may deserialize user input via the `Serializable` API which is extremely dangerous",
+      "tool_specific": {
+        "column": "52"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning flags any use of JNDI as a potential deserialization risk, but without seeing the code we cannot know if untrusted data is actually being deserialized, so the claim is likely overbroad.",
+          "is_true_positive": false,
+          "confidence": 0.65,
+          "category": "SECURITY",
+          "issue_signature": "use of JNDI that can deserialize untrusted data",
+          "developer_explanation": "The tool warns that JNDI may deserialize user input, which is a security concern. If your JNDI usage only looks up trusted resources (e.g., internal DataSource) and never processes untrusted data, the warning can be ignored. Ensure that no external input reaches JNDI lookups, or replace JNDI with a safer alternative if needed.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1950,
+            "output_tokens": 536,
+            "reasoning_tokens": 380,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00016327
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1511,
+          "latency_s": 9.835
+        }
+      ],
+      "original_finding_index": 511
+    },
+    {
+      "finding_id": 40,
+      "type": "UnnecessaryParentheses",
+      "sourcefile": "DefaultSessionIdManager.java",
+      "start_line": "248",
+      "message": "These grouping parentheses are unnecessary; it is unlikely the code will be misinterpreted without them",
+      "tool_specific": {
+        "column": "94"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly states that grouping parentheses in the expression are unnecessary, which is a factual claim about the code's syntax. Since unnecessary parentheses do not affect program behavior, the issue is a style/maintainability concern, making the warning a true positive.",
+          "is_true_positive": true,
+          "confidence": 0.92,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "unnecessary parentheses in expression",
+          "developer_explanation": "The code contains extra parentheses around an expression that do not change its meaning. While this does not cause a functional bug, it makes the code harder to read and maintain. Remove the superfluous parentheses to simplify the expression.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1979,
+            "output_tokens": 338,
+            "reasoning_tokens": 211,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000130683
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 839,
+          "latency_s": 6.102
+        }
+      ],
+      "original_finding_index": 517
+    },
+    {
+      "finding_id": 41,
+      "type": "MissingOverride",
+      "sourcefile": "DefaultSessionIdManager.java",
+      "start_line": "430",
+      "message": "scavenge implements method in SessionIdManager; expected @Override",
+      "tool_specific": {
+        "column": "17"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that the method scavenge implements a method from SessionIdManager but lacks an @Override annotation, which is exactly what the MissingOverride rule checks for.",
+          "is_true_positive": true,
+          "confidence": 0.92,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "missing @Override annotation on implementing method",
+          "developer_explanation": "The scavenge method overrides a method defined in SessionIdManager but does not have the @Override annotation. Adding @Override improves readability and helps the compiler catch signature mismatches. Update the method declaration to include @Override.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1943,
+            "output_tokens": 398,
+            "reasoning_tokens": 307,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000139551
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1219,
+          "latency_s": 6.993
+        }
+      ],
+      "original_finding_index": 518
+    },
+    {
+      "finding_id": 42,
+      "type": "SameNameButDifferent",
+      "sourcefile": "SessionHandler.java",
+      "start_line": "32",
+      "message": "The name `Handler` refers to [org.eclipse.jetty.server.Handler, org.eclipse.jetty.server.Request.Handler] within this file. It may be confusing to have the same name refer to multiple types. Consider qualifying them for clarity.",
+      "tool_specific": {
+        "column": "13"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that the simple name `Handler` refers to two different Jetty types in the same file, which can be confusing, and this is a legitimate readability concern.",
+          "is_true_positive": true,
+          "confidence": 0.96,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "ambiguous type name usage",
+          "developer_explanation": "The file imports or references both org.eclipse.jetty.server.Handler and org.eclipse.jetty.server.Request.Handler using the same simple name, which can make the code hard to read and maintain. Qualify one of the types or use distinct import aliases to avoid ambiguity. This improves clarity without changing behavior.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2021,
+            "output_tokens": 490,
+            "reasoning_tokens": 405,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000158077
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1607,
+          "latency_s": 8.501
+        }
+      ],
+      "original_finding_index": 524
+    },
+    {
+      "finding_id": 43,
+      "type": "SameNameButDifferent",
+      "sourcefile": "SessionHandler.java",
+      "start_line": "50",
+      "message": "The name `Handler` refers to [org.eclipse.jetty.server.Handler, org.eclipse.jetty.server.Request.Handler] within this file. It may be confusing to have the same name refer to multiple types. Consider qualifying them for clarity.",
+      "tool_specific": {
+        "column": "28"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that the simple name `Handler` is used for two different Jetty types in the same file, which can cause confusion, so the claim is about ambiguous naming. This is a legitimate readability/maintainability concern, making the warning a true positive.",
+          "is_true_positive": true,
+          "confidence": 0.88,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "ambiguous type name referring to multiple classes",
+          "developer_explanation": "In this file the identifier `Handler` is used for both org.eclipse.jetty.server.Handler and org.eclipse.jetty.server.Request.Handler, which can be confusing for readers and maintainers. Qualify one of the types (e.g., use the fully‑qualified name) or rename the import to make it clear which Handler is meant. This improves code clarity without changing behavior.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2021,
+            "output_tokens": 703,
+            "reasoning_tokens": 608,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000194287
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2419,
+          "latency_s": 12.313
+        }
+      ],
+      "original_finding_index": 527
+    },
+    {
+      "finding_id": 44,
+      "type": "SameNameButDifferent",
+      "sourcefile": "SessionHandler.java",
+      "start_line": "64",
+      "message": "The name `Handler` refers to [org.eclipse.jetty.server.Handler, org.eclipse.jetty.server.Request.Handler] within this file. It may be confusing to have the same name refer to multiple types. Consider qualifying them for clarity.",
+      "tool_specific": {
+        "column": "9"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that the simple name `Handler` refers to two distinct types in the same file, which can cause confusion for readers and maintainers.",
+          "is_true_positive": true,
+          "confidence": 0.88,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "same simple name used for different types",
+          "developer_explanation": "Your file imports or references both org.eclipse.jetty.server.Handler and org.eclipse.jetty.server.Request.Handler using the same simple name `Handler`. This can make the code harder to understand and increase the risk of using the wrong type. Qualify one of the types (e.g., use the fully‑qualified name) or rename one of the variables to clarify which Handler is intended.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2021,
+            "output_tokens": 540,
+            "reasoning_tokens": 463,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000166577
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1835,
+          "latency_s": 9.251
+        }
+      ],
+      "original_finding_index": 528
+    },
+    {
+      "finding_id": 45,
+      "type": "SameNameButDifferent",
+      "sourcefile": "SessionHandler.java",
+      "start_line": "134",
+      "message": "The name `Handler` refers to [org.eclipse.jetty.server.Handler, org.eclipse.jetty.server.Request.Handler] within this file. It may be confusing to have the same name refer to multiple types. Consider qualifying them for clarity.",
+      "tool_specific": {
+        "column": "32"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that the simple name `Handler` refers to two distinct types in the same file, which is a factual naming conflict that can cause confusion.",
+          "is_true_positive": true,
+          "confidence": 0.92,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "same simple name used for different types",
+          "developer_explanation": "Your file imports or references both org.eclipse.jetty.server.Handler and org.eclipse.jetty.server.Request.Handler using the same simple name `Handler`. This can make the code harder to read and maintain because it's unclear which type is meant in each context. Qualify one or both names (e.g., use the fully‑qualified name or an alias) or rename one of the imports to eliminate the ambiguity.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2021,
+            "output_tokens": 445,
+            "reasoning_tokens": 332,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000150427
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1313,
+          "latency_s": 8.177
+        }
+      ],
+      "original_finding_index": 529
+    },
+    {
+      "finding_id": 46,
+      "type": "UnusedVariable",
+      "sourcefile": "AbstractLoginModule.java",
+      "start_line": "216",
+      "message": "This assignment to the local variable 'webCredential' is never read.",
+      "tool_specific": {
+        "column": "20"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly states that the assignment to the local variable 'webCredential' is never read, which directly indicates dead code. This claim is generally correct unless the variable is accessed indirectly, which is unlikely.",
+          "is_true_positive": true,
+          "confidence": 0.88,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "unused local variable assignment",
+          "developer_explanation": "The variable 'webCredential' is assigned a value that is never used later in the method, so the assignment has no effect. Removing the unused variable or using it as intended will clean up the code and avoid unnecessary work.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1938,
+            "output_tokens": 381,
+            "reasoning_tokens": 300,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000136476
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1190,
+          "latency_s": 6.676
+        }
+      ],
+      "original_finding_index": 572
+    },
+    {
+      "finding_id": 47,
+      "type": "FutureReturnValueIgnored",
+      "sourcefile": "Response.java",
+      "start_line": "222",
+      "message": "Return value of methods returning Future must be checked. Ignoring returned Futures suppresses exceptions thrown from the code that completes the Future.",
+      "tool_specific": {
+        "column": "31"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning flags a call to response.abort(x) whose return type is a Future that is not stored or checked, which the rule states can suppress exceptions from the asynchronous operation. Ignoring a Future can indeed hide errors, so the claim is materially correct.",
+          "is_true_positive": true,
+          "confidence": 0.78,
+          "category": "CORRECTNESS",
+          "issue_signature": "ignored future return value",
+          "developer_explanation": "The call to abort returns a Future, but the code discards it, meaning any exception thrown while completing that Future will be lost. Capture the Future and handle possible failures, for example by adding a callback or checking for exceptions, to ensure errors are not silently ignored.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1970,
+            "output_tokens": 551,
+            "reasoning_tokens": 490,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00016656
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1948,
+          "latency_s": 9.849
+        }
+      ],
+      "original_finding_index": 655
+    },
+    {
+      "finding_id": 48,
+      "type": "FutureReturnValueIgnored",
+      "sourcefile": "HttpDestination.java",
+      "start_line": "330",
+      "message": "Return value of methods returning Future must be checked. Ignoring returned Futures suppresses exceptions thrown from the code that completes the Future.",
+      "tool_specific": {
+        "column": "30"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that a method returning a Future is called and its return value is ignored, which can suppress exceptions from the asynchronous operation, indicating a potential correctness issue.",
+          "is_true_positive": true,
+          "confidence": 0.73,
+          "category": "CORRECTNESS",
+          "issue_signature": "ignored future return value",
+          "developer_explanation": "The call to request.abort returns a Future, but the code discards it, which means any exception thrown while aborting the request will be lost. This can hide errors and lead to unexpected behavior. Capture the Future and handle possible failures, for example by adding a callback or checking for exceptions.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1998,
+            "output_tokens": 426,
+            "reasoning_tokens": 352,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000146346
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1403,
+          "latency_s": 8.58
+        }
+      ],
+      "original_finding_index": 668
+    },
+    {
+      "finding_id": 49,
+      "type": "FutureReturnValueIgnored",
+      "sourcefile": "HttpDestination.java",
+      "start_line": "335",
+      "message": "Return value of methods returning Future must be checked. Ignoring returned Futures suppresses exceptions thrown from the code that completes the Future.",
+      "tool_specific": {
+        "column": "26"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning indicates that a Future returned by request.abort is ignored, which can hide exceptions thrown during its execution, so the claim of a potential bug is material.",
+          "is_true_positive": true,
+          "confidence": 0.66,
+          "category": "CORRECTNESS",
+          "issue_signature": "ignored future return value",
+          "developer_explanation": "The call to request.abort returns a Future, but the code discards it. If the asynchronous operation fails, its exception will never be observed, potentially masking errors. Capture the Future or add appropriate error handling to ensure exceptions are not silently ignored.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1980,
+            "output_tokens": 645,
+            "reasoning_tokens": 638,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00018291
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2541,
+          "latency_s": 12.939
+        }
+      ],
+      "original_finding_index": 669
+    },
+    {
+      "finding_id": 50,
+      "type": "FutureReturnValueIgnored",
+      "sourcefile": "HttpDestination.java",
+      "start_line": "445",
+      "message": "Return value of methods returning Future must be checked. Ignoring returned Futures suppresses exceptions thrown from the code that completes the Future.",
+      "tool_specific": {
+        "column": "22"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning flags an ignored return value of a method that returns a Future, which the rule states can suppress exceptions, so the claim about a potential problem is directly present in the warning.",
+          "is_true_positive": true,
+          "confidence": 0.73,
+          "category": "CORRECTNESS",
+          "issue_signature": "ignored future return value",
+          "developer_explanation": "The call to request.abort returns a Future, but its result is discarded, meaning any exception the abort operation throws will not be observed. This can hide failures and lead to incorrect program behavior. Capture the Future and handle possible exceptions, for example by adding a callback or awaiting its completion.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1973,
+            "output_tokens": 548,
+            "reasoning_tokens": 491,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000166161
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1962,
+          "latency_s": 10.942
+        }
+      ],
+      "original_finding_index": 670
+    },
+    {
+      "finding_id": 51,
+      "type": "MissingCasesInEnumSwitch",
+      "sourcefile": "CompressionHandler.java",
+      "start_line": "258",
+      "message": "Non-exhaustive switch; either add a default or handle the remaining cases: CONNECTION, CACHE_CONTROL, DATE, and 84 others",
+      "tool_specific": {
+        "column": "13"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly states that the switch on an enum does not cover all enum constants and lacks a default, which is a factual condition that can lead to unhandled cases. This indicates a potential correctness problem unless intentionally ignored, so the claim is likely valid.",
+          "is_true_positive": true,
+          "confidence": 0.73,
+          "category": "CORRECTNESS",
+          "issue_signature": "non-exhaustive enum switch",
+          "developer_explanation": "Your switch statement does not handle all possible enum values and has no default case, meaning some enum constants will be ignored at runtime. This can cause unexpected behavior if those cases occur. Add a default branch (even if it does nothing) or explicitly handle the missing enum constants.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1971,
+            "output_tokens": 958,
+            "reasoning_tokens": 990,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000235787
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3956,
+          "latency_s": 17.166
+        }
+      ],
+      "original_finding_index": 715
+    },
+    {
+      "finding_id": 52,
+      "type": "MissingCasesInEnumSwitch",
+      "sourcefile": "DecompressionRequest.java",
+      "start_line": "82",
+      "message": "Non-exhaustive switch; either add a default or handle the remaining cases: CONNECTION, CACHE_CONTROL, DATE, and 86 others",
+      "tool_specific": {
+        "column": "13"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly states that the switch on an enum does not cover all enum constants and lacks a default case, which is a concrete claim of missing cases. This situation can cause unhandled enum values at runtime, so the claim is likely correct.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "CORRECTNESS",
+          "issue_signature": "non-exhaustive enum switch",
+          "developer_explanation": "Your switch statement does not handle every value of the enum and does not provide a default branch, so some enum constants could reach the switch without a matching case. This may lead to unexpected behavior or runtime errors. Add cases for the missing enum values or include a default case to handle them safely.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1972,
+            "output_tokens": 464,
+            "reasoning_tokens": 354,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000151844
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1410,
+          "latency_s": 8.358
+        }
+      ],
+      "original_finding_index": 717
+    },
+    {
+      "finding_id": 53,
+      "type": "MissingCasesInEnumSwitch",
+      "sourcefile": "DeploymentScanner.java",
+      "start_line": "646",
+      "message": "Non-exhaustive switch; either add a default or handle the remaining cases: UNCHANGED",
+      "tool_specific": {
+        "column": "13"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly states that the switch is non‑exhaustive because the enum constant UNCHANGED is not handled and there is no default case, which is a potential correctness problem.",
+          "is_true_positive": true,
+          "confidence": 0.86,
+          "category": "CORRECTNESS",
+          "issue_signature": "non-exhaustive enum switch",
+          "developer_explanation": "Your switch on the enum does not cover the UNCHANGED constant and lacks a default branch, so if that value is ever passed the switch will fall through without executing any case, likely producing incorrect behavior. Add a case for UNCHANGED or a default clause that handles unexpected values appropriately.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1955,
+            "output_tokens": 688,
+            "reasoning_tokens": 628,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000189295
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2501,
+          "latency_s": 12.12
+        }
+      ],
+      "original_finding_index": 729
+    },
+    {
+      "finding_id": 54,
+      "type": "MissingOverride",
+      "sourcefile": "WebAppClassLoader.java",
+      "start_line": "132",
+      "message": "isProtectedClass implements method in ClassVisibilityChecker; expected @Override",
+      "tool_specific": {
+        "column": "25"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that the method implements an interface method but is missing the @Override annotation, which is a factual style issue the tool detects.",
+          "is_true_positive": true,
+          "confidence": 0.88,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "missing @override annotation",
+          "developer_explanation": "The isProtectedClass method implements a method from ClassVisibilityChecker but does not have an @Override annotation. Adding @Override makes the code clearer and helps the compiler catch signature mismatches. Update the method declaration to include @Override.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1946,
+            "output_tokens": 452,
+            "reasoning_tokens": 415,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000148842
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1647,
+          "latency_s": 9.281
+        }
+      ],
+      "original_finding_index": 736
+    },
+    {
+      "finding_id": 55,
+      "type": "FutureReturnValueIgnored",
+      "sourcefile": "HttpConnectionOverFCGI.java",
+      "start_line": "376",
+      "message": "Return value of methods returning Future must be checked. Ignoring returned Futures suppresses exceptions thrown from the code that completes the Future.",
+      "tool_specific": {
+        "column": "40"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning flags that the call to abort(failure) returns a Future whose result is ignored, which the rule says can suppress exceptions from the asynchronous operation.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "CORRECTNESS",
+          "issue_signature": "ignored future return value",
+          "developer_explanation": "The abort method returns a Future that may complete with an exception, but the code discards it, potentially hiding errors that occur during the abort operation. Capture the Future and handle possible failures, for example by adding a callback or logging any exception. This ensures that problems are not silently ignored.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1978,
+            "output_tokens": 428,
+            "reasoning_tokens": 345,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000145946
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1375,
+          "latency_s": 9.223
+        }
+      ],
+      "original_finding_index": 741
+    },
+    {
+      "finding_id": 56,
+      "type": "SameNameButDifferent",
+      "sourcefile": "ResponseContentParser.java",
+      "start_line": "78",
+      "message": "The name `State` refers to [org.eclipse.jetty.fcgi.parser.ResponseContentParser.State, org.eclipse.jetty.http.HttpParser.State] within this file. It may be confusing to have the same name refer to multiple types. Consider qualifying them for clarity.",
+      "tool_specific": {
+        "column": "17"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning reports that the simple name `State` refers to two distinct types in the same file, which can cause confusion, and this claim is accurate based on the described imports.",
+          "is_true_positive": true,
+          "confidence": 0.93,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "same simple name referring to multiple types",
+          "developer_explanation": "You have imported both `ResponseContentParser.State` and `HttpParser.State` and use the unqualified name `State` in the file, which can be ambiguous to readers. Qualify the enum name (e.g., `ResponseContentParser.State`) to make the code clearer and avoid potential misunderstandings.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2033,
+            "output_tokens": 419,
+            "reasoning_tokens": 308,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000146451
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1228,
+          "latency_s": 7.699
+        }
+      ],
+      "original_finding_index": 746
+    },
+    {
+      "finding_id": 57,
+      "type": "SameNameButDifferent",
+      "sourcefile": "ResponseContentParser.java",
+      "start_line": "92",
+      "message": "The name `State` refers to [org.eclipse.jetty.fcgi.parser.ResponseContentParser.State, org.eclipse.jetty.http.HttpParser.State] within this file. It may be confusing to have the same name refer to multiple types. Consider qualifying them for clarity.",
+      "tool_specific": {
+        "column": "21"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that the simple name `State` refers to two different types in the same file, which the tool flags as potentially confusing, and this naming conflict indeed exists.",
+          "is_true_positive": true,
+          "confidence": 0.9,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "multiple types share same simple name",
+          "developer_explanation": "Your file imports or references two distinct `State` types, which can make the code harder to read and maintain because it's unclear which enum is meant in each usage. Consider qualifying the enum names (e.g., `ResponseContentParser.State`) or renaming one of them to avoid ambiguity. This will improve clarity without changing behavior.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2033,
+            "output_tokens": 488,
+            "reasoning_tokens": 398,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000158181
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1582,
+          "latency_s": 8.974
+        }
+      ],
+      "original_finding_index": 748
+    },
+    {
+      "finding_id": 58,
+      "type": "SameNameButDifferent",
+      "sourcefile": "ResponseContentParser.java",
+      "start_line": "126",
+      "message": "The name `State` refers to [org.eclipse.jetty.fcgi.parser.ResponseContentParser.State, org.eclipse.jetty.http.HttpParser.State] within this file. It may be confusing to have the same name refer to multiple types. Consider qualifying them for clarity.",
+      "tool_specific": {
+        "column": "46"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning reports that two distinct types named `State` are used in the same file, which can cause confusion, and this claim is correct based on the description.",
+          "is_true_positive": true,
+          "confidence": 0.92,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "duplicate simple type name",
+          "developer_explanation": "The file references two different `State` types from different packages, which can be confusing for readers and maintainers. Qualify at least one of the types (e.g., use the fully‑qualified name) to make it clear which `State` is being used. This improves readability and reduces the risk of mistakes.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2033,
+            "output_tokens": 497,
+            "reasoning_tokens": 413,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000159711
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1645,
+          "latency_s": 8.948
+        }
+      ],
+      "original_finding_index": 750
+    },
+    {
+      "finding_id": 59,
+      "type": "SameNameButDifferent",
+      "sourcefile": "ResponseContentParser.java",
+      "start_line": "126",
+      "message": "The name `State` refers to [org.eclipse.jetty.fcgi.parser.ResponseContentParser.State, org.eclipse.jetty.http.HttpParser.State] within this file. It may be confusing to have the same name refer to multiple types. Consider qualifying them for clarity.",
+      "tool_specific": {
+        "column": "66"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that the simple name `State` refers to two different types in the same file, which can cause confusion for readers, and this is a valid maintainability concern.",
+          "is_true_positive": true,
+          "confidence": 0.92,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "same simple name used for different types",
+          "developer_explanation": "Having two distinct `State` types in one file makes the code harder to read and understand, as it is not clear which enum or class is being referenced. Qualify one of the types (e.g., `ResponseContentParser.State`) or rename one of them to avoid ambiguity. This improves readability and reduces the risk of mistakes when maintaining the code.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2033,
+            "output_tokens": 566,
+            "reasoning_tokens": 491,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000171441
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1953,
+          "latency_s": 10.469
+        }
+      ],
+      "original_finding_index": 751
+    },
+    {
+      "finding_id": 60,
+      "type": "FutureReturnValueIgnored",
+      "sourcefile": "ProxyHandler.java",
+      "start_line": "511",
+      "message": "Return value of methods returning Future must be checked. Ignoring returned Futures suppresses exceptions thrown from the code that completes the Future.",
+      "tool_specific": {
+        "column": "43"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that the method writeInterim returns a Future and its return value is ignored, which can suppress exceptions from the asynchronous operation, indicating a potential correctness issue.",
+          "is_true_positive": true,
+          "confidence": 0.73,
+          "category": "CORRECTNESS",
+          "issue_signature": "ignored future return value",
+          "developer_explanation": "The call to writeInterim returns a Future whose result or exception is currently discarded, so any failure in the asynchronous write may go unnoticed. This can lead to silent errors and incorrect program behavior. Capture the Future and handle its completion or exceptions, or ensure it is otherwise observed.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1990,
+            "output_tokens": 522,
+            "reasoning_tokens": 475,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00016237
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1893,
+          "latency_s": 10.549
+        }
+      ],
+      "original_finding_index": 757
+    },
+    {
+      "finding_id": 61,
+      "type": "MissingOverride",
+      "sourcefile": "AbstractStream.java",
+      "start_line": "69",
+      "message": "getIdleTimeout implements method in Stream; expected @Override",
+      "tool_specific": {
+        "column": "17"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that getIdleTimeout implements a method from Stream but lacks an @Override annotation, which is exactly what the MissingOverride rule checks for.",
+          "is_true_positive": true,
+          "confidence": 0.93,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "missing @Override annotation on interface method implementation",
+          "developer_explanation": "The getIdleTimeout method overrides a method from the Stream interface but does not have the @Override annotation. Adding @Override improves readability and helps the compiler catch signature mismatches. Update the method declaration to include @Override.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1937,
+            "output_tokens": 465,
+            "reasoning_tokens": 407,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000150719
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1616,
+          "latency_s": 8.085
+        }
+      ],
+      "original_finding_index": 801
+    },
+    {
+      "finding_id": 62,
+      "type": "IntLongMath",
+      "sourcefile": "FrameGenerator.java",
+      "start_line": "236",
+      "message": "Expression of type int may overflow before being assigned to a long",
+      "tool_specific": {
+        "column": "25"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that an int expression may overflow before being assigned to a long, which directly points to a potential correctness issue in the code.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "CORRECTNESS",
+          "issue_signature": "int arithmetic overflow before long conversion",
+          "developer_explanation": "The code adds two int values and then returns the result as a long. If the sum exceeds the int range, it will overflow before the cast, producing an incorrect long value. Cast one of the operands to long (or both) before the addition to ensure the calculation is performed with long precision.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1942,
+            "output_tokens": 357,
+            "reasoning_tokens": 262,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000132544
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1043,
+          "latency_s": 6.448
+        }
+      ],
+      "original_finding_index": 804
+    },
+    {
+      "finding_id": 63,
+      "type": "IntLongMath",
+      "sourcefile": "FrameGenerator.java",
+      "start_line": "258",
+      "message": "Expression of type int may overflow before being assigned to a long",
+      "tool_specific": {
+        "column": "25"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that an int expression may overflow before being assigned to a long, which is a potential correctness issue if the sum exceeds the int range.",
+          "is_true_positive": true,
+          "confidence": 0.73,
+          "category": "CORRECTNESS",
+          "issue_signature": "int addition overflow before long conversion",
+          "developer_explanation": "The code adds two int values and then returns the result as a long. If the sum exceeds the maximum int value, it will overflow before the cast, producing an incorrect result. Cast one operand to long (e.g., (long)capacity + length) so the addition is performed in long arithmetic.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1942,
+            "output_tokens": 426,
+            "reasoning_tokens": 336,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000144274
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1340,
+          "latency_s": 7.237
+        }
+      ],
+      "original_finding_index": 805
+    },
+    {
+      "finding_id": 64,
+      "type": "IntLongMath",
+      "sourcefile": "FrameGenerator.java",
+      "start_line": "463",
+      "message": "Expression of type int may overflow before being assigned to a long",
+      "tool_specific": {
+        "column": "47"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that an int expression is added together before being cast to long, which can overflow, so the claim of a potential overflow is material. This indicates a possible correctness issue.",
+          "is_true_positive": true,
+          "confidence": 0.73,
+          "category": "CORRECTNESS",
+          "issue_signature": "possible int overflow before long conversion",
+          "developer_explanation": "The sum of the int values is computed using int arithmetic, which can wrap around if the total exceeds Integer.MAX_VALUE, leading to an incorrect result when later stored in a long. Cast one of the operands to long before the addition to ensure the whole expression is evaluated in long arithmetic.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1948,
+            "output_tokens": 508,
+            "reasoning_tokens": 433,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000158436
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1725,
+          "latency_s": 8.54
+        }
+      ],
+      "original_finding_index": 806
+    },
+    {
+      "finding_id": 65,
+      "type": "IntLongMath",
+      "sourcefile": "FrameGenerator.java",
+      "start_line": "551",
+      "message": "Expression of type int may overflow before being assigned to a long",
+      "tool_specific": {
+        "column": "25"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly states that an int expression may overflow before being assigned to a long, which is the condition the rule checks for and the basis of its claim.",
+          "is_true_positive": true,
+          "confidence": 0.73,
+          "category": "CORRECTNESS",
+          "issue_signature": "int expression overflow before long conversion",
+          "developer_explanation": "The addition is performed using int arithmetic, so if the sum exceeds the int range it will wrap before being widened to long, potentially yielding an incorrect result. Cast one operand to long (e.g., (long) capacity + reasonLength) so the addition occurs in long arithmetic and cannot overflow.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1943,
+            "output_tokens": 530,
+            "reasoning_tokens": 465,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000161991
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1857,
+          "latency_s": 9.992
+        }
+      ],
+      "original_finding_index": 807
+    },
+    {
+      "finding_id": 66,
+      "type": "IntLongMath",
+      "sourcefile": "StreamParser.java",
+      "start_line": "117",
+      "message": "Expression of type int may overflow before being assigned to a long",
+      "tool_specific": {
+        "column": "56"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that an int expression may overflow before being assigned to a long, which matches the described pattern of int arithmetic followed by a long assignment. This indicates a real risk of incorrect results due to overflow.",
+          "is_true_positive": true,
+          "confidence": 0.92,
+          "category": "CORRECTNESS",
+          "issue_signature": "int arithmetic overflow before long conversion",
+          "developer_explanation": "The subtraction is performed using int arithmetic, so if the result exceeds the int range it will wrap before being widened to long, producing an incorrect value. Cast one of the operands to long (e.g., (long) getFrameMaxSize()) before the subtraction to ensure the operation is done in long precision.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1949,
+            "output_tokens": 513,
+            "reasoning_tokens": 414,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000159323
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1640,
+          "latency_s": 8.818
+        }
+      ],
+      "original_finding_index": 808
+    },
+    {
+      "finding_id": 67,
+      "type": "OperatorPrecedence",
+      "sourcefile": "Frame.java",
+      "start_line": "23",
+      "message": "Use grouping parenthesis to make the operator precedence explicit",
+      "tool_specific": {
+        "column": "40"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning flags the lack of explicit grouping parentheses around a logical expression, but the expression's precedence is already unambiguous in Java, so the issue is only a style suggestion, not a real bug.",
+          "is_true_positive": false,
+          "confidence": 0.86,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "missing grouping parentheses for operator precedence",
+          "developer_explanation": "The tool suggests adding extra parentheses around the instanceof and && expression, but Java's operator precedence already makes the evaluation order clear. This is a readability recommendation, not a correctness problem, so you can safely ignore the warning or add parentheses only if you prefer the style.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1945,
+            "output_tokens": 423,
+            "reasoning_tokens": 326,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000143875
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1296,
+          "latency_s": 7.815
+        }
+      ],
+      "original_finding_index": 810
+    },
+    {
+      "finding_id": 68,
+      "type": "MissingCasesInEnumSwitch",
+      "sourcefile": "HTTP3Session.java",
+      "start_line": "522",
+      "message": "Non-exhaustive switch; either add a default or handle the remaining cases: LOCALLY_CLOSED, REMOTELY_CLOSED",
+      "tool_specific": {
+        "column": "13"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly states that the switch on an enum is missing the cases LOCALLY_CLOSED and REMOTELY_CLOSED, which indicates a non‑exhaustive handling of the enum values.",
+          "is_true_positive": true,
+          "confidence": 0.88,
+          "category": "CORRECTNESS",
+          "issue_signature": "non-exhaustive enum switch",
+          "developer_explanation": "Your switch statement does not cover the enum constants LOCALLY_CLOSED and REMOTELY_CLOSED. If the code ever receives one of these values, the switch will fall through to an implicit default, potentially causing incorrect behavior. Add explicit case blocks for these constants or provide a default case to handle them safely.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1970,
+            "output_tokens": 442,
+            "reasoning_tokens": 334,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00014803
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1330,
+          "latency_s": 8.102
+        }
+      ],
+      "original_finding_index": 813
+    },
+    {
+      "finding_id": 69,
+      "type": "OperatorPrecedence",
+      "sourcefile": "HTTP3Stream.java",
+      "start_line": "190",
+      "message": "Use grouping parenthesis to make the operator precedence explicit",
+      "tool_specific": {
+        "column": "29"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning points out that the boolean expression lacks explicit grouping parentheses, which can affect readability, so the claim about missing parentheses is correct.",
+          "is_true_positive": true,
+          "confidence": 0.9,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "missing grouping parentheses in boolean expression",
+          "developer_explanation": "The current condition relies on operator precedence, which may be confusing to readers. Adding parentheses makes the intended grouping clear and improves code readability. Change the expression to ((dataStalled && dataAvailable) || dataLast).",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1945,
+            "output_tokens": 553,
+            "reasoning_tokens": 523,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000165975
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2083,
+          "latency_s": 10.072
+        }
+      ],
+      "original_finding_index": 815
+    },
+    {
+      "finding_id": 70,
+      "type": "UnusedVariable",
+      "sourcefile": "HttpConnectionOverHTTP3.java",
+      "start_line": "79",
+      "message": "The local variable 'peerCertificates' is never read.",
+      "tool_specific": {
+        "column": "27"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly states that the local variable 'peerCertificates' is never read, which indicates dead code.",
+          "is_true_positive": true,
+          "confidence": 0.9,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "unused local variable",
+          "developer_explanation": "The variable 'peerCertificates' is declared but never used anywhere in the method, adding unnecessary clutter. Remove the declaration (and any related assignment) to keep the code clean and avoid confusion.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1934,
+            "output_tokens": 339,
+            "reasoning_tokens": 265,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000129188
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1052,
+          "latency_s": 5.298
+        }
+      ],
+      "original_finding_index": 819
+    },
+    {
+      "finding_id": 71,
+      "type": "FutureReturnValueIgnored",
+      "sourcefile": "HttpConnectionOverHTTP3.java",
+      "start_line": "186",
+      "message": "Return value of methods returning Future must be checked. Ignoring returned Futures suppresses exceptions thrown from the code that completes the Future.",
+      "tool_specific": {
+        "column": "44"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that the code calls a method returning a Future and ignores its return value, which can suppress exceptions from the asynchronous operation. Ignoring a Future can indeed hide failures, so the claim is materially correct and indicates a potential correctness issue.",
+          "is_true_positive": true,
+          "confidence": 0.75,
+          "category": "CORRECTNESS",
+          "issue_signature": "ignoring future return value",
+          "developer_explanation": "The call to abort returns a Future, but the code does not capture or handle it. This means any exception thrown while completing the Future will be lost, potentially hiding errors. Capture the Future and add appropriate error handling or a callback to ensure failures are observed.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1978,
+            "output_tokens": 583,
+            "reasoning_tokens": 529,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000172296
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2107,
+          "latency_s": 10.545
+        }
+      ],
+      "original_finding_index": 821
+    },
+    {
+      "finding_id": 72,
+      "type": "FutureReturnValueIgnored",
+      "sourcefile": "ServerQuicheConnection.java",
+      "start_line": "356",
+      "message": "Return value of methods returning Future must be checked. Ignoring returned Futures suppresses exceptions thrown from the code that completes the Future.",
+      "tool_specific": {
+        "column": "26"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning indicates that the code at the reported location discards the Future returned by CompletableFuture.allOf, which the rule flags as suppressing exceptions. Ignoring a Future can hide failures, so the claim is materially correct and points to a correctness issue.",
+          "is_true_positive": true,
+          "confidence": 0.73,
+          "category": "CORRECTNESS",
+          "issue_signature": "ignored future return value",
+          "developer_explanation": "The call to CompletableFuture.allOf returns a Future that may complete exceptionally, but the code currently discards it, so any exception will be lost. Capture the Future (e.g., assign it to a variable) or attach a completion handler to ensure errors are observed and handled appropriately.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1985,
+            "output_tokens": 621,
+            "reasoning_tokens": 573,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000179015
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2277,
+          "latency_s": 11.033
+        }
+      ],
+      "original_finding_index": 830
+    },
+    {
+      "finding_id": 73,
+      "type": "FutureReturnValueIgnored",
+      "sourcefile": "QuicheServerConnector.java",
+      "start_line": "119",
+      "message": "Method returns a nested type, java.util.concurrent.CompletableFuture<java.util.concurrent.CompletableFuture<java.lang.Void>>",
+      "tool_specific": {
+        "column": "25"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that the method returns a nested CompletableFuture type, which the rule flags as a potential issue, but nested futures can be intentional and not necessarily a bug.",
+          "is_true_positive": false,
+          "confidence": 0.68,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "nested CompletableFuture return type",
+          "developer_explanation": "The tool warns about returning CompletableFuture<CompletableFuture<Void>>, but this pattern can be a deliberate design choice for composing asynchronous operations. If the nested future is used as intended, the warning can be ignored; otherwise consider flattening the future to simplify usage.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1963,
+            "output_tokens": 698,
+            "reasoning_tokens": 681,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000191291
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2716,
+          "latency_s": 12.173
+        }
+      ],
+      "original_finding_index": 832
+    },
+    {
+      "finding_id": 74,
+      "type": "BanJNDI",
+      "sourcefile": "localContextRoot.java",
+      "start_line": "448",
+      "message": "Using JNDI may deserialize user input via the `Serializable` API which is extremely dangerous",
+      "tool_specific": {
+        "column": "32"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning claims that using JNDI may deserialize user input via the Serializable API, which is not necessarily true for every JNDI usage; without seeing the code we cannot confirm that untrusted data is being deserialized.",
+          "is_true_positive": false,
+          "confidence": 0.7,
+          "category": "SECURITY",
+          "issue_signature": "unsafe deserialization via JNDI",
+          "developer_explanation": "The tool flags any JNDI usage as a potential deserialization risk, but not all JNDI lookups involve untrusted data or object deserialization. Verify whether the JNDI call processes external input; if it does not, this warning can be ignored. If it does, consider refactoring to avoid deserialization or validate the input.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1951,
+            "output_tokens": 487,
+            "reasoning_tokens": 342,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000154977
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1356,
+          "latency_s": 7.748
+        }
+      ],
+      "original_finding_index": 869
+    },
+    {
+      "finding_id": 75,
+      "type": "MissingOverride",
+      "sourcefile": "AbstractForkedChild.java",
+      "start_line": "185",
+      "message": "doStart overrides method in ContainerLifeCycle; expected @Override",
+      "tool_specific": {
+        "column": "17"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly states that the method doStart overrides a method in ContainerLifeCycle but lacks an @Override annotation, which the rule flags as a problem.",
+          "is_true_positive": true,
+          "confidence": 0.96,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "missing @Override annotation",
+          "developer_explanation": "The doStart method overrides a superclass method but is not marked with @Override. Adding the annotation makes the override explicit, helps the compiler catch signature mismatches, and improves code readability. Apply @Override to the method declaration.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1940,
+            "output_tokens": 390,
+            "reasoning_tokens": 314,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00013808
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1247,
+          "latency_s": 7.17
+        }
+      ],
+      "original_finding_index": 872
+    },
+    {
+      "finding_id": 76,
+      "type": "MissingOverride",
+      "sourcefile": "AbstractServerForker.java",
+      "start_line": "128",
+      "message": "redeployWebApp implements method in AbstractForker; expected @Override",
+      "tool_specific": {
+        "column": "29"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that the method redeployWebApp overrides a method in AbstractForker but lacks an @Override annotation, which is a factual claim about the source code. Assuming the annotation is indeed missing, the warning correctly identifies a code‑style issue.",
+          "is_true_positive": true,
+          "confidence": 0.88,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "missing @override annotation",
+          "developer_explanation": "The redeployWebApp method overrides a method from its superclass but does not have the @Override annotation. Adding @Override makes the intent clear, helps the compiler catch signature mismatches, and improves code readability. Update the method declaration to include @Override.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1950,
+            "output_tokens": 560,
+            "reasoning_tokens": 476,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00016735
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1893,
+          "latency_s": 9.727
+        }
+      ],
+      "original_finding_index": 880
+    },
+    {
+      "finding_id": 77,
+      "type": "BanJNDI",
+      "sourcefile": "Transaction.java",
+      "start_line": "125",
+      "message": "Using JNDI may deserialize user input via the `Serializable` API which is extremely dangerous",
+      "tool_specific": {
+        "column": "45"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning claims that the JNDI usage in the code may deserialize user input, which is a potential security risk, but without seeing the code we cannot confirm that untrusted data is actually being deserialized.",
+          "is_true_positive": false,
+          "confidence": 0.65,
+          "category": "SECURITY",
+          "issue_signature": "unsafe JNDI deserialization",
+          "developer_explanation": "The tool flags any JNDI usage as dangerous because it could lead to deserialization attacks. If your JNDI lookup only accesses trusted resources and never processes attacker-controlled data, the warning can be ignored. Ensure that no untrusted input reaches the JNDI call, or replace it with a safer alternative if possible.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1949,
+            "output_tokens": 591,
+            "reasoning_tokens": 485,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000172583
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1931,
+          "latency_s": 10.392
+        }
+      ],
+      "original_finding_index": 925
+    },
+    {
+      "finding_id": 78,
+      "type": "MissingSummary",
+      "sourcefile": "Rule.java",
+      "start_line": "46",
+      "message": "A summary fragment is required; consider using the value of the @return block as a summary fragment instead.",
+      "tool_specific": {
+        "column": "8"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly states that a Javadoc summary fragment is missing and suggests using the @return text as that summary, which indicates a documentation deficiency.",
+          "is_true_positive": true,
+          "confidence": 0.73,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "missing javadoc summary fragment",
+          "developer_explanation": "The method's Javadoc lacks a brief summary sentence before the @return tag. Adding a concise description improves readability and helps tools generate proper documentation. Use the @return text or write a short summary to satisfy the requirement.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1945,
+            "output_tokens": 368,
+            "reasoning_tokens": 283,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000134525
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1126,
+          "latency_s": 6.71
+        }
+      ],
+      "original_finding_index": 928
+    },
+    {
+      "finding_id": 79,
+      "type": "SameNameButDifferent",
+      "sourcefile": "RewriteHandler.java",
+      "start_line": "54",
+      "message": "The name `Handler` refers to [org.eclipse.jetty.server.Handler, org.eclipse.jetty.server.Request.Handler] within this file. It may be confusing to have the same name refer to multiple types. Consider qualifying them for clarity.",
+      "tool_specific": {
+        "column": "27"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that the simple name `Handler` refers to two distinct types in the same file, which the tool has detected, so the claim about name collision is correct.",
+          "is_true_positive": true,
+          "confidence": 0.96,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "multiple types with same simple name",
+          "developer_explanation": "In this file the identifier `Handler` can refer to both `org.eclipse.jetty.server.Handler` and `org.eclipse.jetty.server.Request.Handler`, which can be confusing for readers and maintainers. Qualify the type (e.g., use `Request.Handler` for the inner interface) or rename one of the references to make the code clearer and avoid accidental misuse.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2012,
+            "output_tokens": 454,
+            "reasoning_tokens": 345,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000151624
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1368,
+          "latency_s": 7.24
+        }
+      ],
+      "original_finding_index": 933
+    },
+    {
+      "finding_id": 80,
+      "type": "SameNameButDifferent",
+      "sourcefile": "RewriteHandler.java",
+      "start_line": "148",
+      "message": "The name `Handler` refers to [org.eclipse.jetty.server.Handler, org.eclipse.jetty.server.Request.Handler] within this file. It may be confusing to have the same name refer to multiple types. Consider qualifying them for clarity.",
+      "tool_specific": {
+        "column": "23"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning reports that the simple name `Handler` refers to two distinct types in the same file, which can cause confusion for readers and maintainers.",
+          "is_true_positive": true,
+          "confidence": 0.88,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "ambiguous type name usage",
+          "developer_explanation": "In this file both org.eclipse.jetty.server.Handler and org.eclipse.jetty.server.Request.Handler are referenced using the same simple name `Handler`. This makes the code harder to read and can lead to mistakes. Qualify one of the types (or rename a variable) so each reference is unambiguous.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2012,
+            "output_tokens": 547,
+            "reasoning_tokens": 484,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000167434
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1923,
+          "latency_s": 8.531
+        }
+      ],
+      "original_finding_index": 935
+    },
+    {
+      "finding_id": 81,
+      "type": "MissingSummary",
+      "sourcefile": "RewriteHandler.java",
+      "start_line": "112",
+      "message": "A summary fragment is required; consider using the value of the @see block as a summary fragment instead.",
+      "tool_specific": {
+        "column": "8"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly states that a Javadoc summary fragment is missing, which is a factual claim about the code's documentation. Assuming the comment indeed lacks a summary, this is a real issue.",
+          "is_true_positive": true,
+          "confidence": 0.78,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "missing javadoc summary fragment",
+          "developer_explanation": "Your Javadoc comment does not contain a summary sentence before the @see tag. Add a concise description of the element (e.g., a brief sentence explaining what the method returns) before the @see block. This improves documentation readability and helps tools generate proper API docs.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1947,
+            "output_tokens": 600,
+            "reasoning_tokens": 535,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000174039
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2128,
+          "latency_s": 8.867
+        }
+      ],
+      "original_finding_index": 938
+    },
+    {
+      "finding_id": 82,
+      "type": "MissingSummary",
+      "sourcefile": "RewriteHandler.java",
+      "start_line": "120",
+      "message": "A summary fragment is required; consider using the value of the @see block as a summary fragment instead.",
+      "tool_specific": {
+        "column": "8"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that a Javadoc summary fragment is missing and suggests using the @see value as the summary, which directly describes a documentation deficiency. Since the tool flagged this, the claim of a missing summary is likely correct.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "missing javadoc summary fragment",
+          "developer_explanation": "The Javadoc for this element does not contain a brief summary before the @see tag. Adding a concise description improves readability and helps tools generate proper documentation. Include a one‑sentence summary that explains the purpose of the method or class.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1948,
+            "output_tokens": 524,
+            "reasoning_tokens": 448,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000161156
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1781,
+          "latency_s": 7.579
+        }
+      ],
+      "original_finding_index": 939
+    },
+    {
+      "finding_id": 83,
+      "type": "MissingSummary",
+      "sourcefile": "CoreSession.java",
+      "start_line": "112",
+      "message": "A summary fragment is required; consider using the value of the @return block as a summary fragment instead.",
+      "tool_specific": {
+        "column": "8"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly states that a Javadoc summary fragment is missing, which is a documentation issue the tool detected. Since the tool flagged this, it is likely that the method lacks the required summary, making the claim correct.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "missing javadoc summary fragment",
+          "developer_explanation": "Your method's Javadoc does not include a brief summary sentence before the @return description. Adding a concise summary improves readability and helps tools generate proper documentation. Include a one‑sentence summary, such as \"Returns true if the websocket is open inbound.\".",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1945,
+            "output_tokens": 452,
+            "reasoning_tokens": 352,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000148805
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1398,
+          "latency_s": 6.944
+        }
+      ],
+      "original_finding_index": 945
+    },
+    {
+      "finding_id": 84,
+      "type": "ReferenceEquality",
+      "sourcefile": "FrameFlusher.java",
+      "start_line": "250",
+      "message": "Comparison using reference equality instead of value equality",
+      "tool_specific": {
+        "column": "38"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that the code compares objects with == (reference equality) instead of using value equality, which the tool flags as a potential bug. Without seeing the code we cannot know if reference equality was intentional (e.g., comparing a sentinel constant), so the claim may be incorrect in this context.",
+          "is_true_positive": false,
+          "confidence": 0.6,
+          "category": "CORRECTNESS",
+          "issue_signature": "object compared with reference equality",
+          "developer_explanation": "The tool flagged a comparison that uses == on objects, assuming it should use value equality. If the comparison is meant to check for a specific sentinel instance (e.g., FLUSH_FRAME), reference equality is appropriate and the warning can be ignored. Otherwise, replace the == with Objects.equals to compare the actual content.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1936,
+            "output_tokens": 845,
+            "reasoning_tokens": 823,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000215282
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3287,
+          "latency_s": 12.109
+        }
+      ],
+      "original_finding_index": 967
+    },
+    {
+      "finding_id": 85,
+      "type": "ReferenceEquality",
+      "sourcefile": "FrameFlusher.java",
+      "start_line": "265",
+      "message": "Comparison using reference equality instead of value equality",
+      "tool_specific": {
+        "column": "34"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that the code compares two objects with ==, which the tool assumes is a bug because value equality should be used, but without seeing the code we cannot know if identity comparison was intended.",
+          "is_true_positive": false,
+          "confidence": 0.6,
+          "category": "CORRECTNESS",
+          "issue_signature": "reference equality used instead of value equality",
+          "developer_explanation": "The tool flagged a == comparison between entry.getFrame() and FLUSH_FRAME. If the code is deliberately checking for a specific sentinel Frame instance, using identity comparison is correct and the warning can be ignored. Ensure that the comparison is intended to be by identity; otherwise replace it with Objects.equals.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1936,
+            "output_tokens": 764,
+            "reasoning_tokens": 736,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000201512
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2933,
+          "latency_s": 11.028
+        }
+      ],
+      "original_finding_index": 968
+    },
+    {
+      "finding_id": 86,
+      "type": "UnnecessaryParentheses",
+      "sourcefile": "FrameCaptureExtension.java",
+      "start_line": "103",
+      "message": "These grouping parentheses are unnecessary; it is unlikely the code will be misinterpreted without them",
+      "tool_specific": {
+        "column": "39"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning flags grouping parentheses that are not required for the expression, which is a valid style issue. Since the suggested fix removes those parentheses without changing behavior, the claim is correct and the code can be simplified.",
+          "is_true_positive": true,
+          "confidence": 0.96,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "unnecessary parentheses around expression",
+          "developer_explanation": "The code contains parentheses that do not affect the evaluation of the ternary expression. Removing them makes the code cleaner and easier to read without altering its behavior. Apply the suggested fix to eliminate the superfluous parentheses.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1966,
+            "output_tokens": 376,
+            "reasoning_tokens": 302,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000136662
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1201,
+          "latency_s": 5.753
+        }
+      ],
+      "original_finding_index": 971
+    },
+    {
+      "finding_id": 87,
+      "type": "IntLongMath",
+      "sourcefile": "MessageHandler.java",
+      "start_line": "205",
+      "message": "Expression of type int may overflow before being assigned to a long",
+      "tool_specific": {
+        "column": "67"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that an int expression is added before being cast to long, which can overflow, and the suggested fix casts before addition, indicating a real risk of overflow.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "CORRECTNESS",
+          "issue_signature": "int addition overflow before long cast",
+          "developer_explanation": "The current code adds two int values and then assigns the result to a long, so if the sum exceeds the int range it will wrap around before the cast, producing an incorrect size. Cast one operand to long before the addition to ensure the addition is performed with long precision and the result cannot overflow.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1952,
+            "output_tokens": 382,
+            "reasoning_tokens": 273,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000137164
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1082,
+          "latency_s": 5.1
+        }
+      ],
+      "original_finding_index": 974
+    },
+    {
+      "finding_id": 88,
+      "type": "IntLongMath",
+      "sourcefile": "MessageHandler.java",
+      "start_line": "243",
+      "message": "Expression of type int may overflow before being assigned to a long",
+      "tool_specific": {
+        "column": "67"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that an int expression is added before being cast to long, which can overflow, and this claim directly matches the described code pattern.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "CORRECTNESS",
+          "issue_signature": "int arithmetic overflow before long assignment",
+          "developer_explanation": "The addition of two int values is performed using int arithmetic, so if the sum exceeds Integer.MAX_VALUE it will wrap around before being stored in a long, producing an incorrect size. Cast one of the operands to long (or the whole expression) before adding to ensure the addition is done with long precision.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1952,
+            "output_tokens": 365,
+            "reasoning_tokens": 261,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000134274
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1035,
+          "latency_s": 5.359
+        }
+      ],
+      "original_finding_index": 975
+    },
+    {
+      "finding_id": 89,
+      "type": "UnusedVariable",
+      "sourcefile": "ValidationExtension.java",
+      "start_line": "37",
+      "message": "The field 'LOG' is never read.",
+      "tool_specific": {
+        "column": "33"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly states that the field 'LOG' is never read, which indicates dead code. Static analysis can reliably detect that no read accesses to the field exist in the source. Therefore the claim is likely correct.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "unused field never read",
+          "developer_explanation": "The LOG field is defined but never accessed, so it serves no purpose and adds unnecessary code. Remove the field or add logging statements that use it to keep the codebase clean and avoid wasted resources.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1927,
+            "output_tokens": 457,
+            "reasoning_tokens": 356,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000148989
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1417,
+          "latency_s": 7.063
+        }
+      ],
+      "original_finding_index": 978
+    },
+    {
+      "finding_id": 90,
+      "type": "IntLongMath",
+      "sourcefile": "ByteBufferMessageSink.java",
+      "start_line": "53",
+      "message": "Expression of type int may overflow before being assigned to a long",
+      "tool_specific": {
+        "column": "77"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning claims an int expression may overflow before being assigned to a long, but the cast to long is applied before the addition, causing the addition to be performed in long and preventing overflow.",
+          "is_true_positive": false,
+          "confidence": 0.85,
+          "category": "CORRECTNESS",
+          "issue_signature": "possible int overflow before long assignment",
+          "developer_explanation": "The cast to long is applied to the first operand, so the subsequent addition is done using long arithmetic, eliminating any risk of int overflow. The warning can be safely ignored; the code already ensures correct widening. If you prefer, you could cast the entire sum for clarity, but the current code is functionally safe.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1961,
+            "output_tokens": 685,
+            "reasoning_tokens": 605,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000189007
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2403,
+          "latency_s": 9.835
+        }
+      ],
+      "original_finding_index": 980
+    },
+    {
+      "finding_id": 91,
+      "type": "MissingOverride",
+      "sourcefile": "DispatchedMessageSink.java",
+      "start_line": "77",
+      "message": "accept implements method in MessageSink; expected @Override",
+      "tool_specific": {
+        "column": "17"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that the method accept implements MessageSink but lacks an @Override annotation, which is exactly what the MissingOverride rule checks for. This claim is likely correct, indicating a missing annotation.",
+          "is_true_positive": true,
+          "confidence": 0.92,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "missing @Override annotation on implemented method",
+          "developer_explanation": "The accept method overrides a method from MessageSink but does not have the @Override annotation. Adding @Override improves readability and helps the compiler catch signature mismatches. Update the method declaration to include @Override.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1941,
+            "output_tokens": 386,
+            "reasoning_tokens": 305,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000137437
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1211,
+          "latency_s": 5.891
+        }
+      ],
+      "original_finding_index": 981
+    },
+    {
+      "finding_id": 92,
+      "type": "FutureReturnValueIgnored",
+      "sourcefile": "DispatchedMessageSink.java",
+      "start_line": "109",
+      "message": "Return value of methods returning Future must be checked. Ignoring returned Futures suppresses exceptions thrown from the code that completes the Future.",
+      "tool_specific": {
+        "column": "82"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning flags that a Future returned by CompletableFuture.allOf(...).whenComplete(...) is ignored, and the rule claims that ignoring such Futures suppresses exceptions, which is a material claim about potential loss of error information.",
+          "is_true_positive": true,
+          "confidence": 0.66,
+          "category": "CORRECTNESS",
+          "issue_signature": "ignored future suppresses exceptions",
+          "developer_explanation": "The code discards the CompletableFuture returned by whenComplete, which can hide any exception that occurs while completing the original futures. This may cause failures to go unnoticed and break error handling. Store the returned Future or attach proper error handling to ensure exceptions are observed.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1987,
+            "output_tokens": 807,
+            "reasoning_tokens": 855,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000210709
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3416,
+          "latency_s": 11.528
+        }
+      ],
+      "original_finding_index": 982
+    },
+    {
+      "finding_id": 93,
+      "type": "ReferenceEquality",
+      "sourcefile": "MessageInputStream.java",
+      "start_line": "134",
+      "message": "Comparison using reference equality instead of value equality",
+      "tool_specific": {
+        "column": "26"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning flags a comparison using == on objects, which the tool assumes should be value equality, but without seeing the code we cannot confirm that the objects are not enums or sentinel identity objects where == is appropriate.",
+          "is_true_positive": false,
+          "confidence": 0.73,
+          "category": "CORRECTNESS",
+          "issue_signature": "reference equality comparison instead of value equality",
+          "developer_explanation": "The tool reports that you are comparing two objects with ==, but in this case the compared values are likely enums or a known sentinel object where identity comparison is intentional and correct. You can safely ignore this warning, as using == for enums or identity constants does not cause a bug.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1933,
+            "output_tokens": 708,
+            "reasoning_tokens": 671,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000191881
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2673,
+          "latency_s": 9.865
+        }
+      ],
+      "original_finding_index": 984
+    },
+    {
+      "finding_id": 94,
+      "type": "ReferenceEquality",
+      "sourcefile": "MessageInputStream.java",
+      "start_line": "137",
+      "message": "Comparison using reference equality instead of value equality",
+      "tool_specific": {
+        "column": "26"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning flags a comparison that uses == on objects, but without seeing the code we cannot know if the comparison is intended to be reference-based (e.g., a sentinel constant like EOF). Since such sentinel checks are common and correct, the warning is likely a false positive.",
+          "is_true_positive": false,
+          "confidence": 0.78,
+          "category": "CORRECTNESS",
+          "issue_signature": "reference equality used instead of value equality",
+          "developer_explanation": "The tool reports that you are comparing objects with ==, but in this case the comparison is probably against a known sentinel object (EOF). Reference equality is appropriate for sentinel checks, so the warning can be ignored. No code change is needed unless the comparison was actually meant to be value-based.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1933,
+            "output_tokens": 607,
+            "reasoning_tokens": 561,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000174711
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2234,
+          "latency_s": 8.154
+        }
+      ],
+      "original_finding_index": 985
+    },
+    {
+      "finding_id": 95,
+      "type": "FutureReturnValueIgnored",
+      "sourcefile": "CoreClientUpgradeRequest.java",
+      "start_line": "110",
+      "message": "Return value of methods returning Future must be checked. Ignoring returned Futures suppresses exceptions thrown from the code that completes the Future.",
+      "tool_specific": {
+        "column": "39"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning indicates that a method returning a Future is called and its return value is ignored, which the rule flags as a problem because it can suppress exceptions. Based on this description, the issue is likely a real correctness concern unless the code intentionally discards the Future.",
+          "is_true_positive": true,
+          "confidence": 0.75,
+          "category": "CORRECTNESS",
+          "issue_signature": "ignored future return value",
+          "developer_explanation": "The code calls a method that returns a Future but does not keep or handle the returned object, so any exception thrown during the asynchronous operation will be lost. This can hide failures and make debugging difficult. Store the Future or attach a callback (e.g., whenComplete) to observe completion and handle possible errors.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1981,
+            "output_tokens": 598,
+            "reasoning_tokens": 533,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000174957
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2119,
+          "latency_s": 9.685
+        }
+      ],
+      "original_finding_index": 990
+    },
+    {
+      "finding_id": 96,
+      "type": "FutureReturnValueIgnored",
+      "sourcefile": "CoreClientUpgradeRequest.java",
+      "start_line": "113",
+      "message": "Return value of methods returning Future must be checked. Ignoring returned Futures suppresses exceptions thrown from the code that completes the Future.",
+      "tool_specific": {
+        "column": "30"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that the method request.abort returns a Future and its return value is ignored, which can suppress exceptions from the asynchronous operation. Ignoring a Future can hide failures, so the claim is materially correct.",
+          "is_true_positive": true,
+          "confidence": 0.78,
+          "category": "CORRECTNESS",
+          "issue_signature": "ignored future return value",
+          "developer_explanation": "You call request.abort but do not keep the Future it returns, so any exception that occurs while aborting will be lost. Capture the Future and either wait for it, add a callback, or handle possible errors to ensure failures are not silently ignored.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1975,
+            "output_tokens": 501,
+            "reasoning_tokens": 440,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000158245
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1754,
+          "latency_s": 7.008
+        }
+      ],
+      "original_finding_index": 991
+    },
+    {
+      "finding_id": 97,
+      "type": "FutureReturnValueIgnored",
+      "sourcefile": "WebSocketClient.java",
+      "start_line": "201",
+      "message": "Return value of methods returning Future must be checked. Ignoring returned Futures suppresses exceptions thrown from the code that completes the Future.",
+      "tool_specific": {
+        "column": "33"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning indicates that the code at the reported location ignores a returned Future, which the rule flags as a problem because exceptions from the Future would be suppressed. This claim about ignored Future return value is likely correct, making it a real issue.",
+          "is_true_positive": true,
+          "confidence": 0.73,
+          "category": "CORRECTNESS",
+          "issue_signature": "ignored future return value",
+          "developer_explanation": "The method call returns a Future whose result and possible exception are not being observed. If the asynchronous operation fails, the exception will be lost, potentially hiding bugs. Capture the Future and handle its completion, for example by attaching a whenComplete callback or checking for exceptions.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1979,
+            "output_tokens": 536,
+            "reasoning_tokens": 481,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000164343
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1912,
+          "latency_s": 7.08
+        }
+      ],
+      "original_finding_index": 1014
+    },
+    {
+      "finding_id": 98,
+      "type": "FutureReturnValueIgnored",
+      "sourcefile": "WebSocketClient.java",
+      "start_line": "214",
+      "message": "Return value of methods returning Future must be checked. Ignoring returned Futures suppresses exceptions thrown from the code that completes the Future.",
+      "tool_specific": {
+        "column": "35"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly states that a method returning a Future is called and its return value is ignored, which can suppress exceptions, so the claim is likely correct.",
+          "is_true_positive": true,
+          "confidence": 0.73,
+          "category": "CORRECTNESS",
+          "issue_signature": "ignored future return value",
+          "developer_explanation": "The code calls a method that returns a Future but does not keep or handle the returned object, meaning any exception thrown during the asynchronous operation will be lost. This can hide failures and make debugging difficult. Store the Future or attach a callback (e.g., whenComplete) to observe and handle possible errors.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1978,
+            "output_tokens": 478,
+            "reasoning_tokens": 406,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000154446
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1615,
+          "latency_s": 8.131
+        }
+      ],
+      "original_finding_index": 1015
+    },
+    {
+      "finding_id": 99,
+      "type": "MissingSummary",
+      "sourcefile": "ServerUpgradeResponse.java",
+      "start_line": "30",
+      "message": "A summary fragment is required; consider using the value of the @return block as a summary fragment instead.",
+      "tool_specific": {
+        "column": "8"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly states that a summary fragment is required but is missing, which directly indicates a documentation issue. Since the tool detected the absence of a Javadoc summary, the claim is likely correct.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "missing javadoc summary fragment",
+          "developer_explanation": "Your method's Javadoc lacks a brief summary line before the @return description. Adding a concise summary improves readability and helps documentation tools generate proper summaries. Insert a one‑sentence description of what the method returns, such as \"Returns the negotiated sub‑protocol.\".",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1944,
+            "output_tokens": 459,
+            "reasoning_tokens": 373,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000149958
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1488,
+          "latency_s": 6.703
+        }
+      ],
+      "original_finding_index": 1021
+    },
+    {
+      "finding_id": 100,
+      "type": "CatchAndPrintStackTrace",
+      "sourcefile": "JettyLoggerFactory.java",
+      "start_line": "235",
+      "message": "Logging or rethrowing exceptions should usually be preferred to catching and calling printStackTrace",
+      "tool_specific": {
+        "column": "17"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning indicates a catch block that calls printStackTrace, which the rule flags as a bad practice. Since the tool has identified that pattern, the claim that this is undesirable is materially correct.",
+          "is_true_positive": true,
+          "confidence": 0.86,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "catch block calling printStackTrace",
+          "developer_explanation": "The code catches an exception and only prints its stack trace, which can hide the error from proper logging and prevents the exception from being propagated. Replace the printStackTrace call with structured logging or rethrow the exception so that error handling is consistent and observable.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1953,
+            "output_tokens": 507,
+            "reasoning_tokens": 427,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000158451
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1698,
+          "latency_s": 8.41
+        }
+      ],
+      "original_finding_index": 6
+    },
+    {
+      "finding_id": 101,
+      "type": "LockNotBeforeTry",
+      "sourcefile": "Blocker.java",
+      "start_line": "422",
+      "message": "Prefer locking *immediately* before the try block which releases the lock to avoid the possibility of any intermediate statements throwing.",
+      "tool_specific": {
+        "column": "27"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning flags a lock being acquired before a try block with intervening statements, which can cause the lock not to be released if an exception is thrown. This pattern can lead to a deadlock, so the claim is materially correct unless the intervening code is provably non‑throwing, which we cannot verify without seeing the source.",
+          "is_true_positive": true,
+          "confidence": 0.78,
+          "category": "CONCURRENCY",
+          "issue_signature": "lock acquired before try with intervening statements",
+          "developer_explanation": "A lock is taken before some code that runs before the try block; if any of those statements throw, the lock will never be released, potentially causing a deadlock. Move the lock acquisition directly before the try (or ensure no checked exceptions can be thrown) so the lock is always released in the finally block.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1965,
+            "output_tokens": 770,
+            "reasoning_tokens": 725,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000203605
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2887,
+          "latency_s": 9.803
+        }
+      ],
+      "original_finding_index": 34
+    },
+    {
+      "finding_id": 102,
+      "type": "ClassCanBeStatic",
+      "sourcefile": "WriteFlusher.java",
+      "start_line": "250",
+      "message": "Inner class is non-static but does not reference enclosing class",
+      "tool_specific": {
+        "column": "13"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that the inner class does not reference the enclosing class, which is exactly what the ClassCanBeStatic rule checks for.",
+          "is_true_positive": true,
+          "confidence": 0.9,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "non-static inner class that can be static",
+          "developer_explanation": "The inner class does not use any members of its outer class, so it should be declared static. Declaring it static removes the hidden reference to the outer instance, making the code clearer and avoiding unnecessary memory retention. Change the declaration to `private static class CancellingState extends State`.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1944,
+            "output_tokens": 488,
+            "reasoning_tokens": 422,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000154888
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1676,
+          "latency_s": 6.122
+        }
+      ],
+      "original_finding_index": 161
+    },
+    {
+      "finding_id": 103,
+      "type": "UnusedMethod",
+      "sourcefile": "ArrayByteBufferPool.java",
+      "start_line": "811",
+      "message": "Method 'remove' is never used.",
+      "tool_specific": {
+        "column": "14"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly states that the method 'remove' is never used, which is the claim being evaluated. Without seeing the code we cannot be certain, but such warnings are usually correct for private or internal methods, so it is likely a real dead‑code issue.",
+          "is_true_positive": true,
+          "confidence": 0.7,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "unused method",
+          "developer_explanation": "The 'remove' method is not referenced anywhere in the code base, so it adds unnecessary maintenance burden and may cause confusion. Consider removing it or, if it is intended for external use, ensure it is referenced or documented appropriately.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1927,
+            "output_tokens": 477,
+            "reasoning_tokens": 386,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000152389
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1537,
+          "latency_s": 6.138
+        }
+      ],
+      "original_finding_index": 165
+    },
+    {
+      "finding_id": 104,
+      "type": "UnnecessaryLambda",
+      "sourcefile": "ByteArrayEndPoint.java",
+      "start_line": "59",
+      "message": "Returning a lambda from a helper method or saving it in a constant is unnecessary; prefer to implement the functional interface method directly and use a method reference instead.",
+      "tool_specific": {
+        "column": "28"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning claims that a lambda is being returned or stored unnecessarily and could be replaced with a direct method reference, which is a valid style issue if the code indeed does that. Based on the rule description, this claim is likely correct, making the warning a true positive.",
+          "is_true_positive": true,
+          "confidence": 0.9,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "unnecessary lambda returned from method",
+          "developer_explanation": "The method is returning a lambda that could be expressed as a method reference, adding unnecessary indirection. Replace the lambda with a direct method reference to simplify the code and avoid the extra allocation. This improves readability and reduces overhead.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1987,
+            "output_tokens": 531,
+            "reasoning_tokens": 460,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000163789
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1829,
+          "latency_s": 7.23
+        }
+      ],
+      "original_finding_index": 171
+    },
+    {
+      "finding_id": 105,
+      "type": "BadInstanceof",
+      "sourcefile": "ByteArrayEndPoint.java",
+      "start_line": "475",
+      "message": "`_buffer` is an instance of RetainableByteBuffer.DynamicCapacity which is a subtype of RetainableByteBuffer.DynamicCapacity, so this is equivalent to a null check.",
+      "tool_specific": {
+        "column": "24"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that the instanceof check is always true except when the variable is null, making it equivalent to a null check, which indicates a redundant check.",
+          "is_true_positive": true,
+          "confidence": 0.96,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "redundant instanceof check",
+          "developer_explanation": "The code uses an instanceof test that will never be false for a non‑null _buffer, so it merely checks for null. This is unnecessary and makes the code harder to read. Replace the instanceof with a direct null check (e.g., _buffer != null) to simplify the logic.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1988,
+            "output_tokens": 707,
+            "reasoning_tokens": 660,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000193746
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2630,
+          "latency_s": 9.576
+        }
+      ],
+      "original_finding_index": 183
+    },
+    {
+      "finding_id": 106,
+      "type": "JavaTimeDefaultTimeZone",
+      "sourcefile": "ManagedSelector.java",
+      "start_line": "474",
+      "message": "ZonedDateTime.now() is not allowed because it silently uses the system default time-zone. You must pass an explicit time-zone (e.g., ZoneId.of(\"America/Los_Angeles\")) to this method.",
+      "tool_specific": {
+        "column": "92"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that ZonedDateTime.now() silently uses the system default time‑zone, which is factually true and flagged as a problem by the rule, so the claim about the code pattern is correct.",
+          "is_true_positive": true,
+          "confidence": 0.78,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "use of default time zone with ZonedDateTime.now",
+          "developer_explanation": "Your code calls ZonedDateTime.now() without specifying a zone, which relies on the JVM's default time‑zone and can lead to nondeterministic behavior across environments. Explicitly provide a ZoneId to make the time zone clear and avoid hidden bugs. Replace the call with ZonedDateTime.now(ZoneId.of(\"Your/Zone\")) or pass a configurable ZoneId.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2025,
+            "output_tokens": 727,
+            "reasoning_tokens": 640,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000198515
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2552,
+          "latency_s": 9.561
+        }
+      ],
+      "original_finding_index": 204
+    },
+    {
+      "finding_id": 107,
+      "type": "JavaLangClash",
+      "sourcefile": "HttpException.java",
+      "start_line": "83",
+      "message": "org.eclipse.jetty.http.HttpException.RuntimeException clashes with java.lang.RuntimeException",
+      "tool_specific": {
+        "column": "5"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly states that a class named RuntimeException defined in org.eclipse.jetty.http.HttpException conflicts with java.lang.RuntimeException, which indicates a naming clash. This clash is a real issue because it can cause confusion and potential bugs when the wrong RuntimeException is referenced. Therefore, the warning is a true positive.",
+          "is_true_positive": true,
+          "confidence": 0.92,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "nested class name clashes with java.lang class",
+          "developer_explanation": "Your code defines a nested class called RuntimeException inside HttpException, which has the same simple name as java.lang.RuntimeException. This can lead to developers unintentionally using the wrong exception type, making the code harder to understand and maintain. Rename the nested class to a distinct name or move it to avoid the clash.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1945,
+            "output_tokens": 519,
+            "reasoning_tokens": 405,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000160195
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1609,
+          "latency_s": 6.635
+        }
+      ],
+      "original_finding_index": 207
+    },
+    {
+      "finding_id": 108,
+      "type": "EnumOrdinal",
+      "sourcefile": "Generator.java",
+      "start_line": "50",
+      "message": "You should almost never invoke the Enum.ordinal() method.",
+      "tool_specific": {
+        "column": "76"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning only states a general recommendation that Enum.ordinal() should almost never be called, without showing any concrete problem in the code. Since the claim is not universally true and we have no evidence that the usage is incorrect, the alarm is likely a false positive.",
+          "is_true_positive": false,
+          "confidence": 0.75,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "use of Enum.ordinal method",
+          "developer_explanation": "Calling Enum.ordinal() can make the code fragile because the ordinal values depend on the declaration order, which may change over time. If the current usage is intentional and safe (e.g., for compact storage), you can ignore this warning, but consider using explicit fields or a switch on enum constants for more robust code.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1927,
+            "output_tokens": 595,
+            "reasoning_tokens": 510,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000172449
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2027,
+          "latency_s": 7.695
+        }
+      ],
+      "original_finding_index": 357
+    },
+    {
+      "finding_id": 109,
+      "type": "InconsistentCapitalization",
+      "sourcefile": "HTTP2StreamEndPoint.java",
+      "start_line": "558",
+      "message": "Found the field 'endpoint' with the same name as the parameter 'endPoint' but with different capitalization.",
+      "tool_specific": {
+        "column": "62"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly states that a field named 'endpoint' and a parameter named 'endPoint' differ only in capitalization, which matches the rule's condition. This naming inconsistency is a real issue in the code.",
+          "is_true_positive": true,
+          "confidence": 0.96,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "field and parameter name capitalization mismatch",
+          "developer_explanation": "A class field called 'endpoint' and a constructor (or method) parameter called 'endPoint' differ only by case, which can be confusing and increase the risk of mistakes. Align the naming, for example by renaming the parameter to 'endpoint' or the field to 'endPoint', to improve readability and maintainability.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1972,
+            "output_tokens": 447,
+            "reasoning_tokens": 337,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000148954
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1338,
+          "latency_s": 5.826
+        }
+      ],
+      "original_finding_index": 363
+    },
+    {
+      "finding_id": 110,
+      "type": "MalformedInlineTag",
+      "sourcefile": "HeaderBlockParser.java",
+      "start_line": "53",
+      "message": "The correct syntax to open this inline tag is {@code.",
+      "tool_specific": {
+        "column": "15"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly states that an inline Javadoc tag is malformed because the opening syntax is incorrect, which matches the rule's purpose of detecting malformed {@code} tags. This indicates a real documentation formatting issue.",
+          "is_true_positive": true,
+          "confidence": 0.92,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "malformed javadoc inline tag",
+          "developer_explanation": "Your Javadoc contains an inline {@code} tag that is not using the correct syntax (e.g., missing a space or brace). This can cause Javadoc generation warnings and make the documentation harder to read. Fix the tag to use the proper form {@code ...}.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1953,
+            "output_tokens": 529,
+            "reasoning_tokens": 435,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000162191
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1733,
+          "latency_s": 7.077
+        }
+      ],
+      "original_finding_index": 365
+    },
+    {
+      "finding_id": 111,
+      "type": "InlineMeSuggester",
+      "sourcefile": "Response.java",
+      "start_line": "566",
+      "message": "This deprecated API looks inlineable. If you'd like the body of the API to be automatically inlined to its callers, please annotate it with @InlineMe. NOTE: the suggested fix makes the method final if it was not already.",
+      "tool_specific": {
+        "column": "17"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning only suggests adding an @InlineMe annotation to a deprecated method, which is a style/maintainability suggestion rather than a real defect, so it is not a true issue.",
+          "is_true_positive": false,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "suggested inlineable deprecated API annotation",
+          "developer_explanation": "The tool is merely recommending that you annotate a deprecated method with @InlineMe to enable automatic inlining, which is optional and does not indicate a bug. You can safely ignore this suggestion if you do not need automatic inlining or prefer to keep the method as is.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2032,
+            "output_tokens": 386,
+            "reasoning_tokens": 260,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000140804
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1036,
+          "latency_s": 5.163
+        }
+      ],
+      "original_finding_index": 429
+    },
+    {
+      "finding_id": 112,
+      "type": "NarrowCalculation",
+      "sourcefile": "AbstractSessionDataStore.java",
+      "start_line": "298",
+      "message": "This product of integers could overflow before being implicitly cast to a long.",
+      "tool_specific": {
+        "column": "65"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning claims an integer product may overflow before being cast to long, but the shown expression uses a long literal (10L) which prevents int overflow, suggesting the alarm is likely incorrect.",
+          "is_true_positive": false,
+          "confidence": 0.73,
+          "category": "CORRECTNESS",
+          "issue_signature": "integer multiplication overflow before long cast",
+          "developer_explanation": "The tool warns that the multiplication could overflow, but because the code multiplies a long literal (10L) with an int, the operation is performed in long arithmetic, so overflow cannot occur at the int level. You can safely ignore this warning; no change is needed.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1956,
+            "output_tokens": 635,
+            "reasoning_tokens": 535,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000180322
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2131,
+          "latency_s": 8.71
+        }
+      ],
+      "original_finding_index": 499
+    },
+    {
+      "finding_id": 113,
+      "type": "EqualsGetClass",
+      "sourcefile": "DeploymentScanner.java",
+      "start_line": "1389",
+      "message": "Prefer instanceof to getClass when implementing Object#equals.",
+      "tool_specific": {
+        "column": "24"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning claims that using getClass() in an equals method is wrong and should be replaced with instanceof, but this is not universally a correctness issue; using getClass() can be intentional and valid.",
+          "is_true_positive": false,
+          "confidence": 0.73,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "using getClass in equals implementation",
+          "developer_explanation": "The analysis suggests replacing getClass() with instanceof in your equals method, but using getClass() is acceptable if the class is final or you require strict class equality. If that is the case, you can safely ignore this warning. No functional bug is present.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1939,
+            "output_tokens": 566,
+            "reasoning_tokens": 507,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000167963
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2018,
+          "latency_s": 7.703
+        }
+      ],
+      "original_finding_index": 730
+    },
+    {
+      "finding_id": 114,
+      "type": "AnnotateFormatMethod",
+      "sourcefile": "MetaDataBuilder.java",
+      "start_line": "238",
+      "message": "This method uses a pair of parameters as a format string and its arguments, but the enclosing method wasn't annotated @FormatMethod. Doing so gives compile-time rather than run-time protection against malformed format strings.",
+      "tool_specific": {
+        "column": "20"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that the method takes a format string and arguments but is not annotated with @FormatMethod, which the tool has detected as a missing annotation. This claim is likely correct and indicates a real issue because without the annotation the compiler cannot check format string correctness, potentially leading to runtime errors.",
+          "is_true_positive": true,
+          "confidence": 0.92,
+          "category": "CORRECTNESS",
+          "issue_signature": "missing @formatmethod annotation",
+          "developer_explanation": "Your method forwards a format string and its arguments but lacks the @FormatMethod annotation. Without this annotation the compiler cannot verify that the format string matches the arguments, which can cause runtime formatting errors. Add the @FormatMethod annotation to the method to enable compile‑time checking.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1993,
+            "output_tokens": 523,
+            "reasoning_tokens": 454,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000162651
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1810,
+          "latency_s": 7.447
+        }
+      ],
+      "original_finding_index": 782
+    },
+    {
+      "finding_id": 115,
+      "type": "OverrideThrowableToString",
+      "sourcefile": "QuicException.java",
+      "start_line": "81",
+      "message": "To return a custom message with a Throwable class, one should override getMessage() instead of toString().",
+      "tool_specific": {
+        "column": "19"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning indicates that a Throwable subclass overrides toString() to provide a custom message, which the rule flags as incorrect because getMessage() should be overridden instead.",
+          "is_true_positive": true,
+          "confidence": 0.9,
+          "category": "CORRECTNESS",
+          "issue_signature": "overriding Throwable toString instead of getMessage",
+          "developer_explanation": "Your QuicException class overrides toString() to supply a custom error message, but callers of the exception typically use getMessage() to retrieve that message. Overriding toString() does not change the result of getMessage(), so the custom message may be ignored. Change the override to getMessage() to ensure the intended message is returned.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1959,
+            "output_tokens": 493,
+            "reasoning_tokens": 382,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000156293
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1513,
+          "latency_s": 7.38
+        }
+      ],
+      "original_finding_index": 797
+    },
+    {
+      "finding_id": 116,
+      "type": "StringSplitter",
+      "sourcefile": "AbstractForkedChild.java",
+      "start_line": "154",
+      "message": "String.split(String) has surprising behavior",
+      "tool_specific": {
+        "column": "48"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning flags any use of String.split, claiming it has surprising behavior, but without seeing the code we cannot know that the usage actually leads to a bug, so the claim is likely a generic false alarm.",
+          "is_true_positive": false,
+          "confidence": 0.6,
+          "category": "CORRECTNESS",
+          "issue_signature": "String.split usage with surprising behavior",
+          "developer_explanation": "The tool warns that String.split can behave unexpectedly, but this does not necessarily indicate a problem in your code. If you are handling the split results correctly and are aware of its regex semantics, you can safely ignore the warning. Consider reviewing the usage only if you rely on trailing empty strings or literal splitting.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1931,
+            "output_tokens": 537,
+            "reasoning_tokens": 468,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000162737
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1866,
+          "latency_s": 7.259
+        }
+      ],
+      "original_finding_index": 871
+    },
+    {
+      "finding_id": 117,
+      "type": "EmptyCatch",
+      "sourcefile": "NamingEntryUtil.java",
+      "start_line": "86",
+      "message": "Caught exceptions should not be ignored",
+      "tool_specific": {
+        "column": "9"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning indicates that the code contains a catch block with no statements, which means the caught exception is ignored, matching the rule's claim. Since an empty catch block does indeed ignore exceptions, the claim is materially correct.",
+          "is_true_positive": true,
+          "confidence": 0.92,
+          "category": "CORRECTNESS",
+          "issue_signature": "empty catch block ignoring exception",
+          "developer_explanation": "The catch block currently does nothing, so any exception thrown in the try block is silently swallowed. This can hide errors and make debugging difficult. Add appropriate handling, such as logging the exception or taking corrective action.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1911,
+            "output_tokens": 601,
+            "reasoning_tokens": 563,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000172877
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2243,
+          "latency_s": 7.738
+        }
+      ],
+      "original_finding_index": 919
+    },
+    {
+      "finding_id": 118,
+      "type": "SuperCallToObjectMethod",
+      "sourcefile": "Frame.java",
+      "start_line": "407",
+      "message": "`super.hashCode()` is equivalent to `System.identityHashCode(this)` here",
+      "tool_specific": {
+        "column": "52"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning states that super.hashCode() is equivalent to System.identityHashCode(this), which is true for classes that do not override hashCode, so the claim is correct. This indicates a readability issue rather than a functional bug.",
+          "is_true_positive": true,
+          "confidence": 0.92,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "use of super.hashCode() instead of identity hash code",
+          "developer_explanation": "Calling super.hashCode() in a class that doesn't override hashCode merely returns the object's identity hash, which can be confusing to readers. Replace it with System.identityHashCode(this) for clarity, or override hashCode if a logical hash is needed.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1959,
+            "output_tokens": 460,
+            "reasoning_tokens": 352,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000150683
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1402,
+          "latency_s": 5.923
+        }
+      ],
+      "original_finding_index": 956
+    },
+    {
+      "finding_id": 119,
+      "type": "NonCanonicalType",
+      "sourcefile": "PerMessageDeflateExtension.java",
+      "start_line": "60",
+      "message": "The type `CompressionPool.Entry` was referred to by the non-canonical name `InflaterPool.Entry`. This may be misleading.",
+      "tool_specific": {
+        "column": "25"
+      },
+      "runs": [
+        {
+          "reasoning": "The warning explicitly states that the code refers to `CompressionPool.Entry` using the non‑canonical name `InflaterPool.Entry`, which the rule flags as potentially misleading, indicating a naming inconsistency. This is a real maintainability concern.",
+          "is_true_positive": true,
+          "confidence": 0.78,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "non-canonical type name usage",
+          "developer_explanation": "The code refers to the type `CompressionPool.Entry` as `InflaterPool.Entry`, which can confuse readers and make the code harder to understand. Rename the reference to use the canonical name or adjust imports so the type is referenced consistently.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-120b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 1970,
+            "output_tokens": 653,
+            "reasoning_tokens": 600,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.0001839
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2382,
+          "latency_s": 8.36
+        }
+      ],
+      "original_finding_index": 977
+    }
+  ]
+}

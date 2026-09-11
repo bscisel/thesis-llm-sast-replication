@@ -1,0 +1,1433 @@
+{
+  "model": "gpt-5.6-terra",
+  "tool": "sonarqube",
+  "num_runs": 3,
+  "runs_per_invocation": 3,
+  "source_root": "jetty.project",
+  "call_parameters": {
+    "temperature": null,
+    "concurrency": 3,
+    "response_format": "json_schema",
+    "max_completion_tokens": 8192,
+    "max_retries": 6,
+    "reasoning_effort": "default"
+  },
+  "system_prompt_variant": "jetty",
+  "system_prompt_sha256": "b5b634e0a9109c59",
+  "user_prompt_sha256": "233249fc03b8f699",
+  "timestamp": "2026-08-15T07:55:16.992921+00:00",
+  "updated_at": "2026-08-31T21:37:08.334862+00:00",
+  "findings": [
+    {
+      "finding_id": 0,
+      "type": "java:S131",
+      "sourcefile": "ServletPathSpec.java",
+      "start_line": "440",
+      "message": "Complete cases by adding the missing enum constants or add a default case to this switch.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.82,
+          "developer_explanation": "All unlisted group values already have defined behavior: control reaches the common return at the end of the method and reports no match. The explicitly handled values cover the servlet path-spec forms this method supports, while unsupported forms safely behave as non-matches, so no additional switch branch is required here.",
+          "is_true_positive": false,
+          "issue_signature": "non-exhaustive enum switch",
+          "reasoning": "The switch has a catch-all outcome after it: every nonmatching handled case breaks and any unlisted enum value also reaches `return null`, so it cannot leave the method without a defined no-match result. The supported group values are explicitly handled, and treating unsupported or future values as nonmatches is consistent with this matching method's contract. Adding a `default` that returns null would only restate the behavior already implemented by the shared trailing return.",
+          "run": 1,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 4113,
+            "output_tokens": 1231,
+            "reasoning_tokens": 1023,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 15.636
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.96,
+          "developer_explanation": "The switch handles the currently visible groups but has no fallback for a newly added group. If the enum is extended, this method will silently return null rather than requiring an explicit matching decision. Add a default branch or explicitly handle all enum constants so such changes cannot be overlooked.",
+          "is_true_positive": true,
+          "issue_signature": "non-exhaustive enum switch",
+          "reasoning": "The switch in matched handles the currently visible group constants but has no default branch, so a future PathSpecGroup constant would silently fall through to return null. That can create incorrect matching behavior when the enum is extended and does not force the new case to be reviewed here. The warning therefore identifies a real maintainability issue, even though all currently visible constants are covered.",
+          "run": 2,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 4113,
+            "output_tokens": 340,
+            "reasoning_tokens": 160,
+            "cached_input_tokens": 4110
+          },
+          "stop_reason": "stop",
+          "latency_s": 4.778
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.9,
+          "developer_explanation": "This method already has an effective fallback: any unhandled group reaches the `return null` immediately after the switch. That is the same non-match result intended for unsupported groups, so adding a `default` branch would not make the behavior more complete or safer in this context.",
+          "is_true_positive": false,
+          "issue_signature": "switch without an explicit default case",
+          "reasoning": "Every unhandled `_group` value falls through the switch to the unconditional `return null` at line 467, which is already an effective default result. The explicitly handled cases cover the servlet path-spec groups used here, while unsupported groups correctly represent no match. Adding a `default` case that returns `null` would be redundant rather than addressing a real correctness or maintainability defect.",
+          "run": 3,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 4113,
+            "output_tokens": 697,
+            "reasoning_tokens": 512,
+            "cached_input_tokens": 4110
+          },
+          "stop_reason": "stop",
+          "latency_s": 8.352
+        }
+      ],
+      "original_finding_index": 346
+    },
+    {
+      "finding_id": 1,
+      "type": "java:S2447",
+      "sourcefile": "IncludeExcludeSet.java",
+      "start_line": "215",
+      "message": "Null is returned but a \"Boolean\" is expected.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.99,
+          "developer_explanation": "Returning null is intentional here: the method's documentation explicitly defines null as the third result meaning the item is neither included nor excluded. Callers must handle this documented tri-state result and must not unbox it directly to boolean without a null check.",
+          "is_true_positive": false,
+          "issue_signature": "intentional null return from a Boolean method",
+          "reasoning": "The method's Javadoc explicitly specifies that it returns null when the item is neither included nor excluded, and the control flow returns null precisely for that third state. Thus, null is part of this method's deliberate tri-state API rather than an erroneous Boolean result. A nullable Boolean can require careful handling by callers, but the reported claim that this return is itself a defect is not materially correct in this context.",
+          "run": 1,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 4165,
+            "output_tokens": 179,
+            "reasoning_tokens": 0,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 2.496
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.99,
+          "developer_explanation": "The nullable return is intentional and explicitly documented: `TRUE` means included, `FALSE` means excluded, and `null` means neither. Keep the current tri-state contract, but consider documenting nullable return semantics with an annotation or using a dedicated result type if callers need stronger null-safety guidance.",
+          "is_true_positive": false,
+          "issue_signature": "intentional nullable Boolean return",
+          "reasoning": "The method's Javadoc explicitly defines `null` as the third, meaningful result when the item is neither included nor excluded, and the declared boxed `Boolean` return type supports that tri-state contract. Returning `null` is therefore not an erroneous substitute for a primitive boolean in this context; callers must handle the documented nullable result. The warning's claim that a Boolean result must not be null is not materially correct here.",
+          "run": 2,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 4165,
+            "output_tokens": 189,
+            "reasoning_tokens": 0,
+            "cached_input_tokens": 4162
+          },
+          "stop_reason": "stop",
+          "latency_s": 2.923
+        },
+        {
+          "category": "CORRECTNESS",
+          "confidence": 0.98,
+          "developer_explanation": "This method deliberately uses a nullable Boolean as a three-state result: TRUE for included, FALSE for excluded, and null for neither, as its Javadoc explicitly documents. The null return is therefore part of the method's contract and can be safely retained; callers must handle the documented third state rather than unbox the result without checking.",
+          "is_true_positive": false,
+          "issue_signature": "nullable Boolean used as a return value",
+          "reasoning": "The method's Javadoc explicitly defines null as the third, intended result when the item is neither included nor excluded, and the declared return type is the nullable wrapper type Boolean. Returning null is therefore required to represent that documented tri-state outcome, rather than an erroneous attempt to return a Boolean truth value. A caller that unboxes this result without accounting for the documented null would be problematic, but that is not established by the shown return statement.",
+          "run": 3,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 4165,
+            "output_tokens": 201,
+            "reasoning_tokens": 0,
+            "cached_input_tokens": 4162
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.084
+        }
+      ],
+      "original_finding_index": 811
+    },
+    {
+      "finding_id": 2,
+      "type": "java:S2157",
+      "sourcefile": "LazyList.java",
+      "start_line": "57",
+      "message": "Add a \"clone()\" method to this class.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.93,
+          "developer_explanation": "This utility class declares the Cloneable marker interface but does not provide a clone() implementation. Since the class has only a private constructor and static helpers, cloning is not meaningful here; remove Cloneable rather than adding a clone method, so the declared API does not misleadingly imply clone support.",
+          "is_true_positive": true,
+          "issue_signature": "Cloneable implementation without clone method",
+          "reasoning": "The class declares `implements Cloneable` but has no `clone()` override, while its private constructor and static-only design make cloning meaningless. The marker interface therefore advertises unsupported and unusable cloning behavior, which is misleading API design even though removing the interface is preferable to the suggested addition of a clone method.",
+          "run": 1,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 4244,
+            "output_tokens": 560,
+            "reasoning_tokens": 387,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 7.137
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.91,
+          "developer_explanation": "This is a static utility class with a private constructor, so it should not advertise cloning support. Implementing `Cloneable` without an accessible `clone()` method is misleading and provides no usable cloning API; remove `Cloneable` rather than adding a clone method unless instances are intended to be supported.",
+          "is_true_positive": true,
+          "issue_signature": "cloneable implemented without clone method",
+          "reasoning": "The class declares `implements Cloneable` but exposes no `clone()` implementation, and its private constructor means it is not intended to have normal instances at all. This makes the `Cloneable` marker misleading and unusable as part of the class API. Although adding `clone()` is not the appropriate repair for this static utility class, the underlying issue is real; `Cloneable` should be removed.",
+          "run": 2,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 4244,
+            "output_tokens": 427,
+            "reasoning_tokens": 233,
+            "cached_input_tokens": 4241
+          },
+          "stop_reason": "stop",
+          "latency_s": 4.875
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.91,
+          "developer_explanation": "This non-instantiable utility class declares that it is Cloneable but provides no clone operation, creating a misleading and unusable API contract. Remove Cloneable (and consider whether Serializable is also unnecessary) rather than adding a clone method, since the class has only static behavior and a private constructor.",
+          "is_true_positive": true,
+          "issue_signature": "Cloneable implementation without clone method",
+          "reasoning": "The class explicitly implements Cloneable but declares no clone() method, while its private constructor makes it a static utility class rather than an object intended to be copied. This leaves an exposed but unusable and misleading cloning contract; adding clone() is not necessarily the right fix, but removing the unnecessary interface is. The issue is an API-maintainability problem rather than a runtime correctness failure.",
+          "run": 3,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 4244,
+            "output_tokens": 467,
+            "reasoning_tokens": 278,
+            "cached_input_tokens": 4241
+          },
+          "stop_reason": "stop",
+          "latency_s": 5.807
+        }
+      ],
+      "original_finding_index": 817
+    },
+    {
+      "finding_id": 3,
+      "type": "java:S1452",
+      "sourcefile": "PathCollators.java",
+      "start_line": "54",
+      "message": "Remove usage of generic wildcard type.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.96,
+          "developer_explanation": "This public factory exposes `Comparator<? super Path>`, even though the comparators created in this class compare `Path` values directly. The wildcard makes the returned value less convenient for callers, for example preventing direct assignment to `Comparator<Path>`; expose `Comparator<Path>` from the fields and factory methods instead.",
+          "is_true_positive": true,
+          "issue_signature": "wildcard generic type in return value",
+          "reasoning": "The public method returns `Comparator<? super Path>`, although the comparator implementation in this file is specifically a `Comparator<Path>` and no shown logic requires exposing an unknown supertype. This unnecessarily propagates a wildcard/capture type to callers and makes an otherwise ordinary `Comparator<Path>` harder to use, such as for direct assignment to that type. Returning `Comparator<Path>` preserves the intended comparator behavior while providing a clearer, more usable API.",
+          "run": 1,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 3132,
+            "output_tokens": 497,
+            "reasoning_tokens": 293,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 6.693
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.95,
+          "developer_explanation": "This public factory method returns a wildcarded comparator type even though its result is a comparator intended to compare Path instances. The wildcard makes the returned value unnecessarily harder for callers to assign to Comparator<Path> or use in APIs that require that exact type. Expose Comparator<Path> from the public methods (and preferably use that type for the backing fields) instead.",
+          "is_true_positive": true,
+          "issue_signature": "wildcard generic return type",
+          "reasoning": "The public method exposes `Comparator<? super Path>` even though it returns one of the class's comparators intended to compare `Path` values. A wildcard is useful for comparator parameters that consume paths, but on this return type it unnecessarily weakens the usable static type for callers, such as preventing direct assignment to `Comparator<Path>`. The same pattern also appears in the other public comparator factory methods, though the reported declaration itself is a real API maintainability issue.",
+          "run": 2,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 3132,
+            "output_tokens": 560,
+            "reasoning_tokens": 344,
+            "cached_input_tokens": 3129
+          },
+          "stop_reason": "stop",
+          "latency_s": 7.268
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.92,
+          "developer_explanation": "The public factory exposes a wildcarded comparator type even though the comparators produced by this class compare Path instances. Returning Comparator<Path> gives callers a straightforward, precise API and avoids forcing them to handle a contravariant wildcard when storing or composing the result. Update the public return types, and preferably the backing fields, to Comparator<Path>.",
+          "is_true_positive": true,
+          "issue_signature": "wildcard generic type exposed in return type",
+          "reasoning": "The public method returns `Comparator<? super Path>`, exposing a contravariant wildcard as part of its API despite this class creating comparators for `Path`. This makes the returned value less convenient and less precise for callers, for example preventing direct assignment to `Comparator<Path>`, without providing a demonstrated benefit in this API. The same pattern also appears in the related factory methods and backing fields, although the flagged return type itself is a maintainability issue.",
+          "run": 3,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 3132,
+            "output_tokens": 671,
+            "reasoning_tokens": 457,
+            "cached_input_tokens": 3129
+          },
+          "stop_reason": "stop",
+          "latency_s": 8.534
+        }
+      ],
+      "original_finding_index": 875
+    },
+    {
+      "finding_id": 4,
+      "type": "java:S5843",
+      "sourcefile": "AuthenticationProtocolHandler.java",
+      "start_line": "44",
+      "message": "Simplify this regular expression to reduce its complexity from 35 to the 20 allowed.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.9,
+          "developer_explanation": "The authentication-header parser is encoded as one dense regular expression with nested alternatives, optional groups, and several named captures. This makes the accepted grammar difficult to review or safely modify; split the parsing stages or extract documented subpatterns/constants so the scheme, token, and parameter cases are easier to understand independently.",
+          "is_true_positive": true,
+          "issue_signature": "overly complex regular expression",
+          "reasoning": "The shown code places the complete authentication-challenge grammar in one unannotated regular expression with multiple nested alternatives and optional named capture groups. Although the expression is used to parse a legitimate protocol format, its structure is sufficiently dense to make future review and modification error-prone. Refactoring the parser or decomposing documented subpatterns would improve maintainability without changing the intended grammar.",
+          "run": 1,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 4312,
+            "output_tokens": 377,
+            "reasoning_tokens": 191,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 5.107
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.86,
+          "developer_explanation": "The authentication-challenge expression combines several alternative grammar productions, optional components, and named captures into one hard-to-maintain pattern. Split the parsing of scheme-only, token68, and parameter forms into smaller patterns or explicit parsing steps, and factor the repeated token character class into a named constant so that future grammar changes can be made safely.",
+          "is_true_positive": true,
+          "issue_signature": "overly complex regular expression",
+          "reasoning": "The shown pattern contains multiple nested alternatives, optional groups, repeated character classes, and five named captures in a single expression, giving it substantial structural complexity. Although it is used for a legitimate authentication-header grammar and may be functionally correct, its monolithic form is materially harder to inspect and safely modify. Breaking the grammar into smaller parsing cases or composed subpatterns would reduce that maintenance risk.",
+          "run": 2,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 4312,
+            "output_tokens": 467,
+            "reasoning_tokens": 271,
+            "cached_input_tokens": 4309
+          },
+          "stop_reason": "stop",
+          "latency_s": 7.266
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.93,
+          "developer_explanation": "This single expression combines several distinct authentication-challenge forms: a scheme-only challenge, an optional scheme, a token68 value, and named parameters. Although it implements protocol parsing, its dense alternatives and nested optional groups make it difficult to review or safely modify; split the parsing cases or build the expression from documented subpatterns to make the grammar clearer.",
+          "is_true_positive": true,
+          "issue_signature": "overly complex regular expression",
+          "reasoning": "The shown pattern combines multiple authentication-challenge grammar alternatives, optional nested groups, and several named captures in one inline regular expression, giving it substantial structural complexity. This is a real maintainability issue because understanding which alternative supplies each capture and safely changing one syntax form requires reasoning about the entire expression. Its protocol-parsing purpose may justify some complexity, but it does not remove the readability and change-risk concern raised here.",
+          "run": 3,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 4312,
+            "output_tokens": 312,
+            "reasoning_tokens": 109,
+            "cached_input_tokens": 4309
+          },
+          "stop_reason": "stop",
+          "latency_s": 4.84
+        }
+      ],
+      "original_finding_index": 1003
+    },
+    {
+      "finding_id": 5,
+      "type": "java:S1871",
+      "sourcefile": "HttpDateTime.java",
+      "start_line": "178",
+      "message": "This branch's code block is the same as the block for the branch on line 174.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.98,
+          "developer_explanation": "The two length cases intentionally perform the same numeric conversion: both two-digit and four-digit year tokens must first be parsed as integers, and later code applies the required two-digit-year normalization. Keeping separate branches documents the RFC's distinct token forms and does not create divergent or incorrect behavior, so this duplication can be safely retained.",
+          "is_true_positive": false,
+          "issue_signature": "identical conditional branch bodies",
+          "reasoning": "The two branches deliberately distinguish RFC-defined two-digit and four-digit year token lengths while assigning the parsed integer in both cases; subsequent code normalizes only two-digit numeric year values. Thus the identical bodies do not indicate a missing distinction or a maintainability problem in this context, because the distinct conditions themselves document accepted input forms and control which lengths are consumed as years. The warning's duplicate-block claim is syntactically true, but its implication that this is a problematic duplication is not materially justified here.",
+          "run": 1,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 4982,
+            "output_tokens": 209,
+            "reasoning_tokens": 0,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.519
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.99,
+          "developer_explanation": "The two year-length cases both perform exactly the same conversion and are followed by the same continuation behavior. Combine the conditions into a single condition, such as accepting lengths of two or fewer or exactly four, so the parsing rule is expressed once and cannot diverge during later changes.",
+          "is_true_positive": true,
+          "issue_signature": "duplicate conditional branch bodies",
+          "reasoning": "The `token.length() <= 2` and `token.length() == 4` branches both execute only `year = StringUtil.toInt(token, 0);`, with the same subsequent `continue`. This is duplicated conditional logic rather than distinct handling for the two cases. Although behavior is currently correct, expressing the shared operation once improves maintainability and prevents future changes from accidentally updating only one case.",
+          "run": 2,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 4982,
+            "output_tokens": 265,
+            "reasoning_tokens": 78,
+            "cached_input_tokens": 4979
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.785
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.99,
+          "developer_explanation": "The two year-length branches perform exactly the same conversion and assignment. Combine their conditions, for example by testing for a length of at most two or exactly four, so the accepted year formats and their shared handling are expressed in one place.",
+          "is_true_positive": true,
+          "issue_signature": "duplicate conditional branch bodies",
+          "reasoning": "The `token.length() <= 2` branch and the `token.length() == 4` branch both execute the identical statement `year = StringUtil.toInt(token, 0);`. This is a real duplication in the year-parsing logic and makes future changes to handling either accepted year form easier to apply inconsistently. The branches can be combined without changing the distinction that three-character tokens are not accepted as years.",
+          "run": 3,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 4982,
+            "output_tokens": 326,
+            "reasoning_tokens": 143,
+            "cached_input_tokens": 4979
+          },
+          "stop_reason": "stop",
+          "latency_s": 4.587
+        }
+      ],
+      "original_finding_index": 1247
+    },
+    {
+      "finding_id": 6,
+      "type": "java:S1700",
+      "sourcefile": "MultiPartByteRanges.java",
+      "start_line": "261",
+      "message": "Rename field \"parser\"",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.91,
+          "developer_explanation": "The nested class is named `Parser`, and it contains a field named `parser`, differing only by capitalization. Although the field delegates to a different parser type, this naming makes references and discussions of the two parsers unnecessarily ambiguous. Rename the field to describe its role or concrete type, such as `multiPartParser`.",
+          "is_true_positive": true,
+          "issue_signature": "field name duplicates enclosing class name",
+          "reasoning": "The nested class is named `Parser` while its field is named `parser`, so the names differ only by capitalization. The field refers to a distinct `MultiPart.Parser`, but using the enclosing class's name for it still makes the code harder to distinguish and maintain. A more role-specific field name would improve clarity without changing behavior.",
+          "run": 1,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 4783,
+            "output_tokens": 590,
+            "reasoning_tokens": 405,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 6.95
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.96,
+          "developer_explanation": "The enclosing class is named `Parser` and it contains a field named `parser`, differing only by capitalization. Although this is legal and behavior is unaffected, it makes references less clear because the field represents the delegated `MultiPart.Parser`; rename it to something explicit such as `multiPartParser` or `delegate`.",
+          "is_true_positive": true,
+          "issue_signature": "field name duplicates enclosing class name",
+          "reasoning": "The enclosing class is named `Parser`, while its delegate field is named `parser`, differing only by capitalization. This naming overlap is legal but makes the distinction between the wrapper class and its contained parser unnecessarily unclear, especially when maintaining or extending the class. A more specific delegate-oriented name would improve readability without changing behavior.",
+          "run": 2,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 4783,
+            "output_tokens": 581,
+            "reasoning_tokens": 401,
+            "cached_input_tokens": 4780
+          },
+          "stop_reason": "stop",
+          "latency_s": 7.879
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.93,
+          "developer_explanation": "The field named `parser` is declared inside a class also named `Parser`, differing only by capitalization. This makes references less clear when reading or modifying the wrapper; rename the field to reflect its delegated role, such as `multiPartParser` or `delegate`.",
+          "is_true_positive": true,
+          "issue_signature": "field named like enclosing class",
+          "reasoning": "The `Parser` class declares a `MultiPart.Parser` field named `parser`, so the field name duplicates the enclosing class name except for capitalization. Although the field represents a parser, the duplicate naming obscures the distinction between this wrapper and the delegated parser instance. Renaming it to a role-specific name would improve readability without changing behavior.",
+          "run": 3,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 4783,
+            "output_tokens": 556,
+            "reasoning_tokens": 382,
+            "cached_input_tokens": 4780
+          },
+          "stop_reason": "stop",
+          "latency_s": 7.03
+        }
+      ],
+      "original_finding_index": 1338
+    },
+    {
+      "finding_id": 7,
+      "type": "java:S5261",
+      "sourcefile": "ServletPathSpec.java",
+      "start_line": "182",
+      "message": "Add explicit curly braces to avoid dangling else.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.98,
+          "developer_explanation": "The outer condition and its nested condition are both written without braces, so the `else` at this point relies on Java's nearest-`if` binding rule. Although the current indentation shows the intended association, adding braces around the outer and inner branches makes that association unambiguous and prevents an easy mistake during future edits.",
+          "is_true_positive": true,
+          "issue_signature": "ambiguous nested conditional without braces",
+          "reasoning": "The shown code has an unbraced `if (base.endsWith(\"/\"))` whose body is another unbraced `if`, followed by an `else`, so its meaning depends on the dangling-else rule. Java binds that `else` to the inner condition as currently intended, but the structure is materially confusing and fragile to modification. Explicit braces would preserve the behavior while making the branch ownership clear.",
+          "run": 1,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 5476,
+            "output_tokens": 269,
+            "reasoning_tokens": 67,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 4.003
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.99,
+          "developer_explanation": "The nested conditional has an unbraced inner `if` followed by an `else`, so its binding is visually easy to misread. Add braces around the outer and inner branches to make it explicit that the first `else` belongs to `if (info.startsWith(\"/\"))` and the second belongs to `if (base.endsWith(\"/\"))`.",
+          "is_true_positive": true,
+          "issue_signature": "ambiguous dangling else without braces",
+          "reasoning": "The code has an unbraced nested `if` at lines 179-183, where the `else` at line 182 is syntactically bound to the inner `if`, while the later `else if` is bound to the outer `if`. Although Java's binding is unambiguous to the compiler and the current behavior is defined, this layout is materially confusing and can easily cause an incorrect edit or review misunderstanding. Explicit braces would preserve behavior while making the intended branch structure clear.",
+          "run": 2,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 5476,
+            "output_tokens": 223,
+            "reasoning_tokens": 0,
+            "cached_input_tokens": 5473
+          },
+          "stop_reason": "stop",
+          "latency_s": 2.917
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.99,
+          "developer_explanation": "The nested unbraced conditionals rely on Java's nearest-`if` rule: the first `else` belongs to `if (info.startsWith(\"/\"))`, while the following `else if` belongs to `if (base.endsWith(\"/\"))`. Although the current behavior is correct, this layout is easy to misread or accidentally change during maintenance. Add braces around both branches of the outer conditional and the nested conditional to make the association explicit.",
+          "is_true_positive": true,
+          "issue_signature": "ambiguous nested conditional without braces",
+          "reasoning": "The shown code has an unbraced `if` nested inside another unbraced `if`, followed by two `else` clauses whose bindings depend on Java's nearest-`if` rule. The behavior is syntactically well-defined, but the indentation alone does not make the nesting and `else` ownership sufficiently explicit, creating a real readability and safe-modification concern. Explicit braces would preserve the intended control flow while preventing dangling-else confusion.",
+          "run": 3,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 5476,
+            "output_tokens": 332,
+            "reasoning_tokens": 93,
+            "cached_input_tokens": 5473
+          },
+          "stop_reason": "stop",
+          "latency_s": 4.148
+        }
+      ],
+      "original_finding_index": 1392
+    },
+    {
+      "finding_id": 8,
+      "type": "java:S6126",
+      "sourcefile": "PrefaceFrame.java",
+      "start_line": "33",
+      "message": "Replace this String concatenation with Text block.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.82,
+          "developer_explanation": "This constant deliberately spells out HTTP/2's required CRLF delimiters using explicit escape sequences before converting the exact value to ASCII bytes. A text block would use source line terminators and would still need careful explicit carriage-return escapes to preserve these bytes, so the current form is clearer and safer for this protocol literal.",
+          "is_true_positive": false,
+          "issue_signature": "multiline string concatenation instead of text block",
+          "reasoning": "The shown literal encodes a protocol preface whose required line endings are explicit `\\r\\n` byte sequences, rather than ordinary source-code newlines. Replacing it with a text block is not an unqualified readability improvement because text blocks normalize physical line terminators and require deliberate escaping to retain CRLF. The concatenation is compile-time constant folding, and its segmented representation makes the protocol line boundaries and exact delimiters clear.",
+          "run": 1,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 2509,
+            "output_tokens": 718,
+            "reasoning_tokens": 512,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 8.744
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.9,
+          "developer_explanation": "The multi-line string is deliberately expressed as concatenated literals so that its CRLF protocol line endings are explicit. A text block would introduce indentation and newline-normalization concerns and would not be a clearer representation of these exact HTTP/2 preface bytes, so this can be safely dismissed.",
+          "is_true_positive": false,
+          "issue_signature": "multiline string concatenation instead of text block",
+          "reasoning": "The concatenated literals explicitly encode the HTTP/2 preface's required `\\r\\n` byte sequences, including a final CRLF, before conversion with a fixed ASCII charset. Replacing them with a Java text block is not inherently an improvement and risks making exact line-ending and trailing-newline semantics less obvious or different. Thus the claimed maintainability benefit of using a text block is not materially established in this protocol-byte context.",
+          "run": 2,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 2509,
+            "output_tokens": 194,
+            "reasoning_tokens": 0,
+            "cached_input_tokens": 2506
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.014
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.82,
+          "developer_explanation": "This multi-line constant is assembled from several adjacent string literals even though it represents one fixed block of protocol text. A text block can express the same content more directly; retain the explicit `\\r` escapes so the generated bytes continue to use the required CRLF line endings.",
+          "is_true_positive": true,
+          "issue_signature": "multiline string built by concatenation",
+          "reasoning": "The shown code constructs one fixed four-line string by concatenating four string literals, which can be expressed more clearly as a Java text block. This is a maintainability issue rather than a runtime-performance or correctness defect, and a text block can preserve the exact CRLF bytes by keeping explicit `\\r` escapes.",
+          "run": 3,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 2509,
+            "output_tokens": 684,
+            "reasoning_tokens": 512,
+            "cached_input_tokens": 2506
+          },
+          "stop_reason": "stop",
+          "latency_s": 8.397
+        }
+      ],
+      "original_finding_index": 1477
+    },
+    {
+      "finding_id": 9,
+      "type": "java:S1172",
+      "sourcefile": "HeaderGenerator.java",
+      "start_line": "48",
+      "message": "Remove this unused method parameter \"capacity\".",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.98,
+          "developer_explanation": "The capacity parameter is not read anywhere in this method, so it does not affect header generation. Keeping it makes the API misleading and creates unnecessary maintenance surface; remove it and update callers unless it is intentionally retained to satisfy an external or overriding method signature.",
+          "is_true_positive": true,
+          "issue_signature": "unused method parameter",
+          "reasoning": "The shown generate method never reads its capacity parameter. This makes the parameter misleading and unnecessary API surface, which is a maintainability issue; no overriding or interface constraint is visible in this complete file to justify retaining it.",
+          "run": 1,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 2727,
+            "output_tokens": 137,
+            "reasoning_tokens": 0,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 2.436
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.98,
+          "developer_explanation": "The `capacity` argument is accepted by this method but is never read, so it does not affect the generated frame header. Remove it from this API and update callers if it is not required for compatibility or an overriding method contract; otherwise document why the common signature must retain it.",
+          "is_true_positive": true,
+          "issue_signature": "unused method parameter",
+          "reasoning": "The `capacity` parameter is declared in `generate` but has no references anywhere in the method body. This makes the method signature misleading because callers may reasonably assume capacity affects header generation. Although external callers or subclass contracts could constrain removal of this public parameter, its currently unused state is still a maintainability issue.",
+          "run": 2,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 2727,
+            "output_tokens": 415,
+            "reasoning_tokens": 247,
+            "cached_input_tokens": 2724
+          },
+          "stop_reason": "stop",
+          "latency_s": 5.9
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.98,
+          "developer_explanation": "The capacity argument is declared but never read by this method, so it unnecessarily suggests that caller-provided capacity affects header generation. Remove it from this method and update callers, unless it is deliberately retained to satisfy an external or inherited API contract not shown here.",
+          "is_true_positive": true,
+          "issue_signature": "unused method parameter",
+          "reasoning": "The `capacity` parameter is not referenced anywhere in the complete method body. This makes the method signature misleading and creates unnecessary API surface, which is a maintainability issue. The shown method is not an override or interface implementation, although an external API-compatibility reason cannot be fully ruled out from this file alone.",
+          "run": 3,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 2727,
+            "output_tokens": 158,
+            "reasoning_tokens": 0,
+            "cached_input_tokens": 2724
+          },
+          "stop_reason": "stop",
+          "latency_s": 2.34
+        }
+      ],
+      "original_finding_index": 1479
+    },
+    {
+      "finding_id": 10,
+      "type": "java:S1119",
+      "sourcefile": "WriteFlusher.java",
+      "start_line": "343",
+      "message": "Refactor the code to remove this label and the need for it.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.86,
+          "developer_explanation": "The label is used deliberately to exit the enclosing retry loop after a failure cause has been selected, while retaining the shared suppression handling and callback invocation below the loop. An unlabeled break would only exit the switch, so the label makes this control flow explicit and can be safely retained.",
+          "is_true_positive": false,
+          "issue_signature": "use of labeled control flow",
+          "reasoning": "The label is required by the shown control flow to break out of the enclosing `while` loop from the `FAILED` and `default` switch cases after assigning `cause`. It avoids duplicating the common suppressed-exception processing and callback failure notification, and its scope and purpose are local and clear. Removing it would require a structurally different loop or extracting logic, not a correction to a confusing or erroneous construct.",
+          "run": 1,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 5153,
+            "output_tokens": 703,
+            "reasoning_tokens": 512,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 9.102
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.9,
+          "developer_explanation": "The labeled break is justified here because it exits the retry loop from selected switch cases and then performs the shared suppressed-exception handling and callback failure exactly once. Removing it would require a flag, duplicated cleanup, or restructuring that is not inherently clearer, so this alarm can be safely dismissed.",
+          "is_true_positive": false,
+          "issue_signature": "labeled control-flow statement",
+          "reasoning": "The `loop` label is used to leave the enclosing retry loop from the `FAILED` and default cases while preserving the common code that adds suppressed exceptions and invokes `callback.failed(cause)`. It avoids duplicating that shared post-loop handling and clearly distinguishes those exits from ordinary `switch` breaks. Although labels can sometimes obscure flow, this one represents a justified structured exit rather than a material readability or maintainability defect.",
+          "run": 2,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 5153,
+            "output_tokens": 418,
+            "reasoning_tokens": 225,
+            "cached_input_tokens": 5150
+          },
+          "stop_reason": "stop",
+          "latency_s": 5.78
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.9,
+          "developer_explanation": "The label is used deliberately to exit the outer retry loop after a failure cause has been selected, while ordinary breaks still exit only the switch cases. It preserves the shared suppression and callback-failure handling after the loop without duplicating it, so this use is clear and can be safely retained.",
+          "is_true_positive": false,
+          "issue_signature": "use of a labeled statement",
+          "reasoning": "The label is required to break out of the enclosing `while` loop from the `FAILED` and default switch cases while continuing to the common post-loop suppression and callback handling. An unlabeled `break` there would exit only the switch, and replacing the label would require a less direct control-flow restructuring rather than removing a real defect. This is a justified use of a Java label, not materially confusing control flow.",
+          "run": 3,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 5153,
+            "output_tokens": 336,
+            "reasoning_tokens": 143,
+            "cached_input_tokens": 5150
+          },
+          "stop_reason": "stop",
+          "latency_s": 4.575
+        }
+      ],
+      "original_finding_index": 1738
+    },
+    {
+      "finding_id": 11,
+      "type": "java:S127",
+      "sourcefile": "WriteThroughWriter.java",
+      "start_line": "249",
+      "message": "Refactor the code in order to not assign to this loop counter from within the loop body.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.84,
+          "developer_explanation": "The loop deliberately decrements its counter so that, after emitting an unmatched pending high surrogate, the current character is processed again on the next iteration. This is behaviorally necessary here, but changing a `for` loop counter in the body makes the loop's progress and its interaction with `chars` difficult to reason about. Refactor to an explicitly controlled `while` loop or otherwise make the reprocessing step explicit without modifying a `for` counter.",
+          "is_true_positive": true,
+          "issue_signature": "loop counter modified within loop body",
+          "reasoning": "The `for` loop decrements `i` in its body so that its automatic increment leaves `i` unchanged and the current character is reprocessed after an unmatched pending high surrogate is encoded. Although this is intentional and preserves encoding behavior, it makes loop advancement nonlocal and difficult to safely understand or modify, which is the maintainability problem described by the warning. An explicitly controlled loop can retain the same behavior more clearly.",
+          "run": 1,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 5465,
+            "output_tokens": 615,
+            "reasoning_tokens": 387,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 7.639
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.97,
+          "developer_explanation": "The decrement is intentional: when a stored high surrogate is followed by a non-low-surrogate character, the stored surrogate must be emitted first and the current character must be processed again. The `for` loop's subsequent increment cancels this decrement, so the next iteration revisits the current character rather than skipping it. This alarm can be dismissed because changing the counter here would alter the required surrogate-handling behavior.",
+          "is_true_positive": false,
+          "issue_signature": "loop counter modified within loop body",
+          "reasoning": "The `i--` deliberately offsets the `for` loop's automatic `i++` so that, after emitting an unmatched pending high surrogate, the same current character is examined again on the next iteration. Without this adjustment, that non-low-surrogate character would be skipped, so the counter modification is necessary for the shown UTF-8 conversion logic rather than an accidental or confusing loop-control error. The warning's general pitfall does not materially describe a problem in this context.",
+          "run": 2,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 5465,
+            "output_tokens": 459,
+            "reasoning_tokens": 229,
+            "cached_input_tokens": 5462
+          },
+          "stop_reason": "stop",
+          "latency_s": 5.572
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.96,
+          "developer_explanation": "The decrement is intentional: when a stored high surrogate is followed by a non-low-surrogate character, the stored surrogate must be emitted first and the current character must be processed again on the next iteration. Removing or mechanically refactoring this update without preserving that reprocessing would skip input or produce incorrect UTF-8 output. A brief comment explaining the reprocessing behavior could improve clarity, but the counter update itself is justified.",
+          "is_true_positive": false,
+          "issue_signature": "loop counter modified within loop body",
+          "reasoning": "The `i--` is deliberately used after consuming a previously saved high surrogate without consuming the current non-low-surrogate character, so that the loop's normal increment causes that current character to be processed again. This is necessary for correct handling of an unpaired high surrogate followed by an ordinary character; omitting it would skip that character. Although modifying a `for` counter can be error-prone generally, it is justified by this decoder state-machine behavior here.",
+          "run": 3,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 5465,
+            "output_tokens": 346,
+            "reasoning_tokens": 118,
+            "cached_input_tokens": 5462
+          },
+          "stop_reason": "stop",
+          "latency_s": 4.379
+        }
+      ],
+      "original_finding_index": 1743
+    },
+    {
+      "finding_id": 12,
+      "type": "java:S3011",
+      "sourcefile": "DefaultFileLocatorHelper.java",
+      "start_line": "153",
+      "message": "This accessibility update should be removed.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.91,
+          "developer_explanation": "This code explicitly bypasses the declared access level of an implementation-private field in order to inspect Equinox internals. That creates a brittle dependency on private OSGi implementation details and can fail under module access restrictions or when the implementation changes; prefer a supported API, or isolate and document this compatibility-specific reflective fallback.",
+          "is_true_positive": true,
+          "issue_signature": "reflective access to private fields",
+          "reasoning": "The code obtains a declared field named \"bundleFile\" and calls `setAccessible(true)` before reading it, deliberately bypassing that field's access control. This relies on private implementation details of a particular OSGi implementation, so it is fragile across implementation or Java platform changes even though the reflection is intentional. The warning is therefore a real maintainability issue, rather than a claim of an exploitable security weakness.",
+          "run": 1,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 5776,
+            "output_tokens": 497,
+            "reasoning_tokens": 298,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 6.367
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.82,
+          "developer_explanation": "This code makes a non-public implementation field accessible in order to read internal Equinox bundle state. That bypasses the framework's encapsulation and couples this code to private field names and runtime access rules, so it can break when the framework or Java module settings change. Prefer a supported OSGi/framework API for the bundle location; if no alternative exists, isolate and document this compatibility workaround rather than relying broadly on private internals.",
+          "is_true_positive": true,
+          "issue_signature": "reflective access-control bypass",
+          "reasoning": "The flagged statement explicitly makes a declared, non-public field accessible so that code can read the private `bundleFile` implementation detail. This bypasses encapsulation and makes behavior dependent on private Equinox internals and on reflective-access policy, which is a real maintainability concern even though it is intentional for this compatibility path. The surrounding comments explain the motivation but do not remove the fragility of relying on private fields.",
+          "run": 2,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 5776,
+            "output_tokens": 621,
+            "reasoning_tokens": 400,
+            "cached_input_tokens": 5773
+          },
+          "stop_reason": "stop",
+          "latency_s": 7.307
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.83,
+          "developer_explanation": "This code deliberately reads a known private Equinox implementation field to obtain the physical archive backing an OSGi bundle, after handling the specific supported bundle-entry types. The reflective access is an intentional compatibility workaround rather than an accidental exposure of an arbitrary object or a security boundary bypass; removing it would prevent this fallback from working unless an equivalent supported OSGi API is available.",
+          "is_true_positive": false,
+          "issue_signature": "reflective access-control bypass",
+          "reasoning": "The code intentionally enables access to the private `bundleFile` field of a known OSGi implementation object in order to locate the archive file for a ZIP-backed bundle. The surrounding comments and constrained reflection show that this is a deliberate framework-compatibility fallback, not an unnecessary accessibility change. No untrusted class, field name, or object is shown reaching this operation, and removing the access would defeat the stated functionality; whether a supported replacement API exists cannot be determined from this excerpt.",
+          "run": 3,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 5776,
+            "output_tokens": 600,
+            "reasoning_tokens": 377,
+            "cached_input_tokens": 5773
+          },
+          "stop_reason": "stop",
+          "latency_s": 7.725
+        }
+      ],
+      "original_finding_index": 1955
+    },
+    {
+      "finding_id": 13,
+      "type": "java:S5738",
+      "sourcefile": "Server.java",
+      "start_line": "904",
+      "message": "Remove this call to a deprecated class, it has been marked for removal.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.96,
+          "developer_explanation": "The diagnostic dump includes the singleton from a class that is deprecated and explicitly scheduled for removal. This creates a maintenance and upgrade risk because the code will need to change or may stop compiling when that class is removed; replace it with the supported filesystem-pool diagnostic or omit it if no replacement is needed.",
+          "is_true_positive": true,
+          "issue_signature": "use of an API marked for removal",
+          "reasoning": "The shown `dump` method directly references `FileSystemPool.INSTANCE`, and the referenced class is deprecated with `forRemoval` status. Such an API is intended to disappear, so retaining this dependency creates a real future compatibility and maintenance problem even though the call is only for diagnostics.",
+          "run": 1,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 4537,
+            "output_tokens": 296,
+            "reasoning_tokens": 126,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 4.131
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.96,
+          "developer_explanation": "The diagnostic dump directly depends on a class that is deprecated and scheduled for removal. Replace this reference with the supported replacement API or omit/adapt this dump entry so a future dependency upgrade does not break compilation.",
+          "is_true_positive": true,
+          "issue_signature": "use of a class deprecated for removal",
+          "reasoning": "The dump method directly references `FileSystemPool.INSTANCE`, and the referenced class is reported as deprecated for removal. Even though this is only used for diagnostic output, retaining a direct dependency on an API scheduled for removal creates a future compilation and maintenance risk when that API is deleted. The relevant deprecation annotation is not visible in this excerpt, but the reported use itself is unambiguous.",
+          "run": 2,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 4537,
+            "output_tokens": 363,
+            "reasoning_tokens": 191,
+            "cached_input_tokens": 4534
+          },
+          "stop_reason": "stop",
+          "latency_s": 5.073
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.93,
+          "developer_explanation": "The diagnostic dump path directly depends on a class scheduled for removal. This will eventually prevent the code from compiling against a newer dependency version; replace the dumped object with the supported filesystem-pool diagnostic API or remove this entry if it is no longer needed.",
+          "is_true_positive": true,
+          "issue_signature": "use of an API marked for removal",
+          "reasoning": "The dump method directly references `FileSystemPool.INSTANCE`, and the reported type is deprecated and explicitly marked for removal. This is a real forward-maintenance problem because a future version may remove the type, causing this code to fail to compile or requiring an urgent migration. Its use only for diagnostics does not negate the deprecated dependency.",
+          "run": 3,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 4537,
+            "output_tokens": 333,
+            "reasoning_tokens": 164,
+            "cached_input_tokens": 4534
+          },
+          "stop_reason": "stop",
+          "latency_s": 4.438
+        }
+      ],
+      "original_finding_index": 2258
+    },
+    {
+      "finding_id": 14,
+      "type": "java:S112",
+      "sourcefile": "SessionDataMap.java",
+      "start_line": "58",
+      "message": "Replace generic exceptions with specific library exceptions or a custom exception.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.93,
+          "developer_explanation": "The interface exposes the overly broad checked type `Exception` for deletion failures. This prevents callers from distinguishing expected storage failures from unrelated programming or lifecycle failures and makes implementations' error contract unclear. Declare a meaningful domain-specific exception, or the specific library exception(s) that callers can reasonably handle.",
+          "is_true_positive": true,
+          "issue_signature": "generic exception in public API",
+          "reasoning": "The public `delete` method declares `throws Exception`, which permits every checked failure type without describing the failures callers should expect. The same broad contract appears on the other interface operations, so this is an API-wide maintainability issue rather than a justified implementation detail. A specific storage-related exception would give callers and implementers a clearer, safer error-handling contract.",
+          "run": 1,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 2681,
+            "output_tokens": 271,
+            "reasoning_tokens": 90,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.827
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.88,
+          "developer_explanation": "The public interface exposes a generic checked Exception for deletion, as it does for the other storage operations. This gives callers no meaningful failure contract and forces them to catch or propagate an overly broad type. Define an operation-specific exception (or a deliberate, documented set of relevant exception types) and have implementations translate backend-specific failures to it.",
+          "is_true_positive": true,
+          "issue_signature": "generic exception in public API",
+          "reasoning": "The delete method declares the generic checked type Exception rather than a failure type that describes its storage-operation contract. Callers therefore cannot distinguish expected persistence failures from arbitrary implementation failures and must handle or propagate an unnecessarily broad exception. The same broad contract is also used by the other interface methods, reinforcing that this is an API maintainability issue rather than an isolated implementation detail.",
+          "run": 2,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 2681,
+            "output_tokens": 424,
+            "reasoning_tokens": 234,
+            "cached_input_tokens": 2678
+          },
+          "stop_reason": "stop",
+          "latency_s": 5.721
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.91,
+          "developer_explanation": "The public interface declares the generic checked type Exception for deletion (and the other storage operations), so callers cannot tell what failures are part of this API's contract or handle them selectively. Define and document a domain-specific exception, or expose the specific meaningful checked exceptions that callers are expected to handle, and have implementations translate their internal failures accordingly.",
+          "is_true_positive": true,
+          "issue_signature": "generic exception in public API",
+          "reasoning": "The public delete method declares the catch-all checked type Exception rather than an exception type that describes failures of the session-data operation. This makes the interface's failure contract vague and forces callers either to catch an overly broad type or to propagate it without meaningful handling. The same issue is also present on the other declared operations, so the warning is materially correct even though the exact implementation failures are not shown.",
+          "run": 3,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 2681,
+            "output_tokens": 310,
+            "reasoning_tokens": 112,
+            "cached_input_tokens": 2678
+          },
+          "stop_reason": "stop",
+          "latency_s": 4.243
+        }
+      ],
+      "original_finding_index": 2457
+    },
+    {
+      "finding_id": 15,
+      "type": "java:S3824",
+      "sourcefile": "TopologicalSort.java",
+      "start_line": "57",
+      "message": "Replace this \"Map.get()\" and condition with a call to \"Map.computeIfAbsent()\".",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.93,
+          "developer_explanation": "This method performs a lookup, null check, allocation, and insertion solely to ensure that a dependency set exists. Use `computeIfAbsent` to express that initialization directly, for example `Set<T> set = _dependencies.computeIfAbsent(dependent, key -> new HashSet<>());`. This removes repetitive map-handling code while preserving the behavior for absent or null-mapped keys.",
+          "is_true_positive": true,
+          "issue_signature": "manual map value initialization",
+          "reasoning": "The shown code retrieves a map value and, when it is null, creates and stores a `HashSet` before using it, which is exactly the initialization pattern `computeIfAbsent` represents. The mapping function has no side effects and the existing code already treats a null mapping as absent, so the replacement preserves its semantics. This is a maintainability issue rather than a correctness or concurrency defect.",
+          "run": 1,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 4388,
+            "output_tokens": 534,
+            "reasoning_tokens": 326,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 6.675
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.96,
+          "developer_explanation": "This method uses the standard lookup-null-create-put pattern to initialize a set for a map key. Replace it with `Set<T> set = _dependencies.computeIfAbsent(dependent, key -> new HashSet<>());` to express the initialization in one operation and remove the duplicated map access logic.",
+          "is_true_positive": true,
+          "issue_signature": "manual map value initialization",
+          "reasoning": "The shown method obtains a map value, tests it for null, creates a `HashSet`, and puts it back for the same key, which is exactly the initialization pattern that `computeIfAbsent` represents. Since this map stores only non-null sets in the shown code, the replacement preserves the intended behavior while making the initialization more concise and less error-prone to maintain. This is a maintainability issue rather than a correctness or concurrency defect.",
+          "run": 2,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 4388,
+            "output_tokens": 451,
+            "reasoning_tokens": 251,
+            "cached_input_tokens": 4385
+          },
+          "stop_reason": "stop",
+          "latency_s": 6.088
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.91,
+          "developer_explanation": "This manually performs the common lookup-or-create-and-store operation for a map entry. Use `_dependencies.computeIfAbsent(dependent, key -> new HashSet<>())` to express that intent directly and avoid repeating the map access and null-handling boilerplate.",
+          "is_true_positive": true,
+          "issue_signature": "manual map value initialization",
+          "reasoning": "The shown code gets a map value, creates a `HashSet` when it is absent, and immediately puts that new value back under the same key. This is exactly the lookup-or-initialize operation provided by `computeIfAbsent`, so the current form is unnecessarily verbose and repeats map-management logic. The change preserves the intended behavior here because the mapping function always produces a non-null set.",
+          "run": 3,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 4388,
+            "output_tokens": 573,
+            "reasoning_tokens": 393,
+            "cached_input_tokens": 4385
+          },
+          "stop_reason": "stop",
+          "latency_s": 7.323
+        }
+      ],
+      "original_finding_index": 2693
+    },
+    {
+      "finding_id": 16,
+      "type": "java:S108",
+      "sourcefile": "TypeUtil.java",
+      "start_line": "622",
+      "message": "Remove this block of code, fill it in, or add a comment explaining why it is empty.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.9,
+          "developer_explanation": "This catch deliberately treats a URI conversion failure as an unavailable class-loader location and falls through to the documented null result. The exception parameter is explicitly named `ignored`, and the surrounding control flow makes the fallback behavior clear, so no additional code or comment is necessary here.",
+          "is_true_positive": false,
+          "issue_signature": "empty exception handler",
+          "reasoning": "The caught `URISyntaxException` is intentionally ignored so that `getClassLoaderLocation` falls through to `return null`, which is its established fallback when no usable location can be obtained. The exception variable is named `ignored`, and the method's control flow makes this behavior explicit rather than accidentally swallowing an error. Therefore the empty handler is justified in this context, although the warning's general concern is maintainability.",
+          "run": 1,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 5487,
+            "output_tokens": 376,
+            "reasoning_tokens": 190,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 5.017
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.97,
+          "developer_explanation": "The intentionally ignored URISyntaxException is not documented, so a reader cannot tell whether returning null is the intended fallback or an accidental omission. Add a brief comment in the catch block explaining that an invalid resource URI means no class-loader location can be determined, or otherwise handle the exception explicitly.",
+          "is_true_positive": true,
+          "issue_signature": "undocumented empty exception handler",
+          "reasoning": "The catch block for URISyntaxException has an empty body and silently falls through to return null without documenting that this is the intended fallback. Although ignoring this exception may be a valid design because the method returns null when no location is available, the empty block obscures that intent and makes accidental exception swallowing indistinguishable from deliberate handling. This is therefore a maintainability issue rather than a correctness failure.",
+          "run": 2,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 5487,
+            "output_tokens": 182,
+            "reasoning_tokens": 0,
+            "cached_input_tokens": 5484
+          },
+          "stop_reason": "stop",
+          "latency_s": 2.906
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.9,
+          "developer_explanation": "The URISyntaxException is deliberately swallowed and converted to a null result, but the code does not explain why that loss of diagnostic information is acceptable. Add a brief comment stating that an invalid resource URI is treated as an unavailable class-loader location, or log/propagate the exception if that is not the intended policy.",
+          "is_true_positive": true,
+          "issue_signature": "undocumented empty exception handler",
+          "reasoning": "The catch block for URISyntaxException is empty, so a malformed resource URL silently produces the same null result as a genuinely unavailable resource. Although the exception variable is named `ignored` and returning null is consistent with the method's nullable result, neither establishes why suppressing the conversion failure is safe or intentional. A short rationale or explicit handling would make this policy clear and prevent future maintainers from mistaking the silent failure for accidental behavior.",
+          "run": 3,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 5487,
+            "output_tokens": 420,
+            "reasoning_tokens": 218,
+            "cached_input_tokens": 5484
+          },
+          "stop_reason": "stop",
+          "latency_s": 5.425
+        }
+      ],
+      "original_finding_index": 2703
+    },
+    {
+      "finding_id": 17,
+      "type": "java:S1144",
+      "sourcefile": "SecurityUtils.java",
+      "start_line": "233",
+      "message": "Remove this unused private \"callableToPrivilegedAction\" method.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.99,
+          "developer_explanation": "This private helper has no references anywhere in the shown complete remainder of the class, so it is dead code. Remove it unless it is intentionally retained for an imminent change; doing so reduces unused implementation and avoids maintaining an unneeded exception-conversion behavior.",
+          "is_true_positive": true,
+          "issue_signature": "unused private method",
+          "reasoning": "The private callableToPrivilegedAction method is declared at line 233 and has no invocation or method reference anywhere in the shown class, which ends at line 255. Because a private method cannot be called from outside this class, it is unused dead code in the code shown. Removing it improves maintainability without affecting current behavior.",
+          "run": 1,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 3724,
+            "output_tokens": 160,
+            "reasoning_tokens": 0,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 2.596
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.98,
+          "developer_explanation": "The private adapter method has no call sites in the shown class, which is the complete file through its closing brace. It is dead code and should be removed unless it is intentionally retained for an imminent change; private methods cannot be used by callers outside this class.",
+          "is_true_positive": true,
+          "issue_signature": "unused private method",
+          "reasoning": "`callableToPrivilegedAction` is a private method with no references anywhere in the shown remainder of the complete class, which ends at line 255. Since private methods cannot be called from outside the class, it is dead code. Keeping it adds an unneeded implementation path that readers and future maintainers may have to inspect.",
+          "run": 2,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 3724,
+            "output_tokens": 163,
+            "reasoning_tokens": 0,
+            "cached_input_tokens": 3721
+          },
+          "stop_reason": "stop",
+          "latency_s": 2.728
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.99,
+          "developer_explanation": "This private helper has no references anywhere in the shown complete remainder of the class, so it is dead code. Remove it to avoid retaining an unused conversion path and its exception-handling behavior.",
+          "is_true_positive": true,
+          "issue_signature": "unused private method",
+          "reasoning": "The private callableToPrivilegedAction method is declared at line 233 and has no invocation or method reference anywhere in the shown class. Because it is private, code outside this class cannot use it, so it is dead code rather than a potentially external API. Removing it reduces unneeded maintenance surface without affecting the shown behavior.",
+          "run": 3,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 3724,
+            "output_tokens": 147,
+            "reasoning_tokens": 0,
+            "cached_input_tokens": 3721
+          },
+          "stop_reason": "stop",
+          "latency_s": 2.225
+        }
+      ],
+      "original_finding_index": 2869
+    },
+    {
+      "finding_id": 18,
+      "type": "java:S6204",
+      "sourcefile": "JettyClientUpgradeRequest.java",
+      "start_line": "52",
+      "message": "Replace this usage of 'Stream.collect(Collectors.toList())' with 'Stream.toList()' and ensure that the list is unmodified.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.74,
+          "developer_explanation": "The stream result is only constructed to be passed to `setExtensions`, and no mutation of that list is shown in this class. Provided that `setExtensions` and later request processing do not require a mutable list, use `.toList()` instead; it is the direct Java 16 API and also makes the resulting list's unmodifiable contract explicit.",
+          "is_true_positive": true,
+          "issue_signature": "mutable collector used for an unmodified stream result",
+          "reasoning": "The stream result is created solely as the argument to `setExtensions`, and the shown class never mutates that resulting list. In a Java 16-targeted codebase, `Stream.toList()` is the direct, clearer operation for this purpose and avoids the unnecessary collector import. The unmodifiable result differs from `Collectors.toList()`, so the setter's behavior outside this excerpt must not depend on mutability, but nothing shown indicates such a dependency.",
+          "run": 1,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 3034,
+            "output_tokens": 1246,
+            "reasoning_tokens": 1023,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 14.716
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.74,
+          "developer_explanation": "The list produced by this stream is only used as the argument to `setExtensions` and is not mutated in this class. Provided that `setExtensions` does not retain and later modify the supplied list, use `Stream.toList()` and remove the now-unused collector import; this is the clearer Java 16+ idiom and makes the result's immutability explicit.",
+          "is_true_positive": true,
+          "issue_signature": "stream collection using obsolete collector",
+          "reasoning": "The stream result is immediately passed to `setExtensions` and is not mutated anywhere in the shown complete class. `Stream.toList()` is the Java 16+ direct idiom and returns an unmodifiable list, so this is an appropriate maintainability improvement as long as the inherited setter does not retain and mutate its argument; that behavior is outside the snippet. The warning correctly calls out that mutability must be checked before making the replacement.",
+          "run": 2,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 3034,
+            "output_tokens": 1321,
+            "reasoning_tokens": 1094,
+            "cached_input_tokens": 3031
+          },
+          "stop_reason": "stop",
+          "latency_s": 16.145
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.74,
+          "developer_explanation": "The stream result is only used to supply extension configurations to the setter; this class does not modify the resulting list. On a Java 16+ baseline, use `Stream.toList()` and remove the `Collectors` import, but first verify that `setExtensions` does not retain and mutate its argument because `toList()` returns an unmodifiable list.",
+          "is_true_positive": true,
+          "issue_signature": "use of Collectors.toList instead of Stream.toList",
+          "reasoning": "The collected list is immediately passed to `setExtensions` and is not modified anywhere in this complete class. With the Java 16+ baseline indicated by the warning, `Stream.toList()` is the clearer direct terminal operation and avoids the unnecessary collector dependency. The implementation of `setExtensions` is outside the snippet, so its handling of the supplied list must be checked before applying the change, since `Stream.toList()` returns an unmodifiable list.",
+          "run": 3,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 3034,
+            "output_tokens": 1173,
+            "reasoning_tokens": 948,
+            "cached_input_tokens": 3031
+          },
+          "stop_reason": "stop",
+          "latency_s": 13.956
+        }
+      ],
+      "original_finding_index": 3055
+    },
+    {
+      "finding_id": 19,
+      "type": "xml:S1134",
+      "sourcefile": "pom.xml",
+      "start_line": "54",
+      "message": "Take the required action to fix the issue indicated by this \"FIXME\" comment.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The shown POM contains a FIXME explicitly stating that the Servlet API dependency-management entry is temporary and should be removed after a remaining migration condition is met. This records unresolved cleanup work in a build-critical configuration file, so it is a maintainability issue even though removing the dependency immediately may not be safe. The appropriate action is to complete or track the Servlet API removal and then remove this entry, or replace the comment with a durable issue reference if the work is intentionally deferred.",
+          "is_true_positive": true,
+          "confidence": 0.9,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "unresolved fixme comment",
+          "developer_explanation": "This POM documents temporary Servlet API dependency management that is expected to be removed once Servlet API usage no longer remains in the core. Do not remove it while it is still needed; complete and verify the migration, then delete the dependency-management entry and the comment. If the work is deferred, link the comment to a tracked task with clear ownership rather than leaving an untracked FIXME.",
+          "run": 1,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 2960,
+            "output_tokens": 580,
+            "reasoning_tokens": 358,
+            "cached_input_tokens": 0
+          },
+          "stop_reason": "stop",
+          "latency_s": 11.873,
+          "rerun_after_context_fix": true
+        },
+        {
+          "reasoning": "The shown POM contains a FIXME explicitly stating that the Servlet API dependency-management entry should be removed once remaining Servlet API usage is eliminated. This is an unresolved, action-oriented temporary marker tied to configuration that otherwise risks persisting after its rationale has expired, so the warning correctly identifies a maintainability issue. The snippet cannot establish whether the prerequisite has already been met, but the FIXME itself denotes tracked outstanding cleanup.",
+          "is_true_positive": true,
+          "confidence": 0.9,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "unresolved FIXME comment",
+          "developer_explanation": "This dependency-management entry is marked as temporary and should be revisited when Servlet API usage is no longer present in the core modules. Verify whether that usage remains; if it does not, remove the dependency-management block and the comment, or replace the comment with current, actionable tracking information.",
+          "run": 2,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 2960,
+            "output_tokens": 183,
+            "reasoning_tokens": 0,
+            "cached_input_tokens": 2957
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.885,
+          "rerun_after_context_fix": true
+        },
+        {
+          "reasoning": "The POM contains a FIXME explicitly recording that the Servlet API dependency management is temporary and must be removed after remaining Servlet API usage is eliminated from the module. This is an unresolved maintenance task and leaves temporary configuration in place, even though the comment clearly states the prerequisite for completing it. The dependency may be necessary today, but the outstanding cleanup should be tracked and completed once that prerequisite is met.",
+          "is_true_positive": true,
+          "confidence": 0.86,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "unresolved fixme comment",
+          "developer_explanation": "This POM retains a temporary Servlet API dependency-management entry while the core still uses that API. Eliminate the remaining usage and remove the dependency-management entry when possible, or track the work in the project's issue tracker and replace the FIXME with a reference to that tracked task.",
+          "run": 3,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 2960,
+            "output_tokens": 388,
+            "reasoning_tokens": 204,
+            "cached_input_tokens": 2957
+          },
+          "stop_reason": "stop",
+          "latency_s": 6.481,
+          "rerun_after_context_fix": true
+        }
+      ],
+      "original_finding_index": 3102,
+      "superseded_runs": [
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.99,
+          "developer_explanation": "The flagged line is an ordinary Maven developer metadata element containing an organization URL; it does not contain a FIXME comment or indicate unfinished work. This alarm can be dismissed for this location.",
+          "is_true_positive": false,
+          "issue_signature": "unresolved FIXME comment",
+          "reasoning": "The flagged line contains only the `<organizationUrl>https://webtide.com</organizationUrl>` element and no `FIXME` comment. Therefore, the reported claim that this location identifies an unresolved FIXME is not present in the shown code. The warning is a false positive, likely due to incorrect line association or analysis of the XML content.",
+          "run": 1,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 5069,
+            "output_tokens": 247,
+            "reasoning_tokens": 91,
+            "cached_input_tokens": 1647
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.483
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.99,
+          "developer_explanation": "The flagged line is an ordinary Maven metadata element containing an organization URL, not a comment or a FIXME marker. There is no indicated unfinished action at this location, so this alert can be safely dismissed or suppressed as a misidentification.",
+          "is_true_positive": false,
+          "issue_signature": "unresolved FIXME comment",
+          "reasoning": "Line 54 contains only the XML element `<organizationUrl>https://webtide.com</organizationUrl>` and does not contain a FIXME comment or any unfinished-action marker. Therefore the claimed presence of a FIXME requiring action is not true for the flagged code. The alert is most likely caused by erroneous matching or incorrect source-location reporting.",
+          "run": 2,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 5069,
+            "output_tokens": 210,
+            "reasoning_tokens": 45,
+            "cached_input_tokens": 5066
+          },
+          "stop_reason": "stop",
+          "latency_s": 3.135
+        },
+        {
+          "category": "MAINTAINABILITY",
+          "confidence": 0.99,
+          "developer_explanation": "The flagged line is an ordinary Maven developer metadata element and contains no FIXME comment or unresolved action. This alert can be dismissed for this location; if a FIXME exists elsewhere in the file, its reported location should be corrected.",
+          "is_true_positive": false,
+          "issue_signature": "unresolved FIXME comment",
+          "reasoning": "Line 54 contains only an `<organizationUrl>` element and no comment, let alone a `FIXME` comment indicating unfinished work. Therefore the warning's claimed unresolved FIXME is not present at the flagged code, likely reflecting an incorrect location or analysis result. The claimed issue type is maintainability-related.",
+          "run": 3,
+          "served_model": "gpt-5.6-terra",
+          "usage": {
+            "input_tokens": 5069,
+            "output_tokens": 194,
+            "reasoning_tokens": 39,
+            "cached_input_tokens": 5066
+          },
+          "stop_reason": "stop",
+          "latency_s": 2.805
+        }
+      ]
+    }
+  ],
+  "rerun_history": [
+    {
+      "at": "2026-08-31T21:37:08.334862+00:00",
+      "finding": "xml:S1134 pom.xml:54",
+      "finding_id": 19,
+      "reason": "wycinek zbudowany z glownego pom.xml zamiast jetty-core/pom.xml; poprawka w _resolve_java_path",
+      "repetitions": 3,
+      "source_root": "jetty.project/jetty-core",
+      "paths_relative_to_root": true,
+      "configuration_changed": true
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "method": "merge",
+  "merged_from": [
+    "003_jetty-stage-1",
+    "005_jetty-stage-2"
+  ],
+  "stages": [
+    {
+      "run": "003_jetty-stage-1",
+      "seed": 20260503,
+      "method": "stratified",
+      "findings": 300
+    },
+    {
+      "run": "005_jetty-stage-2",
+      "seed": 20260810,
+      "method": "rule_extension_one_per_rule",
+      "findings": 60
+    }
+  ],
+  "note": "Proba laczona z dwoch etapow o roznych schematach losowania. Etapy nalezy opisac osobno w metodyce; wyniki raportowane na calosci, rozbicie na etapy w zalaczniku.",
+  "resampling_note": "Dla error-prone schemat 'stratum' przestaje byc sensowny: w drugim etapie wszystkie findingi wpadaja do warstwy '__remaining__' i zwinelyby sie w jeden klaster. Klastrowanie idzie po regule. W pierwszym etapie oba podzialy sa identyczne (12 regul, 12 warstw), wiec zmiana nie rusza jego liczb."
+}

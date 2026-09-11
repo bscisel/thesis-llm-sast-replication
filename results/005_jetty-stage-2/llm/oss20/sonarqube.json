@@ -1,0 +1,1626 @@
+{
+  "model": "openai/gpt-oss-20b",
+  "tool": "sonarqube",
+  "num_runs": 3,
+  "runs_per_invocation": 3,
+  "source_root": "jetty.project",
+  "call_parameters": {
+    "temperature": null,
+    "concurrency": 30,
+    "response_format": "json_schema",
+    "max_tokens": 8192,
+    "max_retries": 6,
+    "base_url": "https://openrouter.ai/api/v1",
+    "provider": "deepinfra/bf16",
+    "allow_fallbacks": false,
+    "require_parameters": true,
+    "cache_control": false
+  },
+  "system_prompt_variant": "jetty",
+  "system_prompt_sha256": "b5b634e0a9109c59",
+  "user_prompt_sha256": "233249fc03b8f699",
+  "timestamp": "2026-08-15T09:01:18.044468+00:00",
+  "updated_at": "2026-08-31T21:41:41.169524+00:00",
+  "findings": [
+    {
+      "finding_id": 0,
+      "type": "java:S131",
+      "sourcefile": "ServletPathSpec.java",
+      "start_line": "440",
+      "message": "Complete cases by adding the missing enum constants or add a default case to this switch.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The switch in the matched() method contains a case for every existing PathSpecGroup value and returns null after the switch, so it already handles any unexpected group; no unhandled enum constants exist.",
+          "is_true_positive": false,
+          "confidence": 0.93,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "unhandled enum case in switch",
+          "developer_explanation": "The code covers all declared enum values explicitly. If a new enum constant were introduced, the method would return null, which is an acceptable default. Therefore the warning can be dismissed safely.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 4073,
+            "output_tokens": 1209,
+            "reasoning_tokens": 1257,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00029145
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 4991,
+          "latency_s": 9.897
+        },
+        {
+          "reasoning": "The matched() method’s switch includes a case for every enum constant (EXACT, PREFIX_GLOB, SUFFIX_GLOB, ROOT, DEFAULT) that PathSpecGroup defines; since there are no additional constants, the switch is already complete and does not need a default case. Therefore the tool’s report claiming a missing default case is a false alarm.",
+          "is_true_positive": false,
+          "confidence": 0.9,
+          "category": "OTHER",
+          "issue_signature": "switch missing default case for enum",
+          "developer_explanation": "The switch statement in matched() already handles every constant of PathSpecGroup. Since no other enum values exist, the lack of a default case is acceptable and the warning can be ignored.",
+          "run": 2,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 4073,
+            "output_tokens": 1783,
+            "reasoning_tokens": 1847,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00037181
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 7328,
+          "latency_s": 15.467
+        },
+        {
+          "reasoning": "The switch on _group covers all of the enum constants that are referenced elsewhere in the file, and no other enum values are apparent, so adding a default case is unnecessary for correctness.",
+          "is_true_positive": false,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "missing enum constant case",
+          "developer_explanation": "All enum constants used by this code are already handled by the switch statement. No default branch is required unless a new enum value is added in the future. The tool’s warning can be safely ignored – it is a style suggestion rather than a bug.",
+          "run": 3,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 4073,
+            "output_tokens": 1182,
+            "reasoning_tokens": 1288,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00028767
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 5132,
+          "latency_s": 12.153
+        }
+      ],
+      "original_finding_index": 346
+    },
+    {
+      "finding_id": 1,
+      "type": "java:S2447",
+      "sourcefile": "IncludeExcludeSet.java",
+      "start_line": "215",
+      "message": "Null is returned but a \"Boolean\" is expected.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The method isIncludedAndNotExcluded explicitly returns null for a special case where the item is neither included nor excluded, which is a legitimate use of Boolean to represent a tri-state result. Returning null here does not cause a runtime error as long as callers handle the null case, so the warning is a false positive.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "CORRECTNESS",
+          "issue_signature": "null returned as Boolean",
+          "developer_explanation": "The method is designed to return true, false, or null to indicate inclusion, exclusion, or no decision. Returning null is intentional and safe for callers that check for that special case. Hence, this warning can be safely ignored.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 4125,
+            "output_tokens": 722,
+            "reasoning_tokens": 682,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00022483
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2716,
+          "latency_s": 6.451
+        },
+        {
+          "reasoning": "The method is explicitly documented to return null when the item is neither included nor excluded, so the null return is intentional and not a bug. The rule flags any method that returns a Boolean and may return null, which here is a documented use of a third state.",
+          "is_true_positive": false,
+          "confidence": 0.9,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "null returned for Boolean",
+          "developer_explanation": "This code purposefully returns null to represent a third state (neither included nor excluded), as stated in the Javadoc. Therefore, the warning can be safely ignored. If you want to avoid potential NullPointerExceptions, you could change the API to return an enum or Optional<Boolean> instead, but the current design is intentional.",
+          "run": 2,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 4125,
+            "output_tokens": 1098,
+            "reasoning_tokens": 1121,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00027747
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 4459,
+          "latency_s": 8.634
+        },
+        {
+          "reasoning": "The method’s Javadoc states that null is a legitimate return value representing that the item is neither included nor excluded, so the null return is intentional and correct. SonarQube’s rule S2447 incorrectly flags this intentional null return as a bug because it does not account for documented tri‑state semantics.",
+          "is_true_positive": false,
+          "confidence": 0.8,
+          "category": "CORRECTNESS",
+          "issue_signature": "return null from Boolean method",
+          "developer_explanation": "This warning is a false positive. The method is designed to return null to indicate that the item is neither included nor excluded, as documented in its Javadoc. No change is necessary; callers that use the result should explicitly check for null to avoid unexpected NullPointerExceptions.",
+          "run": 3,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 4125,
+            "output_tokens": 952,
+            "reasoning_tokens": 931,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00025703
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3701,
+          "latency_s": 7.685
+        }
+      ],
+      "original_finding_index": 811
+    },
+    {
+      "finding_id": 2,
+      "type": "java:S2157",
+      "sourcefile": "LazyList.java",
+      "start_line": "57",
+      "message": "Add a \"clone()\" method to this class.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The class implements Cloneable but never instantiates or exposes a public clone method; it contains only static methods and a private constructor. Because no objects of LazyList are ever created, cloning is impossible and the interface is unnecessary. Removing Cloneable or adding an actual clone method would not change functionality. This indicates the warning is a false positive.",
+          "is_true_positive": false,
+          "confidence": 0.9,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "class implements cloneable without clone method",
+          "developer_explanation": "LazyList is a static helper class with a private constructor; it has no instances to be cloned. Implementing Cloneable misleads users and is redundant. You can safely ignore the warning or remove Cloneable if cloning is not intended.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 4204,
+            "output_tokens": 943,
+            "reasoning_tokens": 949,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00025814
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3773,
+          "latency_s": 8.57
+        },
+        {
+          "reasoning": "The class implements Cloneable on line 57 but has no instance fields, no constructor and only static methods, so it cannot be meaningfully cloned. Therefore the rule's premise is irrelevant and the flag is a false positive.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "clone method missing",
+          "developer_explanation": "The class is a utility container with only static methods and a private constructor, so it never has instances to clone. The Cloneable interface is unnecessary here and can be removed. No functionality depends on cloning, so adding a clone() method would be superfluous.",
+          "run": 2,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 4204,
+            "output_tokens": 634,
+            "reasoning_tokens": 583,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00021488
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2309,
+          "latency_s": 6.072
+        },
+        {
+          "reasoning": "The class has a private constructor and only static methods; it cannot be instantiated and thus does not need cloneable semantics, so the rule’s claim of requiring a clone method is irrelevant.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "cloneable implementation without clone method",
+          "developer_explanation": "This class is a static utility; it is never instantiated, so implementing Cloneable serves no purpose. The warning can be safely ignored or the interface removed.",
+          "run": 3,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 4204,
+            "output_tokens": 483,
+            "reasoning_tokens": 429,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00019374
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1710,
+          "latency_s": 4.712
+        }
+      ],
+      "original_finding_index": 817
+    },
+    {
+      "finding_id": 3,
+      "type": "java:S1452",
+      "sourcefile": "PathCollators.java",
+      "start_line": "54",
+      "message": "Remove usage of generic wildcard type.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "Line 54 declares a method that returns Comparator<? super Path>, which uses a wildcard generic type. The Sonar rule S1452 flags this usage as a code smell. The code indeed contains a wildcard, so the rule’s claim correctly identifies a style/maintainability issue even though it does not break correctness.",
+          "is_true_positive": true,
+          "confidence": 0.7,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "usage of generic wildcard type",
+          "developer_explanation": "The byLastModified method currently returns a Comparator with a wildcard type, which is a code style issue. It can be replaced with Comparator<Path> because the comparator only operates on Path objects. Changing the signature removes the wildcard and improves clarity.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 3092,
+            "output_tokens": 2516,
+            "reasoning_tokens": 2803,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.000445
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 11163,
+          "latency_s": 18.117
+        },
+        {
+          "reasoning": "The method byLastModified returns a Comparator<? super Path> but only returns instances of Comparator<Path> (via BY_LAST_MODIFIED_ASCENDING and BY_LAST_MODIFIED_DESCENDING). The wildcard does not affect the correctness or behavior of the method. Hence there is no functional issue, only a style concern.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "generic wildcard type usage",
+          "developer_explanation": "Your method returns a Comparator<? super Path>, but it only supplies Comparators that work with Path objects. The wildcard type does not introduce any bug; removing it would simply make the signature simpler. This warning can safely be ignored without affecting functionality.",
+          "run": 2,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 3092,
+            "output_tokens": 954,
+            "reasoning_tokens": 944,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00022632
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3750,
+          "latency_s": 6.4
+        },
+        {
+          "reasoning": "The method returns a Comparator<? super Path>, which is a harmless use of a wildcard that does not affect program correctness or type safety.",
+          "is_true_positive": false,
+          "confidence": 0.9,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "generic wildcard in return type",
+          "developer_explanation": "The wildcard here is unnecessary but does not introduce bugs or affect functionality. You may change the return type to Comparator<Path> for clarity, but the current code works correctly.",
+          "run": 3,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 3092,
+            "output_tokens": 1040,
+            "reasoning_tokens": 1151,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00023836
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 4586,
+          "latency_s": 7.507
+        }
+      ],
+      "original_finding_index": 875
+    },
+    {
+      "finding_id": 4,
+      "type": "java:S5843",
+      "sourcefile": "AuthenticationProtocolHandler.java",
+      "start_line": "44",
+      "message": "Simplify this regular expression to reduce its complexity from 35 to the 20 allowed.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The CHALLENGE_PATTERN regex contains many alternations, named capturing groups, and optional sub-patterns, giving it a complexity score of 35, which exceeds the tool's threshold of 20. This high complexity makes the pattern difficult to understand and maintain.",
+          "is_true_positive": true,
+          "confidence": 0.8,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "complex regular expression",
+          "developer_explanation": "The regular expression used to parse authentication challenge headers is very hard to read. Refactor or split it into simpler components to improve maintainability and reduce the risk of future errors.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 4272,
+            "output_tokens": 960,
+            "reasoning_tokens": 927,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00026256
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3680,
+          "latency_s": 8.773
+        },
+        {
+          "reasoning": "The CHALLENGE_PATTERN regex contains more than 20 alternating or nested constructs (35 per the tool's metric), so it exceeds the allowed complexity threshold set by SonarQube, which is precisely what the rule reports. The code uses this regex to parse authentication header values, and simplifying it has no risk to correctness, but would ease maintenance and could reduce parsing cost.",
+          "is_true_positive": true,
+          "confidence": 0.8,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "highly complex regular expression",
+          "developer_explanation": "The pattern used here for parsing authentication headers is fairly complex, with many alternations and named groups. Refactoring it into smaller, more readable sub-patterns or using a different parsing approach would make the code easier to understand and could improve performance on heavily loaded systems. Reducing the complexity to 20 or fewer constructs is recommended, though the existing code functions correctly.",
+          "run": 2,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 4272,
+            "output_tokens": 1226,
+            "reasoning_tokens": 1130,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.0002998
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 4499,
+          "latency_s": 8.792
+        },
+        {
+          "reasoning": "The flagged line contains a regex with a reported complexity of 35, which is above the tool's threshold of 20, confirming the tool's claim that the expression is overly complex.",
+          "is_true_positive": true,
+          "confidence": 0.8,
+          "category": "PERFORMANCE",
+          "issue_signature": "complex regular expression",
+          "developer_explanation": "The regex used to parse authentication challenges is more complex than SonarQube recommends. While it functions correctly, its high complexity can lead to slower matching and harder maintenance. Simplifying the pattern—splitting it into simpler, dedicated patterns or reducing nested optional groups—would improve performance and readability.",
+          "run": 3,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 4272,
+            "output_tokens": 1103,
+            "reasoning_tokens": 1087,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00028258
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 4339,
+          "latency_s": 10.26
+        }
+      ],
+      "original_finding_index": 1003
+    },
+    {
+      "finding_id": 5,
+      "type": "java:S1871",
+      "sourcefile": "HttpDateTime.java",
+      "start_line": "178",
+      "message": "This branch's code block is the same as the block for the branch on line 174.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The method parses a year token in two branches that perform the same assignment: lines 175-176 and 178-180 both set year = StringUtil.toInt(token, 0); The code is duplicated and can be refactored.",
+          "is_true_positive": true,
+          "confidence": 0.9,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "duplicate branch code",
+          "developer_explanation": "Both the <=2-character and ==4-character year branches perform exactly the same operation—assigning the parsed integer to the year variable. This duplication is unnecessary and makes future changes harder to keep consistent. Refactor the code to extract the assignment into a single statement or unify the conditions.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 4942,
+            "output_tokens": 638,
+            "reasoning_tokens": 515,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00023758
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2052,
+          "latency_s": 4.652
+        },
+        {
+          "reasoning": "Both the first branch (<=2 digits) and the second branch (==4 digits) assign the year with exactly the same statement, so the duplicated code likely indicates unnecessary duplication rather than a functional bug. This is a maintainability issue, not a correctness problem.",
+          "is_true_positive": true,
+          "confidence": 0.97,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "duplicate code in branches",
+          "developer_explanation": "The two branches of the year-assignment logic are identical. While this does not affect correctness, it makes the code harder to read, maintain, and can lead to inconsistencies if one branch needs to change in the future. Replace the two branches with a single assignment or refactor the logic so that the code is clearer.",
+          "run": 2,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 4942,
+            "output_tokens": 926,
+            "reasoning_tokens": 846,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.0002779
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3337,
+          "latency_s": 7.781
+        },
+        {
+          "reasoning": "The conditional at line 172 has two branches: one for token.length() ≤ 2 and an else‑if for token.length() == 4, and both branches execute the identical assignment year = StringUtil.toInt(token, 0).",
+          "is_true_positive": true,
+          "confidence": 0.9,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "duplicate code block in conditional",
+          "developer_explanation": "Both branches of the \"year\" parsing block perform the same action: converting the token to an int and assigning it to year. This duplicate code can be simplified into a single assignment, improving readability and maintainability. Adjust the code to remove one of the redundant branches.",
+          "run": 3,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 4942,
+            "output_tokens": 784,
+            "reasoning_tokens": 718,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00025802
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2835,
+          "latency_s": 7.347
+        }
+      ],
+      "original_finding_index": 1247
+    },
+    {
+      "finding_id": 6,
+      "type": "java:S1700",
+      "sourcefile": "MultiPartByteRanges.java",
+      "start_line": "261",
+      "message": "Rename field \"parser\"",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The field is declared as private final MultiPart.Parser parser;, which gives it a very generic name that can be misleading, especially since the enclosing class is also called Parser. SonarQube flags such generic names as a code quality issue. Renaming the field to a more descriptive name (e.g., mpParser or partParser) would improve readability and prevent confusion. The tool’s claim is materially correct for this code.",
+          "is_true_positive": true,
+          "confidence": 0.8,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "generic field name reduces readability",
+          "developer_explanation": "This class already uses the name Parser, and has a private field called parser. A name like mpParser or partParser makes the code clearer. Renaming it will help future developers understand that the field holds a MultiPart.Parser instance.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 4743,
+            "output_tokens": 1333,
+            "reasoning_tokens": 1361,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00032891
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 5419,
+          "latency_s": 12.169
+        },
+        {
+          "reasoning": "The code defines a field named 'parser' inside the class 'Parser', which shadows the enclosing class name and can be confusing to maintainers, meeting the criteria for a maintainability issue identified by the rule.",
+          "is_true_positive": true,
+          "confidence": 0.7,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "field name shadows surrounding class name",
+          "developer_explanation": "The field 'parser' inside the nested class 'Parser' shares the same name as its enclosing class, which can lead to confusion when reading or maintaining the code. Renaming the field to something more descriptive, such as 'multiPartParser' or 'innerParser', would make the intent clearer and avoid potential misunderstandings. Make the change if you want to improve readability.",
+          "run": 2,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 4743,
+            "output_tokens": 1343,
+            "reasoning_tokens": 1407,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00033031
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 5612,
+          "latency_s": 12.467
+        },
+        {
+          "reasoning": "The code declares an inner class named Parser and a private field also named parser of type MultiPart.Parser; SonarQube flags this naming collision as a code smell. The field’s name conflicts with the class name and should be renamed to improve readability.",
+          "is_true_positive": true,
+          "confidence": 0.88,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "field name conflicts with inner class",
+          "developer_explanation": "The class contains an inner class named Parser and a private field called parser. Having the field named the same as the nested class can be confusing when reading or refactoring the code, since it creates a naming collision. Rename the field to something more descriptive—e.g. \"multipartParser\"—to avoid ambiguity and improve code clarity.",
+          "run": 3,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 4743,
+            "output_tokens": 790,
+            "reasoning_tokens": 720,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00025289
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2856,
+          "latency_s": 7.339
+        }
+      ],
+      "original_finding_index": 1338
+    },
+    {
+      "finding_id": 7,
+      "type": "java:S5261",
+      "sourcefile": "ServletPathSpec.java",
+      "start_line": "182",
+      "message": "Add explicit curly braces to avoid dangling else.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The code contains nested if-else statements but every else is correctly matched to its intended if; there is no actual dangling else. The rule merely warns about the possibility of confusion, which is a maintainability concern, not a correctness bug.",
+          "is_true_positive": false,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "dangling else",
+          "developer_explanation": "This warning only points out that the lack of braces could mislead a reader, but the code compiles and behaves exactly as intended. The suggestion is purely about readability; you can safely ignore it if you prefer your current style, or add braces if you want clearer structure.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 5436,
+            "output_tokens": 2223,
+            "reasoning_tokens": 2260,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.0004743
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 8932,
+          "latency_s": 16.122
+        },
+        {
+          "reasoning": "The else on line 183 pairs with the inner if, and the outer if is continued by an else‑if chain; there is no actual dangling else, but the nested if‑else without braces can be confusing and prone to future bugs. This is correctly flagged as a maintainability concern.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "ambiguous nested if without braces",
+          "developer_explanation": "The current code mixes indented nested if/else statements without braces, which makes the association between each else and its if less obvious. Adding braces around the nested blocks will make the control flow explicit and reduce the chance of introducing errors later.",
+          "run": 2,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 5436,
+            "output_tokens": 1537,
+            "reasoning_tokens": 1518,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00037826
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 5977,
+          "latency_s": 15.702
+        },
+        {
+          "reasoning": "The else after the inner if is matched to the outer if because the outer if has no braces, so the control flow is correct. The code behaves as intended and there is no unreachable branch or mis‑paired else. The warning flags a potential ambiguity but it is not a bug.",
+          "is_true_positive": false,
+          "confidence": 0.92,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "missing curly braces for if-else chain",
+          "developer_explanation": "The nested ifs are missing braces, which can confuse readers and may lead to maintenance mistakes, but the Java compiler binds the else correctly and the logic works as intended. You can add braces to clarify the intent, but functionally the code is fine.",
+          "run": 3,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 5436,
+            "output_tokens": 1719,
+            "reasoning_tokens": 1612,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00040374
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 6356,
+          "latency_s": 15.851
+        }
+      ],
+      "original_finding_index": 1392
+    },
+    {
+      "finding_id": 8,
+      "type": "java:S6126",
+      "sourcefile": "PrefaceFrame.java",
+      "start_line": "33",
+      "message": "Replace this String concatenation with Text block.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The code uses multiple string literal concatenations with '+', which could be expressed more readably as a Java text block. SonarQube correctly flags this as a code smell that can be improved for maintainability.",
+          "is_true_positive": true,
+          "confidence": 0.9,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "string concatenation should be replaced with text block",
+          "developer_explanation": "The current string assembly uses '+' operators across several lines. Rewriting it as a text block will make the intent clearer and reduce visual clutter. While this change does not alter functionality, it improves readability and maintainability.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2469,
+            "output_tokens": 854,
+            "reasoning_tokens": 791,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00019363
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3112,
+          "latency_s": 7.79
+        },
+        {
+          "reasoning": "The code concatenates several string literals; the rule recommends using a text block, but this is only a style suggestion, not a defect.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "multiline string concatenation",
+          "developer_explanation": "The warning only suggests replacing the string concatenation with a Java 15 text block, which improves readability but does not affect correctness. It can be safely ignored if you prefer the current style.",
+          "run": 2,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2469,
+            "output_tokens": 895,
+            "reasoning_tokens": 925,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00019937
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3693,
+          "latency_s": 8.919
+        },
+        {
+          "reasoning": "The code uses immutable string concatenation to assemble a multi-line literal, which is a pattern that can be replaced by a multi-line text block introduced in Java 15. The suggestion applies to the shown lines, as the strings are concatenated via the '+' operator.",
+          "is_true_positive": true,
+          "confidence": 0.9,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "string concatenation could be replaced with text block",
+          "developer_explanation": "You’re concatenating several string literals to form a multi-line value. Since Java 15, you can write this as a text block, which is more readable and reduces the chance of typos in escape sequences. If you’re targeting Java 15 or newer, replace the concatenation with a text block.",
+          "run": 3,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2469,
+            "output_tokens": 705,
+            "reasoning_tokens": 596,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00017277
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2366,
+          "latency_s": 7.081
+        }
+      ],
+      "original_finding_index": 1477
+    },
+    {
+      "finding_id": 9,
+      "type": "java:S1172",
+      "sourcefile": "HeaderGenerator.java",
+      "start_line": "48",
+      "message": "Remove this unused method parameter \"capacity\".",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The method signature includes a parameter \"capacity\" that is never referenced in the body of the generate method shown, indicating it is unused.",
+          "is_true_positive": true,
+          "confidence": 0.9,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "unused method parameter",
+          "developer_explanation": "The generate method accepts a capacity argument that it never uses, which can confuse developers and suggests redundant code. Remove the parameter or add a comment explaining its purpose if it is intentionally unused for future extension.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2687,
+            "output_tokens": 332,
+            "reasoning_tokens": 284,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00012709
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1125,
+          "latency_s": 2.939
+        },
+        {
+          "reasoning": "The method 'generate' declares a parameter named 'capacity' but the method body never references it. Therefore the parameter is unused.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "unused method parameter",
+          "developer_explanation": "The 'capacity' argument is not used inside the 'generate' method, which can confuse callers and suggest that the value is needed. If it is not intended for future use or API compatibility, remove the parameter to simplify the method signature. Otherwise, document why the parameter is required and consider using it or removing it to keep the code clear.",
+          "run": 2,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2687,
+            "output_tokens": 533,
+            "reasoning_tokens": 454,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00015523
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 1803,
+          "latency_s": 4.751
+        },
+        {
+          "reasoning": "The generate method declares a parameter named capacity that is never referenced within its body. This shows the parameter is unused in the shown code, satisfying the rule’s condition. Removing it would simplify the method signature without affecting functionality.",
+          "is_true_positive": true,
+          "confidence": 0.9,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "unused method parameter",
+          "developer_explanation": "The capacity argument is never used by generate, so keeping it only adds noise to the method’s signature. Removing it or documenting why it is kept would make the code clearer and easier to maintain.",
+          "run": 3,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2687,
+            "output_tokens": 812,
+            "reasoning_tokens": 853,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00019429
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3392,
+          "latency_s": 6.595
+        }
+      ],
+      "original_finding_index": 1479
+    },
+    {
+      "finding_id": 10,
+      "type": "java:S1119",
+      "sourcefile": "WriteFlusher.java",
+      "start_line": "343",
+      "message": "Refactor the code to remove this label and the need for it.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The code uses a label 'loop:' on a while(true) loop only to break out of it; this does not introduce a functional bug or correctness issue, just a style concern.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "labeled loop used",
+          "developer_explanation": "The warning flags the use of a loop label, which is unnecessary for the current control flow. Removing the label and using a simple break or return would improve readability, but the code behaves correctly as written, so the alarm can be safely ignored or cleaned up for style.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 5113,
+            "output_tokens": 1210,
+            "reasoning_tokens": 1177,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00032279
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 4659,
+          "latency_s": 10.062
+        },
+        {
+          "reasoning": "The method defines a label `loop:` before a while loop that is exited using `break loop;`. SonarQube flags this construct as a maintainability issue, suggesting that the label can be removed and replaced with clearer control flow. Since the label adds complexity but does not affect correctness or security, the warning is a valid maintainability flag.",
+          "is_true_positive": true,
+          "confidence": 0.9,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "use of labelled loop",
+          "developer_explanation": "The code uses a label to break out of a loop, which is allowed but makes the flow harder to read. Refactor it by introducing a boolean variable or restructuring the logic to eliminate the label, improving readability without changing behavior.",
+          "run": 2,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 5113,
+            "output_tokens": 2149,
+            "reasoning_tokens": 2233,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00045425
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 8851,
+          "latency_s": 19.847
+        },
+        {
+          "reasoning": "The flagged code contains a loop label \"loop:\" that is immediately used by the inner switch to break out of the while loop. The label is needed for correct control flow, so there is no bug, only a stylistic suggestion.",
+          "is_true_positive": false,
+          "confidence": 0.9,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "labeled break used for loop control",
+          "developer_explanation": "The code correctly uses a labelled break to exit the enclosing while loop from inside a switch statement. This is a valid Java pattern, and removing the label would break the logic. The warning can thus be safely ignored.",
+          "run": 3,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 5113,
+            "output_tokens": 732,
+            "reasoning_tokens": 675,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00025587
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2660,
+          "latency_s": 7.087
+        }
+      ],
+      "original_finding_index": 1738
+    },
+    {
+      "finding_id": 11,
+      "type": "java:S127",
+      "sourcefile": "WriteThroughWriter.java",
+      "start_line": "249",
+      "message": "Refactor the code in order to not assign to this loop counter from within the loop body.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The code intentionally decrements the loop index i to reprocess a character after handling an unmatched high surrogate, ensuring correct UTF‑8 encoding. As a result, the counter modification does not introduce an infinite loop or skip characters, so the tool’s warning is a false positive.",
+          "is_true_positive": false,
+          "confidence": 0.92,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "loop counter assignment in loop body",
+          "developer_explanation": "The line i--; in the for loop is deliberate: when an unmatched high surrogate is detected, the code processes it immediately and then wants to re‑process the following character with a clean surrogate state. Removing the decrement would alter the intended behaviour, so this warning can safely be ignored.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 5425,
+            "output_tokens": 2846,
+            "reasoning_tokens": 2909,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00056119
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 11555,
+          "latency_s": 24.086
+        },
+        {
+          "reasoning": "The flagged code contains a statement `i--;` inside the body of a `for (int i = 0; i < chars; i++)` loop.  This directly modifies the loop counter during iteration, which SonarQube deems a problematic pattern that should be refactored for maintainability and correctness reasons.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "assignment to loop counter inside loop body",
+          "developer_explanation": "The loop counter `i` is decreased inside the loop, so the iteration count changes in the middle of the loop.  This makes the loop logic hard to reason about and can easily introduce off‑by‑one or infinite‑loop bugs if the decrement is not carefully handled.  Refactor the code to avoid modifying `i` inside the loop—for example, compute the next index before the loop or use a while loop that manages the index explicitly.",
+          "run": 2,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 5425,
+            "output_tokens": 3437,
+            "reasoning_tokens": 3453,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00064393
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 13735,
+          "latency_s": 35.741
+        },
+        {
+          "reasoning": "At line 249 the loop index `i` is decremented inside the body (`i--;`). That causes the counter to stay at the same value after the loop’s post‑increment, so the loop never advances and locks for every surrogate pair.",
+          "is_true_positive": true,
+          "confidence": 0.92,
+          "category": "CORRECTNESS",
+          "issue_signature": "loop counter modified within loop body",
+          "developer_explanation": "The code decreases the loop index inside the loop, which prevents `i` from increasing. For surrogate pairs this results in an infinite loop and the writer never progresses. Remove the `i--` (or restructure the loop) so the index only changes as intended by the loop construct.",
+          "run": 3,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 5425,
+            "output_tokens": 1716,
+            "reasoning_tokens": 1778,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00040299
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 7089,
+          "latency_s": 17.085
+        }
+      ],
+      "original_finding_index": 1743
+    },
+    {
+      "finding_id": 12,
+      "type": "java:S3011",
+      "sourcefile": "DefaultFileLocatorHelper.java",
+      "start_line": "153",
+      "message": "This accessibility update should be removed.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The code calls BUNDLE_FILE_FIELD_FOR_DIR_ZIP_BUNDLE_ENTRY.setAccessible(true) at line 153, which is what the S3011 rule flags. This reflection hack is intentional to access private fields of OSGi classes; it is not a security weakness in this context and is required for the functionality. Therefore the alarm is a false positive.",
+          "is_true_positive": false,
+          "confidence": 0.92,
+          "category": "SECURITY",
+          "issue_signature": "setting setaccessible on field",
+          "developer_explanation": "This method uses reflection to reach internal fields of OSGi bundle classes, a necessary hack for locating files in the bundle. The accessibility change is intentional and safe in this context, so the warning can be safely dismissed or suppressed. No bug exists.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 5736,
+            "output_tokens": 988,
+            "reasoning_tokens": 1021,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.0003104
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 4063,
+          "latency_s": 7.042
+        },
+        {
+          "reasoning": "The flagged code uses Field#setAccessible(true) to access private fields of OSGi bundle entry objects, which is required for the method to function correctly. Removing it would break the functionality.",
+          "is_true_positive": false,
+          "confidence": 0.9,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "private field accessed via reflection",
+          "developer_explanation": "The setAccessible call is intentionally used to read internal fields of framework classes. Removing it would prevent the method from locating bundle resources. The warning can be safely dismissed here as it is a conscious use of reflection rather than an accidental bug.",
+          "run": 2,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 5736,
+            "output_tokens": 1050,
+            "reasoning_tokens": 1109,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00031908
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 4416,
+          "latency_s": 6.913
+        },
+        {
+          "reasoning": "Line 153 calls setAccessible(true) on a private field to access internal OSGi state, which SonarQube flags as a style/maintainability issue. The code’s intent is to hack around encapsulation, so the accessibility update is indeed unnecessary for correctness but violates best practices.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "accessibility update should be removed",
+          "developer_explanation": "The code uses reflection to set a private field accessible, which is a hack against encapsulation. While it currently serves a functional purpose, it violates good design principles and can lead to fragile code. Consider refactoring this logic to avoid reflection or documenting the necessity clearly if it must remain.",
+          "run": 3,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 5736,
+            "output_tokens": 1560,
+            "reasoning_tokens": 1696,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00039048
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 6770,
+          "latency_s": 9.978
+        }
+      ],
+      "original_finding_index": 1955
+    },
+    {
+      "finding_id": 13,
+      "type": "java:S5738",
+      "sourcefile": "Server.java",
+      "start_line": "904",
+      "message": "Remove this call to a deprecated class, it has been marked for removal.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The flagged call to FileSystemPool.INSTANCE uses a class that is annotated as @Deprecated and marked for removal, as seen by the tool’s rule. Because the class itself will be removed in future releases, this call will break compatibility and should be updated. No other code in the snippet mitigates this dependency or uses an alternative, so the warning is factual.",
+          "is_true_positive": true,
+          "confidence": 0.92,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "deprecated class usage marked for removal",
+          "developer_explanation": "FileSystemPool is a deprecated class that the library plans to remove. Using it in dump() means that future versions of the library may break the build or cause runtime failures. Replace this reference with the recommended alternative or remove the dump() code that relies on it.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 4497,
+            "output_tokens": 801,
+            "reasoning_tokens": 729,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00024705
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2898,
+          "latency_s": 7.264
+        },
+        {
+          "reasoning": "The code calls FileSystemPool.INSTANCE, a class that the tool reports as deprecated and scheduled for removal. This use of a deprecated class is flagged by the rule and will cause a compile error if the class is removed, making it a real issue.",
+          "is_true_positive": true,
+          "confidence": 0.92,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "deprecated class usage",
+          "developer_explanation": "The code imports and uses 'FileSystemPool.INSTANCE', which is marked as deprecated and slated for removal. This will break future builds once the class is removed. Replace this usage with the newer API or remove it if it is no longer needed.",
+          "run": 2,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 4497,
+            "output_tokens": 1199,
+            "reasoning_tokens": 1220,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00030277
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 4852,
+          "latency_s": 11.832
+        },
+        {
+          "reasoning": "The code references FileSystemPool.INSTANCE, which is a deprecated class scheduled for removal in Jetty, so the tool rightfully flags this use as a code smell.",
+          "is_true_positive": true,
+          "confidence": 0.8,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "deprecated class usage",
+          "developer_explanation": "The dump method uses FileSystemPool.INSTANCE, but this class is marked deprecated and will be removed in future Jetty releases. Replace it with the new API or remove the reference to keep the code forward‑compatible.",
+          "run": 3,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 4497,
+            "output_tokens": 1227,
+            "reasoning_tokens": 1261,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00030669
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 5016,
+          "latency_s": 12.118
+        }
+      ],
+      "original_finding_index": 2258
+    },
+    {
+      "finding_id": 14,
+      "type": "java:S112",
+      "sourcefile": "SessionDataMap.java",
+      "start_line": "58",
+      "message": "Replace generic exceptions with specific library exceptions or a custom exception.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The interface declares methods that throw the generic java.lang.Exception, which triggers SonarQube rule S112. However, since the interface represents a storage abstraction that may involve diverse operations (I/O, database, etc.), propagating a generic Exception is an acceptable design choice and does not indicate a correctness or security bug.",
+          "is_true_positive": false,
+          "confidence": 0.9,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "generic exception as method throws",
+          "developer_explanation": "In this context the interface is meant to be a generic abstraction over session data persistence. Throwing a broad Exception is intentional because the actual persistence implementation might encounter various kinds of failures (I/O, database, security, etc.). Therefore, the warning can be safely ignored; it doesn't represent a functional defect, only a stylistic or design preference that is acceptable here.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2641,
+            "output_tokens": 726,
+            "reasoning_tokens": 678,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00018087
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2700,
+          "latency_s": 5.524
+        },
+        {
+          "reasoning": "The interface declares a method signature that throws the generic java.lang.Exception type; the rule flags this as a code smell.",
+          "is_true_positive": true,
+          "confidence": 0.9,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "generic exception declaration",
+          "developer_explanation": "The delete method declares 'throws Exception', which is too broad and obscures the actual error conditions callers must handle. Refactor the method to throw a more specific exception—either a relevant existing one (e.g., IOException, IllegalArgumentException) or a custom exception like SessionDeleteException—so the API contract is clearer and more maintainable.",
+          "run": 2,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2641,
+            "output_tokens": 742,
+            "reasoning_tokens": 766,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00018311
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3047,
+          "latency_s": 7.181
+        },
+        {
+          "reasoning": "The flagged method declares `throws Exception`, i.e. the interface throws a generic `Exception`. The rule S112 states that throwing generic exceptions is a code smell and recommends more specific exceptions. This mismatch can hinder error handling and obfuscate the API contract, so the tool correctly identifies a maintainability issue.",
+          "is_true_positive": true,
+          "confidence": 0.8,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "generic exception is thrown",
+          "developer_explanation": "In this interface, every method throws the broad `Exception`. This forces callers to catch very generic exceptions, making debugging and proper error handling harder. Define and throw a more specific, meaningful exception class (or a custom one) instead, so callers can narrow their error handling to relevant cases.",
+          "run": 3,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2641,
+            "output_tokens": 1040,
+            "reasoning_tokens": 1114,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00022483
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 4435,
+          "latency_s": 8.42
+        }
+      ],
+      "original_finding_index": 2457
+    },
+    {
+      "finding_id": 15,
+      "type": "java:S3824",
+      "sourcefile": "TopologicalSort.java",
+      "start_line": "57",
+      "message": "Replace this \"Map.get()\" and condition with a call to \"Map.computeIfAbsent()\".",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The code explicitly checks for a null result from _dependencies.get and then puts a new HashSet if null; this is a valid pattern that could be replaced with Map.computeIfAbsent, but the code remains correct and has no bug.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "map lookup with null check",
+          "developer_explanation": "This warning points out a style improvement: you can replace the get–null check with Map.computeIfAbsent to reduce boilerplate. It doesn’t indicate a bug or incorrect behavior, so you can safely ignore it if you prefer the current style.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 4348,
+            "output_tokens": 1098,
+            "reasoning_tokens": 1089,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00028416
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 4345,
+          "latency_s": 7.869
+        },
+        {
+          "reasoning": "The flagged code performs a null check after a Map.get() and then inserts a new Set. Sonar correctly suggests that this can be refactored to Map.computeIfAbsent(), which is a canonical improvement for such patterns. Since the change does not affect correctness and only improves maintainability, the warning is a true positive in the maintainability sense.",
+          "is_true_positive": true,
+          "confidence": 0.9,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "replace map get-and-check with computeIfAbsent",
+          "developer_explanation": "The method currently retrieves a Set from the dependencies map, checks for null, creates a new HashSet if necessary, and puts it back. Using Map.computeIfAbsent(dependent, k -> new HashSet<>()) reduces boilerplate, makes the intent clearer, and lessens the chance of accidental bugs. Refactor the code to use computeIfAbsent for a cleaner implementation.",
+          "run": 2,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 4348,
+            "output_tokens": 1378,
+            "reasoning_tokens": 1324,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00032336
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 5272,
+          "latency_s": 10.46
+        },
+        {
+          "reasoning": "The code retrieves a value from a Map, checks for null, creates a new HashSet, and puts it back – a pattern that can be replaced by computeIfAbsent; this is a real maintainability concern flagged by the tool.",
+          "is_true_positive": true,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "use computeIfAbsent instead of manual get and put",
+          "developer_explanation": "The current code manually handles missing map entries, creating a new Set and inserting it. This can be simplified with _dependencies.computeIfAbsent(dependent, k -> new HashSet<>()). The change reduces boilerplate, eliminates a potential race condition if the map is later shared between threads, and improves readability.",
+          "run": 3,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 4348,
+            "output_tokens": 877,
+            "reasoning_tokens": 864,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00025322
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3430,
+          "latency_s": 6.237
+        }
+      ],
+      "original_finding_index": 2693
+    },
+    {
+      "finding_id": 16,
+      "type": "java:S108",
+      "sourcefile": "TypeUtil.java",
+      "start_line": "622",
+      "message": "Remove this block of code, fill it in, or add a comment explaining why it is empty.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The block catches URISyntaxException and deliberately does nothing, simply returning null, which is a intended design. SonarQube marks empty catch blocks as a code smell, but in this context the empty block is purposeful, not a bug. Therefore the warning is a false positive.",
+          "is_true_positive": false,
+          "confidence": 0.9,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "empty catch block",
+          "developer_explanation": "The empty catch block is intentional; it swallows the URISyntaxException so the method can simply return null. If you want the code to remain clear, add a comment explaining that the exception is ignored on purpose.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 5447,
+            "output_tokens": 950,
+            "reasoning_tokens": 928,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00029641
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3664,
+          "latency_s": 8.014
+        },
+        {
+          "reasoning": "The code has a catch block that catches URISyntaxException and contains no statements. Sonar rules consider empty catch blocks to be a code smell and advise removing or commenting them. This factual state matches the tool’s claim, so the warning is valid.",
+          "is_true_positive": true,
+          "confidence": 0.8,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "empty catch block without comment",
+          "developer_explanation": "You have a catch block that silently swallows a URISyntaxException and then returns null. This is a legitimate approach if you intentionally want to ignore the exception, but the code will be clearer if you add a comment explaining the decision or move the error handling to a more explicit location. Adding a comment improves readability without changing functionality.",
+          "run": 2,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 5447,
+            "output_tokens": 1941,
+            "reasoning_tokens": 2113,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00043515
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 8408,
+          "latency_s": 16.638
+        },
+        {
+          "reasoning": "The code swallows a URISyntaxException without any handling or logging, which is an empty catch block, a known code smell that can hide errors.",
+          "is_true_positive": true,
+          "confidence": 0.9,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "empty catch block",
+          "developer_explanation": "This catch block intentionally ignores a URISyntaxException, which means any URI conversion error is hidden and could lead to silent failures. Either add a comment explaining why ignoring is safe, log the exception, or handle it appropriately. This improves code readability and reduces the risk of undiscovered errors.",
+          "run": 3,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 5447,
+            "output_tokens": 868,
+            "reasoning_tokens": 848,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00028493
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3357,
+          "latency_s": 9.593
+        }
+      ],
+      "original_finding_index": 2703
+    },
+    {
+      "finding_id": 17,
+      "type": "java:S1144",
+      "sourcefile": "SecurityUtils.java",
+      "start_line": "233",
+      "message": "Remove this unused private \"callableToPrivilegedAction\" method.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The snippet shows the private method callableToPrivilegedAction defined at line 233 and there are no calls to it in the visible code. SonarQube flags an unused private method as a code smell, which matches the shown evidence. No other usage is visible, so the tool’s claim that this method can be removed is correct for this snippet.",
+          "is_true_positive": true,
+          "confidence": 0.9,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "unused private method",
+          "developer_explanation": "This method is never called in the current code, so keeping it just adds dead code that can confuse maintainers. You can safely delete it to simplify the class.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 3684,
+            "output_tokens": 941,
+            "reasoning_tokens": 953,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00024226
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3798,
+          "latency_s": 8.891
+        },
+        {
+          "reasoning": "The private method \"callableToPrivilegedAction\" is defined at line 233 but there is no call to it in the provided code, nor any reference that would be visible to normal static analysis, so it is unused.",
+          "is_true_positive": true,
+          "confidence": 0.9,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "unused private method",
+          "developer_explanation": "This method is declared but never invoked within the class. Removing it cleans up the code and eliminates dead weight. If the method is intended for future use, keep it; otherwise delete it to keep the codebase tidy.",
+          "run": 2,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 3684,
+            "output_tokens": 572,
+            "reasoning_tokens": 515,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.0001906
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2048,
+          "latency_s": 4.912
+        },
+        {
+          "reasoning": "The method callableToPrivilegedAction is declared private and there is no reference to it in the supplied code snippet, so within this file it is unused. Since the method is never called, the warning is accurate.",
+          "is_true_positive": true,
+          "confidence": 0.9,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "unused private method",
+          "developer_explanation": "The method callableToPrivilegedAction is defined but never invoked from anywhere in this class, so it’s dead code. Remove it or use it in a place that actually needs converting a Callable to a PrivilegedAction to clean up the class.",
+          "run": 3,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 3684,
+            "output_tokens": 673,
+            "reasoning_tokens": 640,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00020474
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2550,
+          "latency_s": 5.654
+        }
+      ],
+      "original_finding_index": 2869
+    },
+    {
+      "finding_id": 18,
+      "type": "java:S6204",
+      "sourcefile": "JettyClientUpgradeRequest.java",
+      "start_line": "52",
+      "message": "Replace this usage of 'Stream.collect(Collectors.toList())' with 'Stream.toList()' and ensure that the list is unmodified.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The code collects the stream into a list with Collectors.toList(), producing a mutable list; the snippet does not later modify that list, so this usage is correct and safe. The rule merely suggests a stylistic improvement, not a correctness issue.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "mutable list from stream collection",
+          "developer_explanation": "The warning suggests replacing Collectors.toList() with Stream.toList(). In this context the list isn't modified afterward, so the current collection is fine. You can safely ignore or optionally use Stream.toList() for consistency, but it doesn't affect correctness.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2994,
+            "output_tokens": 940,
+            "reasoning_tokens": 921,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00022142
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3660,
+          "latency_s": 8.549
+        },
+        {
+          "reasoning": "The flagged line uses request.getExtensions().stream().map(...).collect(Collectors.toList()) to create a mutable list that is immediately passed to setExtensions, with no evidence that the list is later modified, so there is no functional issue, just a stylistic recommendation.",
+          "is_true_positive": false,
+          "confidence": 0.9,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "usage of mutable stream collector",
+          "developer_explanation": "The code builds a list of ExtensionConfig objects using Collectors.toList(), which returns a mutable list. Since the list is not modified after being set, the recommendation to use Stream.toList() (which creates an unmodifiable list) is unnecessary here. You can safely ignore this warning.",
+          "run": 2,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2994,
+            "output_tokens": 796,
+            "reasoning_tokens": 749,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00020126
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 2970,
+          "latency_s": 7.422
+        },
+        {
+          "reasoning": "The code uses Collectors.toList() which creates a mutable ArrayList, but that list is never modified afterward, so the immutability concern the rule addresses does not manifest here. SonarQube’s suggestion is a style improvement rather than a correctness problem.",
+          "is_true_positive": false,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "mutable list from collect",
+          "developer_explanation": "The call to Collectors.toList() produces a mutable list, but since the code never changes that list after creation or stores a reference that could be altered elsewhere, there is no functional issue. This warning is simply a recommendation to use the newer Stream.toList() for an immutable list if you prefer that guarantee, but it isn’t a bug that needs fixing.",
+          "run": 3,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2994,
+            "output_tokens": 2028,
+            "reasoning_tokens": 2181,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00037374
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 8694,
+          "latency_s": 18.616
+        }
+      ],
+      "original_finding_index": 3055
+    },
+    {
+      "finding_id": 19,
+      "type": "xml:S1134",
+      "sourcefile": "pom.xml",
+      "start_line": "54",
+      "message": "Take the required action to fix the issue indicated by this \"FIXME\" comment.",
+      "tool_specific": {
+        "column": null
+      },
+      "runs": [
+        {
+          "reasoning": "The code contains a FIXME comment in the pom.xml, which SonarQube correctly flags as a maintainability issue that should be addressed. The comment clearly indicates remaining work that needs to be completed before final release.",
+          "is_true_positive": true,
+          "confidence": 0.85,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "fixme comment left in configuration",
+          "developer_explanation": "A FIXME comment remains in the pom.xml, signaling that the removal of Servlet API usage is scheduled, not yet completed. Leave the comment only until the work is finished, then delete it or turn it into a proper issue. This practice avoids accidental use of unfinished code.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2921,
+            "output_tokens": 1193,
+            "reasoning_tokens": 1239,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00025465
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 4952,
+          "latency_s": 18.035,
+          "rerun_after_context_fix": true
+        },
+        {
+          "reasoning": "The snippet contains an XML comment with a \"FIXME\" tag, which SonarQube flags as a code smell because it indicates pending work or a reminder to change the code later.",
+          "is_true_positive": true,
+          "confidence": 0.9,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "fixme comment present",
+          "developer_explanation": "There is a FIXME comment in the pom.xml telling you to remove Servlet API usage once it is fully removed. This is a maintainability issue: keep such comments in a separate issue tracker or, when the TODO is complete, delete the comment to keep the file clean.",
+          "run": 2,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2921,
+            "output_tokens": 1033,
+            "reasoning_tokens": 1009,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00023225
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 4020,
+          "latency_s": 14.323,
+          "rerun_after_context_fix": true
+        },
+        {
+          "reasoning": "The flagged line contains an XML comment with the text \"FIXME\", which SonarQube’s xml:S1134 rule is designed to catch as an issue that should be addressed. The rule’s claim is purely about maintaining code quality, not a functional bug. The presence of this FIXME comment therefore matches the warning’s intent, making it a valid code‑smell highlight.",
+          "is_true_positive": true,
+          "confidence": 0.9,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "fixme comment remains",
+          "developer_explanation": "The notice tells you that a FIXME comment is still in pom.xml. This comment signals unfinished work or a planned change that should eventually be resolved. Remove or replace the FIXME after the servlet‑API removal is complete to keep the project clean.",
+          "run": 3,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 2921,
+            "output_tokens": 1226,
+            "reasoning_tokens": 1210,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00025927
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 4816,
+          "latency_s": 18.555,
+          "rerun_after_context_fix": true
+        }
+      ],
+      "original_finding_index": 3102,
+      "superseded_runs": [
+        {
+          "reasoning": "The pom.xml snippet shows no 'FIXME' text, yet the tool flagged line 54; the rule S1134 triggers on a FIXME comment in XML. Since there is none, the warning is a false alarm.",
+          "is_true_positive": false,
+          "confidence": 0.95,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "fixme comment",
+          "developer_explanation": "This warning is a false positive: the pom.xml does not contain a FIXME comment, so you can safely ignore it. The tool probably mis‑parsed the XML or wrongly mapped a line number.",
+          "run": 1,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 5029,
+            "output_tokens": 1743,
+            "reasoning_tokens": 1803,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00039489
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 7152,
+          "latency_s": 12.517
+        },
+        {
+          "reasoning": "The flagged line shows an <organizationUrl> element, but there is no FIXME comment present in the code snippet. SonarQube's S1134 rule reports on FIXME comments, so the alarm is triggered without the prerequisite comment being there, making it a false positive.",
+          "is_true_positive": false,
+          "confidence": 0.9,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "fixme comment present",
+          "developer_explanation": "There is no FIXME comment in this pom.xml near the flagged line, so the tool's warning is unwarranted. You can ignore this message.",
+          "run": 2,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 5029,
+            "output_tokens": 859,
+            "reasoning_tokens": 817,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00027113
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 3239,
+          "latency_s": 6.246
+        },
+        {
+          "reasoning": "The code fragment shown for line 54 contains only an <organizationUrl> element and no FIXME comment; SonarQube’s xml:S1134 rule reports FIXME comments, so there is no evidence here that an unaddressed FIXME exists, making the alarm suspicious.",
+          "is_true_positive": false,
+          "confidence": 0.65,
+          "category": "MAINTAINABILITY",
+          "issue_signature": "unaddressed FIXME comment",
+          "developer_explanation": "Sonar complains about an unaddressed FIXME comment at the indicated line, but the snippet shows no such comment. If the file indeed has no FIXME, the warning can be safely ignored. If a FIXME has been removed but the tool still reports it, you can suppress it or update the file to remove the comment.",
+          "run": 3,
+          "served_model": "openai/gpt-oss-20b",
+          "served_provider": "DeepInfra",
+          "usage": {
+            "input_tokens": 5029,
+            "output_tokens": 1206,
+            "reasoning_tokens": 1156,
+            "cached_input_tokens": 0,
+            "cost_usd": 0.00031971
+          },
+          "stop_reason": "stop",
+          "thinking_chars": 4589,
+          "latency_s": 9.348
+        }
+      ]
+    }
+  ],
+  "rerun_history": [
+    {
+      "at": "2026-08-31T21:41:41.169524+00:00",
+      "finding": "xml:S1134 pom.xml:54",
+      "finding_id": 19,
+      "reason": "wycinek zbudowany z glownego pom.xml zamiast jetty-core/pom.xml; poprawka w _resolve_java_path",
+      "repetitions": 3,
+      "source_root": "jetty.project/jetty-core",
+      "paths_relative_to_root": true,
+      "configuration_changed": true
+    }
+  ]
+}

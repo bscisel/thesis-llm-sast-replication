@@ -1,0 +1,43 @@
+{
+  "run": "003_jetty-stage-1",
+  "timestamp": "2026-05-22_20-07-11",
+  "target_project": {
+    "name": "Jetty Core without coreapp/start",
+    "key": "jetty-core-minus-coreapp-start",
+    "directory": "jetty.project",
+    "maven_projects": "jetty-core/jetty-alpn,jetty-core/jetty-alpn/jetty-alpn-client,jetty-core/jetty-alpn/jetty-alpn-conscrypt-client,jetty-core/jetty-alpn/jetty-alpn-conscrypt-server,jetty-core/jetty-alpn/jetty-alpn-bouncycastle-client,jetty-core/jetty-alpn/jetty-alpn-bouncycastle-server,jetty-core/jetty-alpn/jetty-alpn-java-client,jetty-core/jetty-alpn/jetty-alpn-java-server,jetty-core/jetty-alpn/jetty-alpn-server,jetty-core/jetty-annotations,jetty-core/jetty-bom,jetty-core/jetty-client,jetty-core/jetty-compression,jetty-core/jetty-compression/jetty-compression-common,jetty-core/jetty-compression/jetty-compression-server,jetty-core/jetty-compression/jetty-compression-gzip,jetty-core/jetty-compression/jetty-compression-brotli,jetty-core/jetty-compression/jetty-compression-zstandard,jetty-core/jetty-compression/jetty-compression-tests,jetty-core/jetty-compression/jetty-compression-client,jetty-core/jetty-deploy,jetty-core/jetty-ee,jetty-core/jetty-ee/jetty-ee-webapp,jetty-core/jetty-ee/jetty-ee-test-resources,jetty-core/jetty-fcgi,jetty-core/jetty-fcgi/jetty-fcgi-client,jetty-core/jetty-fcgi/jetty-fcgi-proxy,jetty-core/jetty-fcgi/jetty-fcgi-server,jetty-core/jetty-http,jetty-core/jetty-http-spi,jetty-core/jetty-http-tools,jetty-core/jetty-http2,jetty-core/jetty-http2/jetty-http2-client,jetty-core/jetty-http2/jetty-http2-client-transport,jetty-core/jetty-http2/jetty-http2-common,jetty-core/jetty-http2/jetty-http2-hpack,jetty-core/jetty-http2/jetty-http2-server,jetty-core/jetty-http2/jetty-http2-tests,jetty-core/jetty-http3,jetty-core/jetty-http3/jetty-http3-client,jetty-core/jetty-http3/jetty-http3-client-transport,jetty-core/jetty-http3/jetty-http3-common,jetty-core/jetty-http3/jetty-http3-qpack,jetty-core/jetty-http3/jetty-http3-server,jetty-core/jetty-http3/jetty-http3-tests,jetty-core/jetty-io,jetty-core/jetty-jmx,jetty-core/jetty-jndi,jetty-core/jetty-keystore,jetty-core/jetty-maven,jetty-core/jetty-osgi,jetty-core/jetty-plus,jetty-core/jetty-proxy,jetty-core/jetty-quic,jetty-core/jetty-quic/jetty-quic-api,jetty-core/jetty-quic/jetty-quic-client,jetty-core/jetty-quic/jetty-quic-common,jetty-core/jetty-quic/jetty-quic-quiche,jetty-core/jetty-quic/jetty-quic-quiche/jetty-quic-quiche-client,jetty-core/jetty-quic/jetty-quic-quiche/jetty-quic-quiche-common,jetty-core/jetty-quic/jetty-quic-quiche/jetty-quic-quiche-jna,jetty-core/jetty-quic/jetty-quic-quiche/jetty-quic-quiche-server,jetty-core/jetty-quic/jetty-quic-util,jetty-core/jetty-quic/jetty-quic-tests,jetty-core/jetty-quic/jetty-quic-server,jetty-core/jetty-rewrite,jetty-core/jetty-security,jetty-core/jetty-server,jetty-core/jetty-session,jetty-core/jetty-slf4j-impl,jetty-core/jetty-staticapp,jetty-core/jetty-tests,jetty-core/jetty-tests/jetty-test-client-transports,jetty-core/jetty-tests/jetty-test-coreapps,jetty-core/jetty-tests/jetty-test-coreapps/jetty-test-coreapp-bad-init,jetty-core/jetty-tests/jetty-test-coreapps/jetty-test-coreapp-demo,jetty-core/jetty-tests/jetty-test-coreapps/jetty-test-coreapp-http2-client,jetty-core/jetty-tests/jetty-test-jmx,jetty-core/jetty-tests/jetty-test-rfc,jetty-core/jetty-unixdomain-server,jetty-core/jetty-util,jetty-core/jetty-util-ajax,jetty-core/jetty-websocket,jetty-core/jetty-websocket/jetty-websocket-core-client,jetty-core/jetty-websocket/jetty-websocket-core-common,jetty-core/jetty-websocket/jetty-websocket-core-server,jetty-core/jetty-websocket/jetty-websocket-core-tests,jetty-core/jetty-websocket/jetty-websocket-jetty-api,jetty-core/jetty-websocket/jetty-websocket-jetty-client,jetty-core/jetty-websocket/jetty-websocket-jetty-common,jetty-core/jetty-websocket/jetty-websocket-jetty-server,jetty-core/jetty-websocket/jetty-websocket-jetty-tests,jetty-core/jetty-xml",
+    "repository": "https://github.com/jetty/jetty.project",
+    "branch": "jetty-12.1.x",
+    "commit": "6ca6c9ab3ab531461355602a455516b976456b97",
+    "version": "12.1.9-SNAPSHOT"
+  },
+  "status": "sampled",
+  "failed_tools": [],
+  "tools": {
+    "SpotBugs": {
+      "findings": "100",
+      "duration_s": 202,
+      "status": "sampled",
+      "source_findings": "1821"
+    },
+    "Error Prone": {
+      "findings": "100",
+      "duration_s": 60,
+      "status": "sampled",
+      "source_findings": "1023"
+    },
+    "SonarQube": {
+      "findings": "100",
+      "duration_s": 134,
+      "status": "sampled",
+      "source_findings": "7734"
+    }
+  },
+  "source_run": "002_jetty-population",
+  "sample": {
+    "seed": 20260503,
+    "method": "stratified",
+    "source_run": "002_jetty-population",
+    "created_at": "2026-05-22T20:07:11"
+  }
+}
